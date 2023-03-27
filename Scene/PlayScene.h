@@ -1,6 +1,9 @@
 #pragma once
 #include "BaseScene.h"
 
+#include "Skydome.h"
+#include "ParticleManager.h"
+
 namespace YScene
 {
 	// ゲームシーン
@@ -28,9 +31,18 @@ namespace YScene
 		// 立方体モデル
 		std::unique_ptr<YGame::Model> cubeMod_ = nullptr;
 
+		// 天球モデル
+		std::unique_ptr<YGame::Model> skydomeMod_ = nullptr;
+
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+		// パーティクルマネージャー
+		YGame::ParticleManager particleMan_;
+
+		// 天球
+		YGame::Skydome skydome_;
+		
 
 		// 転送用ライトグループ
 		std::unique_ptr<YGame::LightGroup> lightGroup_;

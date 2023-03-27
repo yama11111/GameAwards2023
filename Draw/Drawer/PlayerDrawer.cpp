@@ -25,8 +25,8 @@ void PlayerDrawerCommon::StaticInitialize()
 	// ----- ƒ‚ƒfƒ‹“Ç‚İ‚İ ----- //
 
 	// ‘Ì
-	sModels_[static_cast<size_t>(Parts::Body)].reset(Model::LoadObj("player/player_body", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("player/player_body", true));
+	sModels_[static_cast<size_t>(Parts::Body)].reset(Model::Create());
+	sModels_[static_cast<size_t>(1)].reset(Model::Create());
 }
 
 #pragma endregion

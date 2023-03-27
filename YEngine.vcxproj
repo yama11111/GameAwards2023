@@ -116,6 +116,8 @@
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GoalDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp" />
+    <ClCompile Include="Draw\Particle\Effect.cpp" />
+    <ClCompile Include="Draw\Particle\EffectManager.cpp" />
     <ClCompile Include="Draw\Particle\Particle.cpp" />
     <ClCompile Include="Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Draw\SceneChange\Blackout.cpp" />
@@ -200,6 +202,8 @@
     <ClInclude Include="Draw\Drawer\GateDrawer.h" />
     <ClInclude Include="Draw\Drawer\GoalDrawer.h" />
     <ClInclude Include="Draw\Drawer\PlayerDrawer.h" />
+    <ClInclude Include="Draw\Particle\Effect.h" />
+    <ClInclude Include="Draw\Particle\EffectManager.h" />
     <ClInclude Include="Draw\Particle\Particle.h" />
     <ClInclude Include="Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Draw\SceneChange\Blackout.h" />

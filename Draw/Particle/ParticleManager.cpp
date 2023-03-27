@@ -1,18 +1,16 @@
 #include "ParticleManager.h"
 #include "MathUtillity.h"
 #include "YAssert.h"
+#include "Def.h"
 
 using YGame::ParticleManager;
 using YGame::Model;
 using YMath::Vector3;
 
-const float PI = 3.141592f;
-
-Model* ParticleManager::pModel_ = nullptr;
-
-void ParticleManager::StaticInitialize(YGame::Model* pModel)
+void ParticleManager::StaticInitialize()
 {
-	pModel_ = pModel;
+	// ÉÇÉfÉãê›íË
+	FireSpark::StaticInitialize(Model::LoadObj("", true));
 }
 
 void ParticleManager::Initialize()
