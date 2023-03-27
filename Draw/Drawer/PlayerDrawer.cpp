@@ -19,9 +19,15 @@ using YMath::Vector3;
 // 静的 モデル配列 初期化
 std::array<std::unique_ptr<Model>, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::sModels_ =
 { nullptr, nullptr, };
+YGame::ViewProjection* PlayerDrawerCommon::spVP_ = nullptr;
 
-void PlayerDrawerCommon::StaticInitialize()
+void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 {
+	// nullチェック
+	assert(pVP);
+	// 代入
+	spVP_ = pVP;
+
 	// ----- モデル読み込み ----- //
 
 	// 体
@@ -37,16 +43,19 @@ void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection)
 	assert(pParent);
 	assert(pDirection);
 
+	// 色生成
+	color_.reset(Color::Create());
+
 	// オブジェクト生成 + 親行列挿入
-	transform_.reset(new Transform());
-	transform_->Initialize({});
-	transform_->parent_ = pParent;
+	core_.reset(new Transform());
+	core_->Initialize({});
+	core_->parent_ = pParent;
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}));
-		modelObjs_[i]->parent_ = &transform_->m_;
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// 向きポインタ挿入
@@ -61,7 +70,7 @@ void PlayerDrawer::Reset()
 	// 初期化
 	SlimeActor::Initialize();
 
-	transform_->Initialize({});
+	core_->Initialize({});
 
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
@@ -90,7 +99,7 @@ void PlayerDrawer::Update()
 	Vector3 dire = YMath::AdjustAngle(*pDirection_);
 
 	// 行列更新 (親)
-	transform_->UpdateMatrix(
+	core_->UpdateMatrix(
 		{
 			-SlimeActor::JiggleValue(),
 			dire,
@@ -117,7 +126,7 @@ void PlayerDrawer::Draw()
 void PlayerDrawer::IdleAnimation()
 {
 	// 伸縮量
-	Vector3 val = transform_->scale_ * DrawerConfig::Player::Idle::SlimeAction::Value;
+	Vector3 val = core_->scale_ * DrawerConfig::Player::Idle::SlimeAction::Value;
 	val.y_ *= -1.0f;
 
 	// つぶれる量
@@ -144,7 +153,7 @@ void PlayerDrawer::IdleAnimation()
 void PlayerDrawer::JumpAnimation()
 {
 	// 伸縮量
-	Vector3 val = transform_->scale_ * DrawerConfig::Player::Jump::SlimeAction::Value;
+	Vector3 val = core_->scale_ * DrawerConfig::Player::Jump::SlimeAction::Value;
 	val.y_ *= -1.0f;
 
 	// つぶれる量
@@ -171,7 +180,7 @@ void PlayerDrawer::JumpAnimation()
 void PlayerDrawer::LandingAnimation()
 {
 	// つぶれる量
-	Vector3 squash = transform_->scale_ * DrawerConfig::Player::Landing::SlimeAction::Value;
+	Vector3 squash = core_->scale_ * DrawerConfig::Player::Landing::SlimeAction::Value;
 	squash.y_ *= -1.0f;
 
 	// 時間 (フレーム)

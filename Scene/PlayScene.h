@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 
+#include "PlayerDrawer.h"
 #include "Skydome.h"
 #include "ParticleManager.h"
 

@@ -37,15 +37,15 @@ void GoalDrawer::Initialize(YMath::Matrix4* pParent)
 	assert(pParent);
 
 	// オブジェクト生成 + 親行列挿入
-	transform_.reset(new Transform());
-	transform_->Initialize({});
-	transform_->parent_ = pParent;
+	core_.reset(new Transform());
+	core_->Initialize({});
+	core_->parent_ = pParent;
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i].reset(ModelObject::Create({}));
-		modelObjs_[i]->parent_ = &transform_->m_;
+		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// リセット
@@ -57,7 +57,7 @@ void GoalDrawer::Reset()
 	// 初期化
 	SlimeActor::Initialize();
 
-	transform_->Initialize({});
+	core_->Initialize({});
 
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
@@ -83,7 +83,7 @@ void GoalDrawer::Update()
 	}
 
 	// 行列更新 (親)
-	transform_->UpdateMatrix(
+	core_->UpdateMatrix(
 		{
 			-SlimeActor::JiggleValue(),
 			{},

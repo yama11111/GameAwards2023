@@ -31,7 +31,7 @@ class BlockDrawer :
 {
 private:
 	// トランスフォーム 
-	std::unique_ptr<YGame::Transform> transform_;
+	std::unique_ptr<YGame::Transform> core_;
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 	// 立ちモーション用タイマー

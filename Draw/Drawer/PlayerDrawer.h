@@ -19,9 +19,11 @@ protected:
 protected:
 	// モデル (パーツの数だけ)
 	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
+	// ビュープロジェクションポインタ
+	static YGame::ViewProjection* spVP_;
 public:
 	// 静的初期化
-	static void StaticInitialize();
+	static void StaticInitialize(YGame::ViewProjection* pVP);
 };
 
 // プレイヤー描画用クラス
@@ -31,9 +33,12 @@ class PlayerDrawer :
 {
 private:
 	// トランスフォーム 
-	std::unique_ptr<YGame::Transform> transform_;
+	std::unique_ptr<YGame::Transform> core_;
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
+	// 色
+	std::unique_ptr<YGame::Color> color_;
+
 	// 向きポインタ
 	YMath::Vector3* pDirection_ = nullptr;
 	// 立ちモーション用タイマー
