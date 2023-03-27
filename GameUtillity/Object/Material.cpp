@@ -4,9 +4,9 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
 #pragma region 名前空間
 
@@ -121,33 +121,33 @@ Material Material::Load(const std::string& directoryPath, const std::string& fil
 	return m;
 }
 
-Material Material::Load(const std::string directoryPath, const aiMaterial* src, const std::string extension)
-{
-	// 戻り値用
-	Material material = Material();
-
-	// 読み込み
-	aiString path;
-	if (src->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), path) == AI_SUCCESS)
-	{
-		// ファイル名
-		std::string fileName = std::string(path.C_Str());
-
-		// 拡張子を変更するなら
-		if (extension != "")
-		{
-			// 拡張子設定
-			fileName = YUtil::ReplaceExtension(fileName, extension);
-		}
-
-		// 読み込み(代入)
-		material.texFileName_ = fileName;
-		material.texIndex_ = spTexManager_->Load(directoryPath, fileName);
-	}
-
-	// マテリアルを返す
-	return material;
-}
+//Material Material::Load(const std::string directoryPath, const aiMaterial* src, const std::string extension)
+//{
+//	// 戻り値用
+//	Material material = Material();
+//
+//	// 読み込み
+//	aiString path;
+//	if (src->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), path) == AI_SUCCESS)
+//	{
+//		// ファイル名
+//		std::string fileName = std::string(path.C_Str());
+//
+//		// 拡張子を変更するなら
+//		if (extension != "")
+//		{
+//			// 拡張子設定
+//			fileName = YUtil::ReplaceExtension(fileName, extension);
+//		}
+//
+//		// 読み込み(代入)
+//		material.texFileName_ = fileName;
+//		material.texIndex_ = spTexManager_->Load(directoryPath, fileName);
+//	}
+//
+//	// マテリアルを返す
+//	return material;
+//}
 
 void Material::SetDrawCommand(UINT mateRPIndex, UINT texRPIndex)
 {

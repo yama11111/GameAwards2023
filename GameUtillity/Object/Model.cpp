@@ -4,9 +4,9 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
 #pragma region 名前空間
 
@@ -378,59 +378,59 @@ Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 	return instance;
 }
 
-Model* Model::Load(const LoadStatus& status)
-{
-	// インスタンス生成 (動的)
-	Model* instance = new Model();
-
-	// ディレクトリパス設定
-	std::string directoryPath = "Resources/Models/" + status.directoryPath_;
-
-	// Assimp設定
-	Assimp::Importer importer;
-	int flag = 0;
-	flag |= aiProcess_Triangulate;
-	flag |= aiProcess_PreTransformVertices;
-	flag |= aiProcess_CalcTangentSpace;
-	flag |= aiProcess_GenSmoothNormals;
-	flag |= aiProcess_GenUVCoords;
-	flag |= aiProcess_RemoveRedundantMaterials;
-	flag |= aiProcess_OptimizeMeshes;
-
-	// ファイルを開く
-	const aiScene* scene = importer.ReadFile(directoryPath + status.modelFileName_, flag);
-	if (scene == nullptr)
-	{
-		// 無いならエラー
-		printf(importer.GetErrorString());
-		printf("\n");
-		assert(false);
-	}
-
-	/// クリア + リサイズ(メッシュの数だけ)
-	instance->meshes_.clear();
-	instance->meshes_.resize(scene->mNumMeshes);
-	
-	// メッシュ毎に
-	for (size_t i = 0; i < instance->meshes_.size(); i++)
-	{
-		// 頂点情報読み込み
-		const aiMesh* pMesh = scene->mMeshes[i];
-		instance->meshes_[i].vtIdx_ = 
-			LoadVertices(pMesh, status.isInverseU_, status.isInverseV_, status.isNormalized_);
-
-		// マテリアル読み込み
-		const aiMaterial* pMaterial = scene->mMaterials[i];
-		instance->meshes_[i].mtrl_ = 
-			Material::Load(directoryPath, pMaterial, status.extension_);
-	}
-
-	// 後処理
-	scene = nullptr;
-
-	// インスタンスを返す
-	return instance;
-}
+//Model* Model::Load(const LoadStatus& status)
+//{
+//	// インスタンス生成 (動的)
+//	Model* instance = new Model();
+//
+//	// ディレクトリパス設定
+//	std::string directoryPath = "Resources/Models/" + status.directoryPath_;
+//
+//	// Assimp設定
+//	Assimp::Importer importer;
+//	int flag = 0;
+//	flag |= aiProcess_Triangulate;
+//	flag |= aiProcess_PreTransformVertices;
+//	flag |= aiProcess_CalcTangentSpace;
+//	flag |= aiProcess_GenSmoothNormals;
+//	flag |= aiProcess_GenUVCoords;
+//	flag |= aiProcess_RemoveRedundantMaterials;
+//	flag |= aiProcess_OptimizeMeshes;
+//
+//	// ファイルを開く
+//	const aiScene* scene = importer.ReadFile(directoryPath + status.modelFileName_, flag);
+//	if (scene == nullptr)
+//	{
+//		// 無いならエラー
+//		printf(importer.GetErrorString());
+//		printf("\n");
+//		assert(false);
+//	}
+//
+//	/// クリア + リサイズ(メッシュの数だけ)
+//	instance->meshes_.clear();
+//	instance->meshes_.resize(scene->mNumMeshes);
+//	
+//	// メッシュ毎に
+//	for (size_t i = 0; i < instance->meshes_.size(); i++)
+//	{
+//		// 頂点情報読み込み
+//		const aiMesh* pMesh = scene->mMeshes[i];
+//		instance->meshes_[i].vtIdx_ = 
+//			LoadVertices(pMesh, status.isInverseU_, status.isInverseV_, status.isNormalized_);
+//
+//		// マテリアル読み込み
+//		const aiMaterial* pMaterial = scene->mMaterials[i];
+//		instance->meshes_[i].mtrl_ = 
+//			Material::Load(directoryPath, pMaterial, status.extension_);
+//	}
+//
+//	// 後処理
+//	scene = nullptr;
+//
+//	// インスタンスを返す
+//	return instance;
+//}
 
 void Model::Draw(ModelObject* pObj)
 {

@@ -56,7 +56,7 @@ namespace YGame
 		/// <param name="src"> : assimp用マテリアル</param>
 		/// <param name="extension"> : 拡張子</param>
 		/// <returns>マテリアル</returns>
-		static Material Load(const std::string directoryPath, const aiMaterial* src, const std::string extension);
+		//static Material Load(const std::string directoryPath, const aiMaterial* src, const std::string extension);
 	public:
 		/// <summary>
 		/// 描画前コマンド

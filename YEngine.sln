@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YEngine", "YEngine.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTex", "DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj", "{371B9FA9-4C90-4AC6-A123-ACED756D6C77}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assimp", "assimp\assimp.vcxproj", "{1F1633E4-919E-3AE4-A103-70FDD5D7AD9E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "imgui\imgui.vcxproj", "{0A62C3DF-E0C0-44B6-8E0A-CF2C90171F52}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Debug|x64.Build.0 = Debug|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.ActiveCfg = Release|x64
 		{371B9FA9-4C90-4AC6-A123-ACED756D6C77}.Release|x64.Build.0 = Release|x64
-		{1F1633E4-919E-3AE4-A103-70FDD5D7AD9E}.Debug|x64.ActiveCfg = Debug|x64
-		{1F1633E4-919E-3AE4-A103-70FDD5D7AD9E}.Debug|x64.Build.0 = Debug|x64
-		{1F1633E4-919E-3AE4-A103-70FDD5D7AD9E}.Release|x64.ActiveCfg = Release|x64
-		{1F1633E4-919E-3AE4-A103-70FDD5D7AD9E}.Release|x64.Build.0 = Release|x64
 		{0A62C3DF-E0C0-44B6-8E0A-CF2C90171F52}.Debug|x64.ActiveCfg = Debug|x64
 		{0A62C3DF-E0C0-44B6-8E0A-CF2C90171F52}.Debug|x64.Build.0 = Debug|x64
 		{0A62C3DF-E0C0-44B6-8E0A-CF2C90171F52}.Release|x64.ActiveCfg = Release|x64

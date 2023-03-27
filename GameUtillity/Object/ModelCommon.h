@@ -96,7 +96,7 @@ namespace YGame
 		static void CalculateSmoothedVertexNormals(std::vector<VData>& vertices,
 			std::unordered_map<unsigned short, std::vector<unsigned short>>& smoothData);
 		// 頂点情報読み込み(assimp)
-		static YDX::VertexIndex<VData> LoadVertices(const aiMesh* src, bool invU, bool invV, bool isNormalized);
+		//static YDX::VertexIndex<VData> LoadVertices(const aiMesh* src, bool invU, bool invV, bool isNormalized);
 	protected:
 		// パイプライン設定
 		static YDX::PipelineSet sPipelineSet_;

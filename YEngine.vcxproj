@@ -45,11 +45,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)assimp;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)assimp;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)DirectXTex;$(SolutionDir)imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)assimp\include;$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -65,7 +65,8 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)assimp\bin\Debug\assimp-vc143-mtd.dll" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -79,7 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)assimp\include;$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -90,7 +91,8 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)assimp\bin\Release\assimp-vc143-mt.dll" "$(OutDirFullPath)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -319,9 +321,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="assimp\assimp.vcxproj">
-      <Project>{1f1633e4-919e-3ae4-a103-70fdd5d7ad9e}</Project>
-    </ProjectReference>
     <ProjectReference Include="DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>

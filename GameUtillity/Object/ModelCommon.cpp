@@ -4,9 +4,9 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 
 #pragma region 名前空間
 
@@ -227,67 +227,67 @@ void ModelCommon::CalculateSmoothedVertexNormals(std::vector<VData>& vertices,
 		}
 	}
 }
-YDX::VertexIndex<ModelCommon::VData> ModelCommon::LoadVertices(const aiMesh* src, bool invU, bool invV, bool isNormalized)
-{
-	// 戻り値用
-	YDX::VertexIndex<VData> vtIdx;
-
-	// 保存用
-	aiVector3D zero3D(0.0f, 0.0f, 0.0f);
-	aiColor4D zeroColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	std::vector<VData> vData;
-	std::vector<uint16_t> indices;
-
-	// リサイズ(頂点の数だけ)
-	vData.resize(src->mNumVertices);
-
-	// 頂点の数
-	for (size_t i = 0; i < src->mNumVertices; ++i)
-	{
-		// 読み込み(代入)
-		aiVector3D* position = &(src->mVertices[i]);
-		aiVector3D* normal = &(src->mNormals[i]);
-		aiVector3D* uv = (src->HasTextureCoords(0)) ? &(src->mTextureCoords[0][i]) : &zero3D;
-		aiVector3D* tangent = (src->HasTangentsAndBitangents()) ? &(src->mTangents[i]) : &zero3D;
-		aiColor4D* color = (src->HasVertexColors(0)) ? &(src->mColors[0][i]) : &zeroColor;
-
-		if (invU) { uv->x = 1.0f - uv->x; }
-		if (invV) { uv->y = 1.0f - uv->y; }
-
-		VData vertex = {};
-		vertex.pos_ = Vector3(position->x, position->y, position->z);
-		vertex.normal_ = Vector3(normal->x, normal->y, normal->z);
-		vertex.uv_ = Vector2(uv->x, uv->y);
-		vertex.tangent_ = Vector3(tangent->x, tangent->y, tangent->z);
-		vertex.color_ = Vector4(color->r, color->g, color->b, color->a);
-
-		vData[i] = vertex;
-	}
-
-	// リサイズ(インデックスの数だけ)
-	indices.resize(src->mNumFaces * static_cast<size_t>(3));
-
-	// インデックスの数
-	for (size_t i = 0; i < src->mNumFaces; ++i)
-	{
-		// 読み込み(代入)
-		const aiFace& face = src->mFaces[i];
-
-		indices[i * 3 + 0] = face.mIndices[0];
-		indices[i * 3 + 1] = face.mIndices[1];
-		indices[i * 3 + 2] = face.mIndices[2];
-	}
-
-	// 法線計算
-	if (isNormalized) { CalculateNormals(vData, indices); }
-
-	// 頂点インデックス初期化(代入)
-	vtIdx.Initialize(vData, indices);
-
-	// 頂点インデックスを返す
-	return vtIdx;
-}
+//YDX::VertexIndex<ModelCommon::VData> ModelCommon::LoadVertices(const aiMesh* src, bool invU, bool invV, bool isNormalized)
+//{
+//	// 戻り値用
+//	YDX::VertexIndex<VData> vtIdx;
+//
+//	// 保存用
+//	aiVector3D zero3D(0.0f, 0.0f, 0.0f);
+//	aiColor4D zeroColor(0.0f, 0.0f, 0.0f, 0.0f);
+//
+//	std::vector<VData> vData;
+//	std::vector<uint16_t> indices;
+//
+//	// リサイズ(頂点の数だけ)
+//	vData.resize(src->mNumVertices);
+//
+//	// 頂点の数
+//	for (size_t i = 0; i < src->mNumVertices; ++i)
+//	{
+//		// 読み込み(代入)
+//		aiVector3D* position = &(src->mVertices[i]);
+//		aiVector3D* normal = &(src->mNormals[i]);
+//		aiVector3D* uv = (src->HasTextureCoords(0)) ? &(src->mTextureCoords[0][i]) : &zero3D;
+//		aiVector3D* tangent = (src->HasTangentsAndBitangents()) ? &(src->mTangents[i]) : &zero3D;
+//		aiColor4D* color = (src->HasVertexColors(0)) ? &(src->mColors[0][i]) : &zeroColor;
+//
+//		if (invU) { uv->x = 1.0f - uv->x; }
+//		if (invV) { uv->y = 1.0f - uv->y; }
+//
+//		VData vertex = {};
+//		vertex.pos_ = Vector3(position->x, position->y, position->z);
+//		vertex.normal_ = Vector3(normal->x, normal->y, normal->z);
+//		vertex.uv_ = Vector2(uv->x, uv->y);
+//		vertex.tangent_ = Vector3(tangent->x, tangent->y, tangent->z);
+//		vertex.color_ = Vector4(color->r, color->g, color->b, color->a);
+//
+//		vData[i] = vertex;
+//	}
+//
+//	// リサイズ(インデックスの数だけ)
+//	indices.resize(src->mNumFaces * static_cast<size_t>(3));
+//
+//	// インデックスの数
+//	for (size_t i = 0; i < src->mNumFaces; ++i)
+//	{
+//		// 読み込み(代入)
+//		const aiFace& face = src->mFaces[i];
+//
+//		indices[i * 3 + 0] = face.mIndices[0];
+//		indices[i * 3 + 1] = face.mIndices[1];
+//		indices[i * 3 + 2] = face.mIndices[2];
+//	}
+//
+//	// 法線計算
+//	if (isNormalized) { CalculateNormals(vData, indices); }
+//
+//	// 頂点インデックス初期化(代入)
+//	vtIdx.Initialize(vData, indices);
+//
+//	// 頂点インデックスを返す
+//	return vtIdx;
+//}
 
 void ModelCommon::StaticSetDrawCommand()
 {

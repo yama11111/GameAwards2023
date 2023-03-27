@@ -100,7 +100,7 @@ namespace YGame
 		/// <param name="(bool) status.isNormalized_"> : 法線を計算するか</param>
 		/// <param name="(string) status.extension_"> : 拡張子</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Model* Load(const LoadStatus& status);
+		//static Model* Load(const LoadStatus& status);
 	public:
 		/// <summary>
 		/// 描画
