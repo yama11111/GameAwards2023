@@ -19,9 +19,15 @@ using YMath::Vector3;
 // 静的 モデル配列 初期化
 std::array<std::unique_ptr<Model>, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::sModels_ =
 { nullptr, nullptr, };
+YGame::ViewProjection* FilterDrawerCommon::spVP_ = nullptr;
 
-void FilterDrawerCommon::StaticInitialize()
+void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 {
+	// nullチェック
+	assert(pVP);
+	// 代入
+	spVP_ = pVP;
+
 	// ----- モデル読み込み ----- //
 
 	// 体
@@ -41,10 +47,13 @@ void FilterDrawer::Initialize(YMath::Matrix4* pParent)
 	core_->Initialize({});
 	core_->parent_ = pParent;
 
+	// 色生成
+	color_.reset(Color::Create());
+
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 

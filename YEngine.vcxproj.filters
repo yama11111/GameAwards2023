@@ -103,6 +103,9 @@
     <Filter Include="GameUtil\Object\Sprite3D">
       <UniqueIdentifier>{a0a9e3c4-d9e0-4de9-a19f-60e4a7e5eea2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Draw\Drawer\Base">
+      <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -351,6 +354,12 @@
     <ClCompile Include="Draw\Particle\EffectManager.cpp">
       <Filter>Draw\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp">
+      <Filter>Draw\Drawer</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\DrawerManager.cpp">
+      <Filter>Draw\Drawer\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -584,9 +593,6 @@
     <ClInclude Include="Draw\Drawer\BuildingDrawer.h">
       <Filter>Draw\Drawer</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\DrawerConfig.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
     <ClInclude Include="Draw\Drawer\FilterDrawer.h">
       <Filter>Draw\Drawer</Filter>
     </ClInclude>
@@ -610,6 +616,15 @@
     </ClInclude>
     <ClInclude Include="Draw\Particle\EffectManager.h">
       <Filter>Draw\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\SkydomeDrawer.h">
+      <Filter>Draw\Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\DrawerConfig.h">
+      <Filter>Draw\Drawer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\DrawerManager.h">
+      <Filter>Draw\Drawer\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

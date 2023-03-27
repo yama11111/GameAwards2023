@@ -43,13 +43,13 @@ void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection)
 	assert(pParent);
 	assert(pDirection);
 
-	// 色生成
-	color_.reset(Color::Create());
-
 	// オブジェクト生成 + 親行列挿入
 	core_.reset(new Transform());
 	core_->Initialize({});
 	core_->parent_ = pParent;
+
+	// 色生成
+	color_.reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

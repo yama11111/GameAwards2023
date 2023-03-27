@@ -32,24 +32,18 @@ namespace YScene
 		// 立方体モデル
 		std::unique_ptr<YGame::Model> cubeMod_ = nullptr;
 
-		// 天球モデル
-		std::unique_ptr<YGame::Model> skydomeMod_ = nullptr;
-
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+
+		// 天球
+		Skydome skydome_;
+		
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
 
-		// 天球
-		YGame::Skydome skydome_;
-		
-
-		// 転送用ライトグループ
-		std::unique_ptr<YGame::LightGroup> lightGroup_;
-
 		// 転送用ビュープロジェクション
-		YGame::ViewProjection vp_;
+		YGame::ViewProjection transferVP_;
 
 #pragma endregion
 	public:

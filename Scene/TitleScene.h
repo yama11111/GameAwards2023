@@ -36,7 +36,7 @@ namespace YScene
 		std::unique_ptr<YGame::LightGroup> lightGroup_;
 
 		// 転送用ビュープロジェクション
-		YGame::ViewProjection vp_;
+		YGame::ViewProjection transferVP_;
 
 #pragma endregion
 	public:

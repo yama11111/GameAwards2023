@@ -114,10 +114,12 @@
     <ClCompile Include="Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\DrawerManager.cpp" />
     <ClCompile Include="Draw\Drawer\FilterDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GoalDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp" />
     <ClCompile Include="Draw\Particle\Effect.cpp" />
     <ClCompile Include="Draw\Particle\EffectManager.cpp" />
     <ClCompile Include="Draw\Particle\Particle.cpp" />
@@ -200,10 +202,12 @@
     <ClInclude Include="Draw\Drawer\BlockDrawer.h" />
     <ClInclude Include="Draw\Drawer\BuildingDrawer.h" />
     <ClInclude Include="Draw\Drawer\DrawerConfig.h" />
+    <ClInclude Include="Draw\Drawer\DrawerManager.h" />
     <ClInclude Include="Draw\Drawer\FilterDrawer.h" />
     <ClInclude Include="Draw\Drawer\GateDrawer.h" />
     <ClInclude Include="Draw\Drawer\GoalDrawer.h" />
     <ClInclude Include="Draw\Drawer\PlayerDrawer.h" />
+    <ClInclude Include="Draw\Drawer\SkydomeDrawer.h" />
     <ClInclude Include="Draw\Particle\Effect.h" />
     <ClInclude Include="Draw\Particle\EffectManager.h" />
     <ClInclude Include="Draw\Particle\Particle.h" />

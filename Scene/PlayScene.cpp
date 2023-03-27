@@ -6,6 +6,8 @@
 #include <cassert>
 #include "imgui.h"
 
+#include "DrawerManager.h"
+
 #pragma region 名前空間宣言
 using YScene::PlayScene;
 using namespace YDX;
@@ -41,6 +43,8 @@ void PlayScene::Load()
 
 	// ----- 静的初期化 ----- //
 
+	// 描画クラス全て
+	DrawerManager::StaticInitialize(&transferVP_);
 }
 #pragma endregion
 
@@ -48,28 +52,18 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
-	// ライト初期化
-	lightGroup_.reset(LightGroup::Create());
-	{
-		lightGroup_->SetDirectionalLightActive(0, false);
-		lightGroup_->SetDirectionalLightActive(1, false);
-		lightGroup_->SetDirectionalLightActive(2, false);
-	}
-	{
-		lightGroup_->SetPointLightActive(0, false);
-		lightGroup_->SetPointLightActive(1, false);
-		lightGroup_->SetPointLightActive(2, false);
-	}
+	// 天球初期化
+	skydome_.Initialize();
 
 	// ビュープロジェクション初期化
-	vp_.Initialize({ {0,5,-15} });
+	transferVP_.Initialize({ {0,5,-15} });
 }
 #pragma endregion
 
 #pragma region 終了処理
 void PlayScene::Finalize()
 {
-	lightGroup_.reset();
+
 }
 #pragma endregion
 
@@ -87,8 +81,11 @@ void PlayScene::Update()
 		SceneManager::GetInstance()->Change("RESULT");
 	}
 
+	// 天球更新
+	skydome_.Update();
+
 	// ビュープロジェクション
-	vp_.UpdateMatrix();
+	transferVP_.UpdateMatrix();
 }
 #pragma endregion
 
@@ -105,6 +102,8 @@ void PlayScene::DrawBackSprite3Ds()
 
 void PlayScene::DrawModels()
 {
+	// 天球描画
+	skydome_.Draw();
 
 }
 

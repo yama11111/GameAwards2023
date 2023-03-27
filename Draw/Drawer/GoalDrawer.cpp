@@ -19,14 +19,20 @@ using YMath::Vector3;
 // 静的 モデル配列 初期化
 std::array<std::unique_ptr<Model>, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::sModels_ =
 { nullptr, nullptr, };
+YGame::ViewProjection* GoalDrawerCommon::spVP_ = nullptr;
 
-void GoalDrawerCommon::StaticInitialize()
+void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 {
+	// nullチェック
+	assert(pVP);
+	// 代入
+	spVP_ = pVP;
+
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Cube)].reset(Model::LoadObj("player/player_body", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("player/player_body", true));
+	sModels_[static_cast<size_t>(Parts::Cube)].reset(Model::Create());
+	sModels_[static_cast<size_t>(1)].reset(Model::Create());
 }
 
 #pragma endregion

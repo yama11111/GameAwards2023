@@ -46,7 +46,7 @@ void TitleScene::Initialize()
 	lightGroup_.reset(LightGroup::Create());
 
 	// ビュープロジェクション初期化
-	vp_.Initialize({});
+	transferVP_.Initialize({});
 }
 #pragma endregion
 
@@ -80,7 +80,7 @@ void TitleScene::Update()
 	
 
 	// ビュープロジェクション
-	vp_.UpdateMatrix();
+	transferVP_.UpdateMatrix();
 }
 #pragma endregion
 
