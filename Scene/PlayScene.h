@@ -46,7 +46,7 @@ namespace YScene
 		
 		// フィルター
 		YGame::Transform filter_;
-		// フィルター描画クラス
+		// フィルター描画クラス 
 		FilterDrawer filterDra_;
 
 		// ブロック
