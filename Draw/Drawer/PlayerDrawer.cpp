@@ -5,6 +5,8 @@
 
 #pragma region 名前空間
 
+using std::array;
+using std::unique_ptr;
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
@@ -17,9 +19,22 @@ using namespace DrawerConfig::Player;
 
 #pragma region Static
 
+// インデックス
+static const size_t NormalIdx = 0; // 通常
+static const size_t RedIdx = 1; // 赤
+static const size_t InvisibleIdx = 2; // 透明
+static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Body); // 体
+
+
 // 静的 モデル配列 初期化
-std::array<std::unique_ptr<Model>, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::sModels_ =
-{ nullptr, nullptr, };
+array<array<unique_ptr<Model>, PlayerDrawerCommon::PartsNum_>, PlayerDrawerCommon::ModeNum_> PlayerDrawerCommon::sModels_ =
+{
+	nullptr, nullptr, 
+	nullptr, nullptr,
+	nullptr, nullptr
+};
+
+// 静的ビュープロジェクション
 YGame::ViewProjection* PlayerDrawerCommon::spVP_ = nullptr;
 
 void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
@@ -31,9 +46,17 @@ void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	// 体
-	sModels_[static_cast<size_t>(Parts::Normal)].reset(Model::LoadObj("player/playerNormal", true));
-	sModels_[static_cast<size_t>(Parts::Red)]	.reset(Model::LoadObj("player/playerRed", true));
+	// 通常
+	sModels_[NormalIdx][BodyIdx].reset(Model::LoadObj("player/playerNormal", true)); // 体
+	sModels_[NormalIdx][1].reset(Model::Create());
+
+	// 赤
+	sModels_[RedIdx][BodyIdx].reset(Model::LoadObj("player/playerRed", true)); // 体
+	sModels_[RedIdx][1].reset(Model::Create());
+
+	// 赤
+	sModels_[InvisibleIdx][BodyIdx].reset(Model::LoadObj("player/playerNormal", true)); // 体
+	sModels_[InvisibleIdx][1].reset(Model::Create());
 }
 
 #pragma endregion
@@ -46,11 +69,26 @@ void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection, cons
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
+	// 透明色生成
+	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.5f }));
+
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
-		modelObjs_[i]->parent_ = &core_->m_;
+		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		{
+			// 透明ver
+			if (i == InvisibleIdx)
+			{
+				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, invisibleColor_.get(), nullptr));
+			}
+			// 通常、赤ver
+			else
+			{
+				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+			}
+			modelObjs_[i][j]->parent_ = &core_->m_;
+		}
 	}
 
 	// 向きポインタ挿入
@@ -68,7 +106,20 @@ void PlayerDrawer::Reset(const Mode& mode)
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->Initialize({});
+		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		{
+			// 透明ver
+			if (i == InvisibleIdx)
+			{
+				Vector3 scaleVal = { 0.99f,0.99f,0.99f };
+				modelObjs_[i][j]->Initialize({ {},{},scaleVal });
+			}
+			// 通常、赤ver
+			else
+			{
+				modelObjs_[i][j]->Initialize({});
+			}
+		}
 	}
 
 	ChangeColorAnimation(mode);
@@ -91,19 +142,34 @@ void PlayerDrawer::Update()
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->UpdateMatrix();
+		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		{
+			modelObjs_[i][j]->UpdateMatrix();
+		}
 	}
 }
 
-void PlayerDrawer::Draw()
+void PlayerDrawer::PreDraw()
 {
-	// 描画
-	//for (size_t i = 0; i < sModels_.size(); i++)
-	//{
-	//	sModels_[i]->Draw(modelObjs_[i].get());
-	//}
-	
-	sModels_[static_cast<size_t>(current_)]->Draw(modelObjs_[static_cast<size_t>(current_)].get());
+	// 透明描画
+	sModels_[InvisibleIdx][BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
+
+	// 通常なら
+	if (current_ == Mode::Normal)
+	{
+		// 描画
+		sModels_[NormalIdx][BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
+	}
+}
+
+void PlayerDrawer::PostDraw()
+{
+	// 赤なら
+	if (current_ == Mode::Red)
+	{
+		// 描画
+		sModels_[RedIdx][BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
+	}
 }
 
 void PlayerDrawer::JumpAnimation()

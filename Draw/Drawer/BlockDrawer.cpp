@@ -82,10 +82,6 @@ void BlockDrawer::Update()
 void BlockDrawer::Draw()
 {
 	// •`‰æ
-	//for (size_t i = 0; i < sModels_.size(); i++)
-	//{
-	//	sModels_[i]->Draw(modelObjs_[i].get());
-	//}
 
 	sModels_[static_cast<size_t>(current_)]->Draw(modelObjs_[static_cast<size_t>(current_)].get());
 }

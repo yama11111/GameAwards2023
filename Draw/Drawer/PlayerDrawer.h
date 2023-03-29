@@ -5,19 +5,20 @@
 // プレイヤー描画用コモンクラス
 class PlayerDrawerCommon
 {
-protected:
+public:
 	// パーツの名前
 	enum class Parts
 	{
-		Normal, // 通常
-		Red, // 赤
+		Body, // 体
 	};
 protected:
+	// モードの総数
+	static const size_t ModeNum_ = 3;
 	// パーツの総数
 	static const size_t PartsNum_ = 2;
 protected:
 	// モデル (パーツの数だけ)
-	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
+	static std::array<std::array<std::unique_ptr<YGame::Model>, PartsNum_>, ModeNum_> sModels_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:
@@ -32,7 +33,10 @@ class PlayerDrawer :
 {
 private:
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
+	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
+
+	// 透明色
+	std::unique_ptr<YGame::Color> invisibleColor_;
 
 	// 向きポインタ
 	YMath::Vector3* pDirection_ = nullptr;
@@ -59,8 +63,10 @@ public:
 	void Reset(const Mode& mode);
 	// 更新
 	void Update();
-	// 描画
-	void Draw();
+	// 前方描画 (先 に呼ぶ)
+	void PreDraw();
+	// 後方描画 (後 に呼ぶ)
+	void PostDraw();
 public:
 	// ジャンプモーション
 	void JumpAnimation();

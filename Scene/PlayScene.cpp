@@ -55,7 +55,7 @@ void PlayScene::Initialize()
 	// プレイヤー
 	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Normal);
+	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
 	
 	// フィルター
 	filter_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
@@ -144,19 +144,30 @@ void PlayScene::DrawModels()
 	// 天球描画
 	skydome_.Draw();
 
-	// プレイヤー描画
-	playerDra_.Draw();
+	// ----- Pre ----- // 
+	
+	// プレイヤー前描画
+	playerDra_.PreDraw();
 	
 	// ブロック描画
 	blockDra_.Draw();
+
+	// パーティクル
+	particleMan_.Draw();
+
+	// --------------- //
+
 
 	// フィルター描画
 	filterDra_.Draw();
 
 
-
-	// パーティクル
-	particleMan_.Draw();
+	// ----- Post ----- //
+	
+	// プレイヤー後描画
+	playerDra_.PostDraw();
+	
+	// --------------- //
 }
 
 void PlayScene::DrawFrontSprite3Ds()
