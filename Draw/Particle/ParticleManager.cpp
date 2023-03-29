@@ -7,10 +7,15 @@ using YGame::ParticleManager;
 using YGame::Model;
 using YMath::Vector3;
 
-void ParticleManager::StaticInitialize()
+void ParticleManager::StaticInitialize(YGame::ViewProjection* pVP)
 {
-	// モデル設定
-	FireSpark::StaticInitialize(Model::LoadObj("", true));
+	// 基底クラス
+	IParticle::StaticInitialize(pVP);
+
+	// ----- モデル設定 ----- //
+	
+	// 火花
+	//FireSpark::StaticInitialize(Model::LoadObj("", true));
 }
 
 void ParticleManager::Initialize()

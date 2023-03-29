@@ -70,7 +70,7 @@ void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection, cons
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
 	// 透明色生成
-	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.5f }));
+	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.25f }));
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

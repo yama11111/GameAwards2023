@@ -43,6 +43,12 @@ void PlayScene::Load()
 
 	// ----- 静的初期化 ----- //
 
+	// パーティクル
+	ParticleManager::StaticInitialize(&transferVP_);
+
+	// エフェクト
+	EffectManager::StaticInitialize(&particleMan_);
+
 	// 描画クラス全て
 	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
 }
@@ -154,6 +160,9 @@ void PlayScene::DrawModels()
 
 	// パーティクル
 	particleMan_.Draw();
+
+	// エフェクト
+	effectMan_.Draw();
 
 	// --------------- //
 

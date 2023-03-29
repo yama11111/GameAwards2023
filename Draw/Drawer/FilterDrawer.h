@@ -47,10 +47,12 @@ public:
 	void Draw();
 public:
 	// 色替えアニメーション
-	//void ChangeColor(const );
+	void ChangeColorAnimation(const Mode& mode);
 private:
 	// 立ちモーション
 	void IdleAnimation() override;
+public:
+	~FilterDrawer() override = default;
 };
 
 

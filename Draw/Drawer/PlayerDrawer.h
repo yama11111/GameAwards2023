@@ -77,5 +77,7 @@ public:
 private:
 	// —§‚¿ƒ‚[ƒVƒ‡ƒ“
 	void IdleAnimation() override;
+public:
+	~PlayerDrawer() override = default;
 };
 

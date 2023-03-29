@@ -67,5 +67,7 @@ public:
 public:
 	// —§‚¿ƒ‚[ƒVƒ‡ƒ“
 	void IdleAnimation();
+public:
+	~BlockDrawer() override = default;
 };
 

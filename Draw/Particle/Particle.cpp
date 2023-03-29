@@ -4,14 +4,24 @@
 using YGame::IParticle;
 using YGame::FireSpark;
 using YGame::ModelObject;
+using YGame::ViewProjection;
 using YGame::Model;
 using YGame::Color;
 using YMath::Vector3;
 using YMath::Vector4;
 
+ViewProjection* IParticle::spVP_ = nullptr;
 Model* FireSpark::pModel_ = nullptr;
 
-void YGame::FireSpark::StaticInitialize(YGame::Model* pModel)
+void IParticle::StaticInitialize(YGame::ViewProjection* pVP)
+{
+	// nullチェック
+	assert(pVP);
+	// 代入
+	spVP_ = pVP;
+}
+
+void FireSpark::StaticInitialize(YGame::Model* pModel)
 {
 	assert(pModel);
 	pModel_ = pModel;

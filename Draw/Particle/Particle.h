@@ -20,6 +20,12 @@ namespace YGame
 		virtual void Update() = 0;
 		// 描画
 		virtual void Draw() = 0;
+	protected:
+		// ビュープロジェクションポインタ
+		static YGame::ViewProjection* spVP_;
+	public:
+		// 静的初期化
+		static void StaticInitialize(YGame::ViewProjection* pVP);
 	public:
 		// デストラクタ
 		virtual ~IParticle() = default;

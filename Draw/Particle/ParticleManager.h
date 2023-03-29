@@ -1,7 +1,6 @@
 #pragma once
 #include "Particle.h"
 #include <list>
-#include <memory>
 
 namespace YGame
 {
@@ -29,7 +28,7 @@ namespace YGame
 			const uint32_t frame, const size_t num);
 	public:
 		// ê√ìIèâä˙âª
-		static void StaticInitialize();
+		static void StaticInitialize(YGame::ViewProjection* pVP);
 	};
 }
 

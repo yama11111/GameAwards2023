@@ -5,7 +5,7 @@
 #include "FilterDrawer.h"
 #include "BlockDrawer.h"
 #include "Skydome.h"
-#include "ParticleManager.h"
+#include "EffectManager.h"
 
 namespace YScene
 {
@@ -60,6 +60,9 @@ namespace YScene
 		
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
+
+		// エフェクトマネージャー
+		YGame::EffectManager effectMan_;
 
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
