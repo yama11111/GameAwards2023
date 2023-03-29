@@ -106,6 +106,9 @@
     <Filter Include="Draw\Drawer\Base">
       <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameUtil\Main">
+      <UniqueIdentifier>{072ee2c7-00e2-4767-8d0c-c30d3dfe903a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -365,6 +368,12 @@
     </ClCompile>
     <ClCompile Include="Draw\Stuff\Buildings.cpp">
       <Filter>Draw\Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameUtil\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>GameUtil\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -637,6 +646,12 @@
     </ClInclude>
     <ClInclude Include="Draw\Stuff\Buildings.h">
       <Filter>Draw\Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameUtil\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>GameUtil\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

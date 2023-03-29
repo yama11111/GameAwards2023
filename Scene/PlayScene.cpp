@@ -96,6 +96,7 @@ void PlayScene::Update()
 	// リセット
 	if (sKeys_->IsTrigger(DIK_R))
 	{
+
 	}
 
 	// 次のシーンへ
@@ -178,7 +179,7 @@ void PlayScene::DrawModels()
 	
 	// ブロック後描画
 	blockDra_.PostDraw();
-	
+
 	// --------------- //
 }
 
