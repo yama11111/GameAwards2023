@@ -63,7 +63,7 @@ void PlayScene::Initialize()
 
 	// ブロック
 	block_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
-	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Normal);
+	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Red);
 
 
 	// 天球初期化
@@ -149,8 +149,8 @@ void PlayScene::DrawModels()
 	// プレイヤー前描画
 	playerDra_.PreDraw();
 	
-	// ブロック描画
-	blockDra_.Draw();
+	// ブロック前描画
+	blockDra_.PreDraw();
 
 	// パーティクル
 	particleMan_.Draw();
@@ -166,6 +166,9 @@ void PlayScene::DrawModels()
 	
 	// プレイヤー後描画
 	playerDra_.PostDraw();
+	
+	// ブロック後描画
+	blockDra_.PostDraw();
 	
 	// --------------- //
 }

@@ -54,8 +54,8 @@ void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	sModels_[RedIdx][BodyIdx].reset(Model::LoadObj("player/playerRed", true)); // ëÃ
 	sModels_[RedIdx][1].reset(Model::Create());
 
-	// ê‘
-	sModels_[InvisibleIdx][BodyIdx].reset(Model::LoadObj("player/playerNormal", true)); // ëÃ
+	// ìßñæ
+	sModels_[InvisibleIdx][BodyIdx].reset(Model::LoadObj("player/playerInvisible", true)); // ëÃ
 	sModels_[InvisibleIdx][1].reset(Model::Create());
 }
 

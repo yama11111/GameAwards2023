@@ -63,9 +63,9 @@ public:
 	void Reset(const Mode& mode);
 	// 更新
 	void Update();
-	// 前方描画 (先 に呼ぶ)
+	// 前方描画 (フィルターより 先 に呼ぶ)
 	void PreDraw();
-	// 後方描画 (後 に呼ぶ)
+	// 後方描画 (フィルターより 後 に呼ぶ)
 	void PostDraw();
 public:
 	// ジャンプモーション
