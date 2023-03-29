@@ -360,6 +360,12 @@
     <ClCompile Include="Draw\Drawer\DrawerManager.cpp">
       <Filter>Draw\Drawer\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\Drawer\IDrawer.cpp">
+      <Filter>Draw\Drawer\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Stuff\Buildings.cpp">
+      <Filter>Draw\Stuff</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -625,6 +631,12 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\DrawerManager.h">
       <Filter>Draw\Drawer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\IDrawer.h">
+      <Filter>Draw\Drawer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Stuff\Buildings.h">
+      <Filter>Draw\Stuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

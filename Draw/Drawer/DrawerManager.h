@@ -1,10 +1,10 @@
 #pragma once
-#include "ViewProjection.h"
+#include "ParticleManager.h"
 
 class DrawerManager
 {
 public:
 	// Ã“I‰Šú‰»
-	static void StaticInitialize(YGame::ViewProjection* pVP);
+	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
 };
 

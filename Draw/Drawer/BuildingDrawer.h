@@ -40,7 +40,7 @@ private:
 	std::unique_ptr<YGame::Color> color_;
 	
 	// 立ちモーション用タイマー
-	YMath::Timer idelTim_;
+	YMath::Timer idleTim_;
 public:
 	/// <summary>
 	/// 初期化

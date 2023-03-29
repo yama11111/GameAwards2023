@@ -1,8 +1,6 @@
 #pragma once
-#include "Model.h"
-#include "SlimeActor.h"
+#include "IDrawer.h"
 #include <array>
-#include <memory>
 
 // フィルター描画用コモンクラス
 class FilterDrawerCommon
@@ -28,19 +26,13 @@ public:
 
 // フィルター描画用クラス
 class FilterDrawer :
-	private FilterDrawerCommon,
-	private YGame::SlimeActor
+	private IDrawer,
+	private FilterDrawerCommon
 {
 private:
-	// トランスフォーム 
-	std::unique_ptr<YGame::Transform> core_;
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
-	// 色
-	std::unique_ptr<YGame::Color> color_;
-	
-	// 立ちモーション用タイマー
-	YMath::Timer idelTim_;
+
 public:
 	/// <summary>
 	/// 初期化
@@ -54,10 +46,11 @@ public:
 	// 描画
 	void Draw();
 public:
-	// 立ちモーション
-	void IdleAnimation();
 	// 色替えアニメーション
 	//void ChangeColor(const );
+private:
+	// 立ちモーション
+	void IdleAnimation() override;
 };
 
 

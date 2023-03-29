@@ -2,6 +2,8 @@
 #include "BaseScene.h"
 
 #include "PlayerDrawer.h"
+#include "FilterDrawer.h"
+#include "BlockDrawer.h"
 #include "Skydome.h"
 #include "ParticleManager.h"
 
@@ -34,6 +36,23 @@ namespace YScene
 
 #pragma endregion
 #pragma region ゲームオブジェクト
+
+		// プレイヤー
+		YGame::Transform player_;
+		// 向き
+		YMath::Vector3 direction_;
+		// プレイヤー描画クラス
+		PlayerDrawer playerDra_;
+		
+		// フィルター
+		YGame::Transform filter_;
+		// フィルター描画クラス
+		FilterDrawer filterDra_;
+
+		// ブロック
+		YGame::Transform block_;
+		// ブロック描画クラス
+		BlockDrawer blockDra_;
 
 
 		// 天球

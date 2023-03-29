@@ -59,6 +59,11 @@ namespace YGame
 		//static Material Load(const std::string directoryPath, const aiMaterial* src, const std::string extension);
 	public:
 		/// <summary>
+		/// 画像読み込み
+		/// </summary>
+		/// <param name="texFileName"> : 画像ファイル名</param>
+		void LoadTexture(const std::string& texFileName);
+		/// <summary>
 		/// 描画前コマンド
 		/// </summary>
 		/// <param name="mateRPIndex"> : ルートパラメータ番号</param>

@@ -149,6 +149,15 @@ Material Material::Load(const std::string& directoryPath, const std::string& fil
 //	return material;
 //}
 
+void Material::LoadTexture(const std::string& texFileName)
+{
+	// ‰æ‘œ–¼‘ã“ü
+	texFileName_ = texFileName;
+	
+	// ‰æ‘œ“Ç‚Ýž‚Ý
+	texIndex_ = spTexManager_->Load(texFileName);
+}
+
 void Material::SetDrawCommand(UINT mateRPIndex, UINT texRPIndex)
 {
 	// ƒ}ƒeƒŠƒAƒ‹

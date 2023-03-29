@@ -82,6 +82,12 @@ namespace YGame
 		// 生成(立方体)
 		static Model* Create();
 		/// <summary>
+		/// 生成(立方体)
+		/// </summary>
+		/// <param name="texFileName"> : 画像のファイル名</param>
+		/// <returns></returns>
+		static Model* Create(const std::string& texFileName);
+		/// <summary>
 		/// モデル読み込み
 		/// </summary>
 		/// <param name="modelFileName"> : モデルのフォルダ名 (objと同じ名前の時のみ) </param>

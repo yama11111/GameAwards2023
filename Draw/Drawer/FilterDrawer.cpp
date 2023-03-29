@@ -11,6 +11,7 @@ using YGame::Model;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
+using namespace DrawerConfig::Filter;
 
 #pragma endregion
 
@@ -31,24 +32,16 @@ void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Monitor)].reset(Model::LoadObj("player/player_body", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("player/player_body", true));
+	sModels_[static_cast<size_t>(Parts::Monitor)].reset(Model::Create());
+	sModels_[static_cast<size_t>(1)].reset(Model::Create());
 }
 
 #pragma endregion
 
 void FilterDrawer::Initialize(YMath::Matrix4* pParent)
 {
-	// nullチェック
-	assert(pParent);
-
-	// オブジェクト生成 + 親行列挿入
-	core_.reset(new Transform());
-	core_->Initialize({});
-	core_->parent_ = pParent;
-
-	// 色生成
-	color_.reset(Color::Create());
+	// 基底クラス初期化
+	IDrawer::Initialze(pParent, Mode::Red, Idle::IntervalTime);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -63,42 +56,27 @@ void FilterDrawer::Initialize(YMath::Matrix4* pParent)
 
 void FilterDrawer::Reset()
 {
-	// 初期化
-	SlimeActor::Initialize();
+	// リセット
+	IDrawer::Reset(Mode::Red);
 
-	core_->Initialize({});
+	// ----- モデル用オブジェクト初期化 ----- //
+	
+	// モニター
+	modelObjs_[static_cast<size_t>(Parts::Monitor)]->Initialize(
+		{
+			{0,0,-5.0f},
+			{},
+			{1.0f,1.0f,0.0001f},
+		}
+	);
 
-	for (size_t i = 0; i < modelObjs_.size(); i++)
-	{
-		modelObjs_[i]->Initialize({});
-	}
-
-	idelTim_.Initialize(DrawerConfig::Filter::Idle::IntervalTime);
-	idelTim_.SetActive(true);
+	color_->SetRGBA({ 1.0f,0.0f,0.0f,0.25f });
 }
 
 void FilterDrawer::Update()
 {
-	// 立ちモーションタイマー更新
-	idelTim_.Update();
-
-	// タイマーが終わったら
-	if (idelTim_.IsEnd())
-	{
-		// 立ちモーション再生
-		IdleAnimation();
-		// タイマーリセット
-		idelTim_.Reset(true);
-	}
-
-	// 行列更新 (親)
-	core_->UpdateMatrix(
-		{
-			-SlimeActor::JiggleValue(),
-			{},
-			SlimeActor::JiggleValue()
-		}
-	);
+	// 基底クラス更新 
+	IDrawer::Update({});
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -110,10 +88,12 @@ void FilterDrawer::Update()
 void FilterDrawer::Draw()
 {
 	// 描画
-	for (size_t i = 0; i < sModels_.size(); i++)
-	{
-		sModels_[i]->Draw(modelObjs_[i].get());
-	}
+	//for (size_t i = 0; i < sModels_.size(); i++)
+	//{
+	//	sModels_[i]->Draw(modelObjs_[i].get());
+	//}
+	
+	sModels_[static_cast<size_t>(Parts::Monitor)]->Draw(modelObjs_[static_cast<size_t>(Parts::Monitor)].get());
 }
 
 void FilterDrawer::IdleAnimation()

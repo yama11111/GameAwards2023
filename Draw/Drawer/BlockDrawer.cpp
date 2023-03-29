@@ -11,6 +11,7 @@ using YGame::Model;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
+using namespace DrawerConfig::Block;
 
 #pragma endregion
 
@@ -31,24 +32,16 @@ void BlockDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Cube)].reset(Model::LoadObj("player/player_body", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("player/player_body", true));
+	sModels_[static_cast<size_t>(Parts::Normal)].reset(Model::Create("blockNormal.png"));
+	sModels_[static_cast<size_t>(Parts::Red)]	.reset(Model::Create("blockRed.png"));
 }
 
 #pragma endregion
 
-void BlockDrawer::Initialize(YMath::Matrix4* pParent)
+void BlockDrawer::Initialize(YMath::Matrix4* pParent, const Mode& mode)
 {
-	// nullチェック
-	assert(pParent);
-
-	// オブジェクト生成 + 親行列挿入
-	core_.reset(new Transform());
-	core_->Initialize({});
-	core_->parent_ = pParent;
-
-	// 色生成
-	color_.reset(Color::Create());
+	// 基底クラス初期化
+	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -58,47 +51,26 @@ void BlockDrawer::Initialize(YMath::Matrix4* pParent)
 	}
 
 	// リセット
-	Reset();
+	Reset(mode);
 }
 
-void BlockDrawer::Reset()
+void BlockDrawer::Reset(const Mode& mode)
 {
-	// 初期化
-	SlimeActor::Initialize();
-
-	core_->Initialize({});
+	// リセット
+	IDrawer::Reset(mode);
 
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i]->Initialize({});
 	}
 
-	idelTim_.Initialize(DrawerConfig::Block::Idle::IntervalTime);
-	idelTim_.SetActive(true);
+	current_ = mode;
 }
 
 void BlockDrawer::Update()
 {
-	// 立ちモーションタイマー更新
-	idelTim_.Update();
-
-	// タイマーが終わったら
-	if (idelTim_.IsEnd())
-	{
-		// 立ちモーション再生
-		IdleAnimation();
-		// タイマーリセット
-		idelTim_.Reset(true);
-	}
-
-	// 行列更新 (親)
-	core_->UpdateMatrix(
-		{
-			-SlimeActor::JiggleValue(),
-			{},
-			SlimeActor::JiggleValue()
-		}
-	);
+	// 基底クラス更新 
+	IDrawer::Update({});
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -110,10 +82,12 @@ void BlockDrawer::Update()
 void BlockDrawer::Draw()
 {
 	// 描画
-	for (size_t i = 0; i < sModels_.size(); i++)
-	{
-		sModels_[i]->Draw(modelObjs_[i].get());
-	}
+	//for (size_t i = 0; i < sModels_.size(); i++)
+	//{
+	//	sModels_[i]->Draw(modelObjs_[i].get());
+	//}
+
+	sModels_[static_cast<size_t>(current_)]->Draw(modelObjs_[static_cast<size_t>(current_)].get());
 }
 
 void BlockDrawer::IdleAnimation()

@@ -11,13 +11,16 @@
 
 using YGame::Model;
 
-void DrawerManager::StaticInitialize(YGame::ViewProjection* pVP)
+void DrawerManager::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pVP);
 
 	// ----- 静的初期化 ----- // 
 	
+	// 基底クラス
+	IDrawer::StaticInitialize(pParticleMan);
+
 	// プレイヤー
 	PlayerDrawerCommon::StaticInitialize(pVP);
 	

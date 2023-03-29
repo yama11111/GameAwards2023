@@ -44,7 +44,7 @@ void PlayScene::Load()
 	// ----- 静的初期化 ----- //
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_);
+	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
 }
 #pragma endregion
 
@@ -52,11 +52,28 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
+	// プレイヤー
+	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	direction_ = { +1.0f,0.0f,0.0f };
+	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Normal);
+	
+	// フィルター
+	filter_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	filterDra_.Initialize(&filter_.m_);
+
+	// ブロック
+	block_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Normal);
+
+
 	// 天球初期化
 	skydome_.Initialize();
+	
+	// パーティクル初期化
+	particleMan_.Initialize();
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({ {0,5,-15} });
+	transferVP_.Initialize({ {0,0,-100} });
 }
 #pragma endregion
 
@@ -81,8 +98,30 @@ void PlayScene::Update()
 		SceneManager::GetInstance()->Change("RESULT");
 	}
 
+	// プレイヤー
+	player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+	player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+
+	player_.UpdateMatrix();
+	playerDra_.Update();
+	
+	// フィルター
+	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 2.0f;
+	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 2.0f;
+
+	filter_.UpdateMatrix();
+	filterDra_.Update();
+
+	// ブロック
+	block_.UpdateMatrix();
+	blockDra_.Update();
+
+
 	// 天球更新
 	skydome_.Update();
+
+	// パーティクル更新
+	particleMan_.Update();
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
@@ -105,6 +144,19 @@ void PlayScene::DrawModels()
 	// 天球描画
 	skydome_.Draw();
 
+	// プレイヤー描画
+	playerDra_.Draw();
+	
+	// ブロック描画
+	blockDra_.Draw();
+
+	// フィルター描画
+	filterDra_.Draw();
+
+
+
+	// パーティクル
+	particleMan_.Draw();
 }
 
 void PlayScene::DrawFrontSprite3Ds()

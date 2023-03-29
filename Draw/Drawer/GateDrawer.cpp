@@ -31,8 +31,8 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Frame)].reset(Model::LoadObj("player/player_body", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("player/player_body", true));
+	sModels_[static_cast<size_t>(Parts::Frame)].reset(Model::Create());
+	sModels_[static_cast<size_t>(1)].reset(Model::Create());
 }
 
 #pragma endregion
@@ -73,22 +73,22 @@ void GateDrawer::Reset()
 		modelObjs_[i]->Initialize({});
 	}
 
-	idelTim_.Initialize(DrawerConfig::Gate::Idle::IntervalTime);
-	idelTim_.SetActive(true);
+	idleTim_.Initialize(DrawerConfig::Gate::Idle::IntervalTime);
+	idleTim_.SetActive(true);
 }
 
 void GateDrawer::Update()
 {
 	// 立ちモーションタイマー更新
-	idelTim_.Update();
+	idleTim_.Update();
 
 	// タイマーが終わったら
-	if (idelTim_.IsEnd())
+	if (idleTim_.IsEnd())
 	{
 		// 立ちモーション再生
 		IdleAnimation();
 		// タイマーリセット
-		idelTim_.Reset(true);
+		idleTim_.Reset(true);
 	}
 
 	// 行列更新 (親)

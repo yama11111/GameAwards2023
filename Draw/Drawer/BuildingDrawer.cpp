@@ -73,22 +73,22 @@ void BuildingDrawer::Reset()
 		modelObjs_[i]->Initialize({});
 	}
 
-	idelTim_.Initialize(DrawerConfig::Block::Idle::IntervalTime);
-	idelTim_.SetActive(true);
+	idleTim_.Initialize(DrawerConfig::Block::Idle::IntervalTime);
+	idleTim_.SetActive(true);
 }
 
 void BuildingDrawer::Update()
 {
 	// 立ちモーションタイマー更新
-	idelTim_.Update();
+	idleTim_.Update();
 
 	// タイマーが終わったら
-	if (idelTim_.IsEnd())
+	if (idleTim_.IsEnd())
 	{
 		// 立ちモーション再生
 		IdleAnimation();
 		// タイマーリセット
-		idelTim_.Reset(true);
+		idleTim_.Reset(true);
 	}
 
 	// 行列更新 (親)

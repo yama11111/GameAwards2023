@@ -204,6 +204,17 @@ Model* Model::Create()
 	return instance;
 }
 
+Model* Model::Create(const std::string& texFileName)
+{
+	// 生成
+	Model* result = Create();
+	
+	// 画像読み込み
+	result->meshes_[0].mtrl_.LoadTexture(texFileName);
+
+	return result;
+}
+
 Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 {
 	// インスタンス生成 (動的)

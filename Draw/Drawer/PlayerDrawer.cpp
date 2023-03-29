@@ -11,6 +11,7 @@ using YGame::Model;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
+using namespace DrawerConfig::Player;
 
 #pragma endregion
 
@@ -31,25 +32,19 @@ void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Body)].reset(Model::Create());
-	sModels_[static_cast<size_t>(1)].reset(Model::Create());
+	sModels_[static_cast<size_t>(Parts::Normal)].reset(Model::LoadObj("player/playerNormal", true));
+	sModels_[static_cast<size_t>(Parts::Red)]	.reset(Model::LoadObj("player/playerRed", true));
 }
 
 #pragma endregion
 
-void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection)
+void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection, const Mode& mode)
 {
 	// nullチェック
-	assert(pParent);
 	assert(pDirection);
 
-	// オブジェクト生成 + 親行列挿入
-	core_.reset(new Transform());
-	core_->Initialize({});
-	core_->parent_ = pParent;
-
-	// 色生成
-	color_.reset(Color::Create());
+	// 基底クラス初期化
+	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -62,48 +57,34 @@ void PlayerDrawer::Initialize(YMath::Matrix4* pParent, Vector3* pDirection)
 	pDirection_ = pDirection;
 
 	// リセット
-	Reset();
+	Reset(mode);
 }
 
-void PlayerDrawer::Reset()
+void PlayerDrawer::Reset(const Mode& mode)
 {
-	// 初期化
-	SlimeActor::Initialize();
+	// リセット
+	IDrawer::Reset(mode);
 
-	core_->Initialize({});
-
+	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i]->Initialize({});
 	}
 
-	idelTim_.Initialize(DrawerConfig::Player::Idle::IntervalTime);
-	idelTim_.SetActive(true);
+	ChangeColorAnimation(mode);
 }
 
 void PlayerDrawer::Update()
 {
-	// 立ちモーションタイマー更新
-	idelTim_.Update();
-
-	// タイマーが終わったら
-	if (idelTim_.IsEnd())
-	{
-		// 立ちモーション再生
-		IdleAnimation();
-		// タイマーリセット
-		idelTim_.Reset(true);
-	}
-
 	// 向き合わせ
 	Vector3 dire = YMath::AdjustAngle(*pDirection_);
 
-	// 行列更新 (親)
-	core_->UpdateMatrix(
+	// 基底クラス更新 
+	IDrawer::Update(
 		{
-			-SlimeActor::JiggleValue(),
+			{}, 
 			dire,
-			SlimeActor::JiggleValue()
+			{}
 		}
 	);
 
@@ -117,37 +98,12 @@ void PlayerDrawer::Update()
 void PlayerDrawer::Draw()
 {
 	// 描画
-	for (size_t i = 0; i < sModels_.size(); i++)
-	{
-		sModels_[i]->Draw(modelObjs_[i].get());
-	}
-}
-
-void PlayerDrawer::IdleAnimation()
-{
-	// 伸縮量
-	Vector3 val = core_->scale_ * DrawerConfig::Player::Idle::SlimeAction::Value;
-	val.y_ *= -1.0f;
-
-	// つぶれる量
-	Vector3 squash = +val;
-	// のびる量
-	Vector3 streach = -val;
-
-	// 時間 (フレーム)
-	unsigned int frame = DrawerConfig::Player::Idle::SlimeAction::Frame;
-	// 指数 (緩急)
-	float pow = DrawerConfig::Player::Idle::SlimeAction::Power;
-
-	// ぷよぷよアニメーション
-	SlimeActor::Activate(
-		{
-			{{}, frame, pow},
-			{squash, frame, pow},
-			{streach, frame, pow},
-			{{}, frame, pow },
-		}
-	);
+	//for (size_t i = 0; i < sModels_.size(); i++)
+	//{
+	//	sModels_[i]->Draw(modelObjs_[i].get());
+	//}
+	
+	sModels_[static_cast<size_t>(current_)]->Draw(modelObjs_[static_cast<size_t>(current_)].get());
 }
 
 void PlayerDrawer::JumpAnimation()
@@ -198,4 +154,11 @@ void PlayerDrawer::LandingAnimation()
 	);
 }
 
+void PlayerDrawer::ChangeColorAnimation(const Mode& mode)
+{
+	current_ = mode;
+}
 
+void PlayerDrawer::IdleAnimation()
+{
+}
