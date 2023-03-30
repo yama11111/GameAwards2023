@@ -45,6 +45,8 @@ public:
 	void Update();
 	// •`‰æ
 	void Draw();
+public:
+
 private:
 	// —§‚¿ƒ‚[ƒVƒ‡ƒ“
 	void IdleAnimation() override;

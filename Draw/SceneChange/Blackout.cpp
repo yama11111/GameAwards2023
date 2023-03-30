@@ -12,7 +12,7 @@ void Blackout::StaticInitialize()
 	UINT texIdx = TextureManager::GetInstance()->Load("white1x1.png", false);
 	
 	// スプライト生成
-	sCurtenSpr_.reset(Sprite2D::Create({ WinSize }, { texIdx }));
+	sCurtenSpr_.reset(Sprite2D::Create({ false, WinSize }, { texIdx }));
 }
 
 void Blackout::Initialize(const uint32_t changeFrame, const uint32_t loadFrame)
@@ -35,6 +35,7 @@ void Blackout::Reset()
 	step_ = Step::Dark;
 	
 	isAct_ = false;
+	isPreChange_ = false;
 	isChangeMoment_ = false;
 	isEnd_ = false;
 	loadTim_.Reset(false);
@@ -46,7 +47,7 @@ void Blackout::Reset()
 	obj_->pos_ = { p.x_, p.y_, 0.0f };
 	obj_->UpdateMatrix();
 	
-	color_->SetRGBA({ 0.0f,0.0f,0.0f,1.0f });
+	color_->SetRGBA({ 0.0f,0.0f,0.0f,0.0f });
 }
 
 void Blackout::Activate()
@@ -56,6 +57,7 @@ void Blackout::Activate()
 	
 	// 動作開始
 	isAct_ = true;
+	isPreChange_ = true;
 }
 
 void Blackout::UpdateChange()
@@ -82,6 +84,8 @@ void Blackout::UpdateChange()
 			step_ = Step::Load;
 			// 瞬間フラグをtrueに
 			isChangeMoment_ = true;
+			// 遷移中フラグをfalseに
+			isPreChange_ = false;
 			// 読み込みタイマー開始
 			loadTim_.SetActive(true);
 		}

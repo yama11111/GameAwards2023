@@ -16,7 +16,7 @@ void InfectionBlocks::StaticInitialize()
 	UINT texIdx = TextureManager::GetInstance()->Load("white1x1.png", false);
 
 	// スプライト生成
-	sBlockSpr_.reset(Sprite2D::Create({ {1.0f,1.0f} }, { texIdx }));
+	sBlockSpr_.reset(Sprite2D::Create({}, { texIdx }));
 }
 
 void InfectionBlocks::Initialize(
@@ -74,7 +74,9 @@ void InfectionBlocks::Reset()
 	step_ = Step::Narrow;
 
 	isAct_ = false;
+	isPreChange_ = false;
 	isChangeMoment_ = false;
+	isEnd_ = false;
 
 	loadTim_.Reset(false);
 
@@ -100,6 +102,7 @@ void InfectionBlocks::Activate()
 
 	// 動作開始
 	isAct_ = true;
+	isPreChange_ = true;
 
 	// 配列の x y の大きさ
 	Vector2 size =
@@ -169,6 +172,8 @@ void InfectionBlocks::ChangeUpdate()
 			step_ = Step::Load;
 			// 瞬間フラグをtrueに
 			isChangeMoment_ = true;
+			// 遷移中フラグをfalseに
+			isPreChange_ = false;
 			// 読み込みタイマー開始
 			loadTim_.SetActive(true);
 		}
@@ -210,8 +215,8 @@ void InfectionBlocks::ChangeUpdate()
 	else if (step_ == Step::Spread)
 	{
 		// ブロックの終端
-		size_t y = static_cast<size_t>(end_.y_);
 		size_t x = static_cast<size_t>(end_.x_);
+		size_t y = static_cast<size_t>(end_.y_);
 
 		// ブロック終端のタイマーが終了したら
 		if (blocks_[y][x]->actTim_.IsEnd())

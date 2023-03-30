@@ -73,32 +73,35 @@ void Sprite2DObject::SetDrawCommand()
 
 #pragma region Sprite2DCBSet
 
-Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus, const bool div)
+Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 {
 	// インスタンス
 	Sprite2D* instance = new Sprite2D();
 	
+	// テクスチャのサイズを取得
+	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
+	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
+
 	// ----- Status ----- //
 
 	// 反転設定
 	float flipX = status.isFlipX_ ? -1.0f : 1.0f;
 	float flipY = status.isFlipY_ ? -1.0f : 1.0f;
 
+	// サイズを設定 (画像に合わせるならそのまま)
+	Vector2 size = status.isDiv_ ? Vector2(rscSizeX, rscSizeY) : status.size_;
+
 	// 左右上下のポイント設定 (0.0~1,0)
-	float left   = (0.0f - status.anchor_.x_) * status.size_.x_ * flipX;
-	float right  = (1.0f - status.anchor_.x_) * status.size_.x_ * flipX;
-	float top    = (0.0f - status.anchor_.y_) * status.size_.y_ * flipY;
-	float bottom = (1.0f - status.anchor_.y_) * status.size_.y_ * flipY;
+	float left   = (0.0f - status.anchor_.x_) * size.x_ * flipX;
+	float right  = (1.0f - status.anchor_.x_) * size.x_ * flipX;
+	float top    = (0.0f - status.anchor_.y_) * size.y_ * flipY;
+	float bottom = (1.0f - status.anchor_.y_) * size.y_ * flipY;
 
 	// ----- TexStatus ----- //
 
-	// テクスチャのサイズを取得
-	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
-	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
-
 	// テクスチャの左上と右下を設定 (画像に合わせるならそのまま)
-	Vector2 texLT = div ? texStatus.leftTop_ : Vector2(0.0f, 0.0f);
-	Vector2 texRB = div ? (texStatus.leftTop_ + texStatus.size_) : Vector2(rscSizeX, rscSizeY);
+	Vector2 texLT = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_;
+	Vector2 texRB = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : (texStatus.leftTop_ + texStatus.size_);
 
 	// UV座標を計算
 	float texLeft   = texLT.x_ / rscSizeX;
@@ -123,8 +126,8 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus, con
 	instance->isFlipY_ = status.isFlipY_; // Y反転
 
 	instance->tex_		  = texStatus.index_; // テクスチャインデックス
-	instance->texLeftTop_ = div ? texStatus.leftTop_ : Vector2(0.0f, 0.0f); // テクスチャの左上
-	instance->texSize_    = div ? texStatus.size_ : Vector2(rscSizeX, rscSizeY); // テクスチャの大きさ
+	instance->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
+	instance->texSize_	  = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 
 	// インスタンスを返す
 	return instance;
@@ -148,17 +151,17 @@ void Sprite2D::Draw(Sprite2DObject* pObj)
 void Sprite2D::SetSize(const Vector2& size)
 {
 	if (size_ == size) { return; }
-	SetAllStatus({ size, anchor_, isFlipX_, isFlipY_ }, { tex_, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size, anchor_, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetAnchorPoint(const Vector2& anchor)
 {
 	if (anchor_ == anchor) { return; }
-	SetAllStatus({ size_, anchor, isFlipX_, isFlipY_ }, { tex_, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size_, anchor, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetFrip(const bool isFlipX, const bool isFlipY)
 {
 	if (isFlipX_ == isFlipX && isFlipY_ == isFlipY) { return; }
-	SetAllStatus({ size_, anchor_, isFlipX, isFlipY }, { tex_, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size_, anchor_, isFlipX, isFlipY }, { tex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetTextureLeftTop(const Vector2& leftTop, const bool adjust)
 {
@@ -167,21 +170,25 @@ void Sprite2D::SetTextureLeftTop(const Vector2& leftTop, const bool adjust)
 	float adjX = adjust && (texLeftTop_.x_ < leftTop.x_) ? (leftTop.x_ - texLeftTop_.x_) : 0.0f;
 	float adjY = adjust && (texLeftTop_.y_ < leftTop.y_) ? (leftTop.y_ - texLeftTop_.y_) : 0.0f;
 
-	SetAllStatus({ size_, anchor_, isFlipX_, isFlipY_ }, { tex_, leftTop, texSize_ - Vector2(adjX, adjY) }, true);
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, leftTop, texSize_ - Vector2(adjX, adjY) });
 }
 void Sprite2D::SetTextureSize(const Vector2& texSize)
 {
 	if (texSize_ == texSize) { return; }
-	SetAllStatus({ size_, anchor_, isFlipX_, isFlipY_ }, { tex_, texLeftTop_, texSize }, true);
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texSize });
 }
 void Sprite2D::SetTextureRectangle(const Vector2& leftTop, const Vector2& texSize)
 {
 	if (texLeftTop_ == leftTop && texSize_ == texSize) { return; }
-	SetAllStatus({ size_, anchor_, isFlipX_, isFlipY_ }, { tex_, leftTop, texSize }, true);
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, leftTop, texSize });
 }
-void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus, const bool div)
+void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus)
 {
 	std::vector<VData> v;
+
+	// テクスチャのサイズを取得
+	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
+	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
 
 	// ----- Status ----- //
 	
@@ -189,21 +196,20 @@ void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus, co
 	float flipX = status.isFlipX_ ? -1.0f : 1.0f;
 	float flipY = status.isFlipY_ ? -1.0f : 1.0f;
 
+	// サイズを設定 (画像に合わせるならそのまま)
+	Vector2 size = status.isDiv_ ? Vector2(rscSizeX, rscSizeY) : status.size_;
+
 	// 左右上下のポイント設定 (0.0~1,0)
-	float left = (0.0f - status.anchor_.x_) * status.size_.x_ * flipX;
-	float right = (1.0f - status.anchor_.x_) * status.size_.x_ * flipX;
-	float top = (0.0f - status.anchor_.y_) * status.size_.y_ * flipY;
-	float bottom = (1.0f - status.anchor_.y_) * status.size_.y_ * flipY;
+	float left	 = (0.0f - status.anchor_.x_) * size.x_ * flipX;
+	float right	 = (1.0f - status.anchor_.x_) * size.x_ * flipX;
+	float top	 = (0.0f - status.anchor_.y_) * size.y_ * flipY;
+	float bottom = (1.0f - status.anchor_.y_) * size.y_ * flipY;
 
 	// ----- TexStatus ----- //
 
-	// テクスチャのサイズを取得
-	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
-	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
-
 	// テクスチャの左上と右下を設定 (画像に合わせるならそのまま)
-	Vector2 texLT = div ? texStatus.leftTop_ : Vector2(0.0f, 0.0f);
-	Vector2 texRB = div ? (texStatus.leftTop_ + texStatus.size_) : Vector2(rscSizeX, rscSizeY);
+	Vector2 texLT = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_;
+	Vector2 texRB = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : (texStatus.leftTop_ + texStatus.size_);
 
 	// UV座標を計算
 	float texLeft   = texLT.x_ / rscSizeX;
@@ -220,14 +226,14 @@ void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus, co
 	vt_.TransferMap(v);
 
 	// いろいろ設定
-	size_ = status.size_; // 大きさ
-	anchor_ = status.anchor_; // アンカーポイント
+	size_	 = status.size_; // 大きさ
+	anchor_	 = status.anchor_; // アンカーポイント
 	isFlipX_ = status.isFlipX_; // X反転
 	isFlipY_ = status.isFlipY_; // Y反転
 
-	tex_ = texStatus.index_; // テクスチャインデックス
-	texLeftTop_ = div ? texStatus.leftTop_ : Vector2(0.0f, 0.0f); // テクスチャの左上
-	texSize_ = div ? texStatus.size_ : Vector2(rscSizeX, rscSizeY); // テクスチャの大きさ
+	tex_	    = texStatus.index_; // テクスチャインデックス
+	texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
+	texSize_    = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 }
 
 #pragma endregion

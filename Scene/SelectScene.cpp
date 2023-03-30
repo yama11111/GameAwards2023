@@ -16,23 +16,13 @@ void SelectScene::Load()
 {
 	// ----- テクスチャ ----- //
 
-	plainTex_ = spTexManager_->Load("white1x1.png", false);
-
 	// ----- オーディオ ----- //
-
-	//aA_ = pAudioManager_->Load("Resources/Audios/fanfare.wav");
 
 	// ----- スプライト (2D) ----- //
 
-	windowSpr_.reset(Sprite2D::Create({ WinSize }, { plainTex_ }));
-
 	// ----- スプライト (3D) ----- //
 
-	//debriB_.reset(Sprite3D::Create(false));
-
 	// ------- モデル ------- //
-
-	cubeMod_.reset(Model::Create());
 
 	// ----- 静的初期化 ----- //
 }
@@ -42,11 +32,7 @@ void SelectScene::Load()
 #pragma region 初期化
 void SelectScene::Initialize()
 {
-	// ライト初期化
-	lightGroup_.reset(LightGroup::Create());
 
-	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
 }
 #pragma endregion
 
@@ -60,26 +46,11 @@ void SelectScene::Finalize()
 #pragma region 更新
 void SelectScene::Update()
 {
-	// ホットリロード
-	if (sKeys_->IsTrigger(DIK_L))
-	{
-
-	}
-
-	// リセット
-	if (sKeys_->IsTrigger(DIK_R))
-	{
-
-	}
-
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_0))
 	{
-		SceneManager::GetInstance()->Change("PLAY");
+		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
 	}
-
-	// ビュープロジェクション
-	transferVP_.UpdateMatrix();
 }
 #pragma endregion
 

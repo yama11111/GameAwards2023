@@ -93,6 +93,11 @@ bool YFramework::Initialize()
 	// オーディオ初期化
 	AudioManager::GetInstance()->Initialize();
 
+	// シーン遷移初期化
+	TransitionManager::StaticInitialize();
+	transitionMan_ = TransitionManager::GetInstance();
+	transitionMan_->Initialize();
+
 	// シーン初期化
 	BaseScene::StaticInitialize(&worldRuler_);
 	sceneMan_ = SceneManager::GetInstance();
@@ -126,6 +131,9 @@ void YFramework::Update()
 
 	// ゲームルール更新処理
 	worldRuler_.Update();
+
+	// シーン遷移更新
+	transitionMan_->Update();
 
 	// シーン更新処理
 	sceneMan_->Update();

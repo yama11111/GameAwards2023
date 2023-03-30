@@ -106,6 +106,15 @@
     <Filter Include="Draw\Drawer\Base">
       <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Draw\Drawer\ex">
+      <UniqueIdentifier>{380b8772-2e64-4451-bb3e-6a8bb4fb65c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Factory">
+      <UniqueIdentifier>{240ab8c4-0938-43ad-89f4-2b5403078b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw\Drawer\Obj">
+      <UniqueIdentifier>{64150aae-31e8-4a6c-b465-e330b15e3fbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -324,27 +333,6 @@
     <ClCompile Include="GameUtillity\Object\Sprite3DCommon.cpp">
       <Filter>GameUtil\Object\Sprite3D</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\BlockDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\FilterDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\GateDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\GoalDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\YGameSceneFactory.cpp">
-      <Filter>Scene\Base</Filter>
-    </ClCompile>
     <ClCompile Include="MyGame.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -354,9 +342,6 @@
     <ClCompile Include="Draw\Particle\EffectManager.cpp">
       <Filter>Draw\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp">
-      <Filter>Draw\Drawer</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Drawer\DrawerManager.cpp">
       <Filter>Draw\Drawer\Base</Filter>
     </ClCompile>
@@ -365,6 +350,45 @@
     </ClCompile>
     <ClCompile Include="Draw\Stuff\Buildings.cpp">
       <Filter>Draw\Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\YGameSceneFactory.cpp">
+      <Filter>Scene\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\YGameTransitionFactory.cpp">
+      <Filter>Scene\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\TitleDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\BlockDrawer.cpp">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\FilterDrawer.cpp">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\GateDrawer.cpp">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\GoalDrawer.cpp">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\HUDDrawer.cpp">
+      <Filter>Draw\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\InputDrawer.cpp">
+      <Filter>Draw\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\PauseDrawer.cpp">
+      <Filter>Draw\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,27 +617,6 @@
     <ClInclude Include="GameUtillity\Object\Sprite3DCommon.h">
       <Filter>GameUtil\Object\Sprite3D</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\BlockDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\BuildingDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\FilterDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\GateDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\GoalDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\PlayerDrawer.h">
-      <Filter>Draw\Drawer</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\YGameSceneFactory.h">
-      <Filter>Scene\Base</Filter>
-    </ClInclude>
     <ClInclude Include="MyGame.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -622,9 +625,6 @@
     </ClInclude>
     <ClInclude Include="Draw\Particle\EffectManager.h">
       <Filter>Draw\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\SkydomeDrawer.h">
-      <Filter>Draw\Drawer</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\DrawerConfig.h">
       <Filter>Draw\Drawer\Base</Filter>
@@ -637,6 +637,51 @@
     </ClInclude>
     <ClInclude Include="Draw\Stuff\Buildings.h">
       <Filter>Draw\Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\SkydomeDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\BuildingDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ITransitionFactory.h">
+      <Filter>Scene\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\YGameSceneFactory.h">
+      <Filter>Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\YGameTransitionFactory.h">
+      <Filter>Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\TitleDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\BlockDrawer.h">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\FilterDrawer.h">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\GateDrawer.h">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\GoalDrawer.h">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\PlayerDrawer.h">
+      <Filter>Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\HUDConfig.h">
+      <Filter>Draw\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\HUDDrawer.h">
+      <Filter>Draw\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\PauseDrawer.h">
+      <Filter>Draw\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\InputDrawer.h">
+      <Filter>Draw\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

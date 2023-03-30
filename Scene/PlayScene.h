@@ -8,6 +8,7 @@
 #include "GoalDrawer.h"
 
 #include "Skydome.h"
+#include "HUDDrawer.h"
 #include "EffectManager.h"
 
 namespace YScene
@@ -19,23 +20,14 @@ namespace YScene
 #pragma region リソース
 
 		// ----- テクスチャ ----- //
-		
-		// 無地画像
-		UINT plainTex_ = 0;
 
 		// ----- オーディオ ----- //
 
 		// ----- スプライト (2D) ----- //
 		
-		// 画面全部
-		std::unique_ptr<YGame::Sprite2D> windowSpr_ = nullptr;
-		
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
-		
-		// 立方体モデル
-		std::unique_ptr<YGame::Model> cubeMod_ = nullptr;
 
 #pragma endregion
 #pragma region ゲームオブジェクト
@@ -75,6 +67,8 @@ namespace YScene
 		// 天球
 		Skydome skydome_;
 		
+		// HUD
+		HUDDrawer hud_;
 
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;

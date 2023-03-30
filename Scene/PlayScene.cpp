@@ -24,22 +24,13 @@ void PlayScene::Load()
 {
 	// ----- テクスチャ ----- //
 
-	plainTex_ = spTexManager_->Load("white1x1.png", false);
-
 	// ----- オーディオ ----- //
-
-	//aA_ = pAudioManager_->Load("Resources/Audios/fanfare.wav");
 
 	// ----- スプライト (2D) ----- //
 
-	windowSpr_.reset(Sprite2D::Create({ WinSize }, { plainTex_ }));
-
 	// ----- スプライト (3D) ----- //
-
 	
 	// ------- モデル ------- //
-
-	cubeMod_.reset(Model::Create());
 
 	// ----- 静的初期化 ----- //
 
@@ -51,6 +42,9 @@ void PlayScene::Load()
 
 	// 描画クラス全て
 	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
+
+	// HUD
+	HUDDrawerCommon::StaticInitialize();
 }
 #pragma endregion
 
@@ -71,7 +65,7 @@ void PlayScene::Initialize()
 	// ----- フィルター ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
-	filter_.Initialize({ {0.0f,0.0f,-10.0f}, {}, {5.0f,5.0f,5.0f} });
+	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
 	// 描画用クラス初期化 (親行列)
 	filterDra_.Initialize(&filter_.m_);
 
@@ -103,6 +97,9 @@ void PlayScene::Initialize()
 	// 天球初期化
 	skydome_.Initialize();
 	
+	// HUD初期化
+	hud_.Initalize();
+
 	// パーティクル初期化
 	particleMan_.Initialize();
 
@@ -126,10 +123,16 @@ void PlayScene::Update()
 	{
 	}
 
+	// HUD更新
+	hud_.Update();
+
+	// ポーズ中なら弾く
+	if (hud_.IsPause()) { return; }
+
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_0))
 	{
-		SceneManager::GetInstance()->Change("RESULT");
+		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
 	}
 
 	// プレイヤー
@@ -235,7 +238,8 @@ void PlayScene::DrawFrontSprite3Ds()
 
 void PlayScene::DrawFrontSprite2Ds()
 {
-
+	// HUD描画
+	hud_.Draw();
 }
 
 void PlayScene::Draw()

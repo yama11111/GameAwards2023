@@ -11,32 +11,35 @@ namespace YScene
 
 		// ----- テクスチャ ----- //
 
-		// 無地画像
-		UINT plainTex_ = 0;
+		UINT logoTex_ = 0;
+		
+		UINT backTex_ = 0;
+
+		std::array<UINT, 2> spaceKeyTex_ = { 0, 0 };
 
 		// ----- オーディオ ----- //
 
 		// ----- スプライト (2D) ----- //
 
-		// 画面全部
-		std::unique_ptr<YGame::Sprite2D> windowSpr_ = nullptr;
+		std::unique_ptr<YGame::Sprite2D> logoSpr_;
+
+		std::unique_ptr<YGame::Sprite2D> backSpr_;
+
+		std::array<std::unique_ptr<YGame::Sprite2D>, 2> spaceKeySpr_;
 
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
 
-		// 立方体モデル
-		std::unique_ptr<YGame::Model> cubeMod_ = nullptr;
-
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+		std::unique_ptr<YGame::Sprite2DObject> logoObj_;
 
-		// 転送用ライトグループ
-		std::unique_ptr<YGame::LightGroup> lightGroup_;
+		std::unique_ptr<YGame::Sprite2DObject> backObj_;
 
-		// 転送用ビュープロジェクション
-		YGame::ViewProjection transferVP_;
+		std::unique_ptr<YGame::Sprite2DObject> spaceKeyObj_;
+		bool isPush_ = false;
 
 #pragma endregion
 	public:

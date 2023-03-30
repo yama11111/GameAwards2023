@@ -118,9 +118,13 @@
     <ClCompile Include="Draw\Drawer\FilterDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GoalDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\HUDDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\IDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\InputDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\PauseDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\TitleDrawer.cpp" />
     <ClCompile Include="Draw\Particle\Effect.cpp" />
     <ClCompile Include="Draw\Particle\EffectManager.cpp" />
     <ClCompile Include="Draw\Particle\Particle.cpp" />
@@ -167,6 +171,7 @@
     <ClCompile Include="Scene\SelectScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Scene\YGameSceneFactory.cpp" />
+    <ClCompile Include="Scene\YGameTransitionFactory.cpp" />
     <ClCompile Include="Utillity\FileUtillity.cpp" />
     <ClCompile Include="Utillity\imgui\ImGuiManager.cpp" />
     <ClCompile Include="Utillity\Input\InputManager.cpp" />
@@ -208,9 +213,14 @@
     <ClInclude Include="Draw\Drawer\FilterDrawer.h" />
     <ClInclude Include="Draw\Drawer\GateDrawer.h" />
     <ClInclude Include="Draw\Drawer\GoalDrawer.h" />
+    <ClInclude Include="Draw\Drawer\HUDConfig.h" />
+    <ClInclude Include="Draw\Drawer\HUDDrawer.h" />
     <ClInclude Include="Draw\Drawer\IDrawer.h" />
+    <ClInclude Include="Draw\Drawer\InputDrawer.h" />
+    <ClInclude Include="Draw\Drawer\PauseDrawer.h" />
     <ClInclude Include="Draw\Drawer\PlayerDrawer.h" />
     <ClInclude Include="Draw\Drawer\SkydomeDrawer.h" />
+    <ClInclude Include="Draw\Drawer\TitleDrawer.h" />
     <ClInclude Include="Draw\Particle\Effect.h" />
     <ClInclude Include="Draw\Particle\EffectManager.h" />
     <ClInclude Include="Draw\Particle\Particle.h" />
@@ -252,6 +262,7 @@
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Scene\ISceneFactory.h" />
     <ClInclude Include="Scene\BaseScene.h" />
+    <ClInclude Include="Scene\ITransitionFactory.h" />
     <ClInclude Include="Scene\PlayScene.h" />
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="Scene\SceneManager.h" />
@@ -259,6 +270,7 @@
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Scene\YGameSceneFactory.h" />
     <ClInclude Include="Scene\TransitionConfig.h" />
+    <ClInclude Include="Scene\YGameTransitionFactory.h" />
     <ClInclude Include="Utillity\FileUtillity.h" />
     <ClInclude Include="Utillity\imgui\ImGuiManager.h" />
     <ClInclude Include="Utillity\Input\InputManager.h" />

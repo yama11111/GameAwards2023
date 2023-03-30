@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneManager.h"
+#include "TransitionManager.h"
 #include "YWindowsApp.h"
 #include "YDirectX.h"
 #include "ScreenDesc.h"
@@ -27,6 +28,8 @@ namespace YBase
 		ImGuiManager imguiMan_;
 		// シーンマネージャー
 		YScene::SceneManager* sceneMan_ = nullptr;
+		// シーン遷移マネージャー
+		YGame::TransitionManager* transitionMan_ = nullptr;
 		// 終了フラグ
 		bool isEnd_ = false;
 	public:

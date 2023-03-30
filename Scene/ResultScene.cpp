@@ -6,6 +6,7 @@
 #pragma region 名前空間宣言
 using YScene::ResultScene;
 using namespace YGame;
+using namespace YMath;
 #pragma endregion 
 
 #pragma region Static関連
@@ -16,25 +17,37 @@ void ResultScene::Load()
 {
 	// ----- テクスチャ ----- //
 
-	plainTex_ = spTexManager_->Load("white1x1.png", false);
+	// ロゴ
+	logoTex_ = spTexManager_->Load("Result/logo.png");
+
+	// 背景
+	backTex_ = spTexManager_->Load("Result/back.png");
+
+	// スペースキー
+	spaceKeyTex_[0] = spTexManager_->Load("UI/key_SPACE.png");
+	spaceKeyTex_[1] = spTexManager_->Load("UI/key_SPACE_PUSH.png");
+
 
 	// ----- オーディオ ----- //
 
-	//aA_ = pAudioManager_->Load("Resources/Audios/fanfare.wav");
-
 	// ----- スプライト (2D) ----- //
 
-	windowSpr_.reset(Sprite2D::Create({ WinSize }, { plainTex_ }));
+	// ロゴ
+	logoSpr_.reset(Sprite2D::Create({}, { logoTex_ }));
+
+	// 背景
+	backSpr_.reset(Sprite2D::Create({}, { backTex_ }));
+
+	// スペースキー
+	spaceKeySpr_[0].reset(Sprite2D::Create({}, { spaceKeyTex_[0] }));
+	spaceKeySpr_[1].reset(Sprite2D::Create({}, { spaceKeyTex_[1] }));
 
 	// ----- スプライト (3D) ----- //
 
-	//debriB_.reset(Sprite3D::Create(false));
-
 	// ------- モデル ------- //
 
-	cubeMod_.reset(Model::Create());
-
 	// ----- 静的初期化 ----- //
+
 }
 #pragma endregion
 
@@ -42,11 +55,13 @@ void ResultScene::Load()
 #pragma region 初期化
 void ResultScene::Initialize()
 {
-	// ライト初期化
-	lightGroup_.reset(LightGroup::Create());
+	logoObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f - 16.0f, 0.0f} }));
 
-	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
+	backObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} }));
+
+	spaceKeyObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f + 512.0f, WinSize.y_ / 2.0f + 304.0f, 0.0f}, {}, {2.0f,2.0f,1.0f} }));
+
+	isPush_ = false;
 }
 #pragma endregion
 
@@ -60,26 +75,17 @@ void ResultScene::Finalize()
 #pragma region 更新
 void ResultScene::Update()
 {
-	// ホットリロード
-	if (sKeys_->IsTrigger(DIK_L))
-	{
-
-	}
-
-	// リセット
-	if (sKeys_->IsTrigger(DIK_R))
-	{
-
-	}
-
 	// 次のシーンへ
-	if (sKeys_->IsTrigger(DIK_0))
+	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		SceneManager::GetInstance()->Change("TITLE");
+		isPush_ = true;
+
+		SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
 	}
 
-	// ビュープロジェクション
-	transferVP_.UpdateMatrix();
+	logoObj_->UpdateMatrix();
+	backObj_->UpdateMatrix();
+	spaceKeyObj_->UpdateMatrix();
 }
 #pragma endregion
 
@@ -87,6 +93,7 @@ void ResultScene::Update()
 #pragma region 描画
 void ResultScene::DrawBackSprite2Ds()
 {
+	backSpr_->Draw(backObj_.get());
 
 }
 
@@ -102,7 +109,8 @@ void ResultScene::DrawSprite3Ds()
 
 void ResultScene::DrawFrontSprite2Ds()
 {
-
+	logoSpr_->Draw(logoObj_.get());
+	spaceKeySpr_[isPush_]->Draw(spaceKeyObj_.get());
 }
 
 void ResultScene::Draw()

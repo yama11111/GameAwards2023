@@ -34,7 +34,7 @@ class GateDrawer :
 private:
 	// モデル用オブジェクト (子)
 	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
-	
+
 	// 透明色
 	std::unique_ptr<YGame::Color> invisibleColor_;
 public:

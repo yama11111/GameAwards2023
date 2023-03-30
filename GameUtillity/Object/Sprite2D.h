@@ -76,6 +76,7 @@ namespace YGame
 		// 設定用ステータス
 		struct Status
 		{
+			bool isDiv_ = true; // 画像サイズに合わせるか
 			YMath::Vector2 size_; // サイズ
 			YMath::Vector2 anchor_ = { 0.5f, 0.5f }; // アンカーポイント
 			bool isFlipX_ = false; // 左右反転
@@ -85,6 +86,7 @@ namespace YGame
 		struct TexStatus
 		{
 			UINT index_; // テクスチャインデックス
+			bool isDiv_ = true; // 画像サイズに合わせるか
 			YMath::Vector2 leftTop_ = { 0.0f,0.0f }; // テクスチャ左上
 			YMath::Vector2 size_ = { 0.0f,0.0f }; // テクスチャサイズ
 		};
@@ -93,6 +95,7 @@ namespace YGame
 		/// 生成
 		/// </summary>
 		/// <param name="status"> : スプライト設定</param>
+		/// <param name="(bool) isDiv_"> : 画像サイズに合わせるか</param>
 		/// <param name="(Vector2) status.size_"> : 大きさ</param>
 		/// <param name="(Vector2) status.anchor_"> : アンカーポイント (初期値は中心)</param>
 		/// <param name="(bool) status.isFlipX_"> : X反転するか</param>
@@ -100,12 +103,12 @@ namespace YGame
 		/// <param name="--------------------------------"></param>
 		/// <param name="texStatus"> : テクスチャ設定</param>
 		/// <param name="(UINT) texStatus.index_"> : テクスチャインデックス</param>
+		/// <param name="(bool) isDiv_"> : 画像サイズに合わせるか</param>
 		/// <param name="(Vector2) texStatus.leftTop_"> : テクスチャ左上</param>
 		/// <param name="(Vector2) texStatus.size_"> : テクスチャサイズ</param>
 		/// <param name="--------------------------------"></param>
-		/// <param name="isDiv"> : 画像サイズに合わせるか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Sprite2D* Create(const Status& status, const TexStatus& texStatus, const bool isDiv = false);
+		static Sprite2D* Create(const Status& status, const TexStatus& texStatus);
 	public:
 		/// <summary>
 		/// 描画
@@ -129,6 +132,7 @@ namespace YGame
 		/// 全設定
 		/// </summary>
 		/// <param name="status"> : スプライト設定</param>
+		/// <param name="(bool) isDiv_"> : 画像サイズに合わせるか</param>
 		/// <param name="(Vector2) status.size_"> : 大きさ</param>
 		/// <param name="(Vector2) status.anchor_"> : アンカーポイント(中心)</param>
 		/// <param name="(bool) status.isFlipX_"> : X反転するか</param>
@@ -136,11 +140,11 @@ namespace YGame
 		/// <param name="--------------------------------"></param>
 		/// <param name="texStatus"> : テクスチャ設定</param>
 		/// <param name="(UINT) texStatus.index_"> : テクスチャインデックス</param>
+		/// <param name="(bool) isDiv_"> : 画像サイズに合わせるか</param>
 		/// <param name="(Vector2) texStatus.leftTop_"> : テクスチャ左上</param>
 		/// <param name="(Vector2) texStatus.size_"> : テクスチャサイズ</param>
 		/// <param name="--------------------------------"></param>
-		/// <param name="isDiv"> : 画像サイズに合わせるか</param>
-		void SetAllStatus(const Status& status, const TexStatus& texStatus, const bool isDiv = false);
+		void SetAllStatus(const Status& status, const TexStatus& texStatus);
 		// 非表示設定
 		void SetInvisible(const bool isInvisible) { isInvisible_ = isInvisible; }
 	public:

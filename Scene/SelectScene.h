@@ -11,32 +11,16 @@ namespace YScene
 
 		// ----- テクスチャ ----- //
 
-		// 無地画像
-		UINT plainTex_ = 0;
-
 		// ----- オーディオ ----- //
 
 		// ----- スプライト (2D) ----- //
-
-		// 画面全部
-		std::unique_ptr<YGame::Sprite2D> windowSpr_ = nullptr;
 
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
 
-		// 立方体モデル
-		std::unique_ptr<YGame::Model> cubeMod_ = nullptr;
-
 #pragma endregion
 #pragma region ゲームオブジェクト
-
-
-		// 転送用ライトグループ
-		std::unique_ptr<YGame::LightGroup> lightGroup_;
-
-		// 転送用ビュープロジェクション
-		YGame::ViewProjection transferVP_;
 
 #pragma endregion
 	public:
