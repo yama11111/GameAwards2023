@@ -5,20 +5,31 @@
 
 #pragma region 名前空間
 
+using std::array;
+using std::unique_ptr;
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
+using namespace DrawerConfig::Goal;
 
 #pragma endregion
 
 #pragma region Static
 
+// インデックス
+static const size_t CoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Core); // 核
+
+
 // 静的 モデル配列 初期化
-std::array<std::unique_ptr<Model>, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::sModels_ =
-{ nullptr, nullptr, };
+array<unique_ptr<Model>, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::sModels_ =
+{
+	nullptr, nullptr,
+};
+
+// 静的ビュープロジェクション
 YGame::ViewProjection* GoalDrawerCommon::spVP_ = nullptr;
 
 void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
@@ -31,26 +42,21 @@ void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Cube)].reset(Model::Create());
-	sModels_[static_cast<size_t>(1)].reset(Model::Create());
+	sModels_[CoreIdx].reset(Model::Create("goal.png"));
+	sModels_[1].reset(Model::Create());
 }
 
 #pragma endregion
 
 void GoalDrawer::Initialize(YMath::Matrix4* pParent)
 {
-	// nullチェック
-	assert(pParent);
-
-	// オブジェクト生成 + 親行列挿入
-	core_.reset(new Transform());
-	core_->Initialize({});
-	core_->parent_ = pParent;
+	// 基底クラス初期化
+	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
@@ -60,42 +66,19 @@ void GoalDrawer::Initialize(YMath::Matrix4* pParent)
 
 void GoalDrawer::Reset()
 {
-	// 初期化
-	SlimeActor::Initialize();
+	// リセット
+	IDrawer::Reset(Mode::Red);
 
-	core_->Initialize({});
+	// ----- モデル用オブジェクト初期化 ----- //
 
-	for (size_t i = 0; i < modelObjs_.size(); i++)
-	{
-		modelObjs_[i]->Initialize({});
-	}
-
-	idleTim_.Initialize(DrawerConfig::Gate::Idle::IntervalTime);
-	idleTim_.SetActive(true);
+	// 核
+	modelObjs_[CoreIdx]->Initialize({});
 }
 
 void GoalDrawer::Update()
 {
-	// 立ちモーションタイマー更新
-	idleTim_.Update();
-
-	// タイマーが終わったら
-	if (idleTim_.IsEnd())
-	{
-		// 立ちモーション再生
-		IdleAnimation();
-		// タイマーリセット
-		idleTim_.Reset(true);
-	}
-
-	// 行列更新 (親)
-	core_->UpdateMatrix(
-		{
-			-SlimeActor::JiggleValue(),
-			{},
-			SlimeActor::JiggleValue()
-		}
-	);
+	// 基底クラス更新 
+	IDrawer::Update({});
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -107,10 +90,7 @@ void GoalDrawer::Update()
 void GoalDrawer::Draw()
 {
 	// 描画
-	for (size_t i = 0; i < sModels_.size(); i++)
-	{
-		sModels_[i]->Draw(modelObjs_[i].get());
-	}
+	sModels_[CoreIdx]->Draw(modelObjs_[CoreIdx].get());
 }
 
 void GoalDrawer::IdleAnimation()

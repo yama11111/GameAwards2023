@@ -5,7 +5,7 @@
 // フィルター描画用コモンクラス
 class FilterDrawerCommon
 {
-protected:
+public:
 	// パーツの名前
 	enum class Parts
 	{
@@ -45,14 +45,11 @@ public:
 	void Update();
 	// 描画
 	void Draw();
-public:
-	// 色替えアニメーション
-	void ChangeColorAnimation(const Mode& mode);
 private:
 	// 立ちモーション
 	void IdleAnimation() override;
 public:
-	~FilterDrawer() override = default;
+	~FilterDrawer() = default;
 };
 
 

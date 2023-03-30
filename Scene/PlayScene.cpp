@@ -58,18 +58,46 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
-	// プレイヤー
+	// ----- プレイヤー ----- //
+
+	// トランスフォーム (位置、回転、大きさ)
 	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
+	// 描画用クラス初期化 (親行列、向き、初期色)
 	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
 	
-	// フィルター
-	filter_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	
+	// ----- フィルター ----- //
+	
+	// トランスフォーム (位置、回転、大きさ)
+	filter_.Initialize({ {0.0f,0.0f,-10.0f}, {}, {5.0f,5.0f,5.0f} });
+	// 描画用クラス初期化 (親行列)
 	filterDra_.Initialize(&filter_.m_);
 
-	// ブロック
-	block_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	
+	// ----- ブロック ----- //
+	
+	// トランスフォーム (位置、回転、大きさ)
+	block_.Initialize({ {0.0f,-20.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	// 描画用クラス初期化 (親行列、初期色)
 	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Red);
+
+	
+	// ----- ゲート ----- //
+	
+	// トランスフォーム (位置、回転、大きさ)
+	gate_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	// 描画用クラス初期化 (親行列、初期色)
+	gateDra_.Initialize(&gate_.m_, IDrawer::Mode::Red);
+
+	
+	// ----- ゴール ----- //
+	
+	// トランスフォーム (位置、回転、大きさ)
+	goal_.Initialize({ {+20.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	// 描画用クラス初期化 (親行列)
+	goalDra_.Initialize(&goal_.m_);
 
 
 	// 天球初期化
@@ -122,6 +150,14 @@ void PlayScene::Update()
 	block_.UpdateMatrix();
 	blockDra_.Update();
 
+	// ゲート
+	gate_.UpdateMatrix();
+	gateDra_.Update();
+
+	// ゴール
+	goal_.UpdateMatrix();
+	goalDra_.Update();
+
 
 	// 天球更新
 	skydome_.Update();
@@ -157,6 +193,13 @@ void PlayScene::DrawModels()
 	
 	// ブロック前描画
 	blockDra_.PreDraw();
+	
+	// ゲート前描画
+	gateDra_.PreDraw();
+
+	// ゴール描画
+	goalDra_.Draw();
+
 
 	// パーティクル
 	particleMan_.Draw();
@@ -179,6 +222,9 @@ void PlayScene::DrawModels()
 	// ブロック後描画
 	blockDra_.PostDraw();
 	
+	// ゲート後描画
+	gateDra_.PostDraw();
+
 	// --------------- //
 }
 

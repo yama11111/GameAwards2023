@@ -4,6 +4,9 @@
 #include "PlayerDrawer.h"
 #include "FilterDrawer.h"
 #include "BlockDrawer.h"
+#include "GateDrawer.h"
+#include "GoalDrawer.h"
+
 #include "Skydome.h"
 #include "EffectManager.h"
 
@@ -39,15 +42,17 @@ namespace YScene
 
 		// プレイヤー
 		YGame::Transform player_;
-		// 向き
+		// 向き (プレイヤー用)
 		YMath::Vector3 direction_;
 		// プレイヤー描画クラス
 		PlayerDrawer playerDra_;
 		
+
 		// フィルター
 		YGame::Transform filter_;
 		// フィルター描画クラス
 		FilterDrawer filterDra_;
+
 
 		// ブロック
 		YGame::Transform block_;
@@ -55,9 +60,22 @@ namespace YScene
 		BlockDrawer blockDra_;
 
 
+		// ゲート
+		YGame::Transform gate_;
+		// ゲート描画クラス
+		GateDrawer gateDra_;
+
+
+		// ゴール
+		YGame::Transform goal_;
+		// ゴール描画クラス
+		GoalDrawer goalDra_;
+
+
 		// 天球
 		Skydome skydome_;
 		
+
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
 

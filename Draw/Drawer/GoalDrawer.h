@@ -1,17 +1,15 @@
 #pragma once
-#include "Model.h"
-#include "SlimeActor.h"
+#include "IDrawer.h"
 #include <array>
-#include <memory>
 
 // ゴール描画用コモンクラス
 class GoalDrawerCommon
 {
-protected:
+public:
 	// パーツの名前
 	enum class Parts
 	{
-		Cube, // 正方形
+		Core, // 核
 	};
 protected:
 	// パーツの総数
@@ -28,19 +26,13 @@ public:
 
 // ゴール描画用クラス
 class GoalDrawer :
-	private GoalDrawerCommon,
-	private YGame::SlimeActor
+	private IDrawer,
+	private GoalDrawerCommon
 {
 private:
-	// トランスフォーム 
-	std::unique_ptr<YGame::Transform> core_;
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
-	// 色
-	std::unique_ptr<YGame::Color> color_;
-	
-	// 立ちモーション用タイマー
-	YMath::Timer idleTim_;
+
 public:
 	/// <summary>
 	/// 初期化
@@ -53,10 +45,8 @@ public:
 	void Update();
 	// 描画
 	void Draw();
-public:
+private:
 	// 立ちモーション
-	void IdleAnimation();
-	// 色替えアニメーション
-	//void ChangeColor(const );
+	void IdleAnimation() override;
 };
 

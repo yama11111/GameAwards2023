@@ -5,6 +5,8 @@
 
 #pragma region 名前空間
 
+using std::array;
+using std::unique_ptr;
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
@@ -17,9 +19,17 @@ using namespace DrawerConfig::Filter;
 
 #pragma region Static
 
+// インデックス
+static const size_t MonitorIdx = static_cast<size_t>(FilterDrawerCommon::Parts::Monitor); // モニター
+
+
 // 静的 モデル配列 初期化
-std::array<std::unique_ptr<Model>, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::sModels_ =
-{ nullptr, nullptr, };
+array<unique_ptr<Model>, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::sModels_ =
+{
+	nullptr, nullptr, 
+};
+
+// 静的ビュープロジェクション
 YGame::ViewProjection* FilterDrawerCommon::spVP_ = nullptr;
 
 void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
@@ -32,8 +42,8 @@ void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Monitor)].reset(Model::Create());
-	sModels_[static_cast<size_t>(1)].reset(Model::Create());
+	sModels_[MonitorIdx].reset(Model::Create());
+	sModels_[1].reset(Model::Create());
 }
 
 #pragma endregion
@@ -62,9 +72,9 @@ void FilterDrawer::Reset()
 	// ----- モデル用オブジェクト初期化 ----- //
 	
 	// モニター
-	modelObjs_[static_cast<size_t>(Parts::Monitor)]->Initialize(
+	modelObjs_[MonitorIdx]->Initialize(
 		{
-			{0,0,-5.0f},
+			{0.0f,0.0f,0.0f},
 			{},
 			{1.0f,1.0f,0.0001f},
 		}
@@ -88,12 +98,7 @@ void FilterDrawer::Update()
 void FilterDrawer::Draw()
 {
 	// 描画
-	sModels_[static_cast<size_t>(Parts::Monitor)]->Draw(modelObjs_[static_cast<size_t>(Parts::Monitor)].get());
-}
-
-void FilterDrawer::ChangeColorAnimation(const Mode& mode)
-{
-	current_ = mode;
+	sModels_[MonitorIdx]->Draw(modelObjs_[MonitorIdx].get());
 }
 
 void FilterDrawer::IdleAnimation()

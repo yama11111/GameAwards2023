@@ -1,24 +1,24 @@
 #pragma once
-#include "Model.h"
-#include "SlimeActor.h"
+#include "IDrawer.h"
 #include <array>
-#include <memory>
 
 // ゲート描画用コモンクラス
 class GateDrawerCommon
 {
-protected:
+public:
 	// パーツの名前
 	enum class Parts
 	{
 		Frame, // 枠
 	};
 protected:
+	// モードの総数
+	static const size_t ModeNum_ = 3;
 	// パーツの総数
 	static const size_t PartsNum_ = 2;
 protected:
 	// モデル (パーツの数だけ)
-	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
+	static std::array<std::array<std::unique_ptr<YGame::Model>, PartsNum_>, ModeNum_> sModels_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:
@@ -28,35 +28,45 @@ public:
 
 // ゲート描画用クラス
 class GateDrawer :
-	private GateDrawerCommon,
-	private YGame::SlimeActor
+	private IDrawer,
+	private GateDrawerCommon
 {
 private:
-	// トランスフォーム 
-	std::unique_ptr<YGame::Transform> core_;
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
-	// 色
-	std::unique_ptr<YGame::Color> color_;
+	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
 	
-	// 立ちモーション用タイマー
-	YMath::Timer idleTim_;
+	// 透明色
+	std::unique_ptr<YGame::Color> invisibleColor_;
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親行列ポインタ (この行列に追従する)</param>
-	void Initialize(YMath::Matrix4* pParent);
-	// リセット (中身だけ初期化)
-	void Reset();
+	/// <param name="mode"> : 状態</param>
+	/// <param name="---------------------------------------------"></param>
+	/// <param name="Mode::Noraml"> : 通常状態</param>
+	/// <param name="Mode::Red"> : 赤色状態</param>
+	/// <param name="Mode::None"> : 無し (使わない)</param>
+	void Initialize(YMath::Matrix4* pParent, const Mode& mode);
+	/// <summary>
+	/// リセット (中身だけ初期化)
+	/// </summary>
+	/// <param name="mode"> : 状態</param>
+	/// <param name="---------------------------------------------"></param>
+	/// <param name="Mode::Noraml"> : 通常状態</param>
+	/// <param name="Mode::Red"> : 赤色状態</param>
+	/// <param name="Mode::None"> : 無し (使わない)</param>
+	void Reset(const Mode& mode);
 	// 更新
 	void Update();
-	// 描画
-	void Draw();
-public:
+	// 前方描画 (フィルターより 先 に呼ぶ)
+	void PreDraw();
+	// 後方描画 (フィルターより 後 に呼ぶ)
+	void PostDraw();
+private:
 	// 立ちモーション
-	void IdleAnimation();
-	// 色替えアニメーション
-	//void ChangeColor(const );
+	void IdleAnimation() override;
+public:
+	~GateDrawer() = default;
 };
 

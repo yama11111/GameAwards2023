@@ -64,10 +64,10 @@ public:
 	void PreDraw();
 	// 後方描画 (フィルターより 後 に呼ぶ)
 	void PostDraw();
-public:
+private:
 	// 立ちモーション
-	void IdleAnimation();
+	void IdleAnimation() override;
 public:
-	~BlockDrawer() override = default;
+	~BlockDrawer() = default;
 };
 

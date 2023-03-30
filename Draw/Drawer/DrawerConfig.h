@@ -3,6 +3,9 @@
 // 描画用クラス
 namespace DrawerConfig
 {
+	// 透明モデルの大きさ
+	const float InvisibleScale = 0.99f;
+
 	// プレイヤー
 	namespace Player 
 	{

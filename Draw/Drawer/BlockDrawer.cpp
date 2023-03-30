@@ -107,7 +107,12 @@ void BlockDrawer::Reset(const Mode& mode)
 			// ìßñæver
 			if (i == InvisibleIdx)
 			{
-				Vector3 scaleVal = { 0.99f,0.99f,0.99f };
+				Vector3 scaleVal = {
+					DrawerConfig::InvisibleScale,
+					DrawerConfig::InvisibleScale,
+					DrawerConfig::InvisibleScale
+				};
+
 				modelObjs_[i][j]->Initialize({ {},{},scaleVal });
 			}
 			// í èÌÅAê‘ver
@@ -117,8 +122,6 @@ void BlockDrawer::Reset(const Mode& mode)
 			}
 		}
 	}
-
-	current_ = mode;
 }
 
 void BlockDrawer::Update()
