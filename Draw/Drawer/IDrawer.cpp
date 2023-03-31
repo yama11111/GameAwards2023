@@ -19,15 +19,17 @@ void IDrawer::StaticInitialize(YGame::ParticleManager* pParticleMan)
 	spParticleMan_ = pParticleMan;
 }
 
-void IDrawer::Initialze(YMath::Matrix4* pParent, const Mode& mode, const UINT intervalTime)
+void IDrawer::Initialze(YGame::Transform* pParent, const Mode& mode, const UINT intervalTime)
 {
 	// nullチェック
 	assert(pParent);
+	// 代入
+	pParent_ = pParent;
 
 	// オブジェクト生成 + 親行列挿入
 	core_.reset(new Transform());
 	core_->Initialize({});
-	core_->parent_ = pParent;
+	core_->parent_ = &pParent->m_;
 
 	// 色生成
 	color_.reset(Color::Create());

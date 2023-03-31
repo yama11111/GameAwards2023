@@ -58,40 +58,40 @@ void PlayScene::Initialize()
 	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
 	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
-	// 描画用クラス初期化 (親行列、向き、初期色)
-	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
+	// 描画用クラス初期化 (親トランスフォーム、向き、初期色)
+	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
 	
 	
 	// ----- フィルター ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
 	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
-	// 描画用クラス初期化 (親行列)
-	filterDra_.Initialize(&filter_.m_);
+	// 描画用クラス初期化 (親トランスフォーム)
+	filterDra_.Initialize(&filter_);
 
 	
 	// ----- ブロック ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
 	block_.Initialize({ {0.0f,-20.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
-	// 描画用クラス初期化 (親行列、初期色)
-	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Red);
+	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	blockDra_.Initialize(&block_, IDrawer::Mode::Red);
 
 	
 	// ----- ゲート ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
 	gate_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
-	// 描画用クラス初期化 (親行列、初期色)
-	gateDra_.Initialize(&gate_.m_, IDrawer::Mode::Red);
+	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
 
 	
 	// ----- ゴール ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
 	goal_.Initialize({ {+20.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
-	// 描画用クラス初期化 (親行列)
-	goalDra_.Initialize(&goal_.m_);
+	// 描画用クラス初期化 (親トランスフォーム)
+	goalDra_.Initialize(&goal_);
 
 
 	// 天球初期化
@@ -140,8 +140,17 @@ void PlayScene::Update()
 	player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
 
 	player_.UpdateMatrix();
-	playerDra_.Update();
 	
+	if (sKeys_->IsTrigger(DIK_K))
+	{
+		playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
+	}
+	if (sKeys_->IsTrigger(DIK_L))
+	{
+		playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
+	}
+	playerDra_.Update();
+
 	// フィルター
 	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 2.0f;
 	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 2.0f;

@@ -48,7 +48,7 @@ void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 #pragma endregion
 
-void FilterDrawer::Initialize(YMath::Matrix4* pParent)
+void FilterDrawer::Initialize(YGame::Transform* pParent)
 {
 	// Šî’êƒNƒ‰ƒX‰Šú‰»
 	IDrawer::Initialze(pParent, Mode::Red, Idle::IntervalTime);

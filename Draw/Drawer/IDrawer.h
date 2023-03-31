@@ -27,9 +27,12 @@ protected:
 	
 	// 立ちモーション用タイマー
 	YMath::Timer idleTim_;
+	
+	// 親ポインタ
+	YGame::Transform* pParent_ = nullptr;
 protected:
 	// 初期化
-	void Initialze(YMath::Matrix4* pParent, const Mode& mode, const UINT intervalTime);
+	void Initialze(YGame::Transform* pParent, const Mode& mode, const UINT intervalTime);
 	// リセット
 	void Reset(const Mode& mode);
 	// 更新

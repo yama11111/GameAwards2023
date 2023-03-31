@@ -44,14 +44,14 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="pParent"> : 親行列ポインタ (この行列に追従する)</param>
+	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
 	/// <param name="pDirection"> : 向きポインタ (この向きに向く)</param>
 	/// <param name="mode"> : 状態</param>
 	/// <param name="---------------------------------------------"></param>
 	/// <param name="Mode::Noraml"> : 通常状態</param>
 	/// <param name="Mode::Red"> : 赤色状態</param>
 	/// <param name="Mode::None"> : 無し (使わない)</param>
-	void Initialize(YMath::Matrix4* pParent, YMath::Vector3* pDirection, const Mode& mode);
+	void Initialize(YGame::Transform* pParent, YMath::Vector3* pDirection, const Mode& mode);
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>

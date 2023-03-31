@@ -61,7 +61,7 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 #pragma endregion
 
-void GateDrawer::Initialize(YMath::Matrix4* pParent, const Mode& mode)
+void GateDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
 {
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
@@ -99,6 +99,9 @@ void GateDrawer::Reset(const Mode& mode)
 	// リセット
 	IDrawer::Reset(mode);
 
+	// 大きさ
+	Vector3 scale = { 0.25f,1.0f,1.0f };
+
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
@@ -108,17 +111,17 @@ void GateDrawer::Reset(const Mode& mode)
 			if (i == InvisibleIdx)
 			{
 				Vector3 scaleVal = { 
-					DrawerConfig::InvisibleScale,
+					scale.x_ - 0.01f,
 					DrawerConfig::InvisibleScale,
 					DrawerConfig::InvisibleScale 
 				};
 
-				modelObjs_[i][j]->Initialize({ {},{},scaleVal });
+				modelObjs_[i][j]->Initialize({ {}, {}, scaleVal });
 			}
 			// 通常、赤ver
 			else
 			{
-				modelObjs_[i][j]->Initialize({});
+				modelObjs_[i][j]->Initialize({ {}, {}, scale });
 			}
 		}
 	}

@@ -61,7 +61,7 @@ void BlockDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 #pragma endregion
 
-void BlockDrawer::Initialize(YMath::Matrix4* pParent, const Mode& mode)
+void BlockDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
 {
 	// Šî’êƒNƒ‰ƒX‰Šú‰»
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);

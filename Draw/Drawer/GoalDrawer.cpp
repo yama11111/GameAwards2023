@@ -48,7 +48,7 @@ void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 #pragma endregion
 
-void GoalDrawer::Initialize(YMath::Matrix4* pParent)
+void GoalDrawer::Initialize(YGame::Transform* pParent)
 {
 	// Šî’êƒNƒ‰ƒX‰Šú‰»
 	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);

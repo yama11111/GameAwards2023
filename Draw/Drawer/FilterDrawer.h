@@ -37,8 +37,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="pParent"> : 親行列ポインタ (この行列に追従する)</param>
-	void Initialize(YMath::Matrix4* pParent);
+	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
+	void Initialize(YGame::Transform* pParent);
 	// リセット (中身だけ初期化)
 	void Reset();
 	// 更新
