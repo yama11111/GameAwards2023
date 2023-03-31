@@ -51,7 +51,7 @@ namespace YScene
 
 
 		// ブロック個数
-		static const size_t idx = 10;
+		static const size_t idx = 20;
 		// ブロック
 		std::array<YGame::Transform, idx> block_;
 		// ブロック描画クラス

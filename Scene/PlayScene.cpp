@@ -68,7 +68,7 @@ void PlayScene::Initialize()
 	// ----- フィルター ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
-	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {12.0f,8.0f,1.0f} });
+	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {6.0f,4.0f,1.0f} });
 	// 描画用クラス初期化 (親トランスフォーム)
 	filterDra_.Initialize(&filter_);
 
@@ -78,7 +78,7 @@ void PlayScene::Initialize()
 	for (size_t i = 0; i < idx - 1; i++)
 	{
 		// トランスフォーム (位置、回転、大きさ)
-		block_[i].Initialize({{-60.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
+		block_[i].Initialize({{-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
 		// 描画用クラス初期化 (親トランスフォーム、初期色)
 		blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
 	}
@@ -115,7 +115,7 @@ void PlayScene::Initialize()
 	particleMan_.Initialize();
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({ {0,+5,-100} });
+	transferVP_.Initialize({ {0,0,-50} });
 }
 #pragma endregion
 
