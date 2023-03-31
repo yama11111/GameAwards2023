@@ -189,7 +189,7 @@ void PlayScene::Update()
 	YMath::Vector3 playerPosFold = player.player_.pos_ * 2;
 	YMath::Vector3 filterPosFold = filter.filter_.pos_ * 2;
 
-	//Transform posP, Vector2 sizePRL, Vector2 sizePUD, Transform posF, Vector2 sizeF, Vector2 DS, Vector2 AW
+	////Transform posP, Vector2 sizePRL, Vector2 sizePUD, Transform posF, Vector2 sizeF, Vector2 DS, Vector2 AW
 	player.player_.pos_ =
 		BoxCollision(
 			player.player_.pos_,

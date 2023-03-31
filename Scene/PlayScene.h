@@ -40,27 +40,13 @@ namespace YScene
 #pragma endregion
 #pragma region ゲームオブジェクト
 
-		//// プレイヤー
-		//YGame::Transform player_;
-		//// 向き
-		//YMath::Vector3 direction_;
-		//// プレイヤー描画クラス
-		//PlayerDrawer playerDra_;
-
+		// プレイヤー
 		Player player;
 
-		//// フィルター
-		//YGame::Transform filter_;
-		//// フィルター描画クラス
-		//FilterDrawer filterDra_;
-
+		// フィルター
 		Filter filter;
 
-		//// ブロック
-		//YGame::Transform block_;
-		//// ブロック描画クラス
-		//BlockDrawer blockDra_;
-
+		// ブロック
 		Block block;
 
 		// 天球
