@@ -74,13 +74,16 @@ void FilterDrawer::Reset()
 	// モニター
 	modelObjs_[MonitorIdx]->Initialize(
 		{
-			{0.0f,0.0f,-1.0f},
+			{0.0f,0.0f,-4.0f},
 			{},
 			{1.0f,1.0f,0.0001f},
 		}
 	);
 
 	color_->SetRGBA({ 1.0f,0.0f,0.0f,0.25f });
+
+	// フィルターと衝突しているか初期化
+	isCollPlayer_ = false;
 }
 
 void FilterDrawer::Update()
@@ -92,6 +95,20 @@ void FilterDrawer::Update()
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i]->UpdateMatrix();
+	}
+
+
+	// フィルター操作 && プレイヤーと衝突していたら
+	if (*spIsPlayer_ == false && isCollPlayer_)
+	{
+		// 色を変える
+		color_->SetRGB(BadColor);
+	}
+	// 違うなら
+	else
+	{
+		// デフォルトの色に
+		color_->SetRGB({ 1.0f,0.0f,0.0f });
 	}
 }
 

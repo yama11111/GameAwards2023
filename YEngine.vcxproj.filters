@@ -632,9 +632,6 @@
     <ClInclude Include="Draw\Drawer\DrawerManager.h">
       <Filter>Draw\Drawer\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\IDrawer.h">
-      <Filter>Draw\Drawer\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Draw\Stuff\Buildings.h">
       <Filter>Draw\Stuff</Filter>
     </ClInclude>
@@ -682,6 +679,9 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\InputDrawer.h">
       <Filter>Draw\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\IDrawer.h">
+      <Filter>Draw\Drawer\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -77,16 +77,20 @@ void PlayerDrawer::Initialize(YGame::Transform* pParent, Vector3* pDirection, co
 	{
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
-			// 透明ver
+			// 色ポインタ
+			Color* pColor = color_.get();
+
+			// 透明なら
 			if (i == InvisibleIdx)
 			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, invisibleColor_.get(), nullptr));
+				// 透明色ポインタを入れる
+				pColor = invisibleColor_.get();
 			}
-			// 通常、赤ver
-			else
-			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
-			}
+
+			// 生成
+			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, pColor, nullptr));
+			
+			// 親行列代入
 			modelObjs_[i][j]->parent_ = &core_->m_;
 		}
 	}
@@ -108,24 +112,23 @@ void PlayerDrawer::Reset(const Mode& mode)
 	{
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
-			// 透明ver
+			// 大きさ
+			Vector3 scale = DefScale;
+
+			// 透明なら
 			if (i == InvisibleIdx)
 			{
-				Vector3 scaleVal = {
-					DrawerConfig::InvisibleScale,
-					DrawerConfig::InvisibleScale,
-					DrawerConfig::InvisibleScale
-				};
+				// 大きさ調整
+				scale *= DrawerConfig::InvisibleScale;
+			}
 
-				modelObjs_[i][j]->Initialize({ {},{},scaleVal });
-			}
-			// 通常、赤ver
-			else
-			{
-				modelObjs_[i][j]->Initialize({});
-			}
+			// 初期化
+			modelObjs_[i][j]->Initialize({ {}, {}, scale });
 		}
 	}
+
+	// フィルターと衝突しているか初期化
+	isCollFilter_ = false;
 }
 
 void PlayerDrawer::Update()
@@ -149,6 +152,20 @@ void PlayerDrawer::Update()
 		{
 			modelObjs_[i][j]->UpdateMatrix();
 		}
+	}
+
+
+	// フィルター操作 && フィルターと衝突していたら
+	if (*spIsPlayer_ == false && isCollFilter_)
+	{
+		// 色を変える
+		invisibleColor_->SetRGB(BadColor);
+	}
+	// 違うなら
+	else
+	{
+		// デフォルトの色に
+		invisibleColor_->SetRGB({ 1.0f,1.0f,1.0f });
 	}
 }
 

@@ -10,12 +10,15 @@ using YGame::SlimeActor;
 #pragma endregion
 
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
+bool* IDrawer::spIsPlayer_ = nullptr;
 
-void IDrawer::StaticInitialize(YGame::ParticleManager* pParticleMan)
+void IDrawer::StaticInitialize(bool* pIsPlayer, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
+	assert(pIsPlayer);
 	assert(pParticleMan);
 	// 代入
+	spIsPlayer_ = pIsPlayer;
 	spParticleMan_ = pParticleMan;
 }
 

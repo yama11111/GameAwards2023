@@ -100,7 +100,7 @@ void GateDrawer::Reset(const Mode& mode)
 	IDrawer::Reset(mode);
 
 	// 大きさ
-	Vector3 scale = { 0.25f,1.0f,1.0f };
+	Vector3 scale = { 0.25f,2.0f,1.0f };
 
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -112,7 +112,7 @@ void GateDrawer::Reset(const Mode& mode)
 			{
 				Vector3 scaleVal = { 
 					scale.x_ - 0.01f,
-					DrawerConfig::InvisibleScale,
+					scale.y_ - 0.01f,
 					DrawerConfig::InvisibleScale 
 				};
 

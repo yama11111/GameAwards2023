@@ -8,10 +8,11 @@
 #include "BlockDrawer.h"
 #include "BuildingDrawer.h"
 #include "SkydomeDrawer.h"
+#include "hUDDrawer.h"
 
 using YGame::Model;
 
-void DrawerManager::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
+void DrawerManager::StaticInitialize(bool* pIsPlayer, YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pVP);
@@ -19,7 +20,7 @@ void DrawerManager::StaticInitialize(YGame::ViewProjection* pVP, YGame::Particle
 	// ----- 静的初期化 ----- // 
 	
 	// 基底クラス
-	IDrawer::StaticInitialize(pParticleMan);
+	IDrawer::StaticInitialize(pIsPlayer, pParticleMan);
 
 	// プレイヤー
 	PlayerDrawerCommon::StaticInitialize(pVP);
@@ -41,4 +42,7 @@ void DrawerManager::StaticInitialize(YGame::ViewProjection* pVP, YGame::Particle
 	
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize();
+
+	// HUD
+	HUDDrawerCommon::StaticInitialize();
 }

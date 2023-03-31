@@ -43,9 +43,11 @@ protected:
 protected:
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
+	// 静的プレイヤーフラグポインタ
+	static bool* spIsPlayer_;
 public:
 	// 静的初期化
-	static void StaticInitialize(YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(bool* pIsPlayer, YGame::ParticleManager* pParticleMan);
 public:
 	virtual ~IDrawer() = default;
 };

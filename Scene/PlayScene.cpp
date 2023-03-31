@@ -41,10 +41,7 @@ void PlayScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
-
-	// HUD
-	HUDDrawerCommon::StaticInitialize();
+	DrawerManager::StaticInitialize(&isPlayer_, &transferVP_, &particleMan_);
 }
 #pragma endregion
 
@@ -52,10 +49,16 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
+	// プレイヤー操作初期化
+	isPlayer_ = true;
+
+	float scaleVal = 1.0f;
+	Vector3 scale = { scaleVal,scaleVal,scaleVal };
+
 	// ----- プレイヤー ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	player_.Initialize({ {-50.0f,0.0f,0.0f}, {}, scale * 2.0f });
 	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
 	// 描画用クラス初期化 (親トランスフォーム、向き、初期色)
@@ -65,23 +68,31 @@ void PlayScene::Initialize()
 	// ----- フィルター ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
-	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {12.0f,8.0f,1.0f} });
 	// 描画用クラス初期化 (親トランスフォーム)
 	filterDra_.Initialize(&filter_);
 
 	
 	// ----- ブロック ----- //
 	
+	for (size_t i = 0; i < idx - 1; i++)
+	{
+		// トランスフォーム (位置、回転、大きさ)
+		block_[i].Initialize({{-60.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
+		// 描画用クラス初期化 (親トランスフォーム、初期色)
+		blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
+	}
+
 	// トランスフォーム (位置、回転、大きさ)
-	block_.Initialize({ {0.0f,-20.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	blockDra_.Initialize(&block_, IDrawer::Mode::Red);
+	blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
 
 	
 	// ----- ゲート ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
-	gate_.Initialize({ {0.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム、初期色)
 	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
 
@@ -89,7 +100,7 @@ void PlayScene::Initialize()
 	// ----- ゴール ----- //
 	
 	// トランスフォーム (位置、回転、大きさ)
-	goal_.Initialize({ {+20.0f,0.0f,0.0f}, {}, {5.0f,5.0f,5.0f} });
+	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム)
 	goalDra_.Initialize(&goal_);
 
@@ -104,7 +115,7 @@ void PlayScene::Initialize()
 	particleMan_.Initialize();
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({ {0,0,-100} });
+	transferVP_.Initialize({ {0,+5,-100} });
 }
 #pragma endregion
 
@@ -118,27 +129,28 @@ void PlayScene::Finalize()
 #pragma region 更新
 void PlayScene::Update()
 {
-	// リセット
-	if (sKeys_->IsTrigger(DIK_R))
-	{
-	}
-
 	// HUD更新
 	hud_.Update();
 
 	// ポーズ中なら弾く
 	if (hud_.IsPause()) { return; }
 
-	// 次のシーンへ
-	if (sKeys_->IsTrigger(DIK_0))
+
+	// 操作切り替え
+	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
+		isPlayer_ = !isPlayer_;
+		if (isPlayer_) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
 	}
 
-	// プレイヤー
-	player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-	player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
 
+	// プレイヤー
+	if (isPlayer_)
+	{
+		player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+		player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+	}
 	player_.UpdateMatrix();
 	
 	if (sKeys_->IsTrigger(DIK_K))
@@ -151,20 +163,41 @@ void PlayScene::Update()
 	}
 	playerDra_.Update();
 
+
 	// フィルター
-	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 2.0f;
-	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 2.0f;
+	if (isPlayer_ == false)
+	{
+		filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+		filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+	}
 
 	filter_.UpdateMatrix();
 	filterDra_.Update();
 
+	// 衝突
+	if (sKeys_->IsTrigger(DIK_N))
+	{
+		playerDra_.SetIsCollFilter(true);
+		filterDra_.SetIsCollPlayer(true);
+	}
+	if (sKeys_->IsTrigger(DIK_M))
+	{
+		playerDra_.SetIsCollFilter(false);
+		filterDra_.SetIsCollPlayer(false);
+	}
+
 	// ブロック
-	block_.UpdateMatrix();
-	blockDra_.Update();
+	for (size_t i = 0; i < idx; i++)
+	{
+		block_[i].UpdateMatrix();
+		blockDra_[i].Update();
+	}
+
 
 	// ゲート
 	gate_.UpdateMatrix();
 	gateDra_.Update();
+
 
 	// ゴール
 	goal_.UpdateMatrix();
@@ -174,11 +207,20 @@ void PlayScene::Update()
 	// 天球更新
 	skydome_.Update();
 
+
 	// パーティクル更新
 	particleMan_.Update();
 
+
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
+
+
+	// 次のシーンへ
+	if (sKeys_->IsTrigger(DIK_0))
+	{
+		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
+	}
 }
 #pragma endregion
 
@@ -204,8 +246,10 @@ void PlayScene::DrawModels()
 	playerDra_.PreDraw();
 	
 	// ブロック前描画
-	blockDra_.PreDraw();
-	
+	for (size_t i = 0; i < idx; i++)
+	{
+		blockDra_[i].PreDraw();
+	}
 	// ゲート前描画
 	gateDra_.PreDraw();
 
@@ -232,8 +276,10 @@ void PlayScene::DrawModels()
 	playerDra_.PostDraw();
 	
 	// ブロック後描画
-	blockDra_.PostDraw();
-	
+	for (size_t i = 0; i < idx; i++)
+	{
+		blockDra_[i].PostDraw();
+	}
 	// ゲート後描画
 	gateDra_.PostDraw();
 

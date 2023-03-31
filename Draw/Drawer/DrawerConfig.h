@@ -1,14 +1,21 @@
 #pragma once
+#include "Vector3.h"
 
 // 描画用クラス
 namespace DrawerConfig
 {
 	// 透明モデルの大きさ
-	const float InvisibleScale = 0.99f;
+	const float InvisibleScale = 0.95f;
 
 	// プレイヤー
 	namespace Player 
 	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
+		// 置けないときの色
+		const YMath::Vector3 BadColor = { 1.0f,0.0f,1.0f };
+
 		// 立ちモーション
 		namespace Idle
 		{
@@ -67,6 +74,12 @@ namespace DrawerConfig
 	// フィルター
 	namespace Filter 
 	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
+		// 置けないときの色
+		const YMath::Vector3 BadColor = { 0.1f,0.1f,0.1f };
+
 		// 立ちモーション
 		namespace Idle
 		{
@@ -78,6 +91,9 @@ namespace DrawerConfig
 	// ブロック
 	namespace Block
 	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
 		// 立ちモーション
 		namespace Idle
 		{
@@ -89,6 +105,9 @@ namespace DrawerConfig
 	// ゲート
 	namespace Gate
 	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
 		// 立ちモーション
 		namespace Idle
 		{
@@ -100,6 +119,9 @@ namespace DrawerConfig
 	// ゴール
 	namespace Goal
 	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
 		// 立ちモーション
 		namespace Idle
 		{

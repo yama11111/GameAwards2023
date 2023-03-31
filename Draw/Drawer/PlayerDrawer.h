@@ -40,6 +40,9 @@ private:
 
 	// 向きポインタ
 	YMath::Vector3* pDirection_ = nullptr;
+
+	// フィルターと衝突しているか
+	bool isCollFilter_ = false;
 public:
 	/// <summary>
 	/// 初期化
@@ -67,6 +70,9 @@ public:
 	void PreDraw();
 	// 後方描画 (フィルターより 後 に呼ぶ)
 	void PostDraw();
+public:
+	// フィルターと衝突しているか設定
+	void SetIsCollFilter(const bool isCollFilter) { isCollFilter_ = isCollFilter; }
 public:
 	// ジャンプモーション
 	void JumpAnimation();

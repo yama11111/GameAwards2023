@@ -32,6 +32,10 @@ namespace YScene
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+		// プレイヤー操作か
+		bool isPlayer_ = true;
+		
+
 		// プレイヤー
 		YGame::Transform player_;
 		// 向き (プレイヤー用)
@@ -46,10 +50,12 @@ namespace YScene
 		FilterDrawer filterDra_;
 
 
+		// ブロック個数
+		static const size_t idx = 10;
 		// ブロック
-		YGame::Transform block_;
+		std::array<YGame::Transform, idx> block_;
 		// ブロック描画クラス
-		BlockDrawer blockDra_;
+		std::array<BlockDrawer, idx> blockDra_;
 
 
 		// ゲート
