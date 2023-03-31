@@ -47,7 +47,9 @@ namespace YScene
 		Filter filter;
 
 		// ブロック
-		Block block;
+		Block block[20];
+
+		const int blockCount = 2;
 
 		// 天球
 		Skydome skydome_;
@@ -61,12 +63,12 @@ namespace YScene
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
 
-		YMath::Vector2 RL = { 0.0f,0.0f };;
-		YMath::Vector2 WS = { 0.0f,0.0f };;
-		YMath::Vector2 filterSize = { 0.0f,0.0f };;
+		YMath::Vector2 RL = { 0.0f,0.0f };
+		YMath::Vector2 WS = { 0.0f,0.0f };
+		YMath::Vector2 filterSize = { 0.0f,0.0f };
 
-		YMath::Vector2 DS = { 0.0f,0.0f };;
-		YMath::Vector2 AW = { 0.0f,0.0f };;
+		YMath::Vector2 DS = { 0.0f,0.0f };
+		YMath::Vector2 AW = { 0.0f,0.0f };
 
 
 #pragma endregion

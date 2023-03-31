@@ -110,7 +110,13 @@ void PlayScene::Initialize()
 	filter.Inilialize();
 
 	// ブロック
-	block.Inilialize();
+	for (int i = 0; i < blockCount; i++)
+	{
+		block[i].Inilialize();
+		block[i].block_.pos_.x_ = (i - (blockCount / 2)) * 12;
+		block[i].block_.scale_.x_ = 2;
+		block[i].block_.scale_.y_ = 2;
+	}
 
 	// 天球初期化
 	skydome_.Initialize();
@@ -184,7 +190,10 @@ void PlayScene::Update()
 	filter.Update();
 
 	// ブロック
-	block.Update();
+	for (int i = 0; i < blockCount; i++)
+	{
+		block[i].Update();
+	}
 
 	YMath::Vector3 playerPosFold = player.player_.pos_ * 2;
 	YMath::Vector3 filterPosFold = filter.filter_.pos_ * 2;
@@ -200,6 +209,24 @@ void PlayScene::Update()
 			DS,
 			AW
 		);
+
+	for (int i = 0; i < blockCount; i++)
+	{
+		YMath::Vector2 BlockSize;
+		BlockSize.x_ = block[i].block_.scale_.x_;
+		BlockSize.y_ = block[i].block_.scale_.y_;
+
+		player.player_.pos_ =
+			BoxCollision(
+				player.player_.pos_,
+				RL,
+				WS,
+				block[i].block_.pos_,
+				BlockSize,
+				DS,
+				AW
+			);
+	}
 
 	// 天球更新
 	skydome_.Update();
@@ -234,7 +261,10 @@ void PlayScene::DrawModels()
 	player.playerDra_.PreDraw();
 
 	// ブロック前描画
-	block.blockDra_.PreDraw();
+	for (int i = 0; i < blockCount; i++)
+	{
+		block[i].blockDra_.PostDraw();
+	}
 
 	// パーティクル
 	particleMan_.Draw();
@@ -255,7 +285,10 @@ void PlayScene::DrawModels()
 	player.playerDra_.PostDraw();
 
 	// ブロック後描画
-	block.blockDra_.PostDraw();
+	for (int i = 0; i < blockCount; i++)
+	{
+		block[i].blockDra_.PostDraw();
+	}
 
 	// --------------- //
 }
