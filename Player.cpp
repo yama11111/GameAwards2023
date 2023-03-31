@@ -2,6 +2,13 @@
 
 Player::Player()
 {
+	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	direction_ = { +1.0f,0.0f,0.0f };
+	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
+
+	player_.scale_.x_ = 4.0f;
+	player_.scale_.y_ = 8.0f;
+
 	//位置
 	playerPos.x_ = 300;
 	playerPos.y_ = 400;
@@ -50,6 +57,11 @@ Player::~Player()
 
 void Player::Inilialize()
 {
+	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	direction_ = { +1.0f,0.0f,0.0f };
+	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
+
+
 	//位置
 	playerPos.x_ = 300;
 	playerPos.y_ = 400;
@@ -147,11 +159,11 @@ void Player::Update()
 
 	sukeF = false;
 
-	//プレイヤーの上下左右
-	float p_top = playerCheckPos.y_ - playerCheckSize.y_;
-	float p_bottom = playerCheckPos.y_ + playerCheckSize.y_;
-	float p_right = playerCheckPos.x_ + playerCheckSize.x_;
-	float p_left = playerCheckPos.x_ - playerCheckSize.x_;
+	////プレイヤーの上下左右
+	//float p_top = playerCheckPos.y_ - playerCheckSize.y_;
+	//float p_bottom = playerCheckPos.y_ + playerCheckSize.y_;
+	//float p_right = playerCheckPos.x_ + playerCheckSize.x_;
+	//float p_left = playerCheckPos.x_ - playerCheckSize.x_;
 
 	////フィルターの上下左右
 	//float f_top = filterPos.y - filterSize.y;
@@ -529,9 +541,12 @@ void Player::Update()
 	//	filterPos.y += (CheckHitKey(KEY_INPUT_S) - CheckHitKey(KEY_INPUT_W)) * moveSpd;
 	//}
 
+
+	player_.UpdateMatrix();
+	playerDra_.Update();
 }
 
 void Player::Draw()
 {
-	
+
 }

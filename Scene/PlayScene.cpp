@@ -19,6 +19,51 @@ using namespace YGame;
 #pragma region Static関連
 #pragma endregion 
 
+YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP;
+	YMath::Vector3 nowPosF = posF;
+
+	//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - sizePUD.x_;
+	float p_bottom = nowPosP.y_ + sizePUD.y_;
+	float p_right = nowPosP.x_ + sizePRL.x_;
+	float p_left = nowPosP.x_ - sizePRL.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - sizeF.y_;
+	float f_bottom = nowPosF.y_ + sizeF.y_;
+	float f_right = nowPosF.x_ + sizeF.x_;
+	float f_left = nowPosF.x_ - sizeF.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_;
+			nowPosP.y_ -= DS.y_;
+
+			nowPosP.x_ += AW.x_;
+			nowPosP.y_ += AW.y_;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - sizePUD.x_;
+			p_bottom = nowPosP.y_ + sizePUD.y_;
+			p_right = nowPosP.x_ + sizePRL.x_;
+			p_left = nowPosP.x_ - sizePRL.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
 #pragma region 読み込み
 void PlayScene::Load()
 {
@@ -36,7 +81,7 @@ void PlayScene::Load()
 
 	// ----- スプライト (3D) ----- //
 
-	
+
 	// ------- モデル ------- //
 
 	cubeMod_.reset(Model::Create());
@@ -59,22 +104,17 @@ void PlayScene::Load()
 void PlayScene::Initialize()
 {
 	// プレイヤー
-	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
-	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
-	
+	player.Inilialize();
+
 	// フィルター
-	filter_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
-	filterDra_.Initialize(&filter_.m_);
+	filter.Inilialize();
 
 	// ブロック
-	block_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
-	blockDra_.Initialize(&block_.m_, IDrawer::Mode::Red);
-
+	block.Inilialize();
 
 	// 天球初期化
 	skydome_.Initialize();
-	
+
 	// パーティクル初期化
 	particleMan_.Initialize();
 
@@ -106,23 +146,60 @@ void PlayScene::Update()
 	}
 
 	// プレイヤー
-	player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-	player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+	player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+	player.player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
 
-	player_.UpdateMatrix();
-	playerDra_.Update();
-	
 	// フィルター
-	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 2.0f;
-	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 2.0f;
+	filter.filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 2.0f;
+	filter.filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 2.0f;
 
-	filter_.UpdateMatrix();
-	filterDra_.Update();
+	RL.x_ = player.player_.scale_.x_ * 2.0f;
+	RL.y_ = player.player_.scale_.x_ * 2.0f;
+
+	WS.x_ = player.player_.scale_.y_ * 2.0f;
+	WS.y_ = player.player_.scale_.y_ * 2.0f;
+
+	filterSize.x_ = filter.filter_.scale_.x_ * 2.0f;
+	filterSize.y_ = filter.filter_.scale_.y_ * 2.0f;
+
+	DS.x_ = (float)sKeys_->IsRight(Keys::MoveStandard::WASD);
+	DS.y_ = (float)sKeys_->IsUp(Keys::MoveStandard::WASD);
+	AW.x_ = (float)sKeys_->IsLeft(Keys::MoveStandard::WASD);
+	AW.y_ = (float)sKeys_->IsUnder(Keys::MoveStandard::WASD);
+
+	/*DS.x_ = (float)sKeys_->IsRight(Keys::MoveStandard::WASD) || (float)sKeys_->IsRight(Keys::MoveStandard::Arrow);
+	DS.y_ = (float)sKeys_->IsUp(Keys::MoveStandard::WASD) || (float)sKeys_->IsUp(Keys::MoveStandard::Arrow);
+	AW.x_ = (float)sKeys_->IsLeft(Keys::MoveStandard::WASD) || (float)sKeys_->IsLeft(Keys::MoveStandard::Arrow);
+	AW.y_ = (float)sKeys_->IsUnder(Keys::MoveStandard::WASD) || (float)sKeys_->IsUnder(Keys::MoveStandard::Arrow);*/
+
+	/*DS.x_ = 0;
+	DS.y_ = 1;
+	AW.x_ = 0;
+	AW.y_ = 0;*/
+
+	// プレイヤー
+	player.Update();
+
+	// フィルター
+	filter.Update();
 
 	// ブロック
-	block_.UpdateMatrix();
-	blockDra_.Update();
+	block.Update();
 
+	YMath::Vector3 playerPosFold = player.player_.pos_ * 2;
+	YMath::Vector3 filterPosFold = filter.filter_.pos_ * 2;
+
+	//Transform posP, Vector2 sizePRL, Vector2 sizePUD, Transform posF, Vector2 sizeF, Vector2 DS, Vector2 AW
+	player.player_.pos_ =
+		BoxCollision(
+			player.player_.pos_,
+			RL,
+			WS,
+			filter.filter_.pos_,
+			filterSize,
+			DS,
+			AW
+		);
 
 	// 天球更新
 	skydome_.Update();
@@ -139,7 +216,7 @@ void PlayScene::Update()
 #pragma region 描画
 void PlayScene::DrawBackSprite2Ds()
 {
-	
+
 }
 
 void PlayScene::DrawBackSprite3Ds()
@@ -152,12 +229,12 @@ void PlayScene::DrawModels()
 	skydome_.Draw();
 
 	// ----- Pre ----- // 
-	
+
 	// プレイヤー前描画
-	playerDra_.PreDraw();
-	
+	player.playerDra_.PreDraw();
+
 	// ブロック前描画
-	blockDra_.PreDraw();
+	block.blockDra_.PreDraw();
 
 	// パーティクル
 	particleMan_.Draw();
@@ -169,16 +246,16 @@ void PlayScene::DrawModels()
 
 
 	// フィルター描画
-	filterDra_.Draw();
+	filter.filterDra_.Draw();
 
 
 	// ----- Post ----- //
-	
+
 	// プレイヤー後描画
-	playerDra_.PostDraw();
-	
+	player.playerDra_.PostDraw();
+
 	// ブロック後描画
-	blockDra_.PostDraw();
+	block.blockDra_.PostDraw();
 
 	// --------------- //
 }
@@ -224,7 +301,7 @@ void PlayScene::Draw()
 	// ----- 前景スプライト2D ----- //
 
 	DrawFrontSprite2Ds();
-	
+
 	// -------------------------- //
 }
 #pragma endregion

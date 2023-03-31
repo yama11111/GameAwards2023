@@ -375,6 +375,9 @@
     <ClCompile Include="Filter.cpp">
       <Filter>GameUtil\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>GameUtil\Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -651,6 +654,9 @@
       <Filter>GameUtil\Main</Filter>
     </ClInclude>
     <ClInclude Include="Filter.h">
+      <Filter>GameUtil\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
       <Filter>GameUtil\Main</Filter>
     </ClInclude>
   </ItemGroup>

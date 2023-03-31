@@ -110,6 +110,7 @@
     <ClCompile Include="Base\DX\YDirectX.cpp" />
     <ClCompile Include="Base\YFramework.cpp" />
     <ClCompile Include="Base\YWindowsApp.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Draw\Actor\DeadActor.cpp" />
     <ClCompile Include="Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Base\DX\YDirectX.h" />
     <ClInclude Include="Base\YFramework.h" />
     <ClInclude Include="Base\YWindowsApp.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Def.h" />
     <ClInclude Include="Draw\Actor\DeadActor.h" />
     <ClInclude Include="Draw\Actor\SlimeActor.h" />

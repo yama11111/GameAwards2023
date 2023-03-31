@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector2.h"
+#include "PlayerDrawer.h"
 
 class Player
 {
@@ -27,8 +28,15 @@ private:
 	//フィルターの角に当たっているかどうか
 	bool kadoF = false;
 	//corner
-
 public:
+
+	// プレイヤー
+	YGame::Transform player_;
+	// 向き
+	YMath::Vector3 direction_;
+	// プレイヤー描画クラス
+	PlayerDrawer playerDra_;
+
 	Player();
 	~Player();
 
