@@ -10,10 +10,13 @@ public:
 	enum class Parts
 	{
 		Core, // 核
+		Inside, // 内枠
+		Outside, // 外枠
+		Base, // 台座
 	};
 protected:
 	// パーツの総数
-	static const size_t PartsNum_ = 2;
+	static const size_t PartsNum_ = 4;
 protected:
 	// モデル (パーツの数だけ)
 	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;

@@ -1,6 +1,7 @@
 #include "GoalDrawer.h"
 #include "CalcTransform.h"
 #include "DrawerConfig.h"
+#include "Def.h"
 #include <cassert>
 
 #pragma region 名前空間
@@ -21,12 +22,14 @@ using namespace DrawerConfig::Goal;
 
 // インデックス
 static const size_t CoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Core); // 核
-
+static const size_t InsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Inside); // 内枠
+static const size_t OutsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Outside); // 外枠
+static const size_t BaseIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Base); // 台座
 
 // 静的 モデル配列 初期化
 array<unique_ptr<Model>, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::sModels_ =
 {
-	nullptr, nullptr,
+	nullptr, nullptr, nullptr, nullptr,
 };
 
 // 静的ビュープロジェクション
@@ -41,9 +44,10 @@ void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	// 体
-	sModels_[CoreIdx].reset(Model::Create("goal.png"));
-	sModels_[1].reset(Model::Create());
+	sModels_[CoreIdx].reset(Model::LoadObj("goal/core", true)); // 核
+	sModels_[InsideIdx].reset(Model::LoadObj("goal/inside", true)); // 内枠
+	sModels_[OutsideIdx].reset(Model::LoadObj("goal/outside", true)); // 外枠
+	sModels_[BaseIdx].reset(Model::LoadObj("goal/base", true)); // 台座
 }
 
 #pragma endregion
@@ -71,8 +75,12 @@ void GoalDrawer::Reset()
 
 	// ----- モデル用オブジェクト初期化 ----- //
 
-	// 核
-	modelObjs_[CoreIdx]->Initialize({});
+	core_->Initialize({ {0.0f,+3.0f,0.0f}, {0.0f,-PI / 4.0f,0.0f}, {0.5f,0.5f,0.5f} });
+
+	modelObjs_[CoreIdx]->	Initialize({}); // 核
+	modelObjs_[InsideIdx]->	Initialize({}); // 内枠
+	modelObjs_[OutsideIdx]->Initialize({}); // 外枠
+	modelObjs_[BaseIdx]->	Initialize({}); // 台座
 }
 
 void GoalDrawer::Update()
@@ -90,7 +98,10 @@ void GoalDrawer::Update()
 void GoalDrawer::Draw()
 {
 	// 描画
-	sModels_[CoreIdx]->Draw(modelObjs_[CoreIdx].get());
+	for (size_t i = 0; i < sModels_.size(); i++)
+	{
+		sModels_[i]->Draw(modelObjs_[i].get());
+	}
 }
 
 void GoalDrawer::IdleAnimation()
