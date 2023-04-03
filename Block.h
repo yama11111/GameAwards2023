@@ -17,4 +17,5 @@ public:
 	void Inilialize();
 	void Update();
 	void Draw();
+	void Reset();
 };

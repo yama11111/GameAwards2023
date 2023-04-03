@@ -40,6 +40,9 @@ namespace YScene
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+		//プレイヤーtrue、フィルターfalse;
+		bool nowMode;
+
 		// プレイヤー
 		Player player;
 
@@ -49,7 +52,7 @@ namespace YScene
 		// ブロック
 		Block block[20];
 
-		const int blockCount = 2;
+		const int blockCount = 5;
 
 		// 天球
 		Skydome skydome_;
@@ -65,11 +68,11 @@ namespace YScene
 
 		YMath::Vector2 RL = { 0.0f,0.0f };
 		YMath::Vector2 WS = { 0.0f,0.0f };
-		YMath::Vector2 filterSize = { 0.0f,0.0f };
 
 		YMath::Vector2 DS = { 0.0f,0.0f };
 		YMath::Vector2 AW = { 0.0f,0.0f };
 
+		YMath::Vector2 filterSize = { 0.0f,0.0f };
 
 #pragma endregion
 	public:

@@ -1,4 +1,111 @@
 #include "Player.h"
+#include "MathUtillity.h"
+
+#pragma region 名前空間宣言
+using namespace YDX;
+using namespace YInput;
+using namespace YMath;
+using namespace YGame;
+#pragma endregion 
+
+//YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
+//{
+//	YMath::Vector3 nowPosP = posP;
+//	YMath::Vector3 nowPosF = posF;
+//
+//	//プレイヤーの上下左右
+//	float p_top = nowPosP.y_ - sizePUD.x_;
+//	float p_bottom = nowPosP.y_ + sizePUD.y_;
+//	float p_right = nowPosP.x_ + sizePRL.x_;
+//	float p_left = nowPosP.x_ - sizePRL.y_;
+//
+//	//フィルターの上下左右
+//	float f_top = nowPosF.y_ - sizeF.y_;
+//	float f_bottom = nowPosF.y_ + sizeF.y_;
+//	float f_right = nowPosF.x_ + sizeF.x_;
+//	float f_left = nowPosF.x_ - sizeF.x_;
+//
+//	//フィルターに当たっているか
+//	if (p_left < f_right &&
+//		p_right > f_left &&
+//		p_top  < f_bottom &&
+//		p_bottom > f_top)
+//	{
+//		while (p_left < f_right &&
+//			p_right > f_left &&
+//			p_top  < f_bottom &&
+//			p_bottom > f_top)
+//		{
+//			nowPosP.x_ -= DS.x_;
+//			nowPosP.y_ -= DS.y_;
+//
+//			nowPosP.x_ += AW.x_;
+//			nowPosP.y_ += AW.y_;
+//
+//			//プレイヤーの上下左右
+//			p_top = nowPosP.y_ - sizePUD.x_;
+//			p_bottom = nowPosP.y_ + sizePUD.y_;
+//			p_right = nowPosP.x_ + sizePRL.x_;
+//			p_left = nowPosP.x_ - sizePRL.y_;
+//		}
+//	}
+//
+//	return nowPosP;
+//}
+//
+//YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeLR, Vector2 sizeUD, Vector2 DS, Vector2 AW)
+//{
+//	YMath::Vector3 nowPosP = posP;
+//	YMath::Vector3 nowPosF = posF;
+//
+//	YMath::Vector2 Ds = DS;
+//	YMath::Vector2 Aw = AW;
+//
+//	Ds.x_ *= 0.1f;
+//	Ds.y_ *= 0.1f;
+//	Aw.x_ *= 0.1f;
+//	Aw.y_ *= 0.1f;
+//
+//	//プレイヤーの上下左右
+//		//プレイヤーの上下左右
+//	float p_top = nowPosP.y_ - sizePUD.x_;
+//	float p_bottom = nowPosP.y_ + sizePUD.y_;
+//	float p_right = nowPosP.x_ + sizePRL.x_;
+//	float p_left = nowPosP.x_ - sizePRL.y_;
+//
+//	//フィルターの上下左右
+//	float f_top = nowPosF.y_ - sizeUD.x_;
+//	float f_bottom = nowPosF.y_ + sizeUD.y_;
+//	float f_right = nowPosF.x_ + sizeLR.y_;
+//	float f_left = nowPosF.x_ - sizeLR.x_;
+//
+//	//フィルターに当たっているか
+//	if (p_left < f_right &&
+//		p_right > f_left &&
+//		p_top  < f_bottom &&
+//		p_bottom > f_top)
+//	{
+//		while (p_left < f_right &&
+//			p_right > f_left &&
+//			p_top  < f_bottom &&
+//			p_bottom > f_top)
+//		{
+//			nowPosP.x_ -= Ds.x_;
+//			nowPosP.y_ -= Ds.y_;
+//			nowPosP.x_ += Aw.x_;
+//			nowPosP.y_ += Aw.y_;
+//
+//			//プレイヤーの上下左右
+//			p_top = nowPosP.y_ - sizePUD.x_;
+//			p_bottom = nowPosP.y_ + sizePUD.y_;
+//			p_right = nowPosP.x_ + sizePRL.x_;
+//			p_left = nowPosP.x_ - sizePRL.y_;
+//		}
+//	}
+//
+//	return nowPosP;
+//}
+//
 
 Player::Player()
 {
@@ -21,33 +128,31 @@ Player::Player()
 	playerCheckPos.x_ = 0;
 	playerCheckPos.y_ = 0;
 
-	//確認用
-	playerCheckSize.x_ = 16;
-	playerCheckSize.y_ = 64;
+	//
+	playerCheckSize.x_ = player_.scale_.x_;
+	playerCheckSize.y_ = player_.scale_.y_;
 
 	//確認用
-	playerCheckSizeRL.x_ = 16;
-	playerCheckSizeRL.y_ = 64;
+	playerCheckSizeRL.x_ = player_.scale_.x_;
+	playerCheckSizeRL.y_ = player_.scale_.y_;
 
 	//確認用
-	playerCheckSizeUD.x_ = 16;
-	playerCheckSizeUD.y_ = 64;
+	playerCheckSizeUD.x_ = player_.scale_.x_;
+	playerCheckSizeUD.y_ = player_.scale_.y_;
 
 	//入力している値を渡す
 	DS.x_ = false;
 	DS.y_ = false;
+
 	//入力している値を渡す
 	AW.x_ = false;
 	AW.y_ = false;
 
-	//プレイヤーかフィルターか
-	chengeF = true;
-
 	//プレイヤーがすり抜けるか
-	sukeF = false;
+	SetsukeFlag(false);
 
 	//フィルターの角に当たっているかどうか
-	kadoF = false;
+	SetkadoFlag(false);
 }
 
 Player::~Player()
@@ -60,7 +165,6 @@ void Player::Inilialize()
 	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
-
 
 	//位置
 	playerPos.x_ = 300;
@@ -75,35 +179,33 @@ void Player::Inilialize()
 	playerCheckPos.y_ = 0;
 
 	//確認用
-	playerCheckSize.x_ = 16;
-	playerCheckSize.y_ = 64;
+	playerCheckSize.x_ = player_.scale_.x_;
+	playerCheckSize.y_ = player_.scale_.y_;
 
 	//確認用
-	playerCheckSizeRL.x_ = 16;
-	playerCheckSizeRL.y_ = 64;
+	playerCheckSizeRL.x_ = player_.scale_.x_;
+	playerCheckSizeRL.y_ = player_.scale_.y_;
 
 	//確認用
-	playerCheckSizeUD.x_ = 16;
-	playerCheckSizeUD.y_ = 64;
+	playerCheckSizeUD.x_ = player_.scale_.x_;
+	playerCheckSizeUD.y_ = player_.scale_.y_;
 
 	//入力している値を渡す
 	DS.x_ = false;
 	DS.y_ = false;
+
 	//入力している値を渡す
 	AW.x_ = false;
 	AW.y_ = false;
 
-	//プレイヤーかフィルターか
-	chengeF = true;
-
 	//プレイヤーがすり抜けるか
-	sukeF = false;
+	SetsukeFlag(false);
 
 	//フィルターの角に当たっているかどうか
-	kadoF = false;
+	SetkadoFlag(false);
 }
 
-void Player::Update()
+void Player::Update(Transform filterPos, Vector2 filterSizeLR, Vector2 filterSizeUD)
 {
 	DS.x_ = 0;
 	DS.y_ = 0;
@@ -116,40 +218,22 @@ void Player::Update()
 
 	//playerPos.y += 1;
 
-	playerCheckPos = playerPos;
-	playerCheckSize = playerSize;
+	playerCheckPos.x_ = player_.pos_.x_;
+	playerCheckPos.y_ = player_.pos_.y_;
 
-	playerCheckSizeRL.x_ = playerSize.x_;
-	playerCheckSizeRL.y_ = playerSize.x_;
+	//確認用
+	playerCheckSize.x_ = player_.scale_.x_;
+	playerCheckSize.y_ = player_.scale_.y_;
 
-	playerCheckSizeUD.x_ = playerSize.y_;
-	playerCheckSizeUD.y_ = playerSize.y_;
+	//確認用
+	playerCheckSizeRL.x_ = player_.scale_.x_;
+	playerCheckSizeRL.y_ = player_.scale_.y_;
 
-	kadoF = false;
+	//確認用
+	playerCheckSizeUD.x_ = player_.scale_.x_;
+	playerCheckSizeUD.y_ = player_.scale_.y_;
 
-	//if (CheckHitKey(KEY_INPUT_SPACE) &&
-	//	//oldkeys[KEY_INPUT_SPACE] == false &&
-	//	sukeF == false)
-	//{
-	//	chengeF = !chengeF;
-
-	//	/*CF = !CF;
-
-	//	circlePos = playerPos;
-
-	//	CSize = 0;*/
-	//}
-
-	///*if (CSize < WIN_WIDTH * 2)
-	//	CSize += 30;*/
-
-	//if (CheckHitKey(KEY_INPUT_R)
-	//	//&& oldkeys[KEY_INPUT_R] == false
-	//	)
-	//{
-	//	playerPos.x_ = 300;
-	//	playerPos.y_ = 400;
-	//}
+	SetkadoFlag(false);
 
 	//プレイヤーの上下左右
 	float p_top = playerCheckPos.y_ - playerCheckSize.y_;
@@ -157,158 +241,131 @@ void Player::Update()
 	float p_right = playerCheckPos.x_ + playerCheckSize.x_;
 	float p_left = playerCheckPos.x_ - playerCheckSize.x_;
 
-	sukeF = false;
+	//フィルターの上下左右
+	float f_top = filterPos.pos_.y_ - filterSizeUD.y_;
+	float f_bottom = filterPos.pos_.y_ + filterSizeUD.y_;
+	float f_right = filterPos.pos_.x_ + filterSizeLR.x_;
+	float f_left = filterPos.pos_.x_ - filterSizeLR.x_;
 
-	////プレイヤーの上下左右
-	//float p_top = playerCheckPos.y_ - playerCheckSize.y_;
-	//float p_bottom = playerCheckPos.y_ + playerCheckSize.y_;
-	//float p_right = playerCheckPos.x_ + playerCheckSize.x_;
-	//float p_left = playerCheckPos.x_ - playerCheckSize.x_;
+	SetsukeFlag(false);
 
-	////フィルターの上下左右
-	//float f_top = filterPos.y - filterSize.y;
-	//float f_bottom = filterPos.y + filterSize.y;
-	//float f_right = filterPos.x + filterSize.x;
-	//float f_left = filterPos.x - filterSize.x;
+	//フィルターに当たっているか
+	if (p_left < f_right ||
+		p_right > f_left ||
+		p_top  < f_bottom ||
+		p_bottom > f_top)
+	{
+		//完全にフィルター内にいるか
+		if (p_right < f_right &&
+			p_left > f_left &&
+			p_bottom  < f_bottom &&
+			p_top > f_top)
+		{
+			SetsukeFlag(true);
+		}
+		else
+		{
+			//どこの辺がプレイヤーに当たっているか
+			//右上
+			if (p_right > f_right &&
+				p_left < f_right &&
+				p_bottom > f_top &&
+				p_top < f_top)
+			{
+				playerCheckSizeRL.y_ = playerPos.x_ - f_right;
 
-	//sukeF = false;
+				playerCheckSizeUD.y_ = f_top - playerPos.y_;
 
-	////フィルターに当たっているか
-	//if (p_left < f_right &&
-	//	p_right > f_left &&
-	//	p_top  < f_bottom &&
-	//	p_bottom > f_top)
-	//{
-	//	DrawFormatString(100, 200, 0xffffff, "hit");
+				SetkadoFlag(true);
+			}
+			//右下
+			else if (
+				p_right > f_right &&
+				p_left < f_right &&
+				p_bottom > f_bottom &&
+				p_top < f_bottom)
+			{
+				playerCheckSizeRL.y_ = playerPos.x_ - f_right;
 
-	//	//完全にフィルター内にいるか
-	//	if (p_right < f_right &&
-	//		p_left > f_left &&
-	//		p_bottom  < f_bottom &&
-	//		p_top > f_top)
-	//	{
-	//		DrawFormatString(100, 220, 0xffffff, "Phit");
+				playerCheckSizeUD.x_ = playerPos.y_ - f_bottom;
 
-	//		sukeF = true;
-	//	}
-	//	else
-	//	{
-	//		//どこの辺がプレイヤーに当たっているか
+				SetkadoFlag(true);
+			}
+			//左上
+			else if (
+				p_right > f_left &&
+				p_left < f_left &&
+				p_bottom > f_top &&
+				p_top < f_top)
+			{
+				playerCheckSizeRL.x_ = f_left - playerPos.x_;
 
-	//		//右上
-	//		if (p_right > f_right &&
-	//			p_left < f_right &&
-	//			p_bottom > f_top &&
-	//			p_top < f_top)
-	//		{
-	//			playerCheckSizeRL.y = playerPos.x - (filterPos.x + (filterSize.x));
-	//			DrawFormatString(100, 240, 0xffffff, "right");
+				playerCheckSizeUD.y_ = f_top - playerPos.y_;
 
-	//			playerCheckSizeUD.y = (filterPos.y - (filterSize.y)) - playerPos.y;
-	//			DrawFormatString(100, 280, 0xffffff, "up");
+				SetkadoFlag(true);
+			}
+			//左下
+			else if (
+				p_right > f_left &&
+				p_left < f_left &&
+				p_bottom > f_bottom &&
+				p_top < f_bottom)
+			{
+				playerCheckSizeRL.x_ = f_left - playerPos.x_;
 
-	//			kadoF = true;
-	//		}
-	//		//右下
-	//		else if (
-	//			p_right > f_right &&
-	//			p_left < f_right &&
-	//			p_bottom > f_bottom &&
-	//			p_top < f_bottom)
-	//		{
-	//			playerCheckSizeRL.y = playerPos.x - (filterPos.x + (filterSize.x));
-	//			DrawFormatString(100, 240, 0xffffff, "right");
+				playerCheckSizeUD.x_ = playerPos.y_ - f_bottom;
 
-	//			playerCheckSizeUD.x = playerPos.y - (filterPos.y + (filterSize.y));
-	//			DrawFormatString(100, 300, 0xffffff, "down");
+				SetkadoFlag(true);
+			}
+			//右
+			else if (
+				p_right > f_right &&
+				p_left < f_right)
+			{
+				playerCheckSizeRL.y_ = playerPos.x_ - f_right;
 
-	//			kadoF = true;
-	//		}
-	//		//左上
-	//		else if (
-	//			p_right > f_left &&
-	//			p_left < f_left &&
-	//			p_bottom > f_top &&
-	//			p_top < f_top)
-	//		{
-	//			playerCheckSizeRL.x = (filterPos.x - (filterSize.x)) - playerPos.x;
-	//			DrawFormatString(100, 260, 0xffffff, "left");
+			}
+			//左
+			else if (p_right > f_left &&
+				p_left < f_left)
+			{
+				playerCheckSizeRL.x_ = f_left - playerPos.x_;
+			}
+			//上
+			else if (p_bottom > f_top &&
+				p_top < f_top)
+			{
+				//あってる
+				playerCheckSizeUD.y_ = f_top - playerPos.y_;
+			}
 
-	//			playerCheckSizeUD.y = (filterPos.y - (filterSize.y)) - playerPos.y;
-	//			DrawFormatString(100, 280, 0xffffff, "up");
+			else if (p_bottom > f_bottom &&
+				p_top < f_bottom)
+			{
+				//できた
+				playerCheckSizeUD.x_ = playerPos.y_ - f_bottom;
+			}
 
-	//			kadoF = true;
-	//		}
-	//		//左下
-	//		else if (
-	//			p_right > f_left &&
-	//			p_left < f_left &&
-	//			p_bottom > f_bottom &&
-	//			p_top < f_bottom)
-	//		{
-	//			playerCheckSizeRL.x = (filterPos.x - (filterSize.x)) - playerPos.x;
-	//			DrawFormatString(100, 260, 0xffffff, "left");
-
-	//			playerCheckSizeUD.x = playerPos.y - (filterPos.y + (filterSize.y));
-	//			DrawFormatString(100, 300, 0xffffff, "down");
-
-	//			kadoF = true;
-	//		}
-	//		//右
-	//		else if (
-	//			p_right > f_right &&
-	//			p_left < f_right)
-	//		{
-	//			playerCheckSizeRL.y = playerPos.x - (filterPos.x + (filterSize.x));
-	//			DrawFormatString(100, 240, 0xffffff, "right");
-
-	//		}
-	//		//左
-	//		else if (p_right > f_left &&
-	//			p_left < f_left)
-	//		{
-
-	//			playerCheckSizeRL.x = (filterPos.x - (filterSize.x)) - playerPos.x;
-	//			DrawFormatString(100, 260, 0xffffff, "left");
-	//		}
-	//		//上
-	//		else if (p_bottom > f_top &&
-	//			p_top < f_top)
-	//		{
-	//			//あってる
-	//			playerCheckSizeUD.y = (filterPos.y - (filterSize.y / 2)) - playerPos.y - playerSize.y;
-	//			DrawFormatString(100, 280, 0xffffff, "up");
-	//		}
-	//		//下
-	//		else if (p_bottom > f_bottom &&
-	//			p_top < f_bottom)
-	//		{
-	//			//できた
-	//			playerCheckSizeUD.x = playerPos.y - playerSize.y - (filterPos.y + (filterSize.y / 2));
-
-	//			DrawFormatString(100, 300, 0xffffff, "down");
-	//		}
-
-	//	}
-	//}
+		}
+	}
 
 	//if (chengeF)
 	//{
-	//	if (CheckHitKey(KEY_INPUT_D))
+	//	if (Keys::IsDown(DIK_D))
 	//	{
-	//		playerPos.x += moveSpd;
+	//		playerPos.x_ += moveSpd;
 
-	//		DS.x = CheckHitKey(KEY_INPUT_D);
-	//		DS.y = 0;
+	//		DS.x_ = CheckHitKey(KEY_INPUT_D);
+	//		DS.y_ = 0;
 
-	//		AW.x = 0;
-	//		AW.y = 0;
+	//		AW.x_ = 0;
+	//		AW.y_ = 0;
 
 	//		if (!sukeF)
 	//		{
 	//			if (kadoF)
 	//			{
-	//				Vector2 size = { playerSize.x,playerSize.x };
+	//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -322,8 +379,8 @@ void Player::Update()
 	//						AW);
 	//				}
 
-	//				size.x = playerSize.y;
-	//				size.y = playerSize.y;
+	//				size.x_ = playerSize.y_;
+	//				size.y_ = playerSize.y_;
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -356,19 +413,19 @@ void Player::Update()
 
 	//	if (CheckHitKey(KEY_INPUT_A))
 	//	{
-	//		playerPos.x -= moveSpd;
+	//		playerPos.x_ -= moveSpd;
 
-	//		DS.x = 0;
-	//		DS.y = 0;
+	//		DS.x_ = 0;
+	//		DS.y_ = 0;
 
-	//		AW.x = CheckHitKey(KEY_INPUT_A);
-	//		AW.y = 0;
+	//		AW.x_ = CheckHitKey(KEY_INPUT_A);
+	//		AW.y_ = 0;
 
 	//		if (!sukeF)
 	//		{
 	//			if (kadoF)
 	//			{
-	//				Vector2 size = { playerSize.x,playerSize.x };
+	//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -382,8 +439,8 @@ void Player::Update()
 	//						AW);
 	//				}
 
-	//				size.x = playerSize.y;
-	//				size.y = playerSize.y;
+	//				size.x_ = playerSize.y_;
+	//				size.y_ = playerSize.y_;
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -416,20 +473,20 @@ void Player::Update()
 
 	//	if (CheckHitKey(KEY_INPUT_S))
 	//	{
-	//		playerPos.y += moveSpd;
+	//		playerPos.y_ += moveSpd;
 
-	//		DS.x = 0;
-	//		DS.y = CheckHitKey(KEY_INPUT_S);
+	//		DS.x_ = 0;
+	//		DS.y_ = CheckHitKey(KEY_INPUT_S);
 	//		//DS.y = 1;
 
-	//		AW.x = 0;
-	//		AW.y = 0;
+	//		AW.x_ = 0;
+	//		AW.y_ = 0;
 
 	//		if (!sukeF)
 	//		{
 	//			if (kadoF)
 	//			{
-	//				Vector2 size = { playerSize.x,playerSize.x };
+	//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -443,8 +500,8 @@ void Player::Update()
 	//						AW);
 	//				}
 
-	//				size.x = playerSize.y;
-	//				size.y = playerSize.y;
+	//				size.x_ = playerSize.y_;
+	//				size.y_ = playerSize.y_;
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -477,19 +534,19 @@ void Player::Update()
 
 	//	if (CheckHitKey(KEY_INPUT_W))
 	//	{
-	//		playerPos.y -= moveSpd;
+	//		playerPos.y_ -= moveSpd;
 
-	//		DS.x = 0;
-	//		DS.y = 0;
+	//		DS.x_ = 0;
+	//		DS.y_ = 0;
 
-	//		AW.x = 0;
-	//		AW.y = CheckHitKey(KEY_INPUT_W);
+	//		AW.x_ = 0;
+	//		AW.y_ = CheckHitKey(KEY_INPUT_W);
 
 	//		if (!sukeF)
 	//		{
-	//			if (kadoF)
+	//			if (kadoF)	//GetkadoFlag() == true
 	//			{
-	//				Vector2 size = { playerSize.x,playerSize.x };
+	//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -503,8 +560,8 @@ void Player::Update()
 	//						AW);
 	//				}
 
-	//				size.x = playerSize.y;
-	//				size.y = playerSize.y;
+	//				size.x_ = playerSize.y_;
+	//				size.y_ = playerSize.y_;
 
 	//				for (int i = 0; i < boxcount; i++)
 	//				{
@@ -535,12 +592,6 @@ void Player::Update()
 	//		}
 	//	}
 	//}
-	//else
-	//{
-	//	filterPos.x += (CheckHitKey(KEY_INPUT_D) - CheckHitKey(KEY_INPUT_A)) * moveSpd;
-	//	filterPos.y += (CheckHitKey(KEY_INPUT_S) - CheckHitKey(KEY_INPUT_W)) * moveSpd;
-	//}
-
 
 	player_.UpdateMatrix();
 	playerDra_.Update();
@@ -548,5 +599,54 @@ void Player::Update()
 
 void Player::Draw()
 {
+	playerDra_.PreDraw();
+}
+
+void Player::Reset()
+{
+	player_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	direction_ = { +1.0f,0.0f,0.0f };
+	playerDra_.Initialize(&player_.m_, &direction_, IDrawer::Mode::Red);
+
+	player_.scale_.x_ = 4.0f;
+	player_.scale_.y_ = 8.0f;
+
+	//位置
+	playerPos.x_ = 300;
+	playerPos.y_ = 400;
+
+	//サイズ
+	playerSize.x_ = 21;
+	playerSize.y_ = 32;
+
+	//確認用
+	playerCheckPos.x_ = 0;
+	playerCheckPos.y_ = 0;
+
+	//確認用
+	playerCheckSize.x_ = player_.scale_.x_;
+	playerCheckSize.y_ = player_.scale_.y_;
+
+	//確認用
+	playerCheckSizeRL.x_ = player_.scale_.x_;
+	playerCheckSizeRL.y_ = player_.scale_.y_;
+
+	//確認用
+	playerCheckSizeUD.x_ = player_.scale_.x_;
+	playerCheckSizeUD.y_ = player_.scale_.y_;
+
+	//入力している値を渡す
+	DS.x_ = false;
+	DS.y_ = false;
+
+	//入力している値を渡す
+	AW.x_ = false;
+	AW.y_ = false;
+
+	//プレイヤーがすり抜けるか
+	SetsukeFlag(false);
+
+	//フィルターの角に当たっているかどうか
+	SetkadoFlag(false);
 
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector2.h"
+#include "Keys.h"
 #include "PlayerDrawer.h"
 
 class Player
@@ -17,9 +17,6 @@ private:
 	//キーが押されているかどうか
 	YMath::Vector2 DS;
 	YMath::Vector2 AW;
-
-	//プレイヤーかフィルターか
-	bool chengeF = true;
 
 	//プレイヤーがすり抜けるか
 	bool sukeF = false;
@@ -41,8 +38,9 @@ public:
 	~Player();
 
 	void Inilialize();
-	void Update();
+	void Update(YGame::Transform filterPos, YMath::Vector2 filterSizeLR, YMath::Vector2 filterSizeUD);
 	void Draw();
+	void Reset();
 
 	//位置
 	YMath::Vector2 GetPos() { return playerPos; };
@@ -56,11 +54,9 @@ public:
 	YMath::Vector2 GetNowSizeX() { return playerCheckSizeRL; };
 	YMath::Vector2 GetNowSizeY() { return playerCheckSizeUD; };
 
-	bool GetmoveFlag() { return chengeF; };
-	bool GetpassFlag() { return sukeF; };
-	bool GetcornerFlag() { return kadoF; };
+	bool GetsukeFlag() { return sukeF; };
+	bool GetkadoFlag() { return kadoF; };
 
-	void SetmoveFlag(bool flag) { chengeF = flag; };
-	void SetpassFlag(bool flag) { sukeF = flag; };
-	void SetcornerFlag(bool flag) { kadoF = flag; };
+	void SetsukeFlag(bool flag) { sukeF = flag; };
+	void SetkadoFlag(bool flag) { kadoF = flag; };
 };

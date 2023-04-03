@@ -11,6 +11,7 @@ public:
 	void Inilialize();
 	void Update();
 	void Draw();
+	void Reset();
 
 	// フィルター
 	YGame::Transform filter_;
@@ -23,7 +24,7 @@ private:
 	//// フィルター描画クラス
 	//FilterDrawer filterDra_;
 
-	YMath::Vector2 filterPos = { 0,0 };
-	YMath::Vector2 filterSize = { 128,64 };
+	/*YMath::Vector2 filterPos = { 0,0 };
+	YMath::Vector2 filterSize = { 128,64 };*/
 };
 

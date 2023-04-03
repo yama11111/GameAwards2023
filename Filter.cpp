@@ -23,15 +23,18 @@ void Filter::Inilialize()
 
 void Filter::Update()
 {
-	/*filterPos.x_ += (CheckHitKey(KEY_INPUT_D) - CheckHitKey(KEY_INPUT_A)) * moveSpd;
-	flterPos.x_ += (CheckHitKey(KEY_INPUT_S) - CheckHitKey(KEY_INPUT_W)) * moveSpd;*/
-
-
 	filter_.UpdateMatrix();
 	filterDra_.Update();
 }
 
 void Filter::Draw()
 {
+	filterDra_.Draw();
+}
 
+void Filter::Reset()
+{
+	// フィルター
+	filter_.Initialize({ {}, {}, {5.0f,5.0f,5.0f} });
+	filterDra_.Initialize(&filter_.m_);
 }
