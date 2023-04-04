@@ -23,12 +23,17 @@ using namespace DrawerConfig::Gate;
 static const size_t NormalIdx = 0; // í èÌ
 static const size_t RedIdx = 1; // ê‘
 static const size_t InvisibleIdx = 2; // ìßñæ
-static const size_t FrameIdx = static_cast<size_t>(GateDrawerCommon::Parts::Frame); // òg
 
+static const size_t InsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Inside); // ì‡òg
+static const size_t InLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::InsideLight); // ì‡òg (åı)
+static const size_t OutsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Outside); // äOòg
+static const size_t OutLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::OutsideLight); // äOòg (åı)
 
 // ê√ìI ÉÇÉfÉãîzóÒ èâä˙âª
 array<array<unique_ptr<Model>, GateDrawerCommon::PartsNum_>, GateDrawerCommon::ModeNum_> GateDrawerCommon::sModels_ =
 {
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr,
 	nullptr, nullptr,
 	nullptr, nullptr
@@ -45,18 +50,24 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spVP_ = pVP;
 
 	// ----- ÉÇÉfÉãì«Ç›çûÇ› ----- //
-
+	
 	// í èÌ
-	sModels_[NormalIdx][FrameIdx].reset(Model::Create("GateNormal.png")); // òg
-	sModels_[NormalIdx][1].reset(Model::Create());
+	sModels_[NormalIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // ì‡òg
+	sModels_[NormalIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // ì‡òg (åı)
+	sModels_[NormalIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // äOòg
+	sModels_[NormalIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // äOòg (åı)
 
 	// ê‘
-	sModels_[RedIdx][FrameIdx].reset(Model::Create("GateRed.png")); // òg
-	sModels_[RedIdx][1].reset(Model::Create());
+	sModels_[RedIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // ì‡òg
+	sModels_[RedIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // ì‡òg (åı)
+	sModels_[RedIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // äOòg
+	sModels_[RedIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // äOòg (åı)
 
 	// ìßñæ
-	sModels_[InvisibleIdx][FrameIdx].reset(Model::Create("GateInvisible.png")); // òg
-	sModels_[InvisibleIdx][1].reset(Model::Create());
+	sModels_[InvisibleIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // ì‡òg
+	sModels_[InvisibleIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // ì‡òg (åı)
+	sModels_[InvisibleIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // äOòg
+	sModels_[InvisibleIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // äOòg (åı)
 }
 
 #pragma endregion
@@ -99,31 +110,25 @@ void GateDrawer::Reset(const Mode& mode)
 	// ÉäÉZÉbÉg
 	IDrawer::Reset(mode);
 
-	// ëÂÇ´Ç≥
-	Vector3 scale = { 0.25f,2.0f,1.0f };
+	// ----- ÉÇÉfÉãópÉIÉuÉWÉFÉNÉgèâä˙âª ----- //
 
-	// ÉÇÉfÉãópÉIÉuÉWÉFÉNÉgèâä˙âª
+	core_->Initialize({ {0.0f,0.0f,0.0f}, {0.0f,+PI / 6.0f,0.0f}, {1.0f,1.0f,1.0f} }); // äj
+
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		// ëÂÇ´Ç≥
+		Vector3 scale = Vector3(1.0f, 1.0f, 1.0f);
+		
+		// ìßñæÇ»ÇÁ
+		if (i == InvisibleIdx)
 		{
-			// ìßñæver
-			if (i == InvisibleIdx)
-			{
-				Vector3 scaleVal = { 
-					scale.x_ - 0.01f,
-					scale.y_ - 0.01f,
-					DrawerConfig::InvisibleScale 
-				};
-
-				modelObjs_[i][j]->Initialize({ {}, {}, scaleVal });
-			}
-			// í èÌÅAê‘ver
-			else
-			{
-				modelObjs_[i][j]->Initialize({ {}, {}, scale });
-			}
+			scale *= DrawerConfig::InvisibleScale;
 		}
+
+		modelObjs_[i][InsideIdx]->Initialize({ {}, {}, scale }); // ì‡òg
+		modelObjs_[i][InLightIdx]->Initialize({ {}, {}, scale }); // ì‡òg (åı)
+		modelObjs_[i][OutsideIdx]->Initialize({ {}, {}, scale }); // äOòg
+		modelObjs_[i][OutLightIdx]->Initialize({ {}, {}, scale }); // äOòg (åı)
 	}
 
 	current_ = mode;
@@ -147,13 +152,19 @@ void GateDrawer::Update()
 void GateDrawer::PreDraw()
 {
 	// ìßñæï`âÊ
-	sModels_[InvisibleIdx][FrameIdx]->Draw(modelObjs_[InvisibleIdx][FrameIdx].get());
+	for (size_t i = 0; i < sModels_[InvisibleIdx].size(); i++)
+	{
+		sModels_[InvisibleIdx][i]->Draw(modelObjs_[InvisibleIdx][i].get());
+	}
 
 	// í èÌÇ»ÇÁ
 	if (current_ == Mode::Normal)
 	{
 		// ï`âÊ
-		sModels_[NormalIdx][FrameIdx]->Draw(modelObjs_[NormalIdx][FrameIdx].get());
+		for (size_t i = 0; i < sModels_[NormalIdx].size(); i++)
+		{
+			sModels_[NormalIdx][i]->Draw(modelObjs_[NormalIdx][i].get());
+		}
 	}
 }
 
@@ -163,7 +174,10 @@ void GateDrawer::PostDraw()
 	if (current_ == Mode::Red)
 	{
 		// ï`âÊ
-		sModels_[RedIdx][FrameIdx]->Draw(modelObjs_[RedIdx][FrameIdx].get());
+		for (size_t i = 0; i < sModels_[NormalIdx].size(); i++)
+		{
+			sModels_[RedIdx][i]->Draw(modelObjs_[RedIdx][i].get());
+		}
 	}
 }
 

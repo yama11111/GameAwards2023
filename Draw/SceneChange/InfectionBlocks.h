@@ -22,6 +22,16 @@ namespace YGame
 		{
 			std::unique_ptr<Sprite2DObject> obj_; // オブジェクト
 			YMath::Timer actTim_; // 動作タイマー
+			std::unique_ptr<Color> color_; // 色
+			YMath::Timer colorStartTim_; // 色タイマー (始)
+			YMath::Timer colorEndTim_; // 色タイマー (終)
+			// タイマー動作
+			void SetTimerActive(const bool isAct)
+			{
+				actTim_.SetActive(isAct);
+				colorStartTim_.SetActive(isAct);
+				colorEndTim_.SetActive(isAct);
+			};
 		};
 	private:
 		// ブロック配列
@@ -33,6 +43,8 @@ namespace YGame
 		// イージング
 		std::array<YMath::Ease<float>, 2> scaleEas_;
 		std::array<YMath::Ease<float>, 2> rotaEas_;
+		std::array<YMath::Ease<float>, 2> colorEas_;
+		std::array<YMath::Ease<float>, 2> alphaEas_;
 		// 現段階のインデックス
 		size_t stepIndex_ = 0;
 

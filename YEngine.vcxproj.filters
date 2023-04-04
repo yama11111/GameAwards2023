@@ -390,6 +390,15 @@
     <ClCompile Include="Draw\Drawer\PauseDrawer.cpp">
       <Filter>Draw\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\Drawer\SelectDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\StageDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\LetterBoxDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -682,6 +691,18 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\IDrawer.h">
       <Filter>Draw\Drawer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\SelectDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\StageDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="StageConfig.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\LetterBoxDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

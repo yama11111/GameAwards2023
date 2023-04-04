@@ -36,6 +36,12 @@ private:
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 
+	// 回転 (内)
+	YMath::Ease<YMath::Vector3> inRotaEas;
+	// 回転 (外)
+	YMath::Ease<YMath::Vector3> outRotaEas;
+	// 回転タイマー
+	YMath::Timer rotaTim_;
 public:
 	/// <summary>
 	/// 初期化
@@ -51,5 +57,7 @@ public:
 private:
 	// 立ちモーション
 	void IdleAnimation() override;
+	// 回転アニメーション
+	void RotaAnimation();
 };
 

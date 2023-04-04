@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector3.h"
+#include "Def.h"
 
 // 描画用クラス
 namespace DrawerConfig
@@ -126,7 +126,56 @@ namespace DrawerConfig
 		namespace Idle
 		{
 			// 間隔
-			const unsigned int IntervalTime = 10;
+			const unsigned int IntervalTime = 20;
+		}
+		
+		// 回転モーション
+		namespace Rota 
+		{
+			// フレーム
+			const unsigned int Frame = 100;
+
+			// 量 (内)
+			namespace Inside
+			{
+				// 初期値
+				const YMath::Vector3 Start = { +PI / 3.0f,0.0f,+PI / 2.0f };
+				// 最終値
+				const YMath::Vector3 End   = { +PI / 3.0f,0.0f,+PI / 2.0f + +PI * 2.0f };
+			}
+
+			// 量 (外)
+			namespace Outside
+			{
+				// 初期値
+				const YMath::Vector3 Start = { -PI / 3.0f,0.0f,-PI / 3.0f };
+				// 最終値
+				const YMath::Vector3 End   = { -PI / 3.0f,0.0f,-PI / 3.0f - PI * 2.0f };
+			}
+			
+			// 指数
+			const float Exponent = 2.0f;
+		}
+	}
+
+	// セレクトシーン
+	namespace Select 
+	{
+		// 地球
+		namespace Earth
+		{
+			// 大きさ
+			const float Scale = 32.0f;
+		}
+
+		// ステージ
+		namespace Stage
+		{
+			// フレーム
+			const int Frame = 30;
+			
+			// 指数
+			const float Exponent = 1.4f;
 		}
 	}
 }

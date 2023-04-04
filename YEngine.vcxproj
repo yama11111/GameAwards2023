@@ -121,9 +121,12 @@
     <ClCompile Include="Draw\Drawer\HUDDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\IDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\InputDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\LetterBoxDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\PauseDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\PlayerDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\SelectDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\StageDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\TitleDrawer.cpp" />
     <ClCompile Include="Draw\Particle\Effect.cpp" />
     <ClCompile Include="Draw\Particle\EffectManager.cpp" />
@@ -217,9 +220,12 @@
     <ClInclude Include="Draw\Drawer\HUDDrawer.h" />
     <ClInclude Include="Draw\Drawer\IDrawer.h" />
     <ClInclude Include="Draw\Drawer\InputDrawer.h" />
+    <ClInclude Include="Draw\Drawer\LetterBoxDrawer.h" />
     <ClInclude Include="Draw\Drawer\PauseDrawer.h" />
     <ClInclude Include="Draw\Drawer\PlayerDrawer.h" />
+    <ClInclude Include="Draw\Drawer\SelectDrawer.h" />
     <ClInclude Include="Draw\Drawer\SkydomeDrawer.h" />
+    <ClInclude Include="Draw\Drawer\StageDrawer.h" />
     <ClInclude Include="Draw\Drawer\TitleDrawer.h" />
     <ClInclude Include="Draw\Particle\Effect.h" />
     <ClInclude Include="Draw\Particle\EffectManager.h" />
@@ -271,6 +277,7 @@
     <ClInclude Include="Scene\YGameSceneFactory.h" />
     <ClInclude Include="Scene\TransitionConfig.h" />
     <ClInclude Include="Scene\YGameTransitionFactory.h" />
+    <ClInclude Include="StageConfig.h" />
     <ClInclude Include="Utillity\FileUtillity.h" />
     <ClInclude Include="Utillity\imgui\ImGuiManager.h" />
     <ClInclude Include="Utillity\Input\InputManager.h" />

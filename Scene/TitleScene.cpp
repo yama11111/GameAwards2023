@@ -79,7 +79,7 @@ void TitleScene::Update()
 	{
 		isPush_ = true;
 
-		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
+		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
 	}
 	
 	logoObj_->UpdateMatrix();

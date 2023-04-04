@@ -9,13 +9,16 @@ public:
 	// パーツの名前
 	enum class Parts
 	{
-		Frame, // 枠
+		Inside, // 内枠
+		InsideLight, // 内枠 (光)
+		Outside, // 外枠
+		OutsideLight, // 外枠 (光)
 	};
 protected:
 	// モードの総数
 	static const size_t ModeNum_ = 3;
 	// パーツの総数
-	static const size_t PartsNum_ = 2;
+	static const size_t PartsNum_ = 4;
 protected:
 	// モデル (パーツの数だけ)
 	static std::array<std::array<std::unique_ptr<YGame::Model>, PartsNum_>, ModeNum_> sModels_;

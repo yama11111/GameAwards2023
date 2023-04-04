@@ -18,7 +18,8 @@ void TransitionManager::Initialize()
 	InfectionBlocks* newIB = new InfectionBlocks();
 	newIB->Initialize(
 		InfectionBlocksFrame::Change, InfectionBlocksFrame::Load,
-		{ 0.0f,0.0f }, 128.0f, { 12.0f,7.0f });
+		{ 0.0f,0.0f }, 128.0f, { 15.0f,8.0f },
+		{ 0.0f,1.0f });
 	
 
 	// ÉäÉTÉCÉY
