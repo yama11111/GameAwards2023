@@ -71,14 +71,7 @@ void FilterDrawer::Reset()
 
 	// ----- モデル用オブジェクト初期化 ----- //
 	
-	// モニター
-	modelObjs_[MonitorIdx]->Initialize(
-		{
-			{0.0f,0.0f,-4.0f},
-			{},
-			{1.0f,1.0f,0.0001f},
-		}
-	);
+
 
 	color_->SetRGBA({ 1.0f,0.0f,0.0f,0.25f });
 

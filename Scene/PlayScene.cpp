@@ -19,6 +19,109 @@ using namespace YGame;
 #pragma region Static関連
 #pragma endregion 
 
+
+//yうえ+した－
+
+YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP;
+	YMath::Vector3 nowPosF = posF;
+
+	//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - sizePUD.x_;
+	float p_bottom = nowPosP.y_ + sizePUD.y_;
+	float p_right = nowPosP.x_ + sizePRL.x_;
+	float p_left = nowPosP.x_ - sizePRL.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - sizeF.y_;
+	float f_bottom = nowPosF.y_ + sizeF.y_;
+	float f_right = nowPosF.x_ + sizeF.x_;
+	float f_left = nowPosF.x_ - sizeF.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_ * 0.01f;
+			nowPosP.y_ -= DS.y_ * 0.01f;
+
+			nowPosP.x_ += AW.x_ * 0.01f;
+			nowPosP.y_ += AW.y_ * 0.01f;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - sizePUD.x_;
+			p_bottom = nowPosP.y_ + sizePUD.y_;
+			p_right = nowPosP.x_ + sizePRL.x_;
+			p_left = nowPosP.x_ - sizePRL.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
+YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeLR, Vector2 sizeUD, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP;
+	YMath::Vector3 nowPosF = posF;
+
+	YMath::Vector2 Ds = DS;
+	YMath::Vector2 Aw = AW;
+
+	Ds.x_ *= 0.1f;
+	Ds.y_ *= 0.1f;
+	Aw.x_ *= 0.1f;
+	Aw.y_ *= 0.1f;
+
+	//プレイヤーの上下左右
+		//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - sizePUD.x_;
+	float p_bottom = nowPosP.y_ + sizePUD.y_;
+	float p_right = nowPosP.x_ + sizePRL.x_;
+	float p_left = nowPosP.x_ - sizePRL.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - sizeUD.x_;
+	float f_bottom = nowPosF.y_ + sizeUD.y_;
+	float f_right = nowPosF.x_ + sizeLR.y_;
+	float f_left = nowPosF.x_ - sizeLR.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_ * 0.1f;
+			nowPosP.y_ -= DS.y_ * 0.1f;
+
+			nowPosP.x_ += AW.x_ * 0.1f;
+			nowPosP.y_ += AW.y_ * 0.1f;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - sizePUD.x_;
+			p_bottom = nowPosP.y_ + sizePUD.y_;
+			p_right = nowPosP.x_ + sizePRL.x_;
+			p_left = nowPosP.x_ - sizePRL.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
+
 #pragma region 読み込み
 void PlayScene::Load()
 {
@@ -29,7 +132,7 @@ void PlayScene::Load()
 	// ----- スプライト (2D) ----- //
 
 	// ----- スプライト (3D) ----- //
-	
+
 	// ------- モデル ------- //
 
 	// ----- 静的初期化 ----- //
@@ -57,48 +160,96 @@ void PlayScene::Initialize()
 
 	// ----- プレイヤー ----- //
 
-	// トランスフォーム (位置、回転、大きさ)
-	player_.Initialize({ {-50.0f,0.0f,0.0f}, {}, scale * 2.0f });
-	// 向き
-	direction_ = { +1.0f,0.0f,0.0f };
-	// 描画用クラス初期化 (親トランスフォーム、向き、初期色)
-	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
-	
-	
-	// ----- フィルター ----- //
-	
-	// トランスフォーム (位置、回転、大きさ)
-	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {6.0f,4.0f,1.0f} });
-	// 描画用クラス初期化 (親トランスフォーム)
-	filterDra_.Initialize(&filter_);
+	//// トランスフォーム (位置、回転、大きさ)
+	//player_.Initialize({ {-50.0f,0.0f,0.0f}, {}, scale * 2.0f });
+	//// 向き
+	//direction_ = { +1.0f,0.0f,0.0f };
+	//// 描画用クラス初期化 (親トランスフォーム、向き、初期色)
+	//playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	//
+	//
+	//// ----- フィルター ----- //
+	//
+	//// トランスフォーム (位置、回転、大きさ)
+	//filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {6.0f,4.0f,1.0f} });
+	//// 描画用クラス初期化 (親トランスフォーム)
+	//filterDra_.Initialize(&filter_);
 
-	
-	// ----- ブロック ----- //
-	
-	for (size_t i = 0; i < idx - 1; i++)
+	//
+	//// ----- ブロック ----- //
+	//
+	//for (size_t i = 0; i < idx - 1; i++)
+	//{
+	//	// トランスフォーム (位置、回転、大きさ)
+	//	block_[i].Initialize({{-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
+	//	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	//	blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
+	//}
+
+	player.Inilialize();
+
+	// フィルター
+	filter.Inilialize();
+
+	//ブロック
+	for (int i = 0; i < blockCountY; i++)
 	{
-		// トランスフォーム (位置、回転、大きさ)
-		block_[i].Initialize({{-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
-		// 描画用クラス初期化 (親トランスフォーム、初期色)
-		blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
+		for (int j = 0; j < blockCountX; j++)
+		{
+			Block* newBlock = new Block();
+
+			newBlock->Inilialize();
+
+			newBlock->nowKind = map[i][j];
+
+			newBlock->sukeF = false;
+
+			float size = 2.0f;
+
+			newBlock->block_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+			newBlock->block_.pos_.y_ = ((blockCountY / 2) - i) * size;
+
+			newBlock->block_.scale_.x_ = size / 4.0f;
+			newBlock->block_.scale_.y_ = size / 4.0f;
+
+			//格納
+			block.push_back(newBlock);
+		}
 	}
 
-	// トランスフォーム (位置、回転、大きさ)
-	block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
-	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
+	for (int i = 0; i < block.size(); i++)
+	{
+		block[i]->SetMode();
+	}
 
-	
+	// ブロック
+	/*for (int i = 0; i < blockCount; i++)
+	{
+		block[i].Inilialize();
+		block[i].block_.pos_.x_ = (i - (blockCount / 2)) * 8;
+		block[i].block_.pos_.y_ = -10;
+		block[i].block_.scale_.x_ = 2;
+		block[i].block_.scale_.y_ = 2;
+	}*/
+
+	nowMode = true;
+
+	//// トランスフォーム (位置、回転、大きさ)
+	//block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
+	//// 描画用クラス初期化 (親トランスフォーム、初期色)
+	//blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
+
+
 	// ----- ゲート ----- //
-	
+
 	// トランスフォーム (位置、回転、大きさ)
 	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム、初期色)
 	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
 
-	
+
 	// ----- ゴール ----- //
-	
+
 	// トランスフォーム (位置、回転、大きさ)
 	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム)
@@ -107,7 +258,7 @@ void PlayScene::Initialize()
 
 	// 天球初期化
 	skydome_.Initialize();
-	
+
 	// HUD初期化
 	hud_.Initalize();
 
@@ -135,7 +286,6 @@ void PlayScene::Update()
 	// ポーズ中なら弾く
 	if (hud_.IsPause()) { return; }
 
-
 	// 操作切り替え
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
@@ -144,55 +294,301 @@ void PlayScene::Update()
 		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
 	}
 
-
-	// プレイヤー
-	if (isPlayer_)
+	// リセット
+	if (sKeys_->IsTrigger(DIK_R))
 	{
-		player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-		player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+		player.Reset();
+		filter.Reset();
+
+		/*for (int i = 0; i < block.size(); i++)
+		{
+			block[i]->Reset();
+		}*/
+
+		/*for (int i = 0; i < blockCount; i++)
+		{
+			block[i].Reset();
+
+			block[i].block_.pos_.x_ = (i - (blockCount / 2)) * 8;
+			block[i].block_.pos_.y_ = -10;
+			block[i].block_.scale_.x_ = 2;
+			block[i].block_.scale_.y_ = 2;
+		}*/
 	}
-	player_.UpdateMatrix();
-	
+
+	//player_.UpdateMatrix();
+
 	if (sKeys_->IsTrigger(DIK_K))
 	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
+		player.playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
 	}
 	if (sKeys_->IsTrigger(DIK_L))
 	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
+		player.playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
 	}
-	playerDra_.Update();
-
-
-	// フィルター
-	if (isPlayer_ == false)
-	{
-		filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-		filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
-	}
-
-	filter_.UpdateMatrix();
-	filterDra_.Update();
+	//playerDra_.Update();
 
 	// 衝突
 	if (sKeys_->IsTrigger(DIK_N))
 	{
-		playerDra_.SetIsCollFilter(true);
-		filterDra_.SetIsCollPlayer(true);
+		player.playerDra_.SetIsCollFilter(true);
+		filter.filterDra_.SetIsCollPlayer(true);
 	}
 	if (sKeys_->IsTrigger(DIK_M))
 	{
-		playerDra_.SetIsCollFilter(false);
-		filterDra_.SetIsCollPlayer(false);
+		player.playerDra_.SetIsCollFilter(false);
+		filter.filterDra_.SetIsCollPlayer(false);
 	}
+
+	if (sKeys_->IsTrigger(DIK_SPACE))
+	{
+		nowMode = !nowMode;
+	}
+
+	//重力
+	//player.player_.pos_.y_ -= 0.2f;
+
+	if (sKeys_->IsTrigger(DIK_W) && player.JumpFlag == false)
+	{
+		player.Jump = 10;
+		player.JumpPower = 0;
+
+		player.JumpFlag = true;
+
+		player.Gravity = 0;
+		player.GravityPower = 0;
+	}
+
+	if (nowMode)
+	{
+		//// プレイヤー
+		//player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
+		//player.player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
+	}
+	else {
+		// フィルター
+		filter.filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.5f;
+		filter.filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.5f;
+	}
+
+	RL.x_ = player.player_.scale_.x_ * 2;
+	RL.y_ = player.player_.scale_.x_ * 2;
+
+	WS.x_ = player.player_.scale_.y_ * 2;
+	WS.y_ = player.player_.scale_.y_ * 2;
+
+	filterSize.x_ = filter.filter_.scale_.x_;
+	filterSize.y_ = filter.filter_.scale_.y_;
+
+	Vector2 nowFSizeX = { filterSize.x_ * 3,filterSize.x_ * 3 };
+	Vector2 nowFSizeY = { filterSize.y_ * 3,filterSize.y_ * 3 };
+
+	// フィルター
+	filter.Update();
+
+	// プレイヤー
+	//player.Update(filter.filter_, nowFSizeX, nowFSizeY);
+
+	player.player_.UpdateMatrix();
+	player.playerDra_.Update();
 
 	// ブロック
-	for (size_t i = 0; i < idx; i++)
+
+	for (int i = 0; i < block.size(); i++)
 	{
-		block_[i].UpdateMatrix();
-		blockDra_[i].Update();
+		block[i]->Update(filter.filter_);
 	}
 
+	/*for (int i = 0; i < blockCount; i++)
+	{
+		block[i].Update(filter.filter_);
+	}*/
+
+	//YMath::Vector3 playerPosFold = player.player_.pos_ * 2;
+	//YMath::Vector3 filterPosFold = filter.filter_.pos_ * 2;
+
+	/*if (nowMode)
+	{*/
+
+	if (player.JumpFlag == false)
+	{
+		if (player.Gravity < 2.0f)
+			player.Gravity += player.GravityPower;
+
+		if (player.GravityPower < 0.1f)
+			player.GravityPower += 0.02f;
+	}
+	else if (player.JumpFlag == true)
+	{
+		player.Gravity = 0;
+		player.GravityPower = 0;
+
+		player.Jump -= player.JumpPower;
+
+		if (player.JumpPower < 0.1f)
+			player.JumpPower += 0.05f;
+
+		//playerPos.y -= Jump;
+
+		if (player.Jump < 9.5f)
+		{
+			player.JumpFlag = false;
+			player.Jump = 0;
+		}
+	}
+
+	if (!player.JumpFlag)
+	{
+		DS.x_ = 0;
+		DS.y_ = 0;
+		AW.x_ = 0;
+		AW.y_ = 1;
+
+		player.player_.pos_.y_ -= player.Gravity * 0.1f;
+
+		for (int i = 0; i < block.size(); i++)
+		{
+			if (block[i]->nowKind != None)
+			{
+				if (block[i]->sukeF == false)
+				{
+					YMath::Vector2 BlockSize;
+					BlockSize.x_ = block[i]->block_.scale_.x_;
+					BlockSize.y_ = block[i]->block_.scale_.y_;
+
+					player.player_.pos_ =
+						BoxCollision(
+							player.player_.pos_,
+							RL,
+							WS,
+							block[i]->block_.pos_,
+							BlockSize,
+							DS,
+							AW
+						);
+				}
+			}
+		}
+
+		player.player_.UpdateMatrix();
+		player.playerDra_.Update();
+	}
+
+	if (player.JumpFlag)
+	{
+		DS.x_ = 0;
+		DS.y_ = 1;
+		AW.x_ = 0;
+		AW.y_ = 0;
+
+		player.player_.pos_.y_ += player.Jump * 0.1f;
+
+		for (int i = 0; i < block.size(); i++)
+		{
+			if (block[i]->nowKind != None)
+			{
+				if (block[i]->sukeF == false)
+				{
+					YMath::Vector2 BlockSize;
+					BlockSize.x_ = block[i]->block_.scale_.x_;
+					BlockSize.y_ = block[i]->block_.scale_.y_;
+
+					player.player_.pos_ =
+						BoxCollision(
+							player.player_.pos_,
+							RL,
+							WS,
+							block[i]->block_.pos_,
+							BlockSize,
+							DS,
+							AW
+						);
+				}
+			}
+		}
+
+		player.player_.UpdateMatrix();
+		player.playerDra_.Update();
+	}
+
+	if (sKeys_->IsDown(DIK_D))
+	{
+		DS.x_ = 1;
+		DS.y_ = 0;
+		AW.x_ = 0;
+		AW.y_ = 0;
+
+		if (nowMode)
+		{
+			player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
+		}
+
+		for (int i = 0; i < block.size(); i++)
+		{
+			if (block[i]->nowKind != None)
+			{
+				if (block[i]->sukeF == false)
+				{
+					YMath::Vector2 BlockSize;
+					BlockSize.x_ = block[i]->block_.scale_.x_;
+					BlockSize.y_ = block[i]->block_.scale_.y_;
+
+					player.player_.pos_ =
+						BoxCollision(
+							player.player_.pos_,
+							RL,
+							WS,
+							block[i]->block_.pos_,
+							BlockSize,
+							DS,
+							AW
+						);
+				}
+			}
+		}
+	}
+
+	if (sKeys_->IsDown(DIK_A))
+	{
+		DS.x_ = 0;
+		DS.y_ = 0;
+		AW.x_ = 1;
+		AW.y_ = 0;
+
+		if (nowMode)
+		{
+			player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
+		}
+
+		for (int i = 0; i < block.size(); i++)
+		{
+			if (block[i]->nowKind != None)
+			{
+				if (block[i]->sukeF == false)
+				{
+					YMath::Vector2 BlockSize;
+					BlockSize.x_ = block[i]->block_.scale_.x_;
+					BlockSize.y_ = block[i]->block_.scale_.y_;
+
+					player.player_.pos_ =
+						BoxCollision(
+							player.player_.pos_,
+							RL,
+							WS,
+							block[i]->block_.pos_,
+							BlockSize,
+							DS,
+							AW
+						);
+				}
+			}
+		}
+	}
+
+	//}
+
+	// プレイヤー
+	player.Update(filter.filter_, nowFSizeX, nowFSizeY);
 
 	// ゲート
 	gate_.UpdateMatrix();
@@ -228,7 +624,7 @@ void PlayScene::Update()
 #pragma region 描画
 void PlayScene::DrawBackSprite2Ds()
 {
-	
+
 }
 
 void PlayScene::DrawBackSprite3Ds()
@@ -241,15 +637,59 @@ void PlayScene::DrawModels()
 	skydome_.Draw();
 
 	// ----- Pre ----- // 
-	
+
 	// プレイヤー前描画
-	playerDra_.PreDraw();
-	
+	//playerDra_.PreDraw();
+	//
+	//// ブロック前描画
+	//for (size_t i = 0; i < idx; i++)
+	//{
+	//	blockDra_[i].PreDraw();
+	//}
+
+
+	player.playerDra_.PreDraw();
+
 	// ブロック前描画
-	for (size_t i = 0; i < idx; i++)
+	for (int i = 0; i < block.size(); i++)
 	{
-		blockDra_[i].PreDraw();
+		if (block[i]->nowKind != None)
+		{
+			if (!block[i]->sukeF)
+			{
+				block[i]->blockDra_.PreDraw();
+			}
+		}
 	}
+	/*for (int i = 0; i < blockCount; i++)
+	{
+		block[i].blockDra_.PreDraw();
+	}*/
+	/*for (int i = 0; i < blockCount - (int)player.GetkadoFlag() - (int)player.GetsukeFlag(); i++)
+	{
+		block[i].blockDra_.PostDraw();
+	}*/
+	/*for (int i = 1; i < blockCountX - 2; i++)
+	{
+		block[i].blockDra_.PreDraw();
+	}
+
+	if (player.GetkadoFlag())
+	{
+		block[4].blockDra_.PreDraw();
+	}
+
+	if (player.GetsukeFlag())
+	{
+		block[3].blockDra_.PreDraw();
+	}
+
+	if (!player.JumpFlag)
+	{
+		block[1].blockDra_.PreDraw();
+	}*/
+
+
 	// ゲート前描画
 	gateDra_.PreDraw();
 
@@ -267,19 +707,58 @@ void PlayScene::DrawModels()
 
 
 	// フィルター描画
-	filterDra_.Draw();
+	filter.Draw();
 
 
 	// ----- Post ----- //
-	
-	// プレイヤー後描画
-	playerDra_.PostDraw();
-	
+
+	//// プレイヤー後描画
+	//playerDra_.PostDraw();
+	//
+	//// ブロック後描画
+	//for (size_t i = 0; i < idx; i++)
+	//{
+	//	blockDra_[i].PostDraw();
+	//}
+
+	player.playerDra_.PostDraw();
+
 	// ブロック後描画
-	for (size_t i = 0; i < idx; i++)
+	for (int i = 0; i < block.size(); i++)
 	{
-		blockDra_[i].PostDraw();
+		if (block[i]->nowKind != None)
+		{
+			if (!block[i]->sukeF)
+			{
+				block[i]->blockDra_.PostDraw();
+			}
+		}
 	}
+	/*for (int i = 0; i < blockCount; i++)
+	{
+		block[i].blockDra_.PostDraw();
+	}*/
+
+	/*for (int i = 1; i < blockCount - 2; i++)
+	{
+		block[i].blockDra_.PostDraw();
+	}
+
+	if (player.GetkadoFlag())
+	{
+		block[4].blockDra_.PostDraw();
+	}
+
+	if (player.GetsukeFlag())
+	{
+		block[3].blockDra_.PostDraw();
+	}
+
+	if (!player.JumpFlag)
+	{
+		block[1].blockDra_.PostDraw();
+	}*/
+
 	// ゲート後描画
 	gateDra_.PostDraw();
 
@@ -328,7 +807,7 @@ void PlayScene::Draw()
 	// ----- 前景スプライト2D ----- //
 
 	DrawFrontSprite2Ds();
-	
+
 	// -------------------------- //
 }
 #pragma endregion

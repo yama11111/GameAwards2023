@@ -390,6 +390,15 @@
     <ClCompile Include="Draw\Drawer\PauseDrawer.cpp">
       <Filter>Draw\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -682,6 +691,15 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\IDrawer.h">
       <Filter>Draw\Drawer\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
