@@ -21,7 +21,6 @@ using namespace YGame;
 
 
 //yうえ+した－
-
 YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
 {
 	YMath::Vector3 nowPosP = posP;
@@ -191,6 +190,22 @@ void PlayScene::Initialize()
 	// フィルター
 	filter.Inilialize();
 
+	// ----- ゲート ----- //
+
+	// トランスフォーム (位置、回転、大きさ)
+	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
+	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
+
+
+	// ----- ゴール ----- //
+
+	// トランスフォーム (位置、回転、大きさ)
+	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
+	// 描画用クラス初期化 (親トランスフォーム)
+	goalDra_.Initialize(&goal_);
+
+
 	//ブロック
 	for (int i = 0; i < blockCountY; i++)
 	{
@@ -211,6 +226,26 @@ void PlayScene::Initialize()
 
 			newBlock->block_.scale_.x_ = size / 4.0f;
 			newBlock->block_.scale_.y_ = size / 4.0f;
+
+			if (newBlock->nowKind == Start)
+			{
+				player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				player.player_.pos_.y_ = ((blockCountY / 2) - i) * size;
+
+				newBlock->nowKind = Normal;
+			}
+
+			if (map[i][j] == Gorl)
+			{
+				//player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				//player.player_.pos_.y_ = ((blockCountY / 2) - i) * size;
+			}
+
+			if (map[i][j] == Collect)
+			{
+				//player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				//player.player_.pos_.y_ = ((blockCountY / 2) - i) * size;
+			}
 
 			//格納
 			block.push_back(newBlock);
@@ -238,23 +273,6 @@ void PlayScene::Initialize()
 	//block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
 	//// 描画用クラス初期化 (親トランスフォーム、初期色)
 	//blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
-
-
-	// ----- ゲート ----- //
-
-	// トランスフォーム (位置、回転、大きさ)
-	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
-	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
-
-
-	// ----- ゴール ----- //
-
-	// トランスフォーム (位置、回転、大きさ)
-	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
-	// 描画用クラス初期化 (親トランスフォーム)
-	goalDra_.Initialize(&goal_);
-
 
 	// 天球初期化
 	skydome_.Initialize();
@@ -594,7 +612,6 @@ void PlayScene::Update()
 	gate_.UpdateMatrix();
 	gateDra_.Update();
 
-
 	// ゴール
 	goal_.UpdateMatrix();
 	goalDra_.Update();
@@ -653,7 +670,7 @@ void PlayScene::DrawModels()
 	// ブロック前描画
 	for (int i = 0; i < block.size(); i++)
 	{
-		if (block[i]->nowKind != None)
+		if (block[i]->nowKind == Normal || block[i]->nowKind == ColorB)
 		{
 			if (!block[i]->sukeF)
 			{
@@ -726,7 +743,7 @@ void PlayScene::DrawModels()
 	// ブロック後描画
 	for (int i = 0; i < block.size(); i++)
 	{
-		if (block[i]->nowKind != None)
+		if (block[i]->nowKind == Normal || block[i]->nowKind == ColorB)
 		{
 			if (!block[i]->sukeF)
 			{

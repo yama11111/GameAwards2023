@@ -27,14 +27,14 @@ void Block::Update(YGame::Transform filter)
 	float b_left = block_.pos_.x_ - block_.scale_.x_;
 
 	//フィルターの上下左右
-	float f_top = filter.pos_.y_ - filter.scale_.y_;
-	float f_bottom = filter.pos_.y_ + filter.scale_.y_;
-	float f_right = filter.pos_.x_ + filter.scale_.x_;
-	float f_left = filter.pos_.x_ - filter.scale_.x_;
+	float f_top = filter.pos_.y_ - (filter.scale_.y_ * 2);
+	float f_bottom = filter.pos_.y_ + (filter.scale_.y_ * 2);
+	float f_right = filter.pos_.x_ + (filter.scale_.x_ * 2);
+	float f_left = filter.pos_.x_ - (filter.scale_.x_ * 2);
 
 	//SetsukeFlag(false);
 
-	if (nowKind == Color)
+	if (nowKind == ColorB)
 	{
 		//フィルターに当たっているか
 		if (b_left < f_right ||
@@ -42,6 +42,8 @@ void Block::Update(YGame::Transform filter)
 			b_top  < f_bottom ||
 			b_bottom > f_top)
 		{
+			sukeF = true;
+
 			//完全にフィルター内にいるか
 			if (b_right < f_right &&
 				b_left > f_left &&
@@ -98,35 +100,31 @@ void Block::Update(YGame::Transform filter)
 				//}
 				////右
 				//else 
-				if (b_right > f_right &&
-					b_left < f_right)
+				if (b_right > f_right)
 				{
 					//block_.scale_.x_ = block_.pos_.x_ - f_right;
-					sukeF = true;
+					sukeF = false;
 
 				}
 				//左
-				else if (b_right > f_left &&
-					b_left < f_left)
+				else if (b_right > f_left)
 				{
 					//block_.scale_.x_ = f_left - block_.pos_.x_;
-					sukeF = true;
+					sukeF = false;
 				}
 				//上
-				else if (b_bottom > f_top &&
-					b_top < f_top)
+				else if (b_bottom > f_top)
 				{
 					//あってる
-					sukeF = true;
+					sukeF = false;
 					//block_.scale_.y_ = f_top - block_.pos_.y_;
 				}
 
-				else if (b_bottom > f_bottom &&
-					b_top < f_bottom)
+				else if (b_bottom > f_bottom)
 				{
 					//できた
 					//block_.scale_.y_ = block_.pos_.y_ - f_bottom;
-					sukeF = true;
+					sukeF = false;
 				}
 			}
 		}
@@ -150,7 +148,7 @@ void Block::Reset()
 
 void Block::SetMode()
 {
-	if (nowKind == Color)
+	if (nowKind == ColorB)
 	{
 		blockDra_.Initialize(&block_, IDrawer::Mode::Red);
 	}

@@ -6,7 +6,7 @@ enum kind
 {
 	None,	//空白
 	Normal,	//普通
-	Color,	//透けるよ
+	ColorB,	//透けるよ
 	//ABS,	//可変不可
 	Start,	//プレイヤーをスタートに出現のちにNormalに移行
 	Gorl,	//ゴール
