@@ -201,7 +201,7 @@ void PlayScene::Initialize()
 	// ----- ゴール ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
+	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, Vector3{0.5f,0.5f,0.5f} });
 	// 描画用クラス初期化 (親トランスフォーム)
 	goalDra_.Initialize(&goal_);
 
@@ -237,8 +237,8 @@ void PlayScene::Initialize()
 
 			if (map[i][j] == Gorl)
 			{
-				//player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
-				//player.player_.pos_.y_ = ((blockCountY / 2) - i) * size;
+				goal_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				goal_.pos_.y_ = ((blockCountY / 2) - i) * size;
 			}
 
 			if (map[i][j] == Collect)
@@ -708,7 +708,7 @@ void PlayScene::DrawModels()
 
 
 	// ゲート前描画
-	gateDra_.PreDraw();
+	//gateDra_.PreDraw();
 
 	// ゴール描画
 	goalDra_.Draw();
@@ -777,7 +777,7 @@ void PlayScene::DrawModels()
 	}*/
 
 	// ゲート後描画
-	gateDra_.PostDraw();
+	//gateDra_.PostDraw();
 
 	// --------------- //
 }
