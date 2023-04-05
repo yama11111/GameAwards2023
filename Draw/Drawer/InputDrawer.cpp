@@ -47,7 +47,7 @@ void InputDrawerCommon::StaticInitialize()
 
 #pragma region InputDrawer
 
-void InputDrawer::Initalize()
+void InputDrawer::Initalize(const SceneType& sceneType)
 {
 	// ----- 生成 ----- //
 
@@ -65,15 +65,23 @@ void InputDrawer::Initalize()
 
 
 	// リセット
-	Reset();
+	Reset(sceneType);
 }
 
-void InputDrawer::Reset()
+void InputDrawer::Reset(const SceneType& sceneType)
 {
 	// ----- Object初期化 ----- //
 
-	// WASD
-	keyWASDObj_->Initialize({ Key::WASD, {}, Key::Scale });
+	// WASD (シーンの種類によって変える)
+	if (sceneType == SceneType::Select)
+	{
+		keyWASDObj_->Initialize({ Select::Key::WASD, {}, Select::Key::Scale });
+	}
+	else if (sceneType == SceneType::Play)
+	{
+		keyWASDObj_->Initialize({ Play::Key::WASD, {}, Play::Key::Scale });
+	}
+
 	// WASD_PUSH
 	keyWObj_->Initialize({ {} });
 	keyAObj_->Initialize({ {} });
@@ -85,11 +93,26 @@ void InputDrawer::Reset()
 	keySObj_->parent_ = &keyWASDObj_->m_;
 	keyDObj_->parent_ = &keyWASDObj_->m_;
 
-	// SPACE
-	keySpaceObj_->Initialize({ Key::Space, {}, Key::Scale });
+	// SPACE (シーンの種類によって変える)
+	if (sceneType == SceneType::Select)
+	{
+		keySpaceObj_->Initialize({ Select::Key::Space, {}, Select::Key::Scale });
+	}
+	else if (sceneType == SceneType::Play)
+	{
+		keySpaceObj_->Initialize({ Play::Key::Space, {}, Play::Key::Scale });
+	}
 
-	// TAB
-	keyTabObj_->Initialize({ Key::Tab, {}, Key::Scale });
+	// TAB (シーンの種類によって変える)
+	if (sceneType == SceneType::Select)
+	{
+		keyTabObj_->Initialize({ Select::Key::Tab, {}, Select::Key::Scale });
+	}
+	else if (sceneType == SceneType::Play)
+	{
+		keyTabObj_->Initialize({ Play::Key::Tab, {}, Play::Key::Scale });
+	}
+
 
 	// ----- フラグ初期化 ----- //
 

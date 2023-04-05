@@ -399,6 +399,9 @@
     <ClCompile Include="Draw\Drawer\LetterBoxDrawer.cpp">
       <Filter>Draw\Drawer\ex</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\Drawer\CardDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -702,6 +705,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\LetterBoxDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\CardDrawer.h">
       <Filter>Draw\Drawer\ex</Filter>
     </ClInclude>
   </ItemGroup>

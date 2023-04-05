@@ -177,5 +177,79 @@ namespace DrawerConfig
 			// 指数
 			const float Exponent = 1.4f;
 		}
+
+		// カード
+		namespace Card 
+		{
+			// Xの位置
+			const float DefPosX = WinSize.x_ - 96.0f;
+			
+			// 中心の高さ
+			const float CenterHeight = WinSize.y_ / 2.0f;
+			
+			// 全体の高さ
+			const float TotalHeight = 512.0f;
+		}
+
+		// レターボックス
+		namespace LetterBox
+		{
+			// 高さ (上)
+			const float TopHeight = 96.0f;
+			// 高さ (下)
+			const float BottomHeight = 96.0f;
+		}
+
+		// ロゴ
+		namespace Logo 
+		{
+			// 位置
+			const YMath::Vector3 Pos = { 224.0f,48.0f,0.0f };
+		}
+	}
+
+	// カード
+	namespace Card
+	{
+		// ブヨブヨアニメーション
+		namespace SlimeAction
+		{
+			// 時間
+			const unsigned int Frame = 10;
+			
+			// 伸縮量
+			const float Value = 0.25f;
+
+			// 指数
+			const float Exponent = 1.4f;
+		}
+
+		// アニメーション
+		namespace Animation
+		{
+			// フレーム
+			const int Frame = 10;
+
+			// 移動
+			namespace Move
+			{
+
+				// 移動量 (X)
+				const float ValueX = -128.0f;
+
+				// 指数
+				const float Exponent = 1.2f;
+			}
+
+			// 拡大
+			namespace Scale
+			{
+				// 拡大量
+				const float Value = 0.25f;
+
+				// 指数
+				const float Exponent = 1.2f;
+			}
+		}
 	}
 }

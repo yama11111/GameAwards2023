@@ -28,9 +28,14 @@ void SelectScene::Load()
 
 	// ----- 静的初期化 ----- //
 
-	LetterBoxDrawerCommon::StaticInitialize();
+	InputDrawerCommon::StaticInitialize();
+	PauseDrawerCommon::StaticInitialize();
+
 	SkydomeDrawerCommon::StaticInitialize();
+	
+	LetterBoxDrawerCommon::StaticInitialize();
 	StageDrawerCommon::StaticInitialize(&transferVP_);
+	CardDrawerCommon::StaticInitialize();
 	SelectDrawerCommon::StaticInitialize(&transferVP_);
 }
 #pragma endregion
@@ -39,6 +44,11 @@ void SelectScene::Load()
 #pragma region 初期化
 void SelectScene::Initialize()
 {
+	// input
+	inputDra_.Initalize(InputDrawer::SceneType::Select);
+	// pause
+	pauseDra_.Initalize();
+
 	// ステージ番号
 	stageIdx_ = 1;
 
@@ -48,9 +58,6 @@ void SelectScene::Initialize()
 
 	// 天球初期化
 	skydome_.Initialize();
-
-	// レターボックス初期化
-	lbDra_.Initialize(96.0f, 96.0f);
 
 	// カメラ初期化
 	camera_.Initialize({ {+4.0f,+31.0f,-15.0f}, {-PI / 15.0f,-PI / 30.0f,-PI / 45.0f} });
@@ -71,8 +78,16 @@ void SelectScene::Finalize()
 #pragma region 更新
 void SelectScene::Update()
 {
+	// input更新
+	inputDra_.Update();
+	// pause更新
+	pauseDra_.Update();
+
+
 	// ステージ選択 (A or D)
-	stageIdx_ += sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A);
+	stageIdx_ += 
+		+ (sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
+		- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
 
 	// ステージ番号クランプ
 	stageIdx_ = YMath::Clamp(stageIdx_, 1, StageNum);
@@ -90,9 +105,6 @@ void SelectScene::Update()
 
 	// 天球更新
 	skydome_.Update();
-
-	// レターボックス更新
-	lbDra_.Update();
 
 	// カメラ更新 + 代入
 	camera_.Update();
@@ -124,11 +136,13 @@ void SelectScene::DrawSprite3Ds()
 
 void SelectScene::DrawFrontSprite2Ds()
 {
-	// レターボックス描画
-	lbDra_.Draw();
-
-	// 描画用クラス更新
+	// 描画
 	dra_.DrawSprite2D();
+
+	// input描画
+	inputDra_.Draw(false);
+	// pause描画
+	pauseDra_.Draw();
 }
 
 void SelectScene::Draw()

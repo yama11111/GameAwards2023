@@ -48,7 +48,7 @@ void HUDDrawer::Initalize(const Pilot& pilot)
 
 
 	// input
-	inputDra_.Initalize();
+	inputDra_.Initalize(InputDrawer::SceneType::Play);
 
 	// pause
 	pauseDra_.Initalize();
@@ -71,7 +71,7 @@ void HUDDrawer::Reset(const Pilot& pilot)
 
 
 	// input
-	inputDra_.Reset();
+	inputDra_.Reset(InputDrawer::SceneType::Play);
 
 	// pause
 	pauseDra_.Reset();

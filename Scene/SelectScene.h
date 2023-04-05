@@ -1,7 +1,8 @@
 #pragma once
 #include "BaseScene.h"
 #include "SelectDrawer.h"
-#include "LetterBoxDrawer.h"
+#include "InputDrawer.h"
+#include "PauseDrawer.h"
 #include "Camera.h"
 #include "Skydome.h"
 
@@ -26,6 +27,11 @@ namespace YScene
 #pragma endregion
 #pragma region ゲームオブジェクト
 
+		// input
+		InputDrawer inputDra_;
+		// pause
+		PauseDrawer pauseDra_;
+
 		// ステージ番号
 		int stageIdx_ = 0;
 
@@ -34,9 +40,6 @@ namespace YScene
 
 		// 天球
 		Skydome skydome_;
-
-		// レターボックス
-		YGame::LetterBoxDrawer lbDra_;
 
 		// カメラ
 		YGame::Camera camera_;

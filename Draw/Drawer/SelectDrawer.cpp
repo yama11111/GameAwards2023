@@ -18,14 +18,14 @@ using YGame::Model;
 using YGame::TextureManager;
 using YGame::Color;
 using YGame::SlimeActor;
+using YGame::LetterBoxDrawer;
 using YMath::Vector3;
 using namespace DrawerConfig::Select;
 
 #pragma endregion
 
-std::array<std::unique_ptr<YGame::Sprite2D>, 10> SelectDrawerCommon::sNumberSpr_ =
-{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-std::unique_ptr<YGame::Model> SelectDrawerCommon::sEarthModel_ = nullptr;
+unique_ptr<Model> SelectDrawerCommon::sEarthModel_ = nullptr;
+unique_ptr<Sprite2D> SelectDrawerCommon::sLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
 
 void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
@@ -39,18 +39,9 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	TextureManager* pTexMan = TextureManager::GetInstance();
 
 	// ----- スプライト読み込み ----- //
-
-	// 数字
-	sNumberSpr_[0].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/0.png", false) }));
-	sNumberSpr_[1].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/1.png", false) }));
-	sNumberSpr_[2].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/2.png", false) }));
-	sNumberSpr_[3].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/3.png", false) }));
-	sNumberSpr_[4].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/4.png", false) }));
-	sNumberSpr_[5].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/5.png", false) }));
-	sNumberSpr_[6].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/6.png", false) }));
-	sNumberSpr_[7].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/7.png", false) }));
-	sNumberSpr_[8].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/8.png", false) }));
-	sNumberSpr_[9].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/9.png", false) }));
+	
+	// ロゴ
+	sLogoSpr_.reset(Sprite2D::Create({}, { pTexMan->Load("Select/logo.png", false) }));
 
 	// ----- モデル読み込み ----- //
 
@@ -92,7 +83,47 @@ void SelectDrawer::Initalize(int* pStageIdx)
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
 		stageDras_[i].reset(new StageDrawer());
+
+		// 番号がトランスフォームの数より小さいなら
+		if (i < aliveStages_.size())
+		{
+			// 使う用のトランスフォームを代入
+			stageDras_[i]->Initalize(aliveStages_[i].get(), static_cast<int>(i + 1));
+		}
+		// それ以外なら
+		else
+		{
+			// 使わない用のトランスフォームを代入
+			stageDras_[i]->Initalize(deadStage_.get(), static_cast<int>(i + 1));
+		}
 	}
+	
+
+	// ステージカード
+	cards_.resize(StageNum);
+	for (size_t i = 0; i < cards_.size(); i++)
+	{
+		cards_[i].reset(new Transform());
+	}
+
+	// ステージカード描画クラス
+	cardDras_.resize(StageNum);
+	for (size_t i = 0; i < cardDras_.size(); i++)
+	{
+		cardDras_[i].reset(new CardDrawer());
+		cardDras_[i]->Initialize(cards_[i].get(), static_cast<int>(i + 1));
+	}
+
+	// レターボックス初期化
+	lbDra_.reset(new LetterBoxDrawer());
+	lbDra_->Initialize(LetterBox::TopHeight, LetterBox::BottomHeight);
+
+
+	// ロゴ初期化
+	logoObj_.reset(Sprite2DObject::Create({}));
+
+
+	// ----- イージング ----- //
 
 	// ステージ回転用パワー
 	stageRotaPows_.resize(static_cast<size_t>(StageNum - 1)); // リサイズ
@@ -117,7 +148,9 @@ void SelectDrawer::Reset()
 	earthObj_->Initialize({ {},{},{earthScaleVal,earthScaleVal,earthScaleVal} });
 	color_->Initialize({ 0.1f,0.0f,0.1f,1.0f });
 
-	// ステージトランスフォーム (使う用)
+	// ----- ステージ ----- //
+
+	// トランスフォーム (使う用)
 	for (size_t i = 0; i < aliveStages_.size(); i++)
 	{
 		// 位置
@@ -135,28 +168,48 @@ void SelectDrawer::Reset()
 			}
 		);
 	}
-
-	// ステージトランスフォーム (使わない用)
+	// トランスフォーム (使わない用)
 	deadStage_->Initialize({ {-2000,-2000,-2000}, {}, {} });
-
-	// ステージ描画クラス
+	// 描画クラス
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
-		// 番号がトランスフォームの数より小さいなら
-		if (i < aliveStages_.size())
-		{
-			// 使う用のトランスフォームを代入
-			stageDras_[i]->Initalize(aliveStages_[i].get(), static_cast<int>(i + 1));
-		}
-		// それ以外なら
-		else
-		{
-			// 使わない用のトランスフォームを代入
-			stageDras_[i]->Initalize(deadStage_.get(), static_cast<int>(i + 1));
-		}
-
 		stageDras_[i]->Reset();
 	}
+
+	// ----- ステージカード ----- //
+
+	// 高さの幅
+	float heightVal = Card::TotalHeight / static_cast<float>(StageNum - 1);
+
+	// トランスフォーム (親)
+	for (size_t i = 0; i < cards_.size(); i++)
+	{
+		// y の位置
+		float y = Card::CenterHeight + (Card::TotalHeight / 2.0f)
+			- heightVal * static_cast<float>(i);
+		
+		cards_[i]->Initialize(
+			{
+				{ Card::DefPosX, y, 0.0f },
+				{},
+				{ 1.0f, 1.0f, 1.0f }
+			}
+		);
+	}
+	// 描画クラス
+	for (size_t i = 0; i < cardDras_.size(); i++)
+	{
+		cardDras_[i]->Reset();
+	}
+
+
+	// レターボックス
+	lbDra_->Reset();
+
+
+	// ロゴ
+	logoObj_->Initialize({ Logo::Pos });
+
 
 	// ----- その他初期化 ----- //
 
@@ -234,17 +287,48 @@ void SelectDrawer::Update()
 	// 地球
 	earthObj_->UpdateMatrix();
 
-	// ステージオブジェクト
+	// ----- ステージ ----- //
+	
+	// トランスフォーム
 	for (size_t i = 0; i < aliveStages_.size(); i++)
 	{
 		aliveStages_[i]->UpdateMatrix();
 	}
-
-	// ステージ描画クラス
+	// 描画クラス
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
 		stageDras_[i]->Update();
 	}
+
+	// ----- ステージカード ----- //
+
+	// トランスフォーム
+	for (size_t i = 0; i < cards_.size(); i++)
+	{
+		cards_[i]->UpdateMatrix();
+	}
+	// 描画クラス
+	for (size_t i = 0; i < cardDras_.size(); i++)
+	{
+		cardDras_[i]->Update();
+		
+		// 選択中か
+		bool isSelect = false;
+
+		// 選択中のステージ番号のとき
+		if (i == *pStageIdx_ - 1)
+		{
+			// 選択
+			isSelect = true;
+		}
+
+		// 選択中か設定
+		cardDras_[i]->SetSelect(isSelect);
+	}
+
+
+	// レターボックス
+	lbDra_->Update();
 }
 
 void SelectDrawer::DrawModel()
@@ -268,5 +352,15 @@ void SelectDrawer::DrawSprite3D()
 }
 void SelectDrawer::DrawSprite2D()
 {
+	// レターボックス描画
+	lbDra_->Draw();
 
+	// カード描画 (後ろから)
+	for (int i = static_cast<int>(cardDras_.size()) - 1; i >= 0; i--)
+	{
+		cardDras_[i]->Draw();
+	}
+
+	// ロゴ描画
+	sLogoSpr_->Draw(logoObj_.get());
 }

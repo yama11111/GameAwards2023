@@ -114,6 +114,7 @@
     <ClCompile Include="Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\CardDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\DrawerManager.cpp" />
     <ClCompile Include="Draw\Drawer\FilterDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Draw\Actor\SlimeActor.h" />
     <ClInclude Include="Draw\Drawer\BlockDrawer.h" />
     <ClInclude Include="Draw\Drawer\BuildingDrawer.h" />
+    <ClInclude Include="Draw\Drawer\CardDrawer.h" />
     <ClInclude Include="Draw\Drawer\DrawerConfig.h" />
     <ClInclude Include="Draw\Drawer\DrawerManager.h" />
     <ClInclude Include="Draw\Drawer\FilterDrawer.h" />

@@ -58,10 +58,17 @@ private:
 	// TAB
 	bool isPushTab_ = false;
 public:
+	// 初期化用シーン
+	enum class SceneType
+	{
+		Select, // ステージセレクト
+		Play, // ゲーム
+	};
+public:
 	// 初期化
-	void Initalize();
+	void Initalize(const SceneType& sceneType);
 	// リセット
-	void Reset();
+	void Reset(const SceneType& sceneType);
 	// 更新
 	void Update();
 	// 描画

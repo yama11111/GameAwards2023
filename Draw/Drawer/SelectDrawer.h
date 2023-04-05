@@ -1,17 +1,17 @@
 #pragma once
 #include "StageDrawer.h"
+#include "CardDrawer.h"
+#include "LetterBoxDrawer.h"
 #include "Sprite2D.h"
 #include "Power.h"
 
 class SelectDrawerCommon
 {
 protected:
-	// 静的数字スプライト
-	static std::array<std::unique_ptr<YGame::Sprite2D>, 10> sNumberSpr_;
-	// 静的スプライト
-	// static std::unique_ptr<YGame::Sprite2D> sStageSpr_;
 	// 静的地球モデル
 	static std::unique_ptr<YGame::Model> sEarthModel_;
+	// 静的ロゴスプライト
+	static std::unique_ptr<YGame::Sprite2D> sLogoSpr_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:
@@ -22,6 +22,8 @@ public:
 class SelectDrawer : private SelectDrawerCommon
 {
 private:
+	// ----- オブジェクト ----- //
+	
 	// 核
 	std::unique_ptr<YGame::Transform> core_;
 	
@@ -39,7 +41,23 @@ private:
 	// ステージ描画クラス
 	std::vector<std::unique_ptr<StageDrawer>> stageDras_;
 
+
+	// ステージカード用トランスフォーム (親)
+	std::vector<std::unique_ptr<YGame::Transform>> cards_;
+	// ステージカード描画クラス
+	std::vector<std::unique_ptr<CardDrawer>> cardDras_;
+
 	
+	// レターボックス
+	std::unique_ptr<YGame::LetterBoxDrawer> lbDra_;
+
+
+	// ロゴスプライトオブジェクト
+	std::unique_ptr<YGame::Sprite2DObject> logoObj_;
+
+
+	// ----- アニメーション ----- //
+
 	// ステージ番号ポインタ
 	int* pStageIdx_ = nullptr;
 
