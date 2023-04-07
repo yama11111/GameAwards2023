@@ -19,6 +19,31 @@ using namespace YGame;
 #pragma region Static関連
 #pragma endregion 
 
+bool BoxCollision(YGame::Transform obj1, YGame::Transform obj2)
+{
+	//プレイヤーの上下左右
+	float p_top = obj1.pos_.y_ - obj1.scale_.x_;
+	float p_bottom = obj1.pos_.y_ + obj1.scale_.y_;
+	float p_right = obj1.pos_.x_ + obj1.scale_.x_;
+	float p_left = obj1.pos_.x_ - obj1.scale_.y_;
+
+	//フィルターの上下左右
+	float f_top = obj2.pos_.y_ - obj2.scale_.x_;
+	float f_bottom = obj2.pos_.y_ + obj2.scale_.y_;
+	float f_right = obj2.pos_.x_ + obj2.scale_.x_;
+	float f_left = obj2.pos_.x_ - obj2.scale_.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 //yうえ+した－
 YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
@@ -221,7 +246,7 @@ void PlayScene::Initialize()
 
 			float size = 2.0f;
 
-			newBlock->block_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+			newBlock->block_.pos_.x_ = (j - (blockCountX / 3)) * size - 8;
 			newBlock->block_.pos_.y_ = ((blockCountY / 2) - i) * size;
 
 			newBlock->block_.scale_.x_ = size / 4.0f;
@@ -229,16 +254,24 @@ void PlayScene::Initialize()
 
 			if (newBlock->nowKind == Start)
 			{
-				player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				player.player_.pos_.x_ = (j - (blockCountX / 3)) * size - 8;
 				player.player_.pos_.y_ = ((blockCountY / 2) - i) * size;
+
+				player.startPos.x_ = (j - (blockCountX / 3)) * size - 8;
+				player.startPos.y_ = ((blockCountY / 2) - i) * size;
 
 				newBlock->nowKind = Normal;
 			}
 
 			if (map[i][j] == Gorl)
 			{
-				goal_.pos_.x_ = (j - (blockCountX / 3)) * size - 5;
+				goal_.pos_.x_ = (j - (blockCountX / 3)) * size - 8;
 				goal_.pos_.y_ = ((blockCountY / 2) - i) * size;
+
+				goal_.scale_.x_ = size / 4.0f;
+				goal_.scale_.y_ = size / 4.0f;
+
+				newBlock->nowKind = None;
 			}
 
 			if (map[i][j] == Collect)
@@ -307,9 +340,9 @@ void PlayScene::Update()
 	// 操作切り替え
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		isPlayer_ = !isPlayer_;
+		/*isPlayer_ = !isPlayer_;
 		if (isPlayer_) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }*/
 	}
 
 	// リセット
@@ -317,6 +350,7 @@ void PlayScene::Update()
 	{
 		player.Reset();
 		filter.Reset();
+
 
 		/*for (int i = 0; i < block.size(); i++)
 		{
@@ -360,33 +394,43 @@ void PlayScene::Update()
 
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		nowMode = !nowMode;
+		if (player.GetsukeFlag() == false)
+		{
+			nowMode = !nowMode;
+
+			isPlayer_ = !isPlayer_;
+			if (isPlayer_) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		}
 	}
 
 	//重力
 	//player.player_.pos_.y_ -= 0.2f;
 
-	if (sKeys_->IsTrigger(DIK_W) && player.JumpFlag == false)
-	{
-		player.Jump = 10;
-		player.JumpPower = 0;
-
-		player.JumpFlag = true;
-
-		player.Gravity = 0;
-		player.GravityPower = 0;
-	}
 
 	if (nowMode)
 	{
 		//// プレイヤー
 		//player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
 		//player.player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
+		if (sKeys_->IsTrigger(DIK_W) && player.JumpFlag == false)
+		{
+			//if (player.player_.pos_.y_ - 0.2f)
+			//{
+			player.Jump = 10;
+			player.JumpPower = 0;
+
+			player.JumpFlag = true;
+
+			player.Gravity = 0;
+			player.GravityPower = 0;
+			//}
+		}
 	}
 	else {
 		// フィルター
-		filter.filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.5f;
-		filter.filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.5f;
+		filter.filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
+		filter.filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
 	}
 
 	RL.x_ = player.player_.scale_.x_ * 2;
@@ -425,184 +469,217 @@ void PlayScene::Update()
 	//YMath::Vector3 playerPosFold = player.player_.pos_ * 2;
 	//YMath::Vector3 filterPosFold = filter.filter_.pos_ * 2;
 
-	/*if (nowMode)
-	{*/
+	//プレイヤーの上下左右
+	float p_top = player.player_.pos_.y_ - player.player_.scale_.y_;
+	float p_bottom = player.player_.pos_.y_ + player.player_.scale_.y_;
+	float p_right = player.player_.pos_.x_ + player.player_.scale_.x_;
+	float p_left = player.player_.pos_.x_ - player.player_.scale_.x_;
 
-	if (player.JumpFlag == false)
+	//フィルターの上下左右
+	float g_top = goal_.pos_.y_ - goal_.scale_.y_;
+	float g_bottom = goal_.pos_.y_ + goal_.scale_.y_;
+	float g_right = goal_.pos_.x_ + goal_.scale_.x_;
+	float g_left = goal_.pos_.x_ - goal_.scale_.x_;
+
+	//フィルターに当たっているか
+	if (BoxCollision(player.player_, goal_))
 	{
-		if (player.Gravity < 2.0f)
-			player.Gravity += player.GravityPower;
-
-		if (player.GravityPower < 0.1f)
-			player.GravityPower += 0.02f;
+		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
 	}
-	else if (player.JumpFlag == true)
+
+	if (nowMode)
 	{
-		player.Gravity = 0;
-		player.GravityPower = 0;
-
-		player.Jump -= player.JumpPower;
-
-		if (player.JumpPower < 0.1f)
-			player.JumpPower += 0.05f;
-
-		//playerPos.y -= Jump;
-
-		if (player.Jump < 9.5f)
+		if (player.JumpFlag == false)
 		{
-			player.JumpFlag = false;
-			player.Jump = 0;
+			if (player.Gravity < 2.0f)
+				player.Gravity += player.GravityPower;
+
+			if (player.GravityPower < 0.1f)
+				player.GravityPower += 0.02f;
 		}
-	}
-
-	if (!player.JumpFlag)
-	{
-		DS.x_ = 0;
-		DS.y_ = 0;
-		AW.x_ = 0;
-		AW.y_ = 1;
-
-		player.player_.pos_.y_ -= player.Gravity * 0.1f;
-
-		for (int i = 0; i < block.size(); i++)
+		else if (player.JumpFlag == true)
 		{
-			if (block[i]->nowKind != None)
-			{
-				if (block[i]->sukeF == false)
-				{
-					YMath::Vector2 BlockSize;
-					BlockSize.x_ = block[i]->block_.scale_.x_;
-					BlockSize.y_ = block[i]->block_.scale_.y_;
+			//player.Gravity = 0;
+			//player.GravityPower = 0;
 
-					player.player_.pos_ =
-						BoxCollision(
-							player.player_.pos_,
-							RL,
-							WS,
-							block[i]->block_.pos_,
-							BlockSize,
-							DS,
-							AW
-						);
+			player.Jump -= player.JumpPower;
+
+			if (player.JumpPower < 0.1f)
+				player.JumpPower += 0.05f;
+
+			//playerPos.y -= Jump;
+
+			if (player.Jump < 9.5f)
+			{
+				player.JumpFlag = false;
+				player.Jump = 0;
+			}
+		}
+
+		if (!player.JumpFlag)
+		{
+			DS.x_ = 0;
+			DS.y_ = 0;
+			AW.x_ = 0;
+			AW.y_ = 1;
+
+			player.player_.pos_.y_ -= player.Gravity * 0.1f;
+
+			if (player.GetsukeFlag() == false)
+			{
+				for (int i = 0; i < block.size(); i++)
+				{
+					if (block[i]->nowKind != None)
+					{
+						if (block[i]->sukeF == false)
+						{
+							YMath::Vector2 BlockSize;
+							BlockSize.x_ = block[i]->block_.scale_.x_;
+							BlockSize.y_ = block[i]->block_.scale_.y_;
+
+							player.player_.pos_ =
+								BoxCollision(
+									player.player_.pos_,
+									RL,
+									WS,
+									block[i]->block_.pos_,
+									BlockSize,
+									DS,
+									AW
+								);
+						}
+					}
+				}
+			}
+
+			player.player_.UpdateMatrix();
+			player.playerDra_.Update();
+		}
+
+		if (player.JumpFlag)
+		{
+			DS.x_ = 0;
+			DS.y_ = 1;
+			AW.x_ = 0;
+			AW.y_ = 0;
+
+			player.player_.pos_.y_ += player.Jump * 0.1f;
+
+			if (player.GetsukeFlag() == false)
+			{
+				for (int i = 0; i < block.size(); i++)
+				{
+					if (block[i]->nowKind != None)
+					{
+						if (block[i]->sukeF == false)
+						{
+							YMath::Vector2 BlockSize;
+							BlockSize.x_ = block[i]->block_.scale_.x_;
+							BlockSize.y_ = block[i]->block_.scale_.y_;
+
+							player.player_.pos_ =
+								BoxCollision(
+									player.player_.pos_,
+									RL,
+									WS,
+									block[i]->block_.pos_,
+									BlockSize,
+									DS,
+									AW
+								);
+						}
+					}
+				}
+			}
+
+			player.player_.UpdateMatrix();
+			player.playerDra_.Update();
+		}
+
+		if (sKeys_->IsDown(DIK_D))
+		{
+			DS.x_ = 1;
+			DS.y_ = 0;
+			AW.x_ = 0;
+			AW.y_ = 0;
+
+			if (nowMode)
+			{
+				player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.2f;
+			}
+
+			if (player.GetsukeFlag() == false)
+			{
+				for (int i = 0; i < block.size(); i++)
+				{
+					if (block[i]->nowKind != None)
+					{
+						if (block[i]->sukeF == false)
+						{
+							YMath::Vector2 BlockSize;
+							BlockSize.x_ = block[i]->block_.scale_.x_;
+							BlockSize.y_ = block[i]->block_.scale_.y_;
+
+							player.player_.pos_ =
+								BoxCollision(
+									player.player_.pos_,
+									RL,
+									WS,
+									block[i]->block_.pos_,
+									BlockSize,
+									DS,
+									AW
+								);
+						}
+					}
 				}
 			}
 		}
 
-		player.player_.UpdateMatrix();
-		player.playerDra_.Update();
-	}
-
-	if (player.JumpFlag)
-	{
-		DS.x_ = 0;
-		DS.y_ = 1;
-		AW.x_ = 0;
-		AW.y_ = 0;
-
-		player.player_.pos_.y_ += player.Jump * 0.1f;
-
-		for (int i = 0; i < block.size(); i++)
+		if (sKeys_->IsDown(DIK_A))
 		{
-			if (block[i]->nowKind != None)
-			{
-				if (block[i]->sukeF == false)
-				{
-					YMath::Vector2 BlockSize;
-					BlockSize.x_ = block[i]->block_.scale_.x_;
-					BlockSize.y_ = block[i]->block_.scale_.y_;
+			DS.x_ = 0;
+			DS.y_ = 0;
+			AW.x_ = 1;
+			AW.y_ = 0;
 
-					player.player_.pos_ =
-						BoxCollision(
-							player.player_.pos_,
-							RL,
-							WS,
-							block[i]->block_.pos_,
-							BlockSize,
-							DS,
-							AW
-						);
-				}
+			if (nowMode)
+			{
+				player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.2f;
 			}
-		}
 
-		player.player_.UpdateMatrix();
-		player.playerDra_.Update();
-	}
-
-	if (sKeys_->IsDown(DIK_D))
-	{
-		DS.x_ = 1;
-		DS.y_ = 0;
-		AW.x_ = 0;
-		AW.y_ = 0;
-
-		if (nowMode)
-		{
-			player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
-		}
-
-		for (int i = 0; i < block.size(); i++)
-		{
-			if (block[i]->nowKind != None)
+			if (player.GetsukeFlag() == false)
 			{
-				if (block[i]->sukeF == false)
+				for (int i = 0; i < block.size(); i++)
 				{
-					YMath::Vector2 BlockSize;
-					BlockSize.x_ = block[i]->block_.scale_.x_;
-					BlockSize.y_ = block[i]->block_.scale_.y_;
+					if (block[i]->nowKind != None)
+					{
+						if (block[i]->sukeF == false)
+						{
+							YMath::Vector2 BlockSize;
+							BlockSize.x_ = block[i]->block_.scale_.x_;
+							BlockSize.y_ = block[i]->block_.scale_.y_;
 
-					player.player_.pos_ =
-						BoxCollision(
-							player.player_.pos_,
-							RL,
-							WS,
-							block[i]->block_.pos_,
-							BlockSize,
-							DS,
-							AW
-						);
+							player.player_.pos_ =
+								BoxCollision(
+									player.player_.pos_,
+									RL,
+									WS,
+									block[i]->block_.pos_,
+									BlockSize,
+									DS,
+									AW
+								);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	if (sKeys_->IsDown(DIK_A))
-	{
-		DS.x_ = 0;
-		DS.y_ = 0;
-		AW.x_ = 1;
-		AW.y_ = 0;
 
-		if (nowMode)
-		{
-			player.player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
-		}
-
-		for (int i = 0; i < block.size(); i++)
-		{
-			if (block[i]->nowKind != None)
-			{
-				if (block[i]->sukeF == false)
-				{
-					YMath::Vector2 BlockSize;
-					BlockSize.x_ = block[i]->block_.scale_.x_;
-					BlockSize.y_ = block[i]->block_.scale_.y_;
-
-					player.player_.pos_ =
-						BoxCollision(
-							player.player_.pos_,
-							RL,
-							WS,
-							block[i]->block_.pos_,
-							BlockSize,
-							DS,
-							AW
-						);
-				}
-			}
-		}
-	}
-
+	transferVP_.eye_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
+	transferVP_.target_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
 	//}
 
 	// プレイヤー

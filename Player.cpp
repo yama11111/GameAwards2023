@@ -614,13 +614,13 @@ void Player::Draw()
 
 void Player::Reset()
 {
-	player_.Initialize({ {}, {}, {1.0f,1.0f,1.0f} });
+	player_.Initialize({ {}, {}, {0.5f,0.5f,0.5} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Reset(IDrawer::Mode::Red);
 
 	//位置
-	playerPos.x_ = 300;
-	playerPos.y_ = 400;
+	player_.pos_.x_ = startPos.x_;
+	player_.pos_.y_ = startPos.y_;
 
 	//サイズ
 	playerSize.x_ = 21;

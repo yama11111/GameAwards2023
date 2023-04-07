@@ -33,6 +33,7 @@ public:
 	YMath::Vector3 direction_;
 	// プレイヤー描画クラス
 	PlayerDrawer playerDra_;
+	YMath::Vector3 startPos = { 0.0f,0.0f,0.0f };
 
 	Player();
 	~Player();

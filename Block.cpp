@@ -42,15 +42,13 @@ void Block::Update(YGame::Transform filter)
 			b_top  < f_bottom ||
 			b_bottom > f_top)
 		{
-			sukeF = true;
-
 			//完全にフィルター内にいるか
 			if (b_right < f_right &&
 				b_left > f_left &&
 				b_bottom  < f_bottom &&
 				b_top > f_top)
 			{
-
+				sukeF = true;
 			}
 			else
 			{
@@ -100,31 +98,31 @@ void Block::Update(YGame::Transform filter)
 				//}
 				////右
 				//else 
-				if (b_right > f_right)
+				if (b_left < f_right)
 				{
 					//block_.scale_.x_ = block_.pos_.x_ - f_right;
-					sukeF = false;
+				//	sukeF = true;
 
 				}
 				//左
 				else if (b_right > f_left)
 				{
 					//block_.scale_.x_ = f_left - block_.pos_.x_;
-					sukeF = false;
+				//	sukeF = true;
 				}
 				//上
 				else if (b_bottom > f_top)
 				{
-					//あってる
-					sukeF = false;
+					///あってる
+					//sukeF = true;
 					//block_.scale_.y_ = f_top - block_.pos_.y_;
 				}
 
-				else if (b_bottom > f_bottom)
+				else if (b_top < f_bottom)
 				{
 					//できた
 					//block_.scale_.y_ = block_.pos_.y_ - f_bottom;
-					sukeF = false;
+					//sukeF = true;
 				}
 			}
 		}
