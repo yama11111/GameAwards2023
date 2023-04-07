@@ -145,7 +145,10 @@ void YFramework::Update()
 	// ×ボタンで終了メッセージ
 	if (window_.CheckMessage()) { isEnd_ = true; }
 	// ESCキーで終了
-	if (inputMan_->keys_->IsTrigger(DIK_ESCAPE)) { isEnd_ = true; }
+	if (inputMan_->keys_->IsTrigger(DIK_ESCAPE)) 
+	{
+		//isEnd_ = true; 
+	}
 	// ------------------------------------------------ //
 }
 
