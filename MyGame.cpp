@@ -23,7 +23,7 @@ bool MyGame::Initialize()
 	sceneMan_->SetSceneFactory(new YGameTransitionFactory());
 
 	// シーンマネージャー初期化
-	sceneMan_->Initialize("PLAY");
+	sceneMan_->Initialize("EDIT");
 
 	return true;
 }
@@ -60,8 +60,12 @@ void MyGame::Draw()
 	// シーン遷移描画
 	transitionMan_->Draw();
 
+#ifdef _DEBUG
+
 	// imgui描画
 	imguiMan_.Draw();
+
+#endif // DEBUG
 
 	// 描画後処理
 	dx_.PostDraw();

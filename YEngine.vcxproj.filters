@@ -31,9 +31,6 @@
     <Filter Include="Draw\Particle">
       <UniqueIdentifier>{bb4dabc7-ee27-47c5-b886-28303885caef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Draw\UI">
-      <UniqueIdentifier>{5763683f-f3c1-46f0-8183-9a71a100d6a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameUtil\Camera">
       <UniqueIdentifier>{2efd8218-5be8-4f58-a619-d3d296efd583}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="Draw\Drawer\Obj">
       <UniqueIdentifier>{64150aae-31e8-4a6c-b465-e330b15e3fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw\Drawer\UI">
+      <UniqueIdentifier>{5763683f-f3c1-46f0-8183-9a71a100d6a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -382,13 +382,13 @@
       <Filter>Draw\Drawer\Obj</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\HUDDrawer.cpp">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\InputDrawer.cpp">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\PauseDrawer.cpp">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\SelectDrawer.cpp">
       <Filter>Draw\Drawer\ex</Filter>
@@ -401,6 +401,9 @@
     </ClCompile>
     <ClCompile Include="Draw\Drawer\CardDrawer.cpp">
       <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\EditScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -681,16 +684,16 @@
       <Filter>Draw\Drawer\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\HUDConfig.h">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\HUDDrawer.h">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\PauseDrawer.h">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\InputDrawer.h">
-      <Filter>Draw\UI</Filter>
+      <Filter>Draw\Drawer\UI</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\IDrawer.h">
       <Filter>Draw\Drawer\Base</Filter>
@@ -709,6 +712,9 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\CardDrawer.h">
       <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\EditScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

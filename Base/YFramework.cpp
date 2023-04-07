@@ -88,7 +88,7 @@ bool YFramework::Initialize()
 #pragma region Game
 
 	// imgui初期化
-	imguiMan_.Initialize({ window_.PointerHandleWindow(), pDev, dx_.BackBufferCount(), pCmdList });
+	imguiMan_.Initialize({ window_.PointerHandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });
 
 	// オーディオ初期化
 	AudioManager::GetInstance()->Initialize();
@@ -123,11 +123,11 @@ void YFramework::Finalize()
 
 void YFramework::Update()
 {
-	// input更新
-	inputMan_->Update();
-
 	// imgui受付開始
 	imguiMan_.Begin();
+	
+	// input更新
+	inputMan_->Update();
 
 	// ゲームルール更新処理
 	worldRuler_.Update();

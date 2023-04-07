@@ -15,6 +15,9 @@ namespace YScene
 		// リザルト
 		const std::string Result_	 = "RESULT";
 
+		// エディター
+		const std::string Edit_	 = "EDIT";
+
 	public:
 		// シーン生成
 		BaseScene* CreateScene(const std::string& sceneName) override;

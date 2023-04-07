@@ -9,6 +9,7 @@ using YGame::Texture;
 using YGame::TextureManagerCommon;
 using YGame::TextureManager;
 using YDX::GPUResource;
+using YDX::DescriptorHeap;
 using YMath::Vector4;
 using YDX::Result;
 
@@ -99,8 +100,13 @@ UINT TextureManager::CreateTex(const Vector4& color)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
 
-	// テクスチャ設定
-	pDescHeap_->CreateSRV(tex.buff_.Get(), srvDesc, tex.srvCpuHandle_, tex.srvGpuHandle_);
+	// SRV生成
+	DescriptorHeap::Handle handle{};
+	handle = pDescHeap_->CreateSRV(tex.buff_.Get(), srvDesc);
+
+	// ハンドル代入
+	tex.srvCpuHandle_ = handle.cpu_;
+	tex.srvGpuHandle_ = handle.gpu_;
 
 	// テクスチャを保存
 	texs_.push_back(tex);
@@ -205,8 +211,15 @@ UINT TextureManager::Load(const std::string& directoryPath, const std::string te
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = texState.resDesc_.MipLevels;
 
-	// テクスチャ設定
-	pDescHeap_->CreateSRV(tex.buff_.Get(), srvDesc, tex.srvCpuHandle_, tex.srvGpuHandle_);
+	// SRV生成
+	DescriptorHeap::Handle handle{};
+	handle = pDescHeap_->CreateSRV(tex.buff_.Get(), srvDesc);
+
+	// ハンドル代入
+	tex.srvCpuHandle_ = handle.cpu_;
+	tex.srvGpuHandle_ = handle.gpu_;
+
+	// ファイル名代入
 	tex.fileName_ = texFileName;
 
 	// テクスチャを保存

@@ -10,6 +10,9 @@ namespace YDX
 	private:
 		// デスクリプターヒープ
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap_ = nullptr;
+		// インクリメント用
+		UINT incSize_ = 0;
+	private:
 		// SRV 数
 		UINT srvCount_ = 0;
 		// UAV 数
@@ -17,20 +20,34 @@ namespace YDX
 		// CBV 数
 		UINT cbvCount_ = 0;
 	public:
+		// ハンドル (CPU, GPU)
+		struct Handle
+		{
+			D3D12_CPU_DESCRIPTOR_HANDLE cpu_; // CPU
+			D3D12_GPU_DESCRIPTOR_HANDLE gpu_; // GPU
+		};
+	public:
 		// 初期化
 		void Initialize();
-		// SRV 生成
-		void CreateSRV(ID3D12Resource* buff, const D3D12_SHADER_RESOURCE_VIEW_DESC& srvDesc, 
-			D3D12_CPU_DESCRIPTOR_HANDLE& cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE& gpuHandle);
-		// UAV 生成
-		void CreateUAV(ID3D12Resource* buff, const D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc);
-		// CBV 生成
-		void CreateCBV(const D3D12_CONSTANT_BUFFER_VIEW_DESC& cbvDesc);
 		// 描画前コマンド (最初に一回)
 		void SetDrawCommand();
 	public:
+		// SRV 生成
+		Handle CreateSRV(ID3D12Resource* buff, const D3D12_SHADER_RESOURCE_VIEW_DESC& srvDesc);
+		// UAV 生成
+		Handle CreateUAV(ID3D12Resource* buff, const D3D12_UNORDERED_ACCESS_VIEW_DESC& uavDesc);
+		// CBV 生成
+		Handle CreateCBV(const D3D12_CONSTANT_BUFFER_VIEW_DESC& cbvDesc);
+	public:
+		// SRV 追加
+		Handle AddSRV();
+		// UAV 追加
+		Handle AddUAV();
+		// CBV 追加
+		Handle AddCBV();
+	public:
 		// ポインタ取得
-		ID3D12DescriptorHeap* Get() const { return descriptorHeap_.Get(); }
+		ID3D12DescriptorHeap* Get() { return descriptorHeap_.Get(); }
 	private:
 		// 最大 SRV 数
 		static const UINT MaxSRVCount_ = 262144;
