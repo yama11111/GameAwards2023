@@ -15,7 +15,7 @@ private:
 public:
 	struct InitStatus 
 	{
-		HWND* hwnd_; // ウィンドウハンドル
+		HWND hwnd_; // ウィンドウハンドル
 		ID3D12Device* pDevice_; // デバイス
 		ID3D12GraphicsCommandList* pCmdList_; // コマンドリスト
 		YDX::DescriptorHeap* pDescHeap_; // デスクリプターヒープ

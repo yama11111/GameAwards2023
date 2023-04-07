@@ -88,7 +88,7 @@ bool YFramework::Initialize()
 #pragma region Game
 
 	// imgui初期化
-	imguiMan_.Initialize({ window_.PointerHandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });
+	imguiMan_.Initialize({ window_.HandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });
 
 	// オーディオ初期化
 	AudioManager::GetInstance()->Initialize();

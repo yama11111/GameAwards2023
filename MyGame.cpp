@@ -54,11 +54,11 @@ void MyGame::Draw()
 	// デスクリプターヒープセット
 	descHeap_.SetDrawCommand();
 
-	//// シーン描画
-	//sceneMan_->Draw();
+	// シーン描画
+	sceneMan_->Draw();
 
-	//// シーン遷移描画
-	//transitionMan_->Draw();
+	// シーン遷移描画
+	transitionMan_->Draw();
 
 #ifdef _DEBUG
 
