@@ -7,11 +7,12 @@ class Filter
 private:
 	// フィルター
 	YGame::Transform filter_;
+
 	// フィルター描画クラス
 	FilterDrawer filterDra_;
 
-	//今動いてるかどうか
-	//bool nowMove = false;
+	//移動量格納
+	YMath::Vector3 movePos = { 0.0f,0.0f,0.0f };
 
 public:
 	//インクリメント
@@ -33,15 +34,13 @@ public:
 	//リセット
 	void Reset();
 
-	//動いてるかどうかフラグに代入
-	//void SetNowMove(bool flag) { nowMove = flag; };
-
-	//フラグ反転
-	//void ChengeNowMove() {nowMove = !nowMove;};
-
-	//動いてるかどうかのフラグを入手
-	//bool GetNowMove() { return nowMove; };
-
+	//Transform獲得
 	YGame::Transform GetTransform() { return filter_; };
+
+	//移動量獲得
+	YMath::Vector3 GetMovePos() { return movePos; };
+
+	//移動量セット
+	void SetMovePos(YMath::Vector3 pos) { movePos = pos; };
 };
 

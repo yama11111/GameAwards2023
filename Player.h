@@ -1,5 +1,4 @@
 #pragma once
-#include "Keys.h"
 #include "PlayerDrawer.h"
 
 class Player
@@ -18,12 +17,24 @@ private:
 	//スタート時のPos格納
 	YMath::Vector3 startPos = { 0.0f,0.0f,0.0f };
 
+	//移動量格納
+	YMath::Vector3 movePos = { 0.0f,0.0f,0.0f };
+
 	//プレイヤーがすり抜けるか
 	bool ClearFlag = false;
 
 	//フィルターの角に当たっているかどうか
 	bool CornerFlag = false;
 
+
+	//ジャンプ関係
+	bool JumpFlag = false;
+	float JumpPower = 0;
+	float Jump = 0;
+
+	//重力関係
+	float Gravity = 0;
+	float GravityPower = 0;
 public:
 
 	//インクリメント
@@ -37,7 +48,7 @@ public:
 	void Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3 scale_);
 
 	//更新
-	void Update(YGame::Transform filterPos, YMath::Vector2 filterSizeLR, YMath::Vector2 filterSizeUD);
+	//void Update(YGame::Transform filterPos, YMath::Vector2 filterSizeLR, YMath::Vector2 filterSizeUD);
 	void Update(YGame::Transform filterPos);
 
 	//Pre描画(フィルターの前)
@@ -61,16 +72,24 @@ public:
 	void ChengeClearFlag() { ClearFlag = !ClearFlag; };
 	void ChengeCornerFlag() { CornerFlag = !ClearFlag; };
 
+	//Vector3に代入
+	void SetPos(YMath::Vector3 pos) { player_.pos_ = pos; };
+	void SetScale(YMath::Vector3 scale) { player_.scale_ = scale; };
+	void SetRot(YMath::Vector3 rot) { player_.rota_ = rot; };
+	void SetStartPos(YMath::Vector3 pos) { startPos = pos; };
+	void SetMovePos(YMath::Vector3 pos) { movePos = pos; };
+
+	//Vector3を入手
+	YMath::Vector3 GetPos() { return player_.pos_; };
+	YMath::Vector3 GetScale() { return player_.scale_; };
+	YMath::Vector3 GetRot() { return player_.rota_; };
+	YMath::Vector3 GetStartPos() { return startPos; };
+	YMath::Vector3 GetMovePos() { return movePos; };
+
+	//Transformを入手
+	YGame::Transform GetTransform() { return player_; };
+
 	//direction関係
 	void SetDirection(YMath::Vector3 direction) { direction_ = direction; };
 	YMath::Vector3 GetDirection() { return direction_; };
-
-	//ジャンプ関係
-	bool JumpFlag = false;
-	float JumpPower = 0;
-	float Jump = 0;
-
-	//重力関係
-	float Gravity = 0;
-	float GravityPower = 0;
 };

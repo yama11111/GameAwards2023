@@ -23,7 +23,7 @@ bool MyGame::Initialize()
 	sceneMan_->SetSceneFactory(new YGameTransitionFactory());
 
 	// シーンマネージャー初期化
-	sceneMan_->Initialize("EDIT");
+	sceneMan_->Initialize("PLAY");
 
 	return true;
 }

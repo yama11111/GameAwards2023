@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "MathUtillity.h"
+#include "Keys.h"
+#include "imgui.h"
 
 #pragma region 名前空間宣言
 using namespace YDX;
@@ -139,7 +141,9 @@ void Player::Update(Transform filterPos)
 	float f_right = filterPos.pos_.x_ + filterPos.scale_.x_;
 	float f_left = filterPos.pos_.x_ - filterPos.scale_.x_;
 
-	SetClearFlag(false);
+	//SetClearFlag(false);
+
+	player_.pos_ += movePos;
 
 	//フィルターに当たっているか
 	if (p_left < f_right ||
@@ -153,7 +157,7 @@ void Player::Update(Transform filterPos)
 			p_bottom  < f_bottom &&
 			p_top > f_top)
 		{
-			SetClearFlag(true);
+			//SetClearFlag(true);
 		}
 		else
 		{
@@ -240,6 +244,10 @@ void Player::Update(Transform filterPos)
 
 		}
 	}
+
+
+
+
 
 	/*if (chengeF)
 	{
@@ -365,127 +373,127 @@ void Player::Update(Transform filterPos)
 
 
 
-	//	if (CheckHitKey(KEY_INPUT_S))
-	//	{
-	//		playerPos.y_ += moveSpd;
+		//	if (CheckHitKey(KEY_INPUT_S))
+		//	{
+		//		playerPos.y_ += moveSpd;
 
-	//		DS.x_ = 0;
-	//		DS.y_ = CheckHitKey(KEY_INPUT_S);
-	//		//DS.y = 1;
+		//		DS.x_ = 0;
+		//		DS.y_ = CheckHitKey(KEY_INPUT_S);
+		//		//DS.y = 1;
 
-	//		AW.x_ = 0;
-	//		AW.y_ = 0;
+		//		AW.x_ = 0;
+		//		AW.y_ = 0;
 
-	//		if (!sukeF)
-	//		{
-	//			if (kadoF)
-	//			{
-	//				Vector2 size = { playerSize.x_,playerSize.x_ };
+		//		if (!sukeF)
+		//		{
+		//			if (kadoF)
+		//			{
+		//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						size,
-	//						playerCheckSizeUD,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						size,
+		//						playerCheckSizeUD,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
 
-	//				size.x_ = playerSize.y_;
-	//				size.y_ = playerSize.y_;
+		//				size.x_ = playerSize.y_;
+		//				size.y_ = playerSize.y_;
 
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						playerCheckSizeRL,
-	//						size,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
-	//			}
-	//			else
-	//			{
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						playerCheckSizeRL,
-	//						playerCheckSizeUD,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
-	//			}
-	//		}
-	//	}
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						playerCheckSizeRL,
+		//						size,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
+		//			}
+		//			else
+		//			{
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						playerCheckSizeRL,
+		//						playerCheckSizeUD,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
+		//			}
+		//		}
+		//	}
 
-	//	if (CheckHitKey(KEY_INPUT_W))
-	//	{
-	//		playerPos.y_ -= moveSpd;
+		//	if (CheckHitKey(KEY_INPUT_W))
+		//	{
+		//		playerPos.y_ -= moveSpd;
 
-	//		DS.x_ = 0;
-	//		DS.y_ = 0;
+		//		DS.x_ = 0;
+		//		DS.y_ = 0;
 
-	//		AW.x_ = 0;
-	//		AW.y_ = CheckHitKey(KEY_INPUT_W);
+		//		AW.x_ = 0;
+		//		AW.y_ = CheckHitKey(KEY_INPUT_W);
 
-	//		if (!sukeF)
-	//		{
-	//			if (kadoF)	//GetkadoFlag() == true
-	//			{
-	//				Vector2 size = { playerSize.x_,playerSize.x_ };
+		//		if (!sukeF)
+		//		{
+		//			if (kadoF)	//GetkadoFlag() == true
+		//			{
+		//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						size,
-	//						playerCheckSizeUD,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						size,
+		//						playerCheckSizeUD,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
 
-	//				size.x_ = playerSize.y_;
-	//				size.y_ = playerSize.y_;
+		//				size.x_ = playerSize.y_;
+		//				size.y_ = playerSize.y_;
 
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						playerCheckSizeRL,
-	//						size,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
-	//			}
-	//			else
-	//			{
-	//				for (int i = 0; i < boxcount; i++)
-	//				{
-	//					playerPos = BoxCollision(
-	//						playerPos,
-	//						playerCheckSizeRL,
-	//						playerCheckSizeUD,
-	//						Box[i],
-	//						BoxSize,
-	//						DS,
-	//						AW);
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						playerCheckSizeRL,
+		//						size,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
+		//			}
+		//			else
+		//			{
+		//				for (int i = 0; i < boxcount; i++)
+		//				{
+		//					playerPos = BoxCollision(
+		//						playerPos,
+		//						playerCheckSizeRL,
+		//						playerCheckSizeUD,
+		//						Box[i],
+		//						BoxSize,
+		//						DS,
+		//						AW);
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 
 	player_.UpdateMatrix();
 	playerDra_.Update();

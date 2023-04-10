@@ -19,6 +19,197 @@ using namespace YGame;
 #pragma region Static関連
 #pragma endregion 
 
+//yうえ+した－
+
+//bool型BoxCollision
+bool BoxCollision(YGame::Transform obj1, YGame::Transform obj2, bool nibai)
+{
+	YMath::Vector3 obj3 = obj1.scale_;
+
+	if (nibai)
+	{
+		obj3 *= 2;
+	}
+
+	//プレイヤーの上下左右
+	float p_top = obj1.pos_.y_ - obj3.y_;
+	float p_bottom = obj1.pos_.y_ + obj3.y_;
+	float p_right = obj1.pos_.x_ + obj3.x_;
+	float p_left = obj1.pos_.x_ - obj3.x_;
+
+	obj3 = obj2.scale_;
+
+	if (nibai)
+	{
+		obj3 *= 2;
+	}
+
+	//フィルターの上下左右
+	float f_top = obj2.pos_.y_ - obj3.y_;
+	float f_bottom = obj2.pos_.y_ + obj3.y_;
+	float f_right = obj2.pos_.x_ + obj3.x_;
+	float f_left = obj2.pos_.x_ - obj3.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//Posを返すBOxCollision(左右サイズ固定)
+YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP;
+	YMath::Vector3 nowPosF = posF;
+
+	//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - sizePUD.x_;
+	float p_bottom = nowPosP.y_ + sizePUD.y_;
+	float p_right = nowPosP.x_ + sizePRL.x_;
+	float p_left = nowPosP.x_ - sizePRL.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - sizeF.y_;
+	float f_bottom = nowPosF.y_ + sizeF.y_;
+	float f_right = nowPosF.x_ + sizeF.x_;
+	float f_left = nowPosF.x_ - sizeF.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_ * 0.01f;
+			nowPosP.y_ -= DS.y_ * 0.01f;
+
+			nowPosP.x_ += AW.x_ * 0.01f;
+			nowPosP.y_ += AW.y_ * 0.01f;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - sizePUD.x_;
+			p_bottom = nowPosP.y_ + sizePUD.y_;
+			p_right = nowPosP.x_ + sizePRL.x_;
+			p_left = nowPosP.x_ - sizePRL.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
+//Posを返すBOxCollision(左右サイズバラバラ)
+YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeLR, Vector2 sizeUD, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP;
+	YMath::Vector3 nowPosF = posF;
+
+	YMath::Vector2 Ds = DS;
+	YMath::Vector2 Aw = AW;
+
+	Ds.x_ *= 0.1f;
+	Ds.y_ *= 0.1f;
+	Aw.x_ *= 0.1f;
+	Aw.y_ *= 0.1f;
+
+	//プレイヤーの上下左右
+		//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - sizePUD.x_;
+	float p_bottom = nowPosP.y_ + sizePUD.y_;
+	float p_right = nowPosP.x_ + sizePRL.x_;
+	float p_left = nowPosP.x_ - sizePRL.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - sizeUD.x_;
+	float f_bottom = nowPosF.y_ + sizeUD.y_;
+	float f_right = nowPosF.x_ + sizeLR.y_;
+	float f_left = nowPosF.x_ - sizeLR.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_ * 0.1f;
+			nowPosP.y_ -= DS.y_ * 0.1f;
+
+			nowPosP.x_ += AW.x_ * 0.1f;
+			nowPosP.y_ += AW.y_ * 0.1f;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - sizePUD.x_;
+			p_bottom = nowPosP.y_ + sizePUD.y_;
+			p_right = nowPosP.x_ + sizePRL.x_;
+			p_left = nowPosP.x_ - sizePRL.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
+//Posを返すBoxCollision(Transformのみ)
+YMath::Vector3 BoxCollision(Transform posP, Transform posF, Vector2 DS, Vector2 AW)
+{
+	YMath::Vector3 nowPosP = posP.pos_;
+	YMath::Vector3 nowPosF = posF.pos_;
+
+	//プレイヤーの上下左右
+	float p_top = nowPosP.y_ - posP.scale_.x_;
+	float p_bottom = nowPosP.y_ + posP.scale_.y_;
+	float p_right = nowPosP.x_ + posP.scale_.x_;
+	float p_left = nowPosP.x_ - posP.scale_.y_;
+
+	//フィルターの上下左右
+	float f_top = nowPosF.y_ - posF.scale_.y_;
+	float f_bottom = nowPosF.y_ + posF.scale_.y_;
+	float f_right = nowPosF.x_ + posF.scale_.x_;
+	float f_left = nowPosF.x_ - posF.scale_.x_;
+
+	//フィルターに当たっているか
+	if (p_left < f_right &&
+		p_right > f_left &&
+		p_top  < f_bottom &&
+		p_bottom > f_top)
+	{
+		while (p_left < f_right &&
+			p_right > f_left &&
+			p_top  < f_bottom &&
+			p_bottom > f_top)
+		{
+			nowPosP.x_ -= DS.x_ * 0.01f;
+			nowPosP.y_ -= DS.y_ * 0.01f;
+
+			nowPosP.x_ += AW.x_ * 0.01f;
+			nowPosP.y_ += AW.y_ * 0.01f;
+
+			//プレイヤーの上下左右
+			p_top = nowPosP.y_ - posP.scale_.x_;
+			p_bottom = nowPosP.y_ + posP.scale_.y_;
+			p_right = nowPosP.x_ + posP.scale_.x_;
+			p_left = nowPosP.x_ - posP.scale_.y_;
+		}
+	}
+
+	return nowPosP;
+}
+
+
 #pragma region 読み込み
 void PlayScene::Load()
 {
@@ -73,32 +264,7 @@ void PlayScene::Initialize()
 	// ----- フィルター ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	filter->Initialize({ 0.0f, 0.0f, 0.0f }, {}, { 6.0f,4.0f,1.0f });
-
-
-	// ----- ブロック ----- //
-
-	//for (size_t i = 0; i < idx - 1; i++)
-	//{
-	//	// トランスフォーム (位置、回転、大きさ)
-	//	block_[i].Initialize({ {-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale });
-	//	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	//	blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
-	//}
-
-	//// トランスフォーム (位置、回転、大きさ)
-	//block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
-	//// 描画用クラス初期化 (親トランスフォーム、初期色)
-	//blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
-
-
-	// ----- ゲート ----- //
-
-	// トランスフォーム (位置、回転、大きさ)
-	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
-	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
-
+	filter->Initialize({ 0.0f, 0.0f, 0.0f }, {}, { 3.0f,2.0f,1.0f });
 
 	// ----- ゴール ----- //
 
@@ -106,6 +272,109 @@ void PlayScene::Initialize()
 	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム)
 	goalDra_.Initialize(&goal_);
+
+
+	// ----- ブロック ----- //
+
+	//ブロック
+	for (int i = 0; i < blockCountY; i++)
+	{
+		for (int j = 0; j < blockCountX; j++)
+		{
+			//生成
+			Block* newBlock = new Block();
+
+			//初期化
+			newBlock->Initialize();
+
+			//種類を格納
+			newBlock->SetKind(map[i][j]);
+
+			//サイズ
+			float size = 2.0f;
+
+			//格納用Vector
+			YMath::Vector3 result;
+
+			//zは特にいじらない
+			result.z_ = size;
+
+			//posXY
+			result.x_ = (j - (blockCountX / 3)) * size - 8;
+			result.y_ = ((blockCountY / 2) - i) * size;
+
+			//pos格納
+			newBlock->SetPos(result);
+
+			//scaleXY
+			result.x_ = size / 4.0f;
+			result.y_ = size / 4.0f;
+
+			//scale格納
+			newBlock->SetScale(result);
+
+			//種類によって
+			//初期地点
+			if (newBlock->GetKind() == Start)
+			{
+				//posXY
+				result.x_ = (j - (blockCountX / 3)) * size - 8;
+				result.y_ = ((blockCountY / 2) - i) * size;
+
+				//pos格納
+				player->SetPos(result);
+
+				//posXY
+				result.x_ = (j - (blockCountX / 3)) * size - 8;
+				result.y_ = ((blockCountY / 2) - i) * size;
+
+				//StartPos格納
+				player->SetStartPos(result);
+
+				//種類を空白に
+				newBlock->SetKind(None);
+			}
+
+			//ゴール地点
+			if (map[i][j] == Gorl)
+			{
+				//pos格納
+				goal_.pos_.x_ = (j - (blockCountX / 3)) * size - 8;
+				goal_.pos_.y_ = ((blockCountY / 2) - i) * size;
+
+				//scale格納
+				goal_.scale_.x_ = size / 4.0f;
+				goal_.scale_.y_ = size / 4.0f;
+
+				//種類を空白に
+				newBlock->SetKind(None);
+			}
+
+			//コレクトアイテム
+			if (map[i][j] == Collect)
+			{
+
+				//種類を空白に
+				newBlock->SetKind(None);
+			}
+
+			//格納
+			block.push_back(newBlock);
+		}
+	}
+
+	//種類によってブロックを変更
+	for (int i = 0; i < block.size(); i++)
+	{
+		block[i]->SetMode();
+	}
+
+	// ----- ゲート ----- //
+
+	// トランスフォーム (位置、回転、大きさ)
+	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
+	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
 
 
 	// 天球初期化
@@ -142,7 +411,7 @@ void PlayScene::Update()
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
 		//プレイヤーとフィルターが当たってないなら
-		if (true)
+		if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
 		{
 			//操作フラグを反転
 			player->ChengeClearFlag();
@@ -160,55 +429,41 @@ void PlayScene::Update()
 		filter->Reset();
 	}
 
-	// プレイヤー
-	/*if (isPlayer_)
-	{
-		player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-		player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
-	}*/
+	//格納用Vector
+	YMath::Vector3 result(0.0f, 0.0f, 0.0f);
 
-	/*if (sKeys_->IsTrigger(DIK_K))
+	//値を0に
+	player->SetMovePos(result);
+	filter->SetMovePos(result);
+
+	//入力状態を入手
+	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
+	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
+	result.z_ = 0.0f;
+
+
+	//今のアクティブ状態
+	if (player->GetClearFlag())
 	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
+		player->SetMovePos(result);
 	}
-	if (sKeys_->IsTrigger(DIK_L))
+	else
 	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
-	}*/
+		filter->SetMovePos(result);
+	}
 
-	//PlayerUpdate
+
+	//PlayerのUpdate
 	player->Update(filter->GetTransform());
 
-	// フィルター
-	//if (isPlayer_ == false)
-	//{
-	//	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-	//	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
-	//}
-
-	//filter_.UpdateMatrix();
-	//filterDra_.Update();
-
+	//filterのUpdate
 	filter->Update();
 
-	//// 衝突
-	//if (sKeys_->IsTrigger(DIK_N))
-	//{
-	//	playerDra_.SetIsCollFilter(true);
-	//	filterDra_.SetIsCollPlayer(true);
-	//}
-	//if (sKeys_->IsTrigger(DIK_M))
-	//{
-	//	playerDra_.SetIsCollFilter(false);
-	//	filterDra_.SetIsCollPlayer(false);
-	//}
-
-	//// ブロック
-	//for (size_t i = 0; i < idx; i++)
-	//{
-	//	block_[i].UpdateMatrix();
-	//	blockDra_[i].Update();
-	//}
+	// ブロック
+	for (int i = 0; i < block.size(); i++)
+	{
+		block[i]->Update(filter->GetTransform());
+	}
 
 
 	// ゲート
@@ -232,12 +487,25 @@ void PlayScene::Update()
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
 
+	//ゴール判定
+	if (BoxCollision(player->GetTransform(), goal_, false))
+	{
+		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
+	}
 
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_0))
 	{
 		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
 	}
+
+	bool check = BoxCollision(player->GetTransform(), filter->GetTransform(), true);
+
+	ImGui::Begin("F");
+	ImGui::Checkbox("F", &check);
+	ImGui::End();
+
+
 }
 #pragma endregion
 
@@ -263,13 +531,13 @@ void PlayScene::DrawModels()
 	player->PreDraw();
 
 	// ブロック前描画
-	/*for (size_t i = 0; i < idx; i++)
+	for (size_t i = 0; i < block.size(); i++)
 	{
-		blockDra_[i].PreDraw();
-	}*/
+		block[i]->PreDraw();
+	}
 
 	// ゲート前描画
-	gateDra_.PreDraw();
+	//gateDra_.PreDraw();
 
 	// ゴール描画
 	goalDra_.Draw();
@@ -294,13 +562,13 @@ void PlayScene::DrawModels()
 	player->PostDraw();
 
 	// ブロック後描画
-	/*for (size_t i = 0; i < idx; i++)
+	for (size_t i = 0; i < block.size(); i++)
 	{
-		blockDra_[i].PostDraw();
-	}*/
+		block[i]->PostDraw();
+	}
 
 	// ゲート後描画
-	gateDra_.PostDraw();
+	//gateDra_.PostDraw();
 
 	// --------------- //
 }

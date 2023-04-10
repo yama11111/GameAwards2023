@@ -140,13 +140,19 @@ void Block::Update(YGame::Transform filter)
 //Pre描画(フィルターの前)
 void Block::PreDraw()
 {
-	blockDra_.PreDraw();
+	if (nowKind != None)
+	{
+		blockDra_.PreDraw();
+	}
 }
 
 //Post描画(フィルターの後)
 void Block::PostDraw()
 {
-	blockDra_.PostDraw();
+	if (nowKind != None)
+	{
+		blockDra_.PostDraw();
+	}
 }
 
 //リセット

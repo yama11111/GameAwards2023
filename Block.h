@@ -55,17 +55,24 @@ public:
 	//ブロックの種類変更
 	void SetKind(int kind) { nowKind = kind; };
 
+	//現在のブロックの種類の取得
+	int GetKind() { return nowKind; };
+
 	//ClearFlagに代入
 	void SetClearFlag(bool flag) { flag = ClearFlag; };
 
 	//ClearFlagを入手
 	bool GetClearFlag() { return ClearFlag; };
 
-	//posを入手
+	//Vector3に代入
 	void SetPos(YMath::Vector3 pos) { block_.pos_ = pos; };
+	void SetScale(YMath::Vector3 scale) { block_.scale_ = scale; };
+	void SetRot(YMath::Vector3 rot) { block_.rota_ = rot; };
 
-	//posに代入
+	//Vector3を入手
 	YMath::Vector3 GetPos() { return block_.pos_; };
+	YMath::Vector3 GetScale() { return block_.scale_; };
+	YMath::Vector3 GetRot() { return block_.rota_; };
 
 	//Transformを入手
 	YGame::Transform GetTransform() { return block_; };
