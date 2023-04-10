@@ -1,9 +1,12 @@
 #pragma once
 #include "BaseScene.h"
 
-#include "PlayerDrawer.h"
-#include "FilterDrawer.h"
-#include "BlockDrawer.h"
+//#include "PlayerDrawer.h"
+//#include "FilterDrawer.h"
+//#include "BlockDrawer.h"
+#include "Player.h"
+#include "Filter.h"
+#include "Block.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
 
@@ -24,7 +27,7 @@ namespace YScene
 		// ----- オーディオ ----- //
 
 		// ----- スプライト (2D) ----- //
-		
+
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
@@ -32,30 +35,17 @@ namespace YScene
 #pragma endregion
 #pragma region ゲームオブジェクト
 
-		// プレイヤー操作か
-		bool isPlayer_ = true;
-		
-
 		// プレイヤー
-		YGame::Transform player_;
-		// 向き (プレイヤー用)
-		YMath::Vector3 direction_;
-		// プレイヤー描画クラス
-		PlayerDrawer playerDra_;
-		
+		Player* player = new Player();
 
 		// フィルター
-		YGame::Transform filter_;
-		// フィルター描画クラス
-		FilterDrawer filterDra_;
+		Filter* filter = new Filter();;
 
+		// ブロック
+		Block* block = new Block();
 
 		// ブロック個数
 		static const size_t idx = 20;
-		// ブロック
-		std::array<YGame::Transform, idx> block_;
-		// ブロック描画クラス
-		std::array<BlockDrawer, idx> blockDra_;
 
 
 		// ゲート
@@ -72,7 +62,7 @@ namespace YScene
 
 		// 天球
 		Skydome skydome_;
-		
+
 		// HUD
 		HUDDrawer hud_;
 

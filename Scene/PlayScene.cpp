@@ -29,7 +29,7 @@ void PlayScene::Load()
 	// ----- スプライト (2D) ----- //
 
 	// ----- スプライト (3D) ----- //
-	
+
 	// ------- モデル ------- //
 
 	// ----- 静的初期化 ----- //
@@ -40,8 +40,10 @@ void PlayScene::Load()
 	// エフェクト
 	EffectManager::StaticInitialize(&particleMan_);
 
+	bool IsplayF = player->GetClearFlag();
+
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&isPlayer_, &transferVP_, &particleMan_);
+	DrawerManager::StaticInitialize(&IsplayF, &transferVP_, &particleMan_);
 }
 #pragma endregion
 
@@ -50,7 +52,9 @@ void PlayScene::Load()
 void PlayScene::Initialize()
 {
 	// プレイヤー操作初期化
-	isPlayer_ = true;
+	//isPlayer_ = true;
+	//player_->SetClearFlag(true);
+	//filter_->SetNowMove(player_->GetClearFlag());
 
 	float scaleVal = 1.0f;
 	Vector3 scale = { scaleVal,scaleVal,scaleVal };
@@ -58,47 +62,46 @@ void PlayScene::Initialize()
 	// ----- プレイヤー ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	player_.Initialize({ {-50.0f,0.0f,0.0f}, {}, scale * 2.0f });
-	// 向き
-	direction_ = { +1.0f,0.0f,0.0f };
-	// 描画用クラス初期化 (親トランスフォーム、向き、初期色)
-	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
-	
-	
+	player->Initialize({ -50.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, scale * 2.0f);
+
+	//ディレクション(向き)
+	player->SetDirection(YMath::Vector3{ +1.0f, 0.0f, 0.0f });
+
+	//
+	//player_->SetClearFlag(true);
+
 	// ----- フィルター ----- //
-	
-	// トランスフォーム (位置、回転、大きさ)
-	filter_.Initialize({ {0.0f,0.0f,0.0f}, {}, {6.0f,4.0f,1.0f} });
-	// 描画用クラス初期化 (親トランスフォーム)
-	filterDra_.Initialize(&filter_);
 
-	
+	// トランスフォーム (位置、回転、大きさ)
+	filter->Initialize({ 0.0f, 0.0f, 0.0f }, {}, { 6.0f,4.0f,1.0f });
+
+
 	// ----- ブロック ----- //
-	
-	for (size_t i = 0; i < idx - 1; i++)
-	{
-		// トランスフォーム (位置、回転、大きさ)
-		block_[i].Initialize({{-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale});
-		// 描画用クラス初期化 (親トランスフォーム、初期色)
-		blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
-	}
 
-	// トランスフォーム (位置、回転、大きさ)
-	block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
-	// 描画用クラス初期化 (親トランスフォーム、初期色)
-	blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
+	//for (size_t i = 0; i < idx - 1; i++)
+	//{
+	//	// トランスフォーム (位置、回転、大きさ)
+	//	block_[i].Initialize({ {-40.0f + scaleVal * 4.0f * i,-4.0f * scaleVal,0.0f}, {}, scale });
+	//	// 描画用クラス初期化 (親トランスフォーム、初期色)
+	//	blockDra_[i].Initialize(&block_[i], IDrawer::Mode::Normal);
+	//}
 
-	
+	//// トランスフォーム (位置、回転、大きさ)
+	//block_[idx - 1].Initialize({ {0.0f,0.0f,0.0f}, {}, scale });
+	//// 描画用クラス初期化 (親トランスフォーム、初期色)
+	//blockDra_[idx - 1].Initialize(&block_[idx - 1], IDrawer::Mode::Red);
+
+
 	// ----- ゲート ----- //
-	
+
 	// トランスフォーム (位置、回転、大きさ)
 	gate_.Initialize({ {-20.0f,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム、初期色)
 	gateDra_.Initialize(&gate_, IDrawer::Mode::Red);
 
-	
+
 	// ----- ゴール ----- //
-	
+
 	// トランスフォーム (位置、回転、大きさ)
 	goal_.Initialize({ {+4.0f * scaleVal,0.0f,0.0f}, {}, scale });
 	// 描画用クラス初期化 (親トランスフォーム)
@@ -107,7 +110,7 @@ void PlayScene::Initialize()
 
 	// 天球初期化
 	skydome_.Initialize();
-	
+
 	// HUD初期化
 	hud_.Initalize();
 
@@ -135,63 +138,77 @@ void PlayScene::Update()
 	// ポーズ中なら弾く
 	if (hud_.IsPause()) { return; }
 
-
 	// 操作切り替え
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		isPlayer_ = !isPlayer_;
-		if (isPlayer_) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		//プレイヤーとフィルターが当たってないなら
+		if (true)
+		{
+			//操作フラグを反転
+			player->ChengeClearFlag();
+
+			//操作してるobjを表示するスプライトの変更
+			if (player->GetClearFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		}
 	}
 
+	//デバッグ用のリセットボタン
+	if (sKeys_->IsTrigger(DIK_R))
+	{
+		player->Reset();
+		filter->Reset();
+	}
 
 	// プレイヤー
-	if (isPlayer_)
+	/*if (isPlayer_)
 	{
 		player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
 		player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
-	}
-	player_.UpdateMatrix();
-	
-	if (sKeys_->IsTrigger(DIK_K))
+	}*/
+
+	/*if (sKeys_->IsTrigger(DIK_K))
 	{
 		playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
 	}
 	if (sKeys_->IsTrigger(DIK_L))
 	{
 		playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
-	}
-	playerDra_.Update();
+	}*/
 
+	//PlayerUpdate
+	player->Update(filter->GetTransform());
 
 	// フィルター
-	if (isPlayer_ == false)
-	{
-		filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-		filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
-	}
+	//if (isPlayer_ == false)
+	//{
+	//	filter_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+	//	filter_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+	//}
 
-	filter_.UpdateMatrix();
-	filterDra_.Update();
+	//filter_.UpdateMatrix();
+	//filterDra_.Update();
 
-	// 衝突
-	if (sKeys_->IsTrigger(DIK_N))
-	{
-		playerDra_.SetIsCollFilter(true);
-		filterDra_.SetIsCollPlayer(true);
-	}
-	if (sKeys_->IsTrigger(DIK_M))
-	{
-		playerDra_.SetIsCollFilter(false);
-		filterDra_.SetIsCollPlayer(false);
-	}
+	filter->Update();
 
-	// ブロック
-	for (size_t i = 0; i < idx; i++)
-	{
-		block_[i].UpdateMatrix();
-		blockDra_[i].Update();
-	}
+	//// 衝突
+	//if (sKeys_->IsTrigger(DIK_N))
+	//{
+	//	playerDra_.SetIsCollFilter(true);
+	//	filterDra_.SetIsCollPlayer(true);
+	//}
+	//if (sKeys_->IsTrigger(DIK_M))
+	//{
+	//	playerDra_.SetIsCollFilter(false);
+	//	filterDra_.SetIsCollPlayer(false);
+	//}
+
+	//// ブロック
+	//for (size_t i = 0; i < idx; i++)
+	//{
+	//	block_[i].UpdateMatrix();
+	//	blockDra_[i].Update();
+	//}
 
 
 	// ゲート
@@ -228,7 +245,7 @@ void PlayScene::Update()
 #pragma region 描画
 void PlayScene::DrawBackSprite2Ds()
 {
-	
+
 }
 
 void PlayScene::DrawBackSprite3Ds()
@@ -241,15 +258,16 @@ void PlayScene::DrawModels()
 	skydome_.Draw();
 
 	// ----- Pre ----- // 
-	
+
 	// プレイヤー前描画
-	playerDra_.PreDraw();
-	
+	player->PreDraw();
+
 	// ブロック前描画
-	for (size_t i = 0; i < idx; i++)
+	/*for (size_t i = 0; i < idx; i++)
 	{
 		blockDra_[i].PreDraw();
-	}
+	}*/
+
 	// ゲート前描画
 	gateDra_.PreDraw();
 
@@ -267,19 +285,20 @@ void PlayScene::DrawModels()
 
 
 	// フィルター描画
-	filterDra_.Draw();
+	filter->Draw();
 
 
 	// ----- Post ----- //
-	
+
 	// プレイヤー後描画
-	playerDra_.PostDraw();
-	
+	player->PostDraw();
+
 	// ブロック後描画
-	for (size_t i = 0; i < idx; i++)
+	/*for (size_t i = 0; i < idx; i++)
 	{
 		blockDra_[i].PostDraw();
-	}
+	}*/
+
 	// ゲート後描画
 	gateDra_.PostDraw();
 
@@ -328,7 +347,7 @@ void PlayScene::Draw()
 	// ----- 前景スプライト2D ----- //
 
 	DrawFrontSprite2Ds();
-	
+
 	// -------------------------- //
 }
 #pragma endregion
