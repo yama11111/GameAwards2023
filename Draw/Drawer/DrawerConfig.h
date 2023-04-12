@@ -13,6 +13,17 @@ namespace DrawerConfig
 		// 大きさ
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
 
+		// 色
+		namespace DefColor
+		{
+			// 通常
+			const YMath::Vector4 Normal	   = { 0.0f,0.0f,1.0f,1.0f };
+			// 赤
+			const YMath::Vector4 Red	   = { 0.0f,0.0f,0.0f,1.0f };
+			// 透明
+			const YMath::Vector4 Invisible = { 1.0f,1.0f,1.0f,0.4f };
+		}
+
 		// 置けないときの色
 		const YMath::Vector3 BadColor = { 1.0f,0.0f,1.0f };
 
@@ -32,7 +43,7 @@ namespace DrawerConfig
 				const unsigned int Frame = 20;
 
 				// 指数
-				const float Power = 3.0f;
+				const float Exponent = 3.0f;
 			}
 		}
 
@@ -43,13 +54,13 @@ namespace DrawerConfig
 			namespace SlimeAction
 			{
 				// 伸縮量
-				const float Value = 0.5f;
+				const float Value = 0.25f;
 
 				// 時間 (F)
-				const unsigned int Frame = 20;
+				const unsigned int Frame = 4;
 
 				// 指数
-				const float Power = 3.0f;
+				const float Exponent = 3.0f;
 			}
 		}
 
@@ -60,13 +71,36 @@ namespace DrawerConfig
 			namespace SlimeAction
 			{
 				// 伸縮量
-				const float Value = 0.5f;
+				const float Value = 0.4f;
 				
 				// 時間 (F)
-				const unsigned int Frame = 20;
+				const unsigned int Frame = 4;
 
 				// 指数
-				const float Power = 3.0f;
+				const float Exponent = 3.0f;
+			}
+		}
+
+		// リスポーンモーション
+		namespace Respawn
+		{
+			// 時間 (F)
+			const unsigned int Frame = 20;
+			
+			// 指数
+			const float Exponent = 3.0f;
+
+			// ぷよぷよアニメーション
+			namespace SlimeAction
+			{
+				// 伸縮量
+				const float Value = 0.4f;
+
+				// 時間 (F)
+				const unsigned int Frame = 25;
+
+				// 指数
+				const float Exponent = 3.0f;
 			}
 		}
 	}
@@ -94,11 +128,30 @@ namespace DrawerConfig
 		// 大きさ
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
 
+		// 色
+		namespace DefColor
+		{
+			// 通常
+			const YMath::Vector4 Normal	   = { 0.0f,0.0f,1.0f,1.0f };
+			// 赤
+			const YMath::Vector4 Red	   = { 1.0f,0.0f,0.0f,1.0f };
+			// 透明
+			const YMath::Vector4 Invisible = { 1.0f,1.0f,1.0f,0.25f };
+		}
+
+
 		// 立ちモーション
 		namespace Idle
 		{
 			// 間隔
 			const unsigned int IntervalTime = 10;
+		}
+
+		// フェードインモーション
+		namespace FadeIn
+		{	
+			// 指数
+			const float Exponent = 3.0f;
 		}
 	}
 

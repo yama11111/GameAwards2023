@@ -14,6 +14,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();
+public:
+	virtual ~CardDrawerCommon() = default;
 };
 
 class CardDrawer : 

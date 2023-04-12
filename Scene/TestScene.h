@@ -15,8 +15,8 @@
 
 namespace YScene
 {
-	// ゲームシーン
-	class PlayScene : public BaseScene
+	// テストシーン
+	class TestScene : public BaseScene
 	{
 	public:
 #pragma region リソース
@@ -26,59 +26,56 @@ namespace YScene
 		// ----- オーディオ ----- //
 
 		// ----- スプライト (2D) ----- //
-		
+
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
 
 #pragma endregion
 #pragma region ゲームオブジェクト
-
-		// プレイヤー操作か
-		bool isPlayer_ = true;
 		
+		// 核
+		YGame::Transform core_;
 
-		// プレイヤー
-		YGame::Transform player_;
-		// 向き (プレイヤー用)
-		YMath::Vector3 direction_;
+		// プレイヤーか
+		bool isPlayer_ = false;
+
 		// プレイヤー描画クラス
 		PlayerDrawer playerDra_;
-		// スピード
-		YMath::Vector3 playerSpeed_{};
+		// 向き (プレイヤー用)
+		YMath::Vector3 direction_;
+		// プレイヤー描画するか
+		bool isDrawPlayer_ = false;
 
-
-		// フィルター
-		YGame::Transform filter_;
 		// フィルター描画クラス
 		FilterDrawer filterDra_;
+		// フィルター描画するか
+		bool isDrawFilter_ = false;
 
-
-		// ブロック個数
-		static const size_t idx = 20;
-		// ブロック
-		std::array<YGame::Transform, idx> block_;
 		// ブロック描画クラス
-		std::array<BlockDrawer, idx> blockDra_;
+		BlockDrawer blockDra_;
+		// ブロック描画するか
+		bool isDrawBlock_ = false;
 
-
-		// ゲート
-		YGame::Transform gate_;
 		// ゲート描画クラス
 		GateDrawer gateDra_;
+		// ゲート描画するか
+		bool isDrawGate_ = false;
 
-
-		// ゴール
-		YGame::Transform goal_;
 		// ゴール描画クラス
 		GoalDrawer goalDra_;
-
+		// ゴール描画するか
+		bool isDrawGoal_ = false;
 
 		// 天球
 		Skydome skydome_;
-		
+		// 天球描画するか
+		bool isDrawSkydome_ = false;
+
 		// HUD
 		HUDDrawer hud_;
+		// HUD描画するか
+		bool isDrawHUD_ = false;
 
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
@@ -107,18 +104,16 @@ namespace YScene
 	private:
 		// 背景スプライト2D描画
 		void DrawBackSprite2Ds();
-		// スプライト3D描画
-		void DrawBackSprite3Ds();
 		// モデル描画
 		void DrawModels();
 		// スプライト3D描画
-		void DrawFrontSprite3Ds();
+		void DrawSprite3Ds();
 		// 前景スプライト2D描画
 		void DrawFrontSprite2Ds();
 	public:
 		// コンストラクタ
-		PlayScene() = default;
+		TestScene() = default;
 		// デストラクタ
-		~PlayScene() = default;
+		~TestScene() = default;
 	};
 }

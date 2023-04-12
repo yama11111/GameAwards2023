@@ -15,18 +15,18 @@ public:
 		OutsideLight, // 外枠 (光)
 	};
 protected:
-	// モードの総数
-	static const size_t ModeNum_ = 3;
 	// パーツの総数
 	static const size_t PartsNum_ = 4;
 protected:
 	// モデル (パーツの数だけ)
-	static std::array<std::array<std::unique_ptr<YGame::Model>, PartsNum_>, ModeNum_> sModels_;
+	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:
 	// 静的初期化
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~GateDrawerCommon() = default;
 };
 
 // ゲート描画用クラス
@@ -38,8 +38,8 @@ private:
 	// モデル用オブジェクト (子)
 	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
 
-	// 透明色
-	std::unique_ptr<YGame::Color> invisibleColor_;
+	// 色 (普通, 赤, 透明)
+	std::array<std::unique_ptr<YGame::Color>, ModeNum_> colors_;
 public:
 	/// <summary>
 	/// 初期化

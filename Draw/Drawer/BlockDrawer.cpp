@@ -13,6 +13,7 @@ using YGame::Model;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
+using YMath::Vector4;
 using namespace DrawerConfig::Block;
 
 #pragma endregion
@@ -20,18 +21,17 @@ using namespace DrawerConfig::Block;
 #pragma region Static
 
 // インデックス
-static const size_t NormalIdx = 0; // 通常
-static const size_t RedIdx = 1; // 赤
-static const size_t InvisibleIdx = 2; // 透明
+static const size_t NormalIdx = static_cast<size_t>(IDrawer::Mode::Normal); // 通常
+static const size_t RedIdx = static_cast<size_t>(IDrawer::Mode::Red); // 赤
+static const size_t InvisibleIdx = static_cast<size_t>(IDrawer::Mode::Invisivle); // 透明
+
 static const size_t CubeIdx = static_cast<size_t>(BlockDrawerCommon::Parts::Cube); // 体
 
 
 // 静的 モデル配列 初期化
-array<array<unique_ptr<Model>, BlockDrawerCommon::PartsNum_>, BlockDrawerCommon::ModeNum_> BlockDrawerCommon::sModels_ =
+array<unique_ptr<Model>, BlockDrawerCommon::PartsNum_> BlockDrawerCommon::sModels_ =
 {
 	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr
 };
 
 // 静的ビュープロジェクション
@@ -46,17 +46,8 @@ void BlockDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	// 通常
-	sModels_[NormalIdx][CubeIdx].reset(Model::Create("blockNormal.png")); // 立方体
-	sModels_[NormalIdx][1].reset(Model::Create());
-
-	// 赤
-	sModels_[RedIdx][CubeIdx].reset(Model::Create("blockRed.png")); // 立方体
-	sModels_[RedIdx][1].reset(Model::Create());
-
-	// 透明
-	sModels_[InvisibleIdx][CubeIdx].reset(Model::Create("blockInvisible.png")); // 立方体
-	sModels_[InvisibleIdx][1].reset(Model::Create());
+	sModels_[CubeIdx].reset(Model::Create("blockInvisible.png")); // 立方体
+	sModels_[1].reset(Model::Create());
 }
 
 #pragma endregion
@@ -66,28 +57,17 @@ void BlockDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
-	// 透明色生成
-	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.25f }));
+	// 色生成
+	color_.reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			// 透明ver
-			if (i == InvisibleIdx)
-			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, invisibleColor_.get(), nullptr));
-			}
-			// 通常、赤ver
-			else
-			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
-			}
-			
-			// 親行列挿入
-			modelObjs_[i][j]->parent_ = &core_->m_;
-		}
+		// 生成
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		
+		// 親行列挿入
+		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// リセット
@@ -102,26 +82,35 @@ void BlockDrawer::Reset(const Mode& mode)
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			// 透明ver
-			if (i == InvisibleIdx)
-			{
-				Vector3 scaleVal = {
-					DrawerConfig::InvisibleScale,
-					DrawerConfig::InvisibleScale,
-					DrawerConfig::InvisibleScale
-				};
-
-				modelObjs_[i][j]->Initialize({ {},{},scaleVal });
-			}
-			// 通常、赤ver
-			else
-			{
-				modelObjs_[i][j]->Initialize({});
-			}
-		}
+		modelObjs_[i]->Initialize({});
 	}
+
+	// 色初期化
+	color_->Initialize(DefColor::Red);
+
+	// 状態を保存
+	save_ = current_;
+
+	// ----- アニメーション ----- //
+
+	// フェードインフラグ
+	isFadeIn_ = false;
+	// フェードイン用タイマー
+	fadeInTim_.Initialize(0);
+	// フェードイン用色イージング
+	fadeInColorEas_.Initialize(DefColor::Invisible, DefColor::Red, FadeIn::Exponent);
+}
+
+void BlockDrawer::ResetAnimation()
+{
+	// ブヨブヨアニメーション初期化
+	SlimeActor::Initialize();
+
+	// 立ちモーションタイマーリセット
+	idleTim_.Reset(true);
+
+	// フェードイン用タイマーリセット
+	fadeInTim_.Initialize(0);
 }
 
 void BlockDrawer::Update()
@@ -129,37 +118,54 @@ void BlockDrawer::Update()
 	// 基底クラス更新 
 	IDrawer::Update({});
 
+	// フェードイン中なら
+	if (isFadeIn_)
+	{
+		// フェードイン用タイマー更新
+		fadeInTim_.Update();
+		// フェードイン用の色計算
+		Vector4 fadeInColor = fadeInColorEas_.In(fadeInTim_.Ratio());
+
+		// 代入
+		color_->SetRGBA(fadeInColor);
+	}
+	else
+	{
+		// 状態を戻す
+		current_ = save_;
+	}
+
+
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			modelObjs_[i][j]->UpdateMatrix();
-		}
+		modelObjs_[i]->UpdateMatrix();
 	}
 }
 
-void BlockDrawer::PreDraw()
+void BlockDrawer::Draw()
 {
-	// 透明描画
-	sModels_[InvisibleIdx][CubeIdx]->Draw(modelObjs_[InvisibleIdx][CubeIdx].get());
-
-	// 通常なら
-	if (current_ == Mode::Normal)
-	{
-		// 描画
-		sModels_[NormalIdx][CubeIdx]->Draw(modelObjs_[NormalIdx][CubeIdx].get());
-	}
+	// 描画
+	sModels_[CubeIdx]->Draw(modelObjs_[CubeIdx].get());
 }
 
-void BlockDrawer::PostDraw()
+void BlockDrawer::FadeInAnimation(const unsigned int frame)
 {
-	// 赤なら
-	if (current_ == Mode::Red)
-	{
-		// 描画
-		sModels_[RedIdx][CubeIdx]->Draw(modelObjs_[RedIdx][CubeIdx].get());
-	}
+	// アニメーションリセット
+	ResetAnimation();
+
+	// 状態を保存
+	save_ = current_;
+
+	// 状態を透明に
+	current_ = Mode::Invisivle;
+
+	// フェードインタイマー初期化 + 開始
+	fadeInTim_.Initialize(frame);
+	fadeInTim_.SetActive(true);
+
+	// フェードインアニメーション開始
+	isFadeIn_ = true;
 }
 
 void BlockDrawer::IdleAnimation()

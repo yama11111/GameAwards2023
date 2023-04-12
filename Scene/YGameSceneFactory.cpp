@@ -2,8 +2,10 @@
 #include "TitleScene.h"
 #include "SelectScene.h"
 #include "PlayScene.h"
-#include "EditScene.h"
 #include "ResultScene.h"
+
+#include "EditScene.h"
+#include "TestScene.h"
 
 using YScene::YGameSceneFactory;
 using YScene::BaseScene;
@@ -19,6 +21,7 @@ BaseScene* YGameSceneFactory::CreateScene(const std::string& sceneName)
 	if (sceneName == Result_)	{ newScene = new ResultScene(); }
 
 	if (sceneName == Edit_)		{ newScene = new EditScene(); }
+	if (sceneName == Test_)		{ newScene = new TestScene(); }
 
 	return newScene;
 }

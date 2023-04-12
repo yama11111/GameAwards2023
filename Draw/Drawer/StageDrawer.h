@@ -15,6 +15,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~StageDrawerCommon() = default;
 };
 
 class StageDrawer : 

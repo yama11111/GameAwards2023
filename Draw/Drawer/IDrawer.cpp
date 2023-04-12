@@ -6,19 +6,17 @@
 using YGame::Transform;
 using YGame::Color;
 using YGame::SlimeActor;
+using YMath::Vector3;
 
 #pragma endregion
 
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
-bool* IDrawer::spIsPlayer_ = nullptr;
 
-void IDrawer::StaticInitialize(bool* pIsPlayer, YGame::ParticleManager* pParticleMan)
+void IDrawer::StaticInitialize(YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
-	assert(pIsPlayer);
 	assert(pParticleMan);
 	// 代入
-	spIsPlayer_ = pIsPlayer;
 	spParticleMan_ = pParticleMan;
 }
 
@@ -33,9 +31,6 @@ void IDrawer::Initialze(YGame::Transform* pParent, const Mode& mode, const UINT 
 	core_.reset(new Transform());
 	core_->Initialize({});
 	core_->parent_ = &pParent->m_;
-
-	// 色生成
-	color_.reset(Color::Create());
 
 	// 立ちモーションタイマー初期化
 	idleTim_.Initialize(intervalTime);
@@ -63,6 +58,9 @@ void IDrawer::Reset(const Mode& mode)
 
 void IDrawer::Update(const YGame::Transform::Status& status)
 {
+	// 更新
+	SlimeActor::Update();
+
 	// 立ちモーションタイマー更新
 	idleTim_.Update();
 
@@ -78,7 +76,7 @@ void IDrawer::Update(const YGame::Transform::Status& status)
 	// 行列更新 (親)
 	core_->UpdateMatrix(
 		{
-			-SlimeActor::JiggleValue() + status.pos_,
+			Vector3(0.0f, SlimeActor::JiggleValue().y_, 0.0f) + status.pos_,
 			status.rota_,
 			SlimeActor::JiggleValue() + status.scale_
 		}

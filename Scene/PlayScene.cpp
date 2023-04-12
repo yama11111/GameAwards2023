@@ -41,7 +41,7 @@ void PlayScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&isPlayer_, &transferVP_, &particleMan_);
+	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
 }
 #pragma endregion
 
@@ -114,8 +114,11 @@ void PlayScene::Initialize()
 	// パーティクル初期化
 	particleMan_.Initialize();
 
+	// スクロールカメラ
+	scrollCamera_.Initialize({ 0,+10,-50 }, &player_.pos_, { 0.0f,0.0f,0.0f });
+
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({ {0,0,-50} });
+	transferVP_.Initialize({});
 }
 #pragma endregion
 
@@ -140,17 +143,43 @@ void PlayScene::Update()
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
 		isPlayer_ = !isPlayer_;
-		if (isPlayer_) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		if (isPlayer_) 
+		{
+			hud_.SetPilot(HUDDrawerCommon::Pilot::Player);
+			scrollCamera_.SetFollowPoint(&player_.pos_);
+		}
+		else 
+		{
+			hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); 
+			scrollCamera_.SetFollowPoint(&filter_.pos_);
+		}
 	}
 
 
 	// プレイヤー
 	if (isPlayer_)
 	{
-		player_.pos_.x_ += sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
-		player_.pos_.y_ += sKeys_->Vertical(Keys::MoveStandard::WASD) * 2.0f;
+		playerSpeed_.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD) * 2.0f;
+
+		if (sKeys_->IsTrigger(DIK_W))
+		{
+			playerDra_.JumpAnimation();
+			playerSpeed_.y_ = 1.5f;
+		}
+		if (player_.pos_.y_ > 0.0f)
+		{
+			playerSpeed_.y_ -= 0.1f;
+		}
 	}
+
+	player_.pos_ += playerSpeed_;
+	if (player_.pos_.y_ < 0.0f)
+	{
+		playerDra_.LandingAnimation();
+		playerSpeed_.y_ = 0.0f;
+		player_.pos_.y_ = 0.0f;
+	}
+
 	player_.UpdateMatrix();
 	
 	if (sKeys_->IsTrigger(DIK_K))
@@ -174,18 +203,6 @@ void PlayScene::Update()
 	filter_.UpdateMatrix();
 	filterDra_.Update();
 
-	// 衝突
-	if (sKeys_->IsTrigger(DIK_N))
-	{
-		playerDra_.SetIsCollFilter(true);
-		filterDra_.SetIsCollPlayer(true);
-	}
-	if (sKeys_->IsTrigger(DIK_M))
-	{
-		playerDra_.SetIsCollFilter(false);
-		filterDra_.SetIsCollPlayer(false);
-	}
-
 	// ブロック
 	for (size_t i = 0; i < idx; i++)
 	{
@@ -193,16 +210,13 @@ void PlayScene::Update()
 		blockDra_[i].Update();
 	}
 
-
 	// ゲート
 	gate_.UpdateMatrix();
 	gateDra_.Update();
 
-
 	// ゴール
 	goal_.UpdateMatrix();
 	goalDra_.Update();
-
 
 	// 天球更新
 	skydome_.Update();
@@ -211,6 +225,13 @@ void PlayScene::Update()
 	// パーティクル更新
 	particleMan_.Update();
 
+
+
+	// カメラ更新
+	scrollCamera_.Update();
+
+	// ビュープロジェクションにカメラ代入
+	transferVP_ = scrollCamera_.GetViewProjection();
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
@@ -248,7 +269,7 @@ void PlayScene::DrawModels()
 	// ブロック前描画
 	for (size_t i = 0; i < idx; i++)
 	{
-		blockDra_[i].PreDraw();
+		blockDra_[i].Draw();
 	}
 	// ゲート前描画
 	gateDra_.PreDraw();
@@ -275,11 +296,6 @@ void PlayScene::DrawModels()
 	// プレイヤー後描画
 	playerDra_.PostDraw();
 	
-	// ブロック後描画
-	for (size_t i = 0; i < idx; i++)
-	{
-		blockDra_[i].PostDraw();
-	}
 	// ゲート後描画
 	gateDra_.PostDraw();
 

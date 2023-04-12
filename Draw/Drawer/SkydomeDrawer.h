@@ -9,6 +9,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();
+public:
+	virtual ~SkydomeDrawerCommon() = default;
 };
 
 class SkydomeDrawer :

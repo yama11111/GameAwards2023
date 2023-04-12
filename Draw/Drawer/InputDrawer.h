@@ -27,6 +27,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();
+public:
+	virtual ~InputDrawerCommon() = default;
 };
 
 class InputDrawer : private InputDrawerCommon

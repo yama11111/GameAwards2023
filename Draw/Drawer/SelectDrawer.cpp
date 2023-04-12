@@ -27,6 +27,7 @@ using namespace DrawerConfig::Select;
 unique_ptr<Model> SelectDrawerCommon::sEarthModel_ = nullptr;
 unique_ptr<Sprite2D> SelectDrawerCommon::sLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
+StageConfig* SelectDrawerCommon::spStageConfig_ = nullptr;
 
 void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 {
@@ -47,15 +48,14 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// 地球
 	sEarthModel_.reset(Model::LoadObj("earth", true));
+
+
+	// ステージ設定所得
+	spStageConfig_ = StageConfig::GetInstance();
 }
 
-void SelectDrawer::Initalize(int* pStageIdx)
+void SelectDrawer::Initalize()
 {
-	// nullチェック
-	assert(pStageIdx);
-	// 代入
-	pStageIdx_ = pStageIdx;
-
 	// ----- 生成 ----- //
 
 	// 核
@@ -79,7 +79,7 @@ void SelectDrawer::Initalize(int* pStageIdx)
 	deadStage_.reset(new Transform());
 	
 	// ステージ描画クラス
-	stageDras_.resize(StageNum); // リサイズ
+	stageDras_.resize(spStageConfig_->StageNum_); // リサイズ
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
 		stageDras_[i].reset(new StageDrawer());
@@ -100,14 +100,14 @@ void SelectDrawer::Initalize(int* pStageIdx)
 	
 
 	// ステージカード
-	cards_.resize(StageNum);
+	cards_.resize(spStageConfig_->StageNum_);
 	for (size_t i = 0; i < cards_.size(); i++)
 	{
 		cards_[i].reset(new Transform());
 	}
 
 	// ステージカード描画クラス
-	cardDras_.resize(StageNum);
+	cardDras_.resize(spStageConfig_->StageNum_);
 	for (size_t i = 0; i < cardDras_.size(); i++)
 	{
 		cardDras_[i].reset(new CardDrawer());
@@ -126,7 +126,7 @@ void SelectDrawer::Initalize(int* pStageIdx)
 	// ----- イージング ----- //
 
 	// ステージ回転用パワー
-	stageRotaPows_.resize(static_cast<size_t>(StageNum - 1)); // リサイズ
+	stageRotaPows_.resize(static_cast<size_t>(spStageConfig_->StageNum_ - 1)); // リサイズ
 
 	// リセット
 	Reset();
@@ -179,7 +179,7 @@ void SelectDrawer::Reset()
 	// ----- ステージカード ----- //
 
 	// 高さの幅
-	float heightVal = Card::TotalHeight / static_cast<float>(StageNum - 1);
+	float heightVal = Card::TotalHeight / static_cast<float>(spStageConfig_->StageNum_ - 1);
 
 	// トランスフォーム (親)
 	for (size_t i = 0; i < cards_.size(); i++)
@@ -252,7 +252,7 @@ void SelectDrawer::UpdateRotaAnimation()
 		bool isRotaAct = false;
 		
 		// 現在のステージ数より番号が小さいなら
-		if (i < static_cast<size_t>(*pStageIdx_ - 1))
+		if (i < static_cast<size_t>(spStageConfig_->GetCurrentStageIndex() - 1))
 		{
 			// 動作する
 			isRotaAct = true;
@@ -316,7 +316,7 @@ void SelectDrawer::Update()
 		bool isSelect = false;
 
 		// 選択中のステージ番号のとき
-		if (i == *pStageIdx_ - 1)
+		if (i == spStageConfig_->GetCurrentStageIndex() - 1)
 		{
 			// 選択
 			isSelect = true;

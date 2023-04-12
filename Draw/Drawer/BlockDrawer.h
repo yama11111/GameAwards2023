@@ -12,18 +12,18 @@ public:
 		Cube, // 立方体
 	};
 protected:
-	// モードの総数
-	static const size_t ModeNum_ = 3;
 	// パーツの総数
 	static const size_t PartsNum_ = 2;
 protected:
 	// モデル (パーツの数だけ)
-	static std::array<std::array<std::unique_ptr<YGame::Model>, PartsNum_>, ModeNum_> sModels_;
+	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:
 	// 静的初期化
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~BlockDrawerCommon() = default;
 };
 
 // ブロック描画用クラス
@@ -32,12 +32,25 @@ class BlockDrawer :
 	private BlockDrawerCommon
 {
 private:
+	// ----- オブジェクト ----- // 
+
 	// モデル用オブジェクト (子)
-	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 
-	// 透明色
-	std::unique_ptr<YGame::Color> invisibleColor_;
+	// 色
+	std::unique_ptr<YGame::Color> color_;
 
+	// 保存用
+	Mode save_ = Mode::None;
+
+	// ----- アニメーション	 ----- //
+
+	// フェードイン中か
+	bool isFadeIn_ = false;
+	// フェードイン用タイマー
+	YMath::Timer fadeInTim_;
+	// フェードイン用色イージング
+	YMath::Ease<YMath::Vector4> fadeInColorEas_;
 public:
 	/// <summary>
 	/// 初期化
@@ -60,11 +73,14 @@ public:
 	void Reset(const Mode& mode);
 	// 更新
 	void Update();
-	// 前方描画 (フィルターより 先 に呼ぶ)
-	void PreDraw();
-	// 後方描画 (フィルターより 後 に呼ぶ)
-	void PostDraw();
+	// 描画
+	void Draw();
+public:
+	// じんわり出現アニメーション
+	void FadeInAnimation(const unsigned int frame);
 private:
+	// アニメーションリセット
+	void ResetAnimation();
 	// 立ちモーション
 	void IdleAnimation() override;
 public:

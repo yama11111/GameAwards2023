@@ -1,9 +1,8 @@
 #include "SelectScene.h"
 #include "SceneManager.h"
-#include "MathUtillity.h"
 #include "Def.h"
-#include "StageConfig.h"
 #include <cassert>
+#include <imgui.h>
 
 #pragma region 名前空間宣言
 using YScene::SelectScene;
@@ -49,18 +48,19 @@ void SelectScene::Initialize()
 	// pause
 	pauseDra_.Initalize();
 
-	// ステージ番号
-	stageIdx_ = 1;
+	// ステージ設定
+	stageConfig_ = StageConfig::GetInstance();
+	stageConfig_->SetCurrentStageIndex(1);
 
 	// 描画用クラス初期化
-	dra_.Initalize(&stageIdx_);
+	dra_.Initalize();
 	dra_.SetActive(true);
 
 	// 天球初期化
 	skydome_.Initialize();
 
 	// カメラ初期化
-	camera_.Initialize({ {+4.0f,+31.0f,-15.0f}, {-PI / 15.0f,-PI / 30.0f,-PI / 45.0f} });
+	camera_.Initialize({ +4.0f,+31.0f,-15.0f }, { -PI / 15.0f,-PI / 30.0f,-PI / 45.0f });
 	//camera_.Initialize({ {0,0,-100}, {} });
 
 	// ビュープロジェクション初期化
@@ -84,14 +84,20 @@ void SelectScene::Update()
 	pauseDra_.Update();
 
 
+	// ステージ番号取得
+	int stageIdx = stageConfig_->GetCurrentStageIndex();
+
 	// ステージ選択 (A or D)
-	stageIdx_ += 
+	stageIdx += 
 		+ (sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
 		- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
 
-	// ステージ番号クランプ
-	stageIdx_ = YMath::Clamp(stageIdx_, 1, StageNum);
+	// ステージ番号設定
+	stageConfig_->SetCurrentStageIndex(stageIdx);
 
+	ImGui::Begin("StageIdx");
+	ImGui::Text("%d", stageIdx);
+	ImGui::End();
 
 	// 次のシーンへ (SPACE)
 	if (sKeys_->IsTrigger(DIK_SPACE))

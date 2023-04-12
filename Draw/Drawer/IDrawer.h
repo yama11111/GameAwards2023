@@ -10,15 +10,16 @@ public:
 	// 状態
 	enum class Mode
 	{
-		Normal,	 // 通常
-		Red,	 // 赤
-		None,	 // 無し
+		Normal	  = 0, // 通常
+		Red		  = 1, // 赤
+		Invisivle = 2, // 透明
+		None, // 無し
 	};
+	// モードの数
+	static const size_t ModeNum_ = 3;
 protected:
 	// トランスフォーム 
 	std::unique_ptr<YGame::Transform> core_;
-	// 色
-	std::unique_ptr<YGame::Color> color_;
 	
 	// 現在の状態
 	Mode current_ = Mode::Normal;
@@ -43,11 +44,9 @@ protected:
 protected:
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
-	// 静的プレイヤーフラグポインタ
-	static bool* spIsPlayer_;
 public:
 	// 静的初期化
-	static void StaticInitialize(bool* pIsPlayer, YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(YGame::ParticleManager* pParticleMan);
 public:
 	virtual ~IDrawer() = default;
 };

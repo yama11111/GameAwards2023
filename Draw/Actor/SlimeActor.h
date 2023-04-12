@@ -59,6 +59,8 @@ namespace YGame
 		void ChangeAction();
 		// é¿ílçXêV
 		void UpdateValue();
+	public:
+		virtual ~SlimeActor() = default;
 	};
 }
 

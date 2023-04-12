@@ -20,17 +20,16 @@ using namespace DrawerConfig::Player;
 #pragma region Static
 
 // インデックス
-static const size_t NormalIdx = 0; // 通常
-static const size_t RedIdx = 1; // 赤
-static const size_t InvisibleIdx = 2; // 透明
+static const size_t NormalIdx = static_cast<size_t>(IDrawer::Mode::Normal); // 通常
+static const size_t RedIdx = static_cast<size_t>(IDrawer::Mode::Red); // 赤
+static const size_t InvisibleIdx = static_cast<size_t>(IDrawer::Mode::Invisivle); // 透明
+
 static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Body); // 体
 
 
 // 静的 モデル配列 初期化
-array<array<unique_ptr<Model>, PlayerDrawerCommon::PartsNum_>, PlayerDrawerCommon::ModeNum_> PlayerDrawerCommon::sModels_ =
+array<unique_ptr<Model>, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::sModels_ =
 {
-	nullptr, nullptr, 
-	nullptr, nullptr,
 	nullptr, nullptr
 };
 
@@ -46,17 +45,8 @@ void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	// 通常
-	sModels_[NormalIdx][BodyIdx].reset(Model::LoadObj("player/playerNormal", true)); // 体
-	sModels_[NormalIdx][1].reset(Model::Create());
-
-	// 赤
-	sModels_[RedIdx][BodyIdx].reset(Model::LoadObj("player/playerRed", true)); // 体
-	sModels_[RedIdx][1].reset(Model::Create());
-
-	// 透明
-	sModels_[InvisibleIdx][BodyIdx].reset(Model::LoadObj("player/playerInvisible", true)); // 体
-	sModels_[InvisibleIdx][1].reset(Model::Create());
+	sModels_[BodyIdx].reset(Model::LoadObj("player", true)); // 体
+	sModels_[1].reset(Model::Create());
 }
 
 #pragma endregion
@@ -69,26 +59,18 @@ void PlayerDrawer::Initialize(YGame::Transform* pParent, Vector3* pDirection, co
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
-	// 透明色生成
-	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.25f }));
+	// 色生成
+	colors_[NormalIdx]	 .reset(Color::Create());
+	colors_[RedIdx]		 .reset(Color::Create());
+	colors_[InvisibleIdx].reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
-			// 色ポインタ
-			Color* pColor = color_.get();
-
-			// 透明なら
-			if (i == InvisibleIdx)
-			{
-				// 透明色ポインタを入れる
-				pColor = invisibleColor_.get();
-			}
-
 			// 生成
-			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, pColor, nullptr));
+			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr));
 			
 			// 親行列代入
 			modelObjs_[i][j]->parent_ = &core_->m_;
@@ -127,23 +109,65 @@ void PlayerDrawer::Reset(const Mode& mode)
 		}
 	}
 
-	// フィルターと衝突しているか初期化
-	isCollFilter_ = false;
+	// 色初期化
+	colors_[NormalIdx]->Initialize();
+	colors_[RedIdx]->Initialize();
+	colors_[InvisibleIdx]->Initialize();
+
+	// ----- アニメーション ----- //
+	
+	// リスポーンフラグ
+	isRespawn_ = false;
+	// リスポーン用タイマー
+	respawnTim_.Initialize(Respawn::Frame);
+	// リスポーン用スケールイージング
+	respScaleEas_.Initialize(-1.0f,0.0f,Respawn::Exponent);
+	// リスポーン用アルファ値イージング
+	respAlphaEas_.Initialize(0.0f,1.0f,Respawn::Exponent);
+}
+
+void PlayerDrawer::ResetAnimation()
+{
+	// ブヨブヨアニメーション初期化
+	SlimeActor::Initialize();
+
+	// 立ちモーションタイマーリセット
+	idleTim_.Reset(true);
+
+	// リスポーン用タイマーリセット
+	respawnTim_.Reset(false);
 }
 
 void PlayerDrawer::Update()
 {
+	// アニメーション用
+	Vector3 pos{}, rota{}, scale{};
+
 	// 向き合わせ
-	Vector3 dire = YMath::AdjustAngle(*pDirection_);
+	rota = YMath::AdjustAngle(*pDirection_);
+
+	// リスポーン中なら
+	if (isRespawn_)
+	{
+		// リスポーン用タイマー更新
+		respawnTim_.Update();
+		// リスポーン用のスケール計算
+		float respSca = respScaleEas_.In(respawnTim_.Ratio());
+		
+		// 代入
+		scale = Vector3(respSca, respSca, respSca);
+
+		// リスポーン用のアルファ値計算
+		float respAlpha = respAlphaEas_.In(respawnTim_.Ratio());
+
+		// 代入
+		colors_[NormalIdx]->SetAlpha(respAlpha);
+		colors_[RedIdx]->SetAlpha(respAlpha);
+		colors_[InvisibleIdx]->SetAlpha(respAlpha);
+	}
 
 	// 基底クラス更新 
-	IDrawer::Update(
-		{
-			{}, 
-			dire,
-			{}
-		}
-	);
+	IDrawer::Update({ pos, rota, scale });
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -153,32 +177,18 @@ void PlayerDrawer::Update()
 			modelObjs_[i][j]->UpdateMatrix();
 		}
 	}
-
-
-	// フィルター操作 && フィルターと衝突していたら
-	if (*spIsPlayer_ == false && isCollFilter_)
-	{
-		// 色を変える
-		invisibleColor_->SetRGB(BadColor);
-	}
-	// 違うなら
-	else
-	{
-		// デフォルトの色に
-		invisibleColor_->SetRGB({ 1.0f,1.0f,1.0f });
-	}
 }
 
 void PlayerDrawer::PreDraw()
 {
 	// 透明描画
-	sModels_[InvisibleIdx][BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
+	sModels_[BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
 
 	// 通常なら
 	if (current_ == Mode::Normal)
 	{
 		// 描画
-		sModels_[NormalIdx][BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
+		sModels_[BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
 	}
 }
 
@@ -188,7 +198,7 @@ void PlayerDrawer::PostDraw()
 	if (current_ == Mode::Red)
 	{
 		// 描画
-		sModels_[RedIdx][BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
+		sModels_[BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
 	}
 }
 
@@ -206,7 +216,7 @@ void PlayerDrawer::JumpAnimation()
 	// 時間 (フレーム)
 	unsigned int frame = DrawerConfig::Player::Jump::SlimeAction::Frame;
 	// 指数 (緩急)
-	float pow = DrawerConfig::Player::Jump::SlimeAction::Power;
+	float pow = DrawerConfig::Player::Jump::SlimeAction::Exponent;
 
 	// ぷよぷよアニメーション
 	SlimeActor::Activate(
@@ -218,7 +228,6 @@ void PlayerDrawer::JumpAnimation()
 		}
 	);
 }
-
 void PlayerDrawer::LandingAnimation()
 {
 	// つぶれる量
@@ -228,7 +237,7 @@ void PlayerDrawer::LandingAnimation()
 	// 時間 (フレーム)
 	unsigned int frame = DrawerConfig::Player::Landing::SlimeAction::Frame;
 	// 指数 (緩急)
-	float exponent = DrawerConfig::Player::Landing::SlimeAction::Power;
+	float exponent = DrawerConfig::Player::Landing::SlimeAction::Exponent;
 
 	// ぷよぷよアニメーション
 	SlimeActor::Activate(
@@ -261,6 +270,35 @@ void PlayerDrawer::ChangeColorAnimation(const Mode& mode)
 
 	// 発生
 	spParticleMan_->EmitFireWorks(20, 10, pParent_->pos_, pParent_->scale_.x_, color);
+}
+
+void PlayerDrawer::RespawnAnimation()
+{
+	// アニメーションリセット
+	ResetAnimation();
+
+	// リスポーンタイマー開始
+	respawnTim_.SetActive(true);
+
+	// つぶれる量
+	Vector3 squash = core_->scale_ * DrawerConfig::Player::Respawn::SlimeAction::Value;
+
+	// 時間 (フレーム)
+	unsigned int frame = DrawerConfig::Player::Respawn::SlimeAction::Frame;
+	// 指数 (緩急)
+	float exponent = DrawerConfig::Player::Respawn::SlimeAction::Exponent;
+
+	// ぷよぷよアニメーション
+	SlimeActor::Activate(
+		{
+			{{}, frame, exponent},
+			{squash, frame, exponent},
+			{{}, frame, exponent}
+		}
+	);
+
+	// リスポーンアニメーション開始
+	isRespawn_ = true;
 }
 
 void PlayerDrawer::IdleAnimation()

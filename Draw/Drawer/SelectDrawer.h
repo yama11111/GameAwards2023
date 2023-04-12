@@ -4,6 +4,7 @@
 #include "LetterBoxDrawer.h"
 #include "Sprite2D.h"
 #include "Power.h"
+#include "StageConfig.h"
 
 class SelectDrawerCommon
 {
@@ -14,9 +15,13 @@ protected:
 	static std::unique_ptr<YGame::Sprite2D> sLogoSpr_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
+	// ステージ設定ポインタ
+	static StageConfig* spStageConfig_;
 public:
 	// 静的初期化
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~SelectDrawerCommon() = default;
 };
 
 class SelectDrawer : private SelectDrawerCommon
@@ -58,9 +63,6 @@ private:
 
 	// ----- アニメーション ----- //
 
-	// ステージ番号ポインタ
-	int* pStageIdx_ = nullptr;
-
 	// 動作中か
 	bool isAct_ = false;
 	
@@ -75,7 +77,7 @@ private:
 	std::vector<YMath::Power> stageRotaPows_;
 public:
 	// 初期化
-	void Initalize(int* pStageIdx);
+	void Initalize();
 	// リセット
 	void Reset();
 	// 更新

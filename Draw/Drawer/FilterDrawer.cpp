@@ -53,10 +53,16 @@ void FilterDrawer::Initialize(YGame::Transform* pParent)
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, Mode::Red, Idle::IntervalTime);
 
+	// 色生成
+	color_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }));
+
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
+		// 生成
 		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		
+		// 親行列代入
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
@@ -81,9 +87,6 @@ void FilterDrawer::Reset()
 	);
 
 	color_->SetRGBA({ 1.0f,0.0f,0.0f,0.25f });
-
-	// フィルターと衝突しているか初期化
-	isCollPlayer_ = false;
 }
 
 void FilterDrawer::Update()
@@ -95,20 +98,6 @@ void FilterDrawer::Update()
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i]->UpdateMatrix();
-	}
-
-
-	// フィルター操作 && プレイヤーと衝突していたら
-	if (*spIsPlayer_ == false && isCollPlayer_)
-	{
-		// 色を変える
-		color_->SetRGB(BadColor);
-	}
-	// 違うなら
-	else
-	{
-		// デフォルトの色に
-		color_->SetRGB({ 1.0f,0.0f,0.0f });
 	}
 }
 

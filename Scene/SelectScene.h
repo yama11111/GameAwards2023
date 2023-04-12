@@ -32,8 +32,8 @@ namespace YScene
 		// pause
 		PauseDrawer pauseDra_;
 
-		// ステージ番号
-		int stageIdx_ = 0;
+		// ステージ設定
+		StageConfig* stageConfig_;
 
 		// ステージセレクト描画クラス
 		SelectDrawer dra_;

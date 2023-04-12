@@ -115,6 +115,9 @@
     <Filter Include="Draw\Drawer\UI">
       <UniqueIdentifier>{5763683f-f3c1-46f0-8183-9a71a100d6a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameUtil\Resource">
+      <UniqueIdentifier>{28e50d81-eb17-4533-a659-ee5403e36748}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -147,16 +150,10 @@
     <ClCompile Include="Base\DX\Vertices.cpp">
       <Filter>Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\AudioManager.cpp">
-      <Filter>GameUtil</Filter>
-    </ClCompile>
     <ClCompile Include="Base\DX\DescriptorHeap.cpp">
       <Filter>Base\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="GameUtillity\Camera\Camera.cpp">
-      <Filter>GameUtil\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Camera\CameraManager.cpp">
       <Filter>GameUtil\Camera</Filter>
     </ClCompile>
     <ClCompile Include="GameUtillity\Collision\CollisionManager.cpp">
@@ -185,9 +182,6 @@
     </ClCompile>
     <ClCompile Include="Draw\SceneChange\Blackout.cpp">
       <Filter>Draw\SceneChange</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Color.cpp">
-      <Filter>GameUtil</Filter>
     </ClCompile>
     <ClCompile Include="Utillity\Input\InputManager.cpp">
       <Filter>Util\Input</Filter>
@@ -300,17 +294,11 @@
     <ClCompile Include="GameUtillity\Camera\ViewProjection.cpp">
       <Filter>GameUtil\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\Transform.cpp">
-      <Filter>GameUtil</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Stuff\Floor.cpp">
       <Filter>Draw\Stuff</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Stuff\Skydome.cpp">
       <Filter>Draw\Stuff</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\TextureManager.cpp">
-      <Filter>GameUtil</Filter>
     </ClCompile>
     <ClCompile Include="GameUtillity\Object\Material.cpp">
       <Filter>GameUtil\Object\Model</Filter>
@@ -405,6 +393,27 @@
     <ClCompile Include="Scene\EditScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\TestScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StageConfig.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollCamera.cpp">
+      <Filter>GameUtil\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Transform.cpp">
+      <Filter>GameUtil\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Color.cpp">
+      <Filter>GameUtil\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\AudioManager.cpp">
+      <Filter>GameUtil\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\TextureManager.cpp">
+      <Filter>GameUtil\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -437,16 +446,10 @@
     <ClInclude Include="Base\DX\Vertices.h">
       <Filter>Base\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\AudioManager.h">
-      <Filter>GameUtil</Filter>
-    </ClInclude>
     <ClInclude Include="Base\DX\DescriptorHeap.h">
       <Filter>Base\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="GameUtillity\Camera\Camera.h">
-      <Filter>GameUtil\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Camera\CameraManager.h">
       <Filter>GameUtil\Camera</Filter>
     </ClInclude>
     <ClInclude Include="GameUtillity\Collision\CollisionConfig.h">
@@ -478,9 +481,6 @@
     </ClInclude>
     <ClInclude Include="Draw\SceneChange\Blackout.h">
       <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Color.h">
-      <Filter>GameUtil</Filter>
     </ClInclude>
     <ClInclude Include="Utillity\Input\InputManager.h">
       <Filter>Util\Input</Filter>
@@ -599,17 +599,11 @@
     <ClInclude Include="GameUtillity\Camera\ViewProjection.h">
       <Filter>GameUtil\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\Transform.h">
-      <Filter>GameUtil</Filter>
-    </ClInclude>
     <ClInclude Include="Draw\Stuff\Floor.h">
       <Filter>Draw\Stuff</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Stuff\Skydome.h">
       <Filter>Draw\Stuff</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\TextureManager.h">
-      <Filter>GameUtil</Filter>
     </ClInclude>
     <ClInclude Include="GameUtillity\Object\Material.h">
       <Filter>GameUtil\Object\Model</Filter>
@@ -715,6 +709,24 @@
     </ClInclude>
     <ClInclude Include="Scene\EditScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TestScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Camera\ScrollCamera.h">
+      <Filter>GameUtil\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Transform.h">
+      <Filter>GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Color.h">
+      <Filter>GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\AudioManager.h">
+      <Filter>GameUtil\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\TextureManager.h">
+      <Filter>GameUtil\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

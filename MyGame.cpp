@@ -2,6 +2,7 @@
 #include "Def.h"
 #include "YGameSceneFactory.h"
 #include "YGameTransitionFactory.h"
+#include "StageConfig.h"
 
 #pragma region 名前空間宣言
 using YBase::MyGame;
@@ -17,13 +18,16 @@ bool MyGame::Initialize()
 	// 基底クラス初期化処理
 	if (YFramework::Initialize() == false) { return false; }
 
+	// ステージ設定
+	StageConfig::GetInstance()->Initialize();
+
 	// シーンファクトリー設定
 	sceneMan_->SetSceneFactory(new YGameSceneFactory());
 	// 遷移ファクトリー設定
 	sceneMan_->SetSceneFactory(new YGameTransitionFactory());
 
 	// シーンマネージャー初期化
-	sceneMan_->Initialize("EDIT");
+	sceneMan_->Initialize("TEST");
 
 	return true;
 }

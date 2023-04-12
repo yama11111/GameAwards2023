@@ -24,6 +24,8 @@ protected:
 public:
 	// 静的初期化
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~BuildingDrawerCommon() = default;
 };
 
 // ビル描画用クラス

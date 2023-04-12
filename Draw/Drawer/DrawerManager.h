@@ -5,6 +5,6 @@ class DrawerManager
 {
 public:
 	// Ã“I‰Šú‰»
-	static void StaticInitialize(bool* pIsPlayer, YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
 };
 

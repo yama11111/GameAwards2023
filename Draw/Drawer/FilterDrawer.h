@@ -22,6 +22,8 @@ protected:
 public:
 	// 静的初期化
 	static void StaticInitialize(YGame::ViewProjection* pVP);
+public:
+	virtual ~FilterDrawerCommon() = default;
 };
 
 // フィルター描画用クラス
@@ -33,8 +35,8 @@ private:
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 
-	// プレイヤーと衝突しているか
-	bool isCollPlayer_ = false;
+	// 色
+	std::unique_ptr<YGame::Color> color_;
 public:
 	/// <summary>
 	/// 初期化
@@ -48,8 +50,6 @@ public:
 	// 描画
 	void Draw();
 public:
-	// プレイヤーと衝突しているか設定
-	void SetIsCollPlayer(const bool isCollPlayer) { isCollPlayer_ = isCollPlayer; }
 private:
 	// 立ちモーション
 	void IdleAnimation() override;

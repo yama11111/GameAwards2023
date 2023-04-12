@@ -30,6 +30,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();
+public:
+	virtual ~PauseDrawerCommon() = default;
 };
 
 class PauseDrawer : private PauseDrawerCommon

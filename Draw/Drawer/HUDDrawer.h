@@ -19,6 +19,8 @@ protected:
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();
+public:
+	virtual ~HUDDrawerCommon() = default;
 };
 
 class HUDDrawer : private HUDDrawerCommon

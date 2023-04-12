@@ -144,7 +144,6 @@
     <ClCompile Include="Draw\Stuff\Skydome.cpp" />
     <ClCompile Include="GameUtillity\AudioManager.cpp" />
     <ClCompile Include="GameUtillity\Camera\Camera.cpp" />
-    <ClCompile Include="GameUtillity\Camera\CameraManager.cpp" />
     <ClCompile Include="GameUtillity\Camera\ViewProjection.cpp" />
     <ClCompile Include="GameUtillity\Collision\BaseCollider.cpp" />
     <ClCompile Include="GameUtillity\Collision\CollisionManager.cpp" />
@@ -176,9 +175,12 @@
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SelectScene.cpp" />
+    <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Scene\YGameSceneFactory.cpp" />
     <ClCompile Include="Scene\YGameTransitionFactory.cpp" />
+    <ClCompile Include="ScrollCamera.cpp" />
+    <ClCompile Include="StageConfig.cpp" />
     <ClCompile Include="Utillity\FileUtillity.cpp" />
     <ClCompile Include="Utillity\imgui\ImGuiManager.cpp" />
     <ClCompile Include="Utillity\Input\InputManager.cpp" />
@@ -245,7 +247,7 @@
     <ClInclude Include="Draw\Stuff\Skydome.h" />
     <ClInclude Include="GameUtillity\AudioManager.h" />
     <ClInclude Include="GameUtillity\Camera\Camera.h" />
-    <ClInclude Include="GameUtillity\Camera\CameraManager.h" />
+    <ClInclude Include="GameUtillity\Camera\ScrollCamera.h" />
     <ClInclude Include="GameUtillity\Camera\ViewProjection.h" />
     <ClInclude Include="GameUtillity\Collision\BaseCollider.h" />
     <ClInclude Include="GameUtillity\Collision\CollisionConfig.h" />
@@ -279,6 +281,7 @@
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SelectScene.h" />
+    <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Scene\YGameSceneFactory.h" />
     <ClInclude Include="Scene\TransitionConfig.h" />

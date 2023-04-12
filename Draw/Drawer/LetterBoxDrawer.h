@@ -12,6 +12,8 @@ namespace YGame
 	public:
 		// Ã“I‰Šú‰»
 		static void StaticInitialize();
+	public:
+		virtual ~LetterBoxDrawerCommon() = default;
 	};
 
 	class LetterBoxDrawer : private LetterBoxDrawerCommon

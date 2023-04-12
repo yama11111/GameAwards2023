@@ -27,6 +27,8 @@ namespace YGame
 	public:
 		// 静的初期化 (デフォルト値設定)
 		static void StaticInitialize();
+	public:
+		virtual ~Sprite2DObjectCommon() = default;
 	};
 	
 	// スプライト2Dコモンクラス
@@ -76,5 +78,7 @@ namespace YGame
 		static void StaticInitialize();
 		// 静的描画コマンド
 		static void StaticSetDrawCommand();
+	public:
+		virtual ~Sprite2DCommon() = default;
 	};
 }

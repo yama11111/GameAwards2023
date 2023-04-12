@@ -30,13 +30,9 @@ static const size_t OutsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::O
 static const size_t OutLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::OutsideLight); // 外枠 (光)
 
 // 静的 モデル配列 初期化
-array<array<unique_ptr<Model>, GateDrawerCommon::PartsNum_>, GateDrawerCommon::ModeNum_> GateDrawerCommon::sModels_ =
+array<unique_ptr<Model>, GateDrawerCommon::PartsNum_> GateDrawerCommon::sModels_ =
 {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr
+	nullptr, nullptr, nullptr, nullptr,
 };
 
 // 静的ビュープロジェクション
@@ -50,24 +46,11 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spVP_ = pVP;
 
 	// ----- モデル読み込み ----- //
-	
-	// 通常
-	sModels_[NormalIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // 内枠
-	sModels_[NormalIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // 内枠 (光)
-	sModels_[NormalIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // 外枠
-	sModels_[NormalIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // 外枠 (光)
 
-	// 赤
-	sModels_[RedIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // 内枠
-	sModels_[RedIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // 内枠 (光)
-	sModels_[RedIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // 外枠
-	sModels_[RedIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // 外枠 (光)
-
-	// 透明
-	sModels_[InvisibleIdx][InsideIdx].reset(Model::LoadObj("gate/inside", true)); // 内枠
-	sModels_[InvisibleIdx][InLightIdx].reset(Model::LoadObj("gate/insideLight", true)); // 内枠 (光)
-	sModels_[InvisibleIdx][OutsideIdx].reset(Model::LoadObj("gate/outside", true)); // 外枠
-	sModels_[InvisibleIdx][OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // 外枠 (光)
+	sModels_[InsideIdx]	 .reset(Model::LoadObj("gate/inside", true)); // 内枠
+	sModels_[InLightIdx] .reset(Model::LoadObj("gate/insideLight", true)); // 内枠 (光)
+	sModels_[OutsideIdx] .reset(Model::LoadObj("gate/outside", true)); // 外枠
+	sModels_[OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // 外枠 (光)
 }
 
 #pragma endregion
@@ -77,24 +60,18 @@ void GateDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
-	// 透明色生成
-	invisibleColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,0.25f }));
+	// 色生成
+	colors_[NormalIdx].reset(Color::Create());
+	colors_[RedIdx].reset(Color::Create());
+	colors_[InvisibleIdx].reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
-			// 透明ver
-			if (i == InvisibleIdx)
-			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, invisibleColor_.get(), nullptr));
-			}
-			// 通常、赤ver
-			else
-			{
-				modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
-			}
+			// 生成
+			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr));
 
 			// 親行列挿入
 			modelObjs_[i][j]->parent_ = &core_->m_;
@@ -131,7 +108,10 @@ void GateDrawer::Reset(const Mode& mode)
 		modelObjs_[i][OutLightIdx]->Initialize({ {}, {}, scale }); // 外枠 (光)
 	}
 
-	current_ = mode;
+	// 色初期化
+	colors_[NormalIdx]->Initialize();
+	colors_[RedIdx]->Initialize();
+	colors_[InvisibleIdx]->Initialize();
 }
 
 void GateDrawer::Update()
@@ -152,18 +132,18 @@ void GateDrawer::Update()
 void GateDrawer::PreDraw()
 {
 	// 透明描画
-	for (size_t i = 0; i < sModels_[InvisibleIdx].size(); i++)
+	for (size_t i = 0; i < sModels_.size(); i++)
 	{
-		sModels_[InvisibleIdx][i]->Draw(modelObjs_[InvisibleIdx][i].get());
+		sModels_[i]->Draw(modelObjs_[InvisibleIdx][i].get());
 	}
 
 	// 通常なら
 	if (current_ == Mode::Normal)
 	{
 		// 描画
-		for (size_t i = 0; i < sModels_[NormalIdx].size(); i++)
+		for (size_t i = 0; i < sModels_.size(); i++)
 		{
-			sModels_[NormalIdx][i]->Draw(modelObjs_[NormalIdx][i].get());
+			sModels_[i]->Draw(modelObjs_[NormalIdx][i].get());
 		}
 	}
 }
@@ -174,9 +154,9 @@ void GateDrawer::PostDraw()
 	if (current_ == Mode::Red)
 	{
 		// 描画
-		for (size_t i = 0; i < sModels_[NormalIdx].size(); i++)
+		for (size_t i = 0; i < sModels_.size(); i++)
 		{
-			sModels_[RedIdx][i]->Draw(modelObjs_[RedIdx][i].get());
+			sModels_[i]->Draw(modelObjs_[RedIdx][i].get());
 		}
 	}
 }

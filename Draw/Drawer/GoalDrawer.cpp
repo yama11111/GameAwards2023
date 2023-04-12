@@ -60,7 +60,7 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
