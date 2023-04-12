@@ -453,13 +453,18 @@ void PlayScene::Update()
 	filter->SetMovePos(result);
 
 	//入力状態を入手
-	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD) * 0.5f;
-	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
+	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD);
+	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD);
 	result.z_ = 0.0f;
+
+	float playerA = 0.3f;
+	float filterA = 0.5f;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
 	{
+		result.x_ *= playerA;
+
 		//プレイヤーはy軸はジャンプのみ
 		result.y_ = 0.0f;
 
@@ -468,6 +473,8 @@ void PlayScene::Update()
 	}
 	else
 	{
+		result.x_ *= filterA;
+
 		//フィルターの移動量格納
 		filter->SetMovePos(result);
 	}
@@ -510,7 +517,6 @@ void PlayScene::Update()
 		//重力、浮力を加算
 		//player->AddGravity();
 		//}
-
 
 		////入力方向手動代入
 		//DS.x_ = 0;
@@ -590,17 +596,17 @@ void PlayScene::Update()
 		//	}
 		//}
 
-		//横移動
-		player->PlayerMove(player->GetMovePos());
-
 		//右を押してるとき左に修正
 		if (sKeys_->IsDown(DIK_D))
 		{
 			//入力方向手動代入
-			DS.x_ = 0.01f;
+			DS.x_ = 1.0f;
 			DS.y_ = 0;
 			AW.x_ = 0;
 			AW.y_ = 0;
+
+			//横移動
+			player->PlayerMove(player->GetMovePos());
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -621,11 +627,13 @@ void PlayScene::Update()
 							while (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								//ちょっと戻す
-								player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
 								//再代入
 								CheckTrans1 = player->GetTransform();
 							}
+
+							//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
 						}
 					}
 				}
@@ -638,8 +646,11 @@ void PlayScene::Update()
 			//入力方向手動代入
 			DS.x_ = 0;
 			DS.y_ = 0;
-			AW.x_ = 0.01f;
+			AW.x_ = 1.0f;
 			AW.y_ = 0;
+
+			//横移動
+			player->PlayerMove(player->GetMovePos());
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
