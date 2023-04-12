@@ -604,13 +604,16 @@ void Player::AddGravity()
 		Gravity += GravityPower;
 	}
 
+	//d—Í‚©‚¯‚é
 	player_.pos_.y_ -= Gravity;
 }
 
 void Player::PlayerMove(YMath::Vector3 pos)
 {
+	//ˆÚ“®
 	player_.pos_ += pos;
 
+	//XVˆ—
 	player_.UpdateMatrix();
 	playerDra_.Update();
 
