@@ -1,4 +1,5 @@
 #include "Filter.h"
+#include "imgui.h"
 
 //インクリメント
 Filter::Filter()
@@ -36,6 +37,13 @@ void Filter::Update()
 	//更新
 	filter_.UpdateMatrix();
 	filterDra_.Update();
+
+	/*ImGui::Begin("Filter_");
+	ImGui::SliderFloat("pos", &filter_.pos_.x_, -500, 500);
+	ImGui::SliderFloat("pos", &filter_.pos_.y_, -500, 500);
+	ImGui::SliderFloat("scale", &filter_.scale_.x_, 0, 10);
+	ImGui::SliderFloat("scale", &filter_.scale_.y_, 0, 10);
+	ImGui::End();*/
 }
 
 //描画ほかのPostとPreの間に描画する

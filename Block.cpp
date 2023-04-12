@@ -36,7 +36,7 @@ void Block::Update(YGame::Transform filter)
 	float f_right = filter.pos_.x_ + (filter.scale_.x_ * 2);
 	float f_left = filter.pos_.x_ - (filter.scale_.x_ * 2);
 
-	//SetsukeFlag(false);
+	SetClearFlag(false);
 
 	if (nowKind == ColorB)
 	{
@@ -46,89 +46,92 @@ void Block::Update(YGame::Transform filter)
 			b_top  < f_bottom ||
 			b_bottom > f_top)
 		{
-			//完全にフィルター内にいるか
-			if (b_right < f_right &&
-				b_left > f_left &&
-				b_bottom  < f_bottom &&
-				b_top > f_top)
-			{
-				ClearFlag = true;
-			}
-			else
-			{
-				//どこの辺がプレイヤーに当たっているか
-				//右上
-				//if (b_right > f_right &&
-				//	b_left < f_right &&
-				//	b_bottom > f_top &&
-				//	b_top < f_top)
-				//{
-				//	block_.scale_.y_ = block_.pos_.x_ - f_right;
+			////完全にフィルター内にいるか
+			//if (b_right < f_right &&
+			//	b_left > f_left &&
+			//	b_bottom  < f_bottom &&
+			//	b_top > f_top)
+			//{
+			//	ClearFlag = true;
+			//}
+			//else
+			//{
+			//	///どこの辺がプレイヤーに当たっているか
+			//	//右上
+			//	if (b_right > f_right &&
+			//		b_left < f_right &&
+			//		b_bottom > f_top &&
+			//		b_top < f_top)
+			//	{
+			//		block_.scale_.y_ = block_.pos_.x_ - f_right;
 
-				//	block_.scale_.y_ = f_top - block_.pos_.y_;
-				//}
-				////右下
-				//else if (
-				//	b_right > f_right &&
-				//	b_left < f_right &&
-				//	b_bottom > f_bottom &&
-				//	b_top < f_bottom)
-				//{
-				//	block_.scale_.y_ = block_.pos_.x_ - f_right;
+			//		block_.scale_.y_ = f_top - block_.pos_.y_;
+			//		ClearFlag = true;
+			//	}
+			//	//右下
+			//	else if (
+			//		b_right > f_right &&
+			//		b_left < f_right &&
+			//		b_bottom > f_bottom &&
+			//		b_top < f_bottom)
+			//	{
+			//		block_.scale_.y_ = block_.pos_.x_ - f_right;
 
-				//	block_.scale_.x_ = block_.pos_.y_ - f_bottom;
-				//}
-				////左上
-				//else if (
-				//	b_right > f_left &&
-				//	b_left < f_left &&
-				//	b_bottom > f_top &&
-				//	b_top < f_top)
-				//{
-				//	block_.scale_.x_ = f_left - block_.pos_.x_;
+			//		block_.scale_.x_ = block_.pos_.y_ - f_bottom;
+			//		ClearFlag = true;
+			//	}
+			//	//左上
+			//	else if (
+			//		b_right > f_left &&
+			//		b_left < f_left &&
+			//		b_bottom > f_top &&
+			//		b_top < f_top)
+			//	{
+			//		block_.scale_.x_ = f_left - block_.pos_.x_;
 
-				//	block_.scale_.y_ = f_top - block_.pos_.y_;
-				//}
-				////左下
-				//else if (
-				//	b_right > f_left &&
-				//	b_left < f_left &&
-				//	b_bottom > f_bottom &&
-				//	b_top < f_bottom)
-				//{
-				//	block_.scale_.x_ = f_left - block_.pos_.x_;
+			//		block_.scale_.y_ = f_top - block_.pos_.y_;
+			//		ClearFlag = true;
+			//	}
+			//	//左下
+			//	else if (
+			//		b_right > f_left &&
+			//		b_left < f_left &&
+			//		b_bottom > f_bottom &&
+			//		b_top < f_bottom)
+			//	{
+			//		block_.scale_.x_ = f_left - block_.pos_.x_;
 
-				//	block_.scale_.x_ = block_.pos_.y_ - f_bottom;
-				//}
-				////右
-				//else 
-				if (b_left < f_right)
-				{
-					//block_.scale_.x_ = block_.pos_.x_ - f_right;
-				//	sukeF = true;
+			//		block_.scale_.x_ = block_.pos_.y_ - f_bottom;
+			//		ClearFlag = true;
+			//	}
+			//	//右
+			//	else if (b_left < f_right)
+			//	{
+			//		block_.scale_.x_ = block_.pos_.x_ - f_right;
+			//		ClearFlag = true;
 
-				}
-				//左
-				else if (b_right > f_left)
-				{
-					//block_.scale_.x_ = f_left - block_.pos_.x_;
-				//	sukeF = true;
-				}
-				//上
-				else if (b_bottom > f_top)
-				{
-					///あってる
-					//sukeF = true;
-					//block_.scale_.y_ = f_top - block_.pos_.y_;
-				}
+			//	}
+			//	//左
+			//	else if (b_right > f_left)
+			//	{
+			//		block_.scale_.x_ = f_left - block_.pos_.x_;
+			//		ClearFlag = true;
+			//	}
+			//	//上
+			//	else if (b_bottom > f_top)
+			//	{
+			//		//あってる
+			//		ClearFlag = true;
+			//		block_.scale_.y_ = f_top - block_.pos_.y_;
+			//	}
 
-				else if (b_top < f_bottom)
-				{
-					//できた
-					//block_.scale_.y_ = block_.pos_.y_ - f_bottom;
-					//sukeF = true;
-				}
-			}
+			//	else if (b_top < f_bottom)
+			//	{
+			//		//できた
+			//		block_.scale_.y_ = block_.pos_.y_ - f_bottom;
+			//		ClearFlag = true;
+			//	}
+			//}
 		}
 	}
 

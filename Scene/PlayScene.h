@@ -112,16 +112,16 @@ namespace YScene
 
 		//const int blockCount = 5;
 
+		//ブロック格納用変数
 		std::vector<Block*> block;
 
+		//中心からの縦横サイズ
 		YMath::Vector2 RL = { 0.0f,0.0f };
 		YMath::Vector2 WS = { 0.0f,0.0f };
 
+		//入力確認用
 		YMath::Vector2 DS = { 0.0f,0.0f };
 		YMath::Vector2 AW = { 0.0f,0.0f };
-
-		YMath::Vector2 filterSize = { 0.0f,0.0f };
-
 
 
 		// ゲート

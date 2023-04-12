@@ -12,9 +12,10 @@ using namespace YGame;
 
 Player::Player()
 {
-	player_.Initialize({ {}, {}, {0.5f,0.5f,0.5f} });
+	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	filterDra_.Initialize(&player_);
 
 	player_.scale_.x_ = 4.0f;
 	player_.scale_.y_ = 8.0f;
@@ -38,9 +39,10 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	player_.Initialize({ {}, {}, {0.5f,0.5f,0.5f} });
+	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
 	SetClearFlag(false);
@@ -60,6 +62,7 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 	player_.Initialize({ pos_, rot_, scale_ });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
 	SetClearFlag(false);
@@ -77,13 +80,15 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 //Pre描画(フィルターの前)
 void Player::PreDraw()
 {
-	playerDra_.PreDraw();
+	//playerDra_.PreDraw();
+	//filterDra_.Draw();
 }
 
 //Post描画(フィルターの後)
 void Player::PostDraw()
 {
-	playerDra_.PostDraw();
+	//playerDra_.PostDraw();
+	filterDra_.Draw();
 }
 
 void Player::Update(Transform filterPos)
@@ -141,9 +146,11 @@ void Player::Update(Transform filterPos)
 	float f_right = filterPos.pos_.x_ + filterPos.scale_.x_;
 	float f_left = filterPos.pos_.x_ - filterPos.scale_.x_;
 
+	//すり抜けフラグかつ今操作しているかどうか
 	//SetClearFlag(false);
 
-	player_.pos_ += movePos;
+	//移動量を足す
+	//player_.pos_ += movePos;
 
 	//フィルターに当たっているか
 	if (p_left < f_right ||
@@ -151,6 +158,8 @@ void Player::Update(Transform filterPos)
 		p_top  < f_bottom ||
 		p_bottom > f_top)
 	{
+		//SetClearFlag(true);
+
 		//完全にフィルター内にいるか
 		if (p_right < f_right &&
 			p_left > f_left &&
@@ -245,266 +254,292 @@ void Player::Update(Transform filterPos)
 		}
 	}
 
-
-
-
-
-	/*if (chengeF)
+	//後で消す
 	{
-		if (Keys::IsDown(DIK_D))
+		/*if (chengeF)
 		{
-			playerPos.x_ += moveSpd;
-
-			DS.x_ = CheckHitKey(KEY_INPUT_D);
-			DS.y_ = 0;
-
-			AW.x_ = 0;
-			AW.y_ = 0;
-
-			if (!sukeF)
+			if (Keys::IsDown(DIK_D))
 			{
-				if (kadoF)
+				playerPos.x_ += moveSpd;
+
+				DS.x_ = CheckHitKey(KEY_INPUT_D);
+				DS.y_ = 0;
+
+				AW.x_ = 0;
+				AW.y_ = 0;
+
+				if (!sukeF)
 				{
-					Vector2 size = { playerSize.x_,playerSize.x_ };
-
-					for (int i = 0; i < boxcount; i++)
+					if (kadoF)
 					{
-						playerPos = BoxCollision(
-							playerPos,
-							size,
-							playerCheckSizeUD,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
+						Vector2 size = { playerSize.x_,playerSize.x_ };
+
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								size,
+								playerCheckSizeUD,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
+
+						size.x_ = playerSize.y_;
+						size.y_ = playerSize.y_;
+
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								playerCheckSizeRL,
+								size,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
 					}
-
-					size.x_ = playerSize.y_;
-					size.y_ = playerSize.y_;
-
-					for (int i = 0; i < boxcount; i++)
+					else
 					{
-						playerPos = BoxCollision(
-							playerPos,
-							playerCheckSizeRL,
-							size,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
-					}
-				}
-				else
-				{
-					for (int i = 0; i < boxcount; i++)
-					{
-						playerPos = BoxCollision(
-							playerPos,
-							playerCheckSizeRL,
-							playerCheckSizeUD,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								playerCheckSizeRL,
+								playerCheckSizeUD,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
 					}
 				}
 			}
-		}
 
-		if (CheckHitKey(KEY_INPUT_A))
-		{
-			playerPos.x_ -= moveSpd;
-
-			DS.x_ = 0;
-			DS.y_ = 0;
-
-			AW.x_ = CheckHitKey(KEY_INPUT_A);
-			AW.y_ = 0;
-
-			if (!sukeF)
+			if (CheckHitKey(KEY_INPUT_A))
 			{
-				if (kadoF)
+				playerPos.x_ -= moveSpd;
+
+				DS.x_ = 0;
+				DS.y_ = 0;
+
+				AW.x_ = CheckHitKey(KEY_INPUT_A);
+				AW.y_ = 0;
+
+				if (!sukeF)
 				{
-					Vector2 size = { playerSize.x_,playerSize.x_ };
-
-					for (int i = 0; i < boxcount; i++)
+					if (kadoF)
 					{
-						playerPos = BoxCollision(
-							playerPos,
-							size,
-							playerCheckSizeUD,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
+						Vector2 size = { playerSize.x_,playerSize.x_ };
+
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								size,
+								playerCheckSizeUD,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
+
+						size.x_ = playerSize.y_;
+						size.y_ = playerSize.y_;
+
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								playerCheckSizeRL,
+								size,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
 					}
-
-					size.x_ = playerSize.y_;
-					size.y_ = playerSize.y_;
-
-					for (int i = 0; i < boxcount; i++)
+					else
 					{
-						playerPos = BoxCollision(
-							playerPos,
-							playerCheckSizeRL,
-							size,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
+						for (int i = 0; i < boxcount; i++)
+						{
+							playerPos = BoxCollision(
+								playerPos,
+								playerCheckSizeRL,
+								playerCheckSizeUD,
+								Box[i],
+								BoxSize,
+								DS,
+								AW);
+						}
 					}
 				}
-				else
-				{
-					for (int i = 0; i < boxcount; i++)
-					{
-						playerPos = BoxCollision(
-							playerPos,
-							playerCheckSizeRL,
-							playerCheckSizeUD,
-							Box[i],
-							BoxSize,
-							DS,
-							AW);
-					}
-				}
-			}
-		}*/
+			}*/
 
 
 
-		//	if (CheckHitKey(KEY_INPUT_S))
-		//	{
-		//		playerPos.y_ += moveSpd;
+			//	if (CheckHitKey(KEY_INPUT_S))
+			//	{
+			//		playerPos.y_ += moveSpd;
 
-		//		DS.x_ = 0;
-		//		DS.y_ = CheckHitKey(KEY_INPUT_S);
-		//		//DS.y = 1;
+			//		DS.x_ = 0;
+			//		DS.y_ = CheckHitKey(KEY_INPUT_S);
+			//		//DS.y = 1;
 
-		//		AW.x_ = 0;
-		//		AW.y_ = 0;
+			//		AW.x_ = 0;
+			//		AW.y_ = 0;
 
-		//		if (!sukeF)
-		//		{
-		//			if (kadoF)
-		//			{
-		//				Vector2 size = { playerSize.x_,playerSize.x_ };
+			//		if (!sukeF)
+			//		{
+			//			if (kadoF)
+			//			{
+			//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						size,
-		//						playerCheckSizeUD,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						size,
+			//						playerCheckSizeUD,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
 
-		//				size.x_ = playerSize.y_;
-		//				size.y_ = playerSize.y_;
+			//				size.x_ = playerSize.y_;
+			//				size.y_ = playerSize.y_;
 
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						playerCheckSizeRL,
-		//						size,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
-		//			}
-		//			else
-		//			{
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						playerCheckSizeRL,
-		//						playerCheckSizeUD,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
-		//			}
-		//		}
-		//	}
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						playerCheckSizeRL,
+			//						size,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
+			//			}
+			//			else
+			//			{
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						playerCheckSizeRL,
+			//						playerCheckSizeUD,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
+			//			}
+			//		}
+			//	}
 
-		//	if (CheckHitKey(KEY_INPUT_W))
-		//	{
-		//		playerPos.y_ -= moveSpd;
+			//	if (CheckHitKey(KEY_INPUT_W))
+			//	{
+			//		playerPos.y_ -= moveSpd;
 
-		//		DS.x_ = 0;
-		//		DS.y_ = 0;
+			//		DS.x_ = 0;
+			//		DS.y_ = 0;
 
-		//		AW.x_ = 0;
-		//		AW.y_ = CheckHitKey(KEY_INPUT_W);
+			//		AW.x_ = 0;
+			//		AW.y_ = CheckHitKey(KEY_INPUT_W);
 
-		//		if (!sukeF)
-		//		{
-		//			if (kadoF)	//GetkadoFlag() == true
-		//			{
-		//				Vector2 size = { playerSize.x_,playerSize.x_ };
+			//		if (!sukeF)
+			//		{
+			//			if (kadoF)	//GetkadoFlag() == true
+			//			{
+			//				Vector2 size = { playerSize.x_,playerSize.x_ };
 
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						size,
-		//						playerCheckSizeUD,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						size,
+			//						playerCheckSizeUD,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
 
-		//				size.x_ = playerSize.y_;
-		//				size.y_ = playerSize.y_;
+			//				size.x_ = playerSize.y_;
+			//				size.y_ = playerSize.y_;
 
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						playerCheckSizeRL,
-		//						size,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
-		//			}
-		//			else
-		//			{
-		//				for (int i = 0; i < boxcount; i++)
-		//				{
-		//					playerPos = BoxCollision(
-		//						playerPos,
-		//						playerCheckSizeRL,
-		//						playerCheckSizeUD,
-		//						Box[i],
-		//						BoxSize,
-		//						DS,
-		//						AW);
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						playerCheckSizeRL,
+			//						size,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
+			//			}
+			//			else
+			//			{
+			//				for (int i = 0; i < boxcount; i++)
+			//				{
+			//					playerPos = BoxCollision(
+			//						playerPos,
+			//						playerCheckSizeRL,
+			//						playerCheckSizeUD,
+			//						Box[i],
+			//						BoxSize,
+			//						DS,
+			//						AW);
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
 
+		/*ImGui::Begin("Player");
+		ImGui::SliderFloat("pos", &player_.pos_.x_, -500, 500);
+		ImGui::SliderFloat("pos", &player_.pos_.y_, -500, 500);
+		ImGui::SliderFloat("scale", &player_.scale_.x_, 0, 10);
+		ImGui::SliderFloat("scale", &player_.scale_.y_, 0, 10);
+		ImGui::End();*/
+
+	}
+
+	if (GetClearFlag())
+	{
+
+	}
+
+	ImGui::Begin("Player");
+	ImGui::SliderFloat("J", &Jump, 0, 2);
+	ImGui::SliderFloat("JP", &JumpPower, 0, 10);
+	ImGui::SliderFloat("G", &Gravity, 0, 10);
+	ImGui::SliderFloat("GP", &GravityPower, 0, 10);
+	ImGui::SliderFloat("X", &player_.pos_.x_, 0, 10);
+	ImGui::SliderFloat("Y", &player_.pos_.y_, 0, 10);
+	ImGui::End();
+
+
+	//更新
 	player_.UpdateMatrix();
 	playerDra_.Update();
+
+	filterDra_.Update();
 }
 
 
 void Player::Reset()
 {
-	player_.Initialize({ {}, {}, {0.5f,0.5f,0.5} });
+	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.5f,0.5f,0.5f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Reset(IDrawer::Mode::Red);
+	filterDra_.Reset();
 
 	//位置
 	player_.pos_.x_ = startPos.x_;
@@ -523,4 +558,61 @@ void Player::Reset()
 
 	Gravity = 0;
 	GravityPower = 0;
+}
+
+void Player::JumpReset()
+{
+	Jump = 1.0f;
+	JumpPower = 0;
+
+	JumpFlag = true;
+
+	Gravity = 0;
+	GravityPower = 0;
+}
+
+//重力、浮力の加算
+void Player::AddGravity()
+{
+	//フラグがonなら
+	if (JumpFlag)
+	{
+		//加算する力が残っているなら
+		if (Jump > 0)
+		{
+			//重力分加算
+			JumpPower += Gravity;
+
+			//ジャンプ力減算
+			Jump -= JumpPower;
+
+			//座標から引く
+			player_.pos_.y_ += Jump;
+		}
+	}
+
+	//ジャンプ力がなくなったら
+	/*if (Jump < 0)
+	{
+		JumpFlag = false;
+	}*/
+
+	//重力
+	if (Gravity < 0.2f)
+	{
+		GravityPower += 0.02f;
+		Gravity += GravityPower;
+	}
+
+	player_.pos_.y_ -= Gravity;
+}
+
+void Player::PlayerMove(YMath::Vector3 pos)
+{
+	player_.pos_ += pos;
+
+	player_.UpdateMatrix();
+	playerDra_.Update();
+
+	filterDra_.Update();
 }

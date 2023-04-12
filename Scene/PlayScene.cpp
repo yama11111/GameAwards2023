@@ -22,7 +22,7 @@ using namespace YGame;
 //yうえ+した－
 
 //bool型BoxCollision
-bool BoxCollision(YGame::Transform obj1, YGame::Transform obj2, bool nibai)
+static bool BoxCollision(YGame::Transform obj1, YGame::Transform obj2, bool nibai)
 {
 	YMath::Vector3 obj3 = obj1.scale_;
 
@@ -63,7 +63,7 @@ bool BoxCollision(YGame::Transform obj1, YGame::Transform obj2, bool nibai)
 }
 
 //Posを返すBOxCollision(左右サイズ固定)
-YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeF, Vector2 DS, Vector2 AW)
+static YMath::Vector3 BoxCollision(YMath::Vector3 posP, YMath::Vector2 sizePRL, YMath::Vector2 sizePUD, YMath::Vector3 posF, YMath::Vector2 sizeF, YMath::Vector2 DS, YMath::Vector2 AW)
 {
 	YMath::Vector3 nowPosP = posP;
 	YMath::Vector3 nowPosF = posF;
@@ -109,7 +109,7 @@ YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vect
 }
 
 //Posを返すBOxCollision(左右サイズバラバラ)
-YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vector3 posF, Vector2 sizeLR, Vector2 sizeUD, Vector2 DS, Vector2 AW)
+static YMath::Vector3 BoxCollision(YMath::Vector3 posP, YMath::Vector2 sizePRL, YMath::Vector2 sizePUD, YMath::Vector3 posF, YMath::Vector2 sizeLR, YMath::Vector2 sizeUD, YMath::Vector2 DS, YMath::Vector2 AW)
 {
 	YMath::Vector3 nowPosP = posP;
 	YMath::Vector3 nowPosF = posF;
@@ -164,7 +164,7 @@ YMath::Vector3 BoxCollision(Vector3 posP, Vector2 sizePRL, Vector2 sizePUD, Vect
 }
 
 //Posを返すBoxCollision(Transformのみ)
-YMath::Vector3 BoxCollision(Transform posP, Transform posF, Vector2 DS, Vector2 AW)
+static YMath::Vector3 BoxCollision(YGame::Transform posP, YGame::Transform posF, YMath::Vector2 DS, YMath::Vector2 AW)
 {
 	YMath::Vector3 nowPosP = posP.pos_;
 	YMath::Vector3 nowPosF = posF.pos_;
@@ -209,7 +209,6 @@ YMath::Vector3 BoxCollision(Transform posP, Transform posF, Vector2 DS, Vector2 
 	return nowPosP;
 }
 
-
 #pragma region 読み込み
 void PlayScene::Load()
 {
@@ -247,7 +246,7 @@ void PlayScene::Initialize()
 	//player_->SetClearFlag(true);
 	//filter_->SetNowMove(player_->GetClearFlag());
 
-	float scaleVal = 1.0f;
+	float scaleVal = harfScale;
 	Vector3 scale = { scaleVal,scaleVal,scaleVal };
 
 	// ----- プレイヤー ----- //
@@ -264,7 +263,7 @@ void PlayScene::Initialize()
 	// ----- フィルター ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	filter->Initialize({ 0.0f, 0.0f, 0.0f }, {}, { 3.0f,2.0f,1.0f });
+	filter->Initialize({ 0.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
 
 	// ----- ゴール ----- //
 
@@ -281,58 +280,37 @@ void PlayScene::Initialize()
 	{
 		for (int j = 0; j < blockCountX; j++)
 		{
-			//生成
-			Block* newBlock = new Block();
-
-			//初期化
-			newBlock->Initialize();
-
-			//種類を格納
-			newBlock->SetKind(map[i][j]);
+			//Noneだったらのぞく(return)
+			if (map[i][j] == None)
+			{
+				continue;
+			}
 
 			//サイズ
-			float size = 2.0f;
+			float size = harfScale * 2;
 
 			//格納用Vector
 			YMath::Vector3 result;
 
-			//zは特にいじらない
-			result.z_ = size;
-
-			//posXY
-			result.x_ = (j - (blockCountX / 3)) * size - 8;
-			result.y_ = ((blockCountY / 2) - i) * size;
-
-			//pos格納
-			newBlock->SetPos(result);
-
-			//scaleXY
-			result.x_ = size / 4.0f;
-			result.y_ = size / 4.0f;
-
-			//scale格納
-			newBlock->SetScale(result);
-
 			//種類によって
 			//初期地点
-			if (newBlock->GetKind() == Start)
+			if (map[i][j] == Start)
 			{
 				//posXY
-				result.x_ = (j - (blockCountX / 3)) * size - 8;
+				result.x_ = (j - (blockCountX / 3)) * size;
 				result.y_ = ((blockCountY / 2) - i) * size;
 
 				//pos格納
 				player->SetPos(result);
 
-				//posXY
-				result.x_ = (j - (blockCountX / 3)) * size - 8;
-				result.y_ = ((blockCountY / 2) - i) * size;
-
 				//StartPos格納
 				player->SetStartPos(result);
 
-				//種類を空白に
-				newBlock->SetKind(None);
+				////種類を空白に
+				//newBlock->SetKind(None);
+
+				//次へ
+				continue;
 			}
 
 			//ゴール地点
@@ -346,17 +324,55 @@ void PlayScene::Initialize()
 				goal_.scale_.x_ = size / 4.0f;
 				goal_.scale_.y_ = size / 4.0f;
 
-				//種類を空白に
-				newBlock->SetKind(None);
+				////種類を空白に
+				//newBlock->SetKind(None);
+
+				//次へ
+				continue;
 			}
 
 			//コレクトアイテム
 			if (map[i][j] == Collect)
 			{
 
-				//種類を空白に
-				newBlock->SetKind(None);
+				////種類を空白に
+				//newBlock->SetKind(None);
+
+				//次へ
+				continue;
 			}
+
+			//生成
+			Block* newBlock = new Block();
+
+			//初期化
+			newBlock->Initialize();
+
+			//種類を格納
+			newBlock->SetKind(map[i][j]);
+
+			////サイズ
+			//float size = harfScale * 2;
+
+			////格納用Vector
+			//YMath::Vector3 result;
+
+			//zは特にいじらない
+			result.z_ = size / 4;
+
+			//posXY
+			result.x_ = (j - (blockCountX / 3)) * size - 8;
+			result.y_ = ((blockCountY / 2) - i) * size;
+
+			//pos格納
+			newBlock->SetPos(result);
+
+			//scaleXY
+			result.x_ = size / 4;
+			result.y_ = size / 4;
+
+			//scale格納
+			newBlock->SetScale(result);
 
 			//格納
 			block.push_back(newBlock);
@@ -414,10 +430,10 @@ void PlayScene::Update()
 		if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
 		{
 			//操作フラグを反転
-			player->ChengeClearFlag();
+			player->ChengePlayFlag();
 
 			//操作してるobjを表示するスプライトの変更
-			if (player->GetClearFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+			if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
 			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
 		}
 	}
@@ -441,17 +457,20 @@ void PlayScene::Update()
 	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD) * 0.5f;
 	result.z_ = 0.0f;
 
-
 	//今のアクティブ状態
-	if (player->GetClearFlag())
+	if (player->GetPlayFlag())
 	{
+		//プレイヤーはy軸はジャンプのみ
+		result.y_ = 0.0f;
+
+		//プレイヤーの移動量格納
 		player->SetMovePos(result);
 	}
 	else
 	{
+		//フィルターの移動量格納
 		filter->SetMovePos(result);
 	}
-
 
 	//PlayerのUpdate
 	player->Update(filter->GetTransform());
@@ -463,6 +482,194 @@ void PlayScene::Update()
 	for (int i = 0; i < block.size(); i++)
 	{
 		block[i]->Update(filter->GetTransform());
+	}
+
+	//格納
+	YGame::Transform CheckTrans1 = player->GetTransform();
+
+	//格納
+	YGame::Transform CheckTrans2;
+
+	//プレイヤー操作モードがnの時
+	if (player->GetPlayFlag())
+	{
+		//Wを押してジャンプ処理
+		if (sKeys_->IsTrigger(DIK_W))
+		{
+			//ジャンプフラグがoffの時
+			if (!player->GetJumpFlag())
+			{
+				//重力関係リセット
+				player->JumpReset();
+			}
+		}
+
+		//プレイヤージャンプ処理
+		/*if (player->GetJumpFlag())
+		{*/
+		//重力、浮力を加算
+		//player->AddGravity();
+		//}
+
+
+		////入力方向手動代入
+		//DS.x_ = 0;
+		//DS.y_ = 0;
+		//AW.x_ = 0;
+		//AW.y_ = 0.1f;
+
+		////フィルターの中にいるか
+		//if (player->GetClearFlag() == false)
+		//{
+		//	//ブロック分繰り返す
+		//	for (int i = 0; i < block.size(); i++)
+		//	{
+		//		//ブロックの種類が空白か
+		//		if (block[i]->GetKind() != None)
+		//		{
+		//			//ブロックがフィルターの中にいるか
+		//			if (block[i]->GetClearFlag() == false)
+		//			{
+		//				//ブロックのTransformを代入
+		//				CheckTrans2 = block[i]->GetTransform();
+
+		//				//判定外に出るまで繰り返す
+		//				while (BoxCollision(CheckTrans1, CheckTrans2, true))
+		//				{
+		//					//ちょっと戻す
+		//					player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+		//					//再代入
+		//					CheckTrans1 = player->GetTransform();
+
+		//					//下に埋まった瞬間ジャンプフラグをfalseに
+		//					player->SetJumpFlag(false);
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
+		////ジャンプがfalseなら上に修正
+		////ジャンプがtrueなら下に修正
+		//if (player->GetJumpFlag())
+		//{
+		//	//入力方向手動代入
+		//	DS.x_ = 0;
+		//	DS.y_ = 0.1f;
+		//	AW.x_ = 0;
+		//	AW.y_ = 0;
+
+		//	//フィルターの中にいるか
+		//	if (player->GetClearFlag() == false)
+		//	{
+		//		//ブロック分繰り返す
+		//		for (int i = 0; i < block.size(); i++)
+		//		{
+		//			//ブロックの種類が空白か
+		//			if (block[i]->GetKind() != None)
+		//			{
+		//				//ブロックがフィルターの中にいるか
+		//				if (block[i]->GetClearFlag() == false)
+		//				{
+		//					//ブロックのTransformを代入
+		//					CheckTrans2 = block[i]->GetTransform();
+
+		//					//判定外に出るまで繰り返す
+		//					while (BoxCollision(CheckTrans1, CheckTrans2, true))
+		//					{
+		//						//ちょっと戻す
+		//						player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+		//						//再代入
+		//						CheckTrans1 = player->GetTransform();
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
+		//横移動
+		player->PlayerMove(player->GetMovePos());
+
+		//右を押してるとき左に修正
+		if (sKeys_->IsDown(DIK_D))
+		{
+			//入力方向手動代入
+			DS.x_ = 0.01f;
+			DS.y_ = 0;
+			AW.x_ = 0;
+			AW.y_ = 0;
+
+			//フィルターの中にいるか
+			if (player->GetClearFlag() == false)
+			{
+				//ブロック分繰り返す
+				for (int i = 0; i < block.size(); i++)
+				{
+					//ブロックの種類が空白か
+					if (block[i]->GetKind() != None)
+					{
+						//ブロックがフィルターの中にいるか
+						if (block[i]->GetClearFlag() == false)
+						{
+							//ブロックのTransformを代入
+							CheckTrans2 = block[i]->GetTransform();
+
+							//判定外に出るまで繰り返す
+							while (BoxCollision(CheckTrans1, CheckTrans2, true))
+							{
+								//ちょっと戻す
+								player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+								//再代入
+								CheckTrans1 = player->GetTransform();
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//左を押してるとき右に修正
+		if (sKeys_->IsDown(DIK_A))
+		{
+			//入力方向手動代入
+			DS.x_ = 0;
+			DS.y_ = 0;
+			AW.x_ = 0.01f;
+			AW.y_ = 0;
+
+			//フィルターの中にいるか
+			if (player->GetClearFlag() == false)
+			{
+				//ブロック分繰り返す
+				for (int i = 0; i < block.size(); i++)
+				{
+					//ブロックの種類が空白か
+					if (block[i]->GetKind() != None)
+					{
+						//ブロックがフィルターの中にいるか
+						if (block[i]->GetClearFlag() == false)
+						{
+							//ブロックのTransformを代入
+							CheckTrans2 = block[i]->GetTransform();
+
+							//判定外に出るまで繰り返す
+							while (BoxCollision(CheckTrans1, CheckTrans2, true))
+							{
+								//ちょっと戻す
+								player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+								//再代入
+								CheckTrans1 = player->GetTransform();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 
@@ -499,13 +706,18 @@ void PlayScene::Update()
 		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
 	}
 
-	bool check = BoxCollision(player->GetTransform(), filter->GetTransform(), true);
+	/*bool check = BoxCollision(player->GetTransform(), filter->GetTransform(), true);
 
 	ImGui::Begin("F");
 	ImGui::Checkbox("F", &check);
-	ImGui::End();
+	ImGui::End();*/
 
+	//rightleftで横移動
+	transferVP_.eye_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
+	transferVP_.target_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
 
+	//updownで奥行き確認
+	transferVP_.eye_.z_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.1f;
 }
 #pragma endregion
 
