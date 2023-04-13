@@ -49,8 +49,8 @@ void InfectionBlocks::Initialize(
 			// ブロック生成 + 初期化
 			blocks_[y][x].reset(new Block());
 
-			blocks_[y][x]->color_.reset(Color::Create({}));
-			blocks_[y][x]->obj_.reset(Sprite2DObject::Create({}, blocks_[y][x]->color_.get()));
+			blocks_[y][x]->color_.reset(Color::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+			blocks_[y][x]->obj_.reset(Sprite2DObject::Create({}, blocks_[y][x]->color_.get(), false));
 			blocks_[y][x]->obj_->pos_ = { p.x_, p.y_, 0.0f };
 			blocks_[y][x]->actTim_.Initialize(changeFrame);
 			blocks_[y][x]->colorStartTim_.Initialize(changeFrame * 4);
@@ -124,19 +124,14 @@ void InfectionBlocks::Activate()
 
 
 	// アンカーポイント基準の位置 を 始点 とする
-	Vector2 start = anchor_ - size;
-	size_t sX = static_cast<size_t>(start.x_);
-	size_t sY = static_cast<size_t>(start.y_);
+	float sX = anchor_.x_ * size.x_;
+	float sY = anchor_.y_ * size.y_;
 
 	// 始点のタイマー開始
-	blocks_[sY][sX]->SetTimerActive(true);
+	blocks_[static_cast<size_t>(sY)][static_cast<size_t>(sX)]->SetTimerActive(true);
 
 	// 始点
-	start_ =
-	{
-		static_cast<float>(sX),
-		static_cast<float>(sY)
-	};
+	start_ = { sX,sY };
 
 
 	// 半分の地点

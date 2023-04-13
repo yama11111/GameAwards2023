@@ -41,7 +41,7 @@ namespace YGame
 		/// 生成
 		/// </summary>
 		/// <param name="pTex"> : テクスチャポインタ</param>
-		/// <returns>動的インスタンス (newされたもの)</returns>
+		/// <returns>スプライトポインタ</returns>
 		static Sprite3D* Create(Texture* pTex);
 
 		/// <summary>
@@ -138,12 +138,10 @@ namespace YGame
 
 #pragma endregion
 
-	private:
-		
-		Sprite3D() = default;
-	
 	public:
 		
+		Sprite3D() = default;
+
 		~Sprite3D() = default;
 	
 	};

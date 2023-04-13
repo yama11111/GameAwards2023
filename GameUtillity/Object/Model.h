@@ -149,6 +149,8 @@ namespace YGame
 
 	public:
 		
+		Model() = default;
+
 		~Model() = default;
 	};
 }

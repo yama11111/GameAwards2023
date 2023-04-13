@@ -32,21 +32,28 @@ YDX::PipelineSet Sprite3D::Common::sPipelineSet_{};
 
 Sprite3D* Sprite3D::Create(Texture* pTex)
 {
-	// インスタンス生成 (動的)
-	Sprite3D* instance = new Sprite3D();
+	// スプライト生成
+	unique_ptr<Sprite3D> newSprite = std::make_unique<Sprite3D>();
+
 	
 	// 初期化
-	instance->vt_.Initialize({{}});
-	
+	newSprite->vt_.Initialize({ {} });
+
 	// テクスチャ番号
-	instance->pTex_ = pTex;
+	newSprite->pTex_ = pTex;
 
 	// 描画する
-	instance->isInvisible_  = false;
+	newSprite->isInvisible_  = false;
 	
-	
-	// インスタンスを返す
-	return instance;
+
+	// ポインタを獲得
+	Sprite3D* newSpritePtr = newSprite.get();
+
+	// スプライトを保存
+	sprites_.push_back(std::move(newSprite));
+
+	// スプライトポインタを返す
+	return newSpritePtr;
 }
 
 void Sprite3D::AllClear()
@@ -54,8 +61,9 @@ void Sprite3D::AllClear()
 	// スプライト3D全消去
 	for (size_t i = 0; i < sprites_.size(); i++)
 	{
-		sprites_[i].reset();
+		sprites_[i].reset(nullptr);
 	}
+	sprites_.clear();
 }
 
 void Sprite3D::Draw(Sprite3DObject* pObj)

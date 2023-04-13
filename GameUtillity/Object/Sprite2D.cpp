@@ -32,9 +32,10 @@ YDX::PipelineSet Sprite2D::Common::sPipelineSet_{};
 
 Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 {
-	// インスタンス
-	Sprite2D* instance = new Sprite2D();
-	
+	// スプライト生成
+	unique_ptr<Sprite2D> newSprite = std::make_unique<Sprite2D>();
+
+
 	// テクスチャのサイズを取得
 	float rscSizeX = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Width);
 	float rscSizeY = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Height);
@@ -68,7 +69,7 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 	
 
 	// インスタンス生成 (動的)
-	instance->vt_.Initialize(
+	newSprite->vt_.Initialize(
 		{
 			{ {  left,bottom,0.0f },{  texLeft,texBottom } }, // 左下
 			{ {  left,top,   0.0f },{  texLeft,texTop } },    // 左上
@@ -77,17 +78,24 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 		});
 
 	// いろいろ設定
-	instance->size_    = status.size_; // 大きさ
-	instance->anchor_  = status.anchor_; // アンカーポイント
-	instance->isFlipX_ = status.isFlipX_; // X反転
-	instance->isFlipY_ = status.isFlipY_; // Y反転
+	newSprite->size_    = status.size_; // 大きさ
+	newSprite->anchor_  = status.anchor_; // アンカーポイント
+	newSprite->isFlipX_ = status.isFlipX_; // X反転
+	newSprite->isFlipY_ = status.isFlipY_; // Y反転
 
-	instance->pTex_		  = texStatus.pTex_; // テクスチャインデックス
-	instance->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
-	instance->texSize_	  = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
+	newSprite->pTex_	   = texStatus.pTex_; // テクスチャインデックス
+	newSprite->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
+	newSprite->texSize_	   = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 
-	// インスタンスを返す
-	return instance;
+
+	// ポインタを獲得
+	Sprite2D* newSpritePtr = newSprite.get();
+
+	// スプライトを保存
+	sprites_.push_back(std::move(newSprite));
+
+	// スプライトポインタを返す
+	return newSpritePtr;
 }
 
 void Sprite2D::AllClear()
@@ -95,8 +103,9 @@ void Sprite2D::AllClear()
 	// スプライト2D全消去
 	for (size_t i = 0; i < sprites_.size(); i++)
 	{
-		sprites_[i].reset();
+		sprites_[i].reset(nullptr);
 	}
+	sprites_.clear();
 }
 
 void Sprite2D::Draw(Sprite2DObject* pObj)

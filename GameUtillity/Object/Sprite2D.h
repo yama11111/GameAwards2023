@@ -95,7 +95,7 @@ namespace YGame
 		/// <param name="(Vector2) texStatus.leftTop_"> : テクスチャ左上</param>
 		/// <param name="(Vector2) texStatus.size_"> : テクスチャサイズ</param>
 		/// <param name="--------------------------------"></param>
-		/// <returns>動的インスタンス (newされたもの)</returns>
+		/// <returns>スプライトポインタ</returns>
 		static Sprite2D* Create(const Status& status, const TexStatus& texStatus);
 
 		/// <summary>
@@ -267,11 +267,9 @@ namespace YGame
 
 #pragma endregion
 
-	private:
+	public:
 
 		Sprite2D() = default;
-
-	public:
 
 		~Sprite2D() = default;
 

@@ -15,19 +15,19 @@ using YMath::Matrix4;
 
 #pragma region Sprite2DObject
 
-Sprite2DObject* Sprite2DObject::Create(const Status& status)
+Sprite2DObject* Sprite2DObject::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr);
+	return Create(status, nullptr, isMutable);
 }
 
-Sprite2DObject* Sprite2DObject::Create(const Status& status, Color* pColor)
+Sprite2DObject* Sprite2DObject::Create(const Status& status, Color* pColor, const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	Sprite2DObject* instance = new Sprite2DObject();
 
 	// 定数バッファ生成
-	instance->cBuff_.Create();
+	instance->cBuff_.Create(isMutable);
 
 	// 初期化(デフォルト)
 	instance->Initialize(status);
@@ -75,7 +75,7 @@ void Sprite2DObject::Common::StaticInitialize()
 	sProjection_ = YMath::MatOrthoGraphic();
 
 	// 生成
-	sDefColor_.reset(Color::Create());
+	sDefColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 }
 
 #pragma endregion

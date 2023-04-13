@@ -14,14 +14,14 @@ void ImGuiManager::Initialize(const InitStatus& state)
 	assert(state.pCmdList_);
 	assert(state.pDescHeap_);
 	// 代入
-	pCommandList_= state.pCmdList_;
+	pCmdList_= state.pCmdList_;
 	pDescHeap_ = state.pDescHeap_;
 
 	// SRV用ハンドル
 	DescriptorHeap::Handle descHeapHandle{};
 	
 	// SRVを追加
-	descHeapHandle = state.pDescHeap_->AddSRV();
+	descHeapHandle = state.pDescHeap_->AddSRV(false);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -68,8 +68,8 @@ void ImGuiManager::Draw()
 {
 	// SRVヒープの設定コマンド
 	ID3D12DescriptorHeap* ppHeaps[] = { pDescHeap_->Get() };
-	pCommandList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	pCmdList_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// Render Dear ImGui graphics
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), pCommandList_);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), pCmdList_);
 }

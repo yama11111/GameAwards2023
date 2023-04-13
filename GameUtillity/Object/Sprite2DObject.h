@@ -33,8 +33,9 @@ namespace YGame
 		/// <param name="(Vector3) status.pos_"> : 位置</param>
 		/// <param name="(Vector3) status.rota_"> : 回転</param>
 		/// <param name="(Vector3) status.scale_"> : 大きさ</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Sprite2DObject* Create(const Status& status);
+		static Sprite2DObject* Create(const Status& status, const bool isMutable = true);
 		
 		/// <summary>
 		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
@@ -45,8 +46,9 @@ namespace YGame
 		/// <param name="(Vector3) status.scale_"> : 大きさ</param>
 		/// <param name="-------------------------------------"></param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Sprite2DObject* Create(const Status& status, Color* pColor);
+		static Sprite2DObject* Create(const Status& status, Color* pColor, const bool isMutable = true);
 	
 	public:
 		
@@ -101,7 +103,7 @@ namespace YGame
 	
 	public:
 		
-		~Sprite2DObject() override = default;
+		~Sprite2DObject() = default;
 	
 	};
 }

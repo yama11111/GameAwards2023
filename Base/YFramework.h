@@ -12,42 +12,78 @@ namespace YBase
 	class YFramework
 	{
 	protected:
+		
 		// WindowsAPI
 		YWindowsApp window_;
+		
 		// DirectX12
 		YDX::YDirectX dx_;
+		
 		// inputマネージャー
 		YInput::InputManager* inputMan_ = nullptr;
+		
 		// スクリーン設定
 		YDX::ScreenDesc screenDesc_;
+		
 		// デスクリプターヒープ (SRV, UAV, CBV)
 		YDX::DescriptorHeap descHeap_;
+		
 		// ゲームルール
 		YGame::WorldRuler worldRuler_;
+		
 		// imguiマネージャー
 		ImGuiManager imguiMan_;
+		
 		// シーンマネージャー
 		YScene::SceneManager* sceneMan_ = nullptr;
+		
 		// シーン遷移マネージャー
 		YGame::TransitionManager* transitionMan_ = nullptr;
+		
 		// 終了フラグ
 		bool isEnd_ = false;
+	
 	public:
-		// 初期化
+		
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <returns>成功したか</returns>
 		virtual bool Initialize();
-		// 終了処理
+
+		/// <summary>
+		/// 終了処理
+		/// </summary>
 		virtual void Finalize();
-		// 更新
+
+		/// <summary>
+		/// 更新
+		/// </summary>
 		virtual void Update();
-		// 描画
+		
+		/// <summary>
+		/// 描画
+		/// </summary>
 		virtual void Draw() = 0;
-		// 終了フラグ取得
+		
+		/// <summary>
+		/// 終了フラグ取得
+		/// </summary>
+		/// <returns>終了フラグ</returns>
 		virtual bool IsEnd() { return isEnd_; }
+	
 	public:
-		// 実行
+
+		/// <summary>
+		/// 実行
+		/// </summary>
 		void Run();
+	
 	public:
+		
 		YFramework() = default;
+		
 		virtual ~YFramework() = default;
+	
 	};
 }

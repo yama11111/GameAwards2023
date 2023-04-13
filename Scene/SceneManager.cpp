@@ -25,7 +25,7 @@ void SceneManager::Initialize(const std::string& sceneName)
 void SceneManager::Finalize()
 {
 	// 現在シーン終了処理
-	scene_->Finalize();
+	if (scene_) { scene_->Finalize(); }
 
 	// 次シーン削除
 	if (nextScene_) { delete nextScene_; }

@@ -32,10 +32,10 @@ LightGroup::LightGroup() :
 	direLights_(), pointLights_()//, spotLights_()
 {}
 
-LightGroup* LightGroup::Create()
+LightGroup* LightGroup::Create(const bool isMutable)
 {
 	LightGroup* instance = new LightGroup();
-	instance->cBuff_.Create();
+	instance->cBuff_.Create(isMutable);
 	instance->Initialize();
 
 	return instance;

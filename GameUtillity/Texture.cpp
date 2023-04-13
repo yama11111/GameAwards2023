@@ -88,7 +88,7 @@ Texture* Texture::Create(const Vector4& color)
 
 	// SRV生成
 	DescriptorHeap::Handle handle{};
-	handle = common_.pDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc);
+	handle = common_.pDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc, false);
 
 	// ハンドル代入
 	newTex->srvCpuHandle_ = handle.cpu_;
@@ -214,7 +214,7 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 
 	// SRV生成
 	DescriptorHeap::Handle handle{};
-	handle = common_.pDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc);
+	handle = common_.pDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc, false);
 
 	// ハンドル代入
 	newTex->srvCpuHandle_ = handle.cpu_;
@@ -239,8 +239,9 @@ void Texture::AllClear()
 	// テクスチャ全消去
 	for (size_t i = 0; i < texs_.size(); i++)
 	{
-		texs_[i].reset();
+		texs_[i].reset(nullptr);
 	}
+	texs_.clear();
 }
 
 void Texture::SetDrawCommand(const UINT rootParamIndex)

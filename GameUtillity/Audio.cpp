@@ -132,6 +132,7 @@ void Audio::AllClear()
 		delete[] audios_[i]->sound_.pBuff_;
 		audios_[i].reset(nullptr);
 	}
+	audios_.clear();
 }
 
 Audio::Common::~Common()

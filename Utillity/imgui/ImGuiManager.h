@@ -9,7 +9,7 @@ class ImGuiManager
 {
 private:
 	// コマンドリストポインタ
-	ID3D12GraphicsCommandList* pCommandList_ = nullptr;
+	ID3D12GraphicsCommandList* pCmdList_ = nullptr;
 	// デスクリプターヒープ
 	YDX::DescriptorHeap* pDescHeap_ = nullptr;
 public:

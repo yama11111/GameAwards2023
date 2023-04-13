@@ -34,7 +34,7 @@ Material::Material() :
 	pTex_(spDefTexIndex_)
 {
 	// 定数バッファ生成
-	cBuff_.Create();
+	cBuff_.Create(false);
 	cBuff_.map_->ambient_ = ambient_;
 	cBuff_.map_->diffuse_ = diffuse_;
 	cBuff_.map_->specular_ = specular_;

@@ -10,10 +10,10 @@ Color::Color() :
 	color_(1.0f, 1.0f, 1.0f, 1.0f)
 {}
 
-Color* Color::Create(const YMath::Vector4& color, const YMath::Vector4& originalColorRate)
+Color* Color::Create(const YMath::Vector4& color, const YMath::Vector4& originalColorRate, const bool isMutable)
 {
 	Color* instance = new Color();
-	instance->cBuff_.Create();
+	instance->cBuff_.Create(isMutable);
 	instance->Initialize(color, originalColorRate);
 
 	return instance;

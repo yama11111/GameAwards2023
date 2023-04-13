@@ -12,19 +12,19 @@ using YMath::Matrix4;
 
 #pragma region Model
 
-ModelObject* ModelObject::Create(const Status& status)
+ModelObject* ModelObject::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, nullptr, nullptr);
+	return Create(status, nullptr, nullptr, nullptr, isMutable);
 }
 
-ModelObject* ModelObject::Create(const Status& status, ViewProjection* pVP, Color* pColor, LightGroup* pLightGroup)
+ModelObject* ModelObject::Create(const Status& status, ViewProjection* pVP, Color* pColor, LightGroup* pLightGroup, const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	ModelObject* instance = new ModelObject();
 
 	// 定数バッファ生成
-	instance->cBuff_.Create();
+	instance->cBuff_.Create(isMutable);
 
 	// 初期化(デフォルト)
 	instance->Initialize(status);
@@ -105,9 +105,9 @@ void ModelObject::Common::StaticInitialize()
 	sDefVP_.reset(new YGame::ViewProjection());
 	sDefVP_->Initialize({});
 
-	sDefLightGroup_.reset(LightGroup::Create());
+	sDefLightGroup_.reset(LightGroup::Create(false));
 
-	sDefColor_.reset(Color::Create());
+	sDefColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 }
 
 #pragma endregion

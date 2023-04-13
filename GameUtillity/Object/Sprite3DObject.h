@@ -47,8 +47,9 @@ namespace YGame
 		/// <param name="-------------------------------------"></param>
 		/// <param name="isXAxisBillboard"> : X軸ビルボードか</param>
 		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Sprite3DObject* Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard);
+		static Sprite3DObject* Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard, const bool isMutable = true);
 		
 		/// <summary>
 		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
@@ -62,9 +63,10 @@ namespace YGame
 		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
 		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Sprite3DObject* Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard,
-			ViewProjection* pVP, Color* pColor);
+			ViewProjection* pVP, Color* pColor, const bool isMutable = true);
 	
 	public:
 		

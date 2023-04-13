@@ -13,20 +13,20 @@ using YMath::Matrix4;
 
 #pragma region Sprite3D
 
-Sprite3DObject* Sprite3DObject::Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard)
+Sprite3DObject* Sprite3DObject::Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, isXAxisBillboard, isYAxisBillboard, nullptr, nullptr);
+	return Create(status, isXAxisBillboard, isYAxisBillboard, nullptr, nullptr, isMutable);
 }
 
 Sprite3DObject* Sprite3DObject::Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard,
-	ViewProjection* pVP, Color* pColor)
+	ViewProjection* pVP, Color* pColor, const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	Sprite3DObject* instance = new Sprite3DObject();
 
 	// 定数バッファ生成
-	instance->cBuff_.Create();
+	instance->cBuff_.Create(isMutable);
 
 	// 初期化(デフォルト)
 	instance->Initialize(status);
@@ -126,7 +126,7 @@ void Sprite3DObject::Common::StaticInitialize()
 	sDefVP_.reset(new YGame::ViewProjection());
 	sDefVP_->Initialize({});
 
-	sDefColor_.reset(Color::Create());
+	sDefColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 }
 
 #pragma endregion

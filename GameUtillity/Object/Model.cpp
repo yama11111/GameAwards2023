@@ -91,6 +91,17 @@ Model* Model::CreateCube(const std::string& texFileName)
 
 Model* Model::Load(const std::string& modelFileName, const bool isSmoothing)
 {
+	// 読み込んだことがあるかチェック
+	for (size_t i = 0; i < models_.size(); i++)
+	{
+		// ファイルパス が同じなら
+		if (modelFileName == models_[i]->fileName_)
+		{
+			// そのテクスチャポインタを返す
+			return models_[i].get();
+		}
+	}
+
 	// モデル生成
 	unique_ptr<Model> newModel = std::make_unique<Model>();
 
@@ -109,6 +120,9 @@ Model* Model::Load(const std::string& modelFileName, const bool isSmoothing)
 	// 追加
 	newModel->meshes_.push_back(std::move(newMesh));
 
+	// ファイル名代入
+	newModel->fileName_ = modelFileName;
+
 
 	// ポインタを獲得
 	Model* newModelPtr = newModel.get();
@@ -125,8 +139,9 @@ void Model::AllClear()
 	// モデル全消去
 	for (size_t i = 0; i < models_.size(); i++)
 	{
-		models_[i].reset();
+		models_[i].reset(nullptr);
 	}
+	models_.clear();
 }
 
 void Model::Draw(ModelObject* pObj)

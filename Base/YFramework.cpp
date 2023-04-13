@@ -53,11 +53,11 @@ bool YFramework::Initialize()
 	GPUResource::StaticInitialize(pDev);
 
 	// デスクリプターヒープ (SRV, UAV, CBV)
-	DescriptorHeap::StaticInitialize({ pDev, pCmdList });
+	DescriptorHeap::StaticInitialize(pDev, pCmdList);
 	descHeap_.Initialize();
 
 	// 定数バッファ静的初期化
-	ConstBufferCommon::StaticInitialize({ pCmdList, &descHeap_ });
+	ConstBufferCommon::StaticInitialize(pCmdList, &descHeap_);
 
 	// テクスチャ静的初期化
 	Texture::Common::StaticInitialize(pDev, pCmdList, &descHeap_);
@@ -121,6 +121,13 @@ void YFramework::Finalize()
 
 	// シーン終了処理
 	sceneMan_->Finalize();
+
+	// リソース全クリア
+	Model::AllClear();
+	Sprite2D::AllClear();
+	Sprite3D::AllClear();
+	Texture::AllClear();
+	Audio::AllClear();
 }
 
 void YFramework::Update()
@@ -139,6 +146,9 @@ void YFramework::Update()
 
 	// シーン更新処理
 	sceneMan_->Update();
+
+	// デスクリプタカウント表示
+	descHeap_.ShowCount();
 
 	// imgui受付終了
 	imguiMan_.End();
