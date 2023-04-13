@@ -4,21 +4,21 @@
 
 using YGame::Sprite2D;
 using YGame::Sprite2DObject;
-using YGame::TextureManager;
+using YGame::Texture;
 using YMath::Vector3;
 using namespace HUDConfig::Operation;
 
 #pragma region InputDrawerCommon
 
 YInput::Keys* InputDrawerCommon::sKeys_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keyWASDSpr_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keyWPushSpr_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keyAPushSpr_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keySPushSpr_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keyDPushSpr_ = nullptr;
-std::unique_ptr<Sprite2D> InputDrawerCommon::keySDeadSpr_ = nullptr;
-std::array<std::unique_ptr<Sprite2D>, 2> InputDrawerCommon::keySpaceSpr_ = { nullptr, nullptr };
-std::array<std::unique_ptr<YGame::Sprite2D>, 2> InputDrawerCommon::keyTabSpr_ = { nullptr, nullptr };
+Sprite2D* InputDrawerCommon::spKeyWASDSpr_  = nullptr;
+Sprite2D* InputDrawerCommon::spKeyWPushSpr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeyAPushSpr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeySPushSpr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeyDPushSpr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeySDeadSpr_ = nullptr;
+std::array<Sprite2D*, 2> InputDrawerCommon::spKeySpaceSpr_ = { nullptr, nullptr };
+std::array<Sprite2D*, 2> InputDrawerCommon::spKeyTabSpr_ = { nullptr, nullptr };
 
 void InputDrawerCommon::StaticInitialize()
 {
@@ -26,20 +26,20 @@ void InputDrawerCommon::StaticInitialize()
 	sKeys_ = YInput::Keys::GetInstance();
 
 	// WASD
-	keyWASDSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_WASD.png") }));
+	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
 	// WASD_PUSH
-	keyWPushSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_W_PUSH.png") }));
-	keyAPushSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_A_PUSH.png") }));
-	keySPushSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_S_PUSH.png") }));
-	keyDPushSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_D_PUSH.png") }));
+	spKeyWPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_W_PUSH.png") });
+	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
+	spKeySPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_PUSH.png") });
+	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
 	// S_DEAD
-	keySDeadSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_S_DEAD.png") }));
+	spKeySDeadSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_DEAD.png") });
 	// SPACE
-	keySpaceSpr_[0].reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_SPACE.png") }));
-	keySpaceSpr_[1].reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/key_SPACE_PUSH.png") }));
+	spKeySpaceSpr_[0] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE.png") });
+	spKeySpaceSpr_[1] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE_PUSH.png") });
 	// TAB
-	keyTabSpr_[0].	reset(Sprite2D::Create({}, {TextureManager::GetInstance()->Load("UI/key_TAB.png")}));
-	keyTabSpr_[1].	reset(Sprite2D::Create({}, {TextureManager::GetInstance()->Load("UI/key_TAB_PUSH.png")}));
+	spKeyTabSpr_[0]	  = Sprite2D::Create({}, { Texture::Load("UI/key_TAB.png") });
+	spKeyTabSpr_[1]	  = Sprite2D::Create({}, { Texture::Load("UI/key_TAB_PUSH.png") });
 }
 
 #pragma endregion
@@ -167,18 +167,18 @@ void InputDrawer::Update()
 void InputDrawer::Draw(const bool isPlayer)
 {
 	// WASD
-	keyWASDSpr_->Draw(keyWASDObj_.get());
+	spKeyWASDSpr_->Draw(keyWASDObj_.get());
 	// WASD_PUSH
-	if (isPushW_) { keyWPushSpr_->Draw(keyWObj_.get()); }
-	if (isPushA_) { keyAPushSpr_->Draw(keyAObj_.get()); }
-	if (isPushS_) { keySPushSpr_->Draw(keySObj_.get()); }
-	if (isPushD_) { keyDPushSpr_->Draw(keyDObj_.get()); }
+	if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
+	if (isPushA_) { spKeyAPushSpr_->Draw(keyAObj_.get()); }
+	if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
+	if (isPushD_) { spKeyDPushSpr_->Draw(keyDObj_.get()); }
 	// S_DEAD
-	if (isPlayer) { keySDeadSpr_->Draw(keySObj_.get()); }
+	if (isPlayer) { spKeySDeadSpr_->Draw(keySObj_.get()); }
 	// SPACE
-	keySpaceSpr_[isPushSpace_]->Draw(keySpaceObj_.get());
+	spKeySpaceSpr_[isPushSpace_]->Draw(keySpaceObj_.get());
 	// TAB
-	keyTabSpr_[isPushTab_]->Draw(keyTabObj_.get());
+	spKeyTabSpr_[isPushTab_]->Draw(keyTabObj_.get());
 }
 
 #pragma endregion

@@ -4,12 +4,12 @@ using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 
-std::unique_ptr<Model> SkydomeDrawerCommon::sModel_ = nullptr;
+Model* SkydomeDrawerCommon::spModel_ = nullptr;
 
 void SkydomeDrawerCommon::StaticInitialize()
 {
 	// ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý
-	sModel_.reset(Model::LoadObj("skydome", true));
+	spModel_ = Model::Load("skydome", true);
 }
 
 void SkydomeDrawer::Initalize(YMath::Matrix4* pParent)
@@ -48,5 +48,5 @@ void SkydomeDrawer::Update()
 void SkydomeDrawer::Draw()
 {
 	// •`‰æ
-	sModel_->Draw(obj_.get());
+	spModel_->Draw(obj_.get());
 }

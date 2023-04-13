@@ -8,17 +8,24 @@ namespace YGame
 	class Transform
 	{
 	public:
+		
 		// 位置
 		YMath::Vector3 pos_;
+		
 		// 回転
 		YMath::Vector3 rota_;
+		
 		// 大きさ
 		YMath::Vector3 scale_;
+		
 		// 行列
 		YMath::Matrix4 m_;
+		
 		// 親行列
 		YMath::Matrix4* parent_;
+	
 	public:
+		
 		// 設定用ステータス(位置、回転、大きさ)
 		struct Status
 		{
@@ -26,7 +33,9 @@ namespace YGame
 			YMath::Vector3 rota_ = { 0.0f, 0.0f, 0.0f };
 			YMath::Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
 		};
+
 	public:
+		
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -35,8 +44,12 @@ namespace YGame
 		/// <param name="(Vector3) status.rota_"> : 回転</param>
 		/// <param name="(Vector3) status.scale_"> : 大きさ</param>
 		void Initialize(const Status& status);
-		// アフィン変換
+		
+		/// <summary>
+		/// アフィン変換
+		/// </summary>
 		void UpdateMatrix();
+		
 		/// <summary>
 		/// アフィン変換 (位置、回転、大きさ を加算したオブジェクトで行列計算)
 		/// </summary>
@@ -45,8 +58,11 @@ namespace YGame
 		/// <param name="(Vector3) status.rota_"> : 回転</param>
 		/// <param name="(Vector3) status.scale_"> : 大きさ</param>
 		void UpdateMatrix(const Status& status);
+	
 	public:
+		
 		Transform();
+		
 		virtual ~Transform() = default;
 	};
 }

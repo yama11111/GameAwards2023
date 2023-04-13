@@ -4,23 +4,20 @@
 
 using YGame::LetterBoxDrawerCommon;
 using YGame::LetterBoxDrawer;
-using YGame::TextureManager;
+using YGame::Texture;
 using YGame::Sprite2DObject;
 using YGame::Sprite2D;
 using YGame::Color;
 
-std::unique_ptr<Sprite2D> LetterBoxDrawerCommon::sSpr_ = nullptr;
+Sprite2D* LetterBoxDrawerCommon::spSpr_ = nullptr;
 
 void LetterBoxDrawerCommon::StaticInitialize()
 {
-	// テクスチャマネージャー取得
-	TextureManager* pTexMan = TextureManager::GetInstance();
-
 	// テクスチャ取得 (白1x1)
-	UINT tex = pTexMan->Load("white1x1.png", false);
+	Texture* pTex = Texture::Load("white1x1.png", false);
 
 	// スプライト作成
-	sSpr_.reset(Sprite2D::Create({ false, { WinSize.x_, 1.0f } }, { tex }));
+	spSpr_ = Sprite2D::Create({ false, { WinSize.x_, 1.0f } }, { pTex });
 }
 
 void LetterBoxDrawer::Initialize(const float topHeight, const float bottomHeight)
@@ -86,6 +83,6 @@ void LetterBoxDrawer::Draw()
 	// 描画
 	for (size_t i = 0; i < sprObjs_.size(); i++)
 	{
-		sSpr_->Draw(sprObjs_[i].get());
+		spSpr_->Draw(sprObjs_[i].get());
 	}
 }

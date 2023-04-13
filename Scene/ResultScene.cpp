@@ -18,29 +18,27 @@ void ResultScene::Load()
 	// ----- テクスチャ ----- //
 
 	// ロゴ
-	logoTex_ = spTexManager_->Load("Result/logo.png");
+	pLogoTex_ = Texture::Load("Result/logo.png");
 
 	// 背景
-	backTex_ = spTexManager_->Load("Result/back.png");
-
+	pBackTex_ = Texture::Load("Result/back.png");
 	// スペースキー
-	spaceKeyTex_[0] = spTexManager_->Load("UI/key_SPACE.png");
-	spaceKeyTex_[1] = spTexManager_->Load("UI/key_SPACE_PUSH.png");
-
+	pSpaceKeyTex_[0] = Texture::Load("UI/key_SPACE.png");
+	pSpaceKeyTex_[1] = Texture::Load("UI/key_SPACE_PUSH.png");
 
 	// ----- オーディオ ----- //
 
 	// ----- スプライト (2D) ----- //
 
 	// ロゴ
-	logoSpr_.reset(Sprite2D::Create({}, { logoTex_ }));
+	pLogoSpr_ = Sprite2D::Create({}, { pLogoTex_ });
 
 	// 背景
-	backSpr_.reset(Sprite2D::Create({}, { backTex_ }));
+	pBackSpr_ = Sprite2D::Create({}, { pBackTex_ });
 
 	// スペースキー
-	spaceKeySpr_[0].reset(Sprite2D::Create({}, { spaceKeyTex_[0] }));
-	spaceKeySpr_[1].reset(Sprite2D::Create({}, { spaceKeyTex_[1] }));
+	pSpaceKeySpr_[0] = Sprite2D::Create({}, { pSpaceKeyTex_[0] });
+	pSpaceKeySpr_[1] = Sprite2D::Create({}, { pSpaceKeyTex_[1] });
 
 	// ----- スプライト (3D) ----- //
 
@@ -93,7 +91,7 @@ void ResultScene::Update()
 #pragma region 描画
 void ResultScene::DrawBackSprite2Ds()
 {
-	backSpr_->Draw(backObj_.get());
+	pBackSpr_->Draw(backObj_.get());
 
 }
 
@@ -109,32 +107,32 @@ void ResultScene::DrawSprite3Ds()
 
 void ResultScene::DrawFrontSprite2Ds()
 {
-	logoSpr_->Draw(logoObj_.get());
-	spaceKeySpr_[isPush_]->Draw(spaceKeyObj_.get());
+	pLogoSpr_->Draw(logoObj_.get());
+	pSpaceKeySpr_[isPush_]->Draw(spaceKeyObj_.get());
 }
 
 void ResultScene::Draw()
 {
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
+	Sprite2D::Common::StaticSetPipeline();
 	// ----- 背景スプライト ----- //
 
 	DrawBackSprite2Ds();
 
 	// -------------------------- //
-	ModelCommon::StaticSetDrawCommand();
+	Model::Common::StaticSetPipeline();
 	// --------- モデル --------- //
 
 	DrawModels();
 
 	// -------------------------- //
-	Sprite3DCommon::StaticSetDrawCommand();
+	Sprite3D::Common::StaticSetPipeline();
 	// ------- ビルボード ------- //
 
 	DrawSprite3Ds();
 
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
+	Sprite2D::Common::StaticSetPipeline();
 	// ----- 前景スプライト ----- //
 
 	DrawFrontSprite2Ds();

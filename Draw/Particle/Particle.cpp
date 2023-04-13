@@ -11,7 +11,7 @@ using YMath::Vector3;
 using YMath::Vector4;
 
 ViewProjection* IParticle::spVP_ = nullptr;
-std::unique_ptr<Model> FireWork::sModel_ = nullptr;
+Model* FireWork::spModel_ = nullptr;
 
 void IParticle::StaticInitialize(YGame::ViewProjection* pVP)
 {
@@ -21,12 +21,12 @@ void IParticle::StaticInitialize(YGame::ViewProjection* pVP)
 	spVP_ = pVP;
 }
 
-void FireWork::StaticInitialize(YGame::Model* model)
+void FireWork::StaticInitialize(YGame::Model* pModel)
 {
 	// nullチェック
-	assert(model);
+	assert(pModel);
 	// 初期化
-	sModel_.reset(model);
+	spModel_ = pModel;
 }
 
 void FireWork::Emit(
@@ -83,5 +83,5 @@ void FireWork::Update()
 void FireWork::Draw()
 {
 	// 描画
-	sModel_->Draw(obj_.get());
+	spModel_->Draw(obj_.get());
 }

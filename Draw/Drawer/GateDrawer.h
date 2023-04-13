@@ -19,7 +19,7 @@ protected:
 	static const size_t PartsNum_ = 4;
 protected:
 	// モデル (パーツの数だけ)
-	static std::array<std::unique_ptr<YGame::Model>, PartsNum_> sModels_;
+	static std::array<YGame::Model*, PartsNum_> spModels_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:

@@ -65,7 +65,7 @@ namespace YGame
 		/// <param name="num"> : 要素数 (小数点切り捨て)</param>
 		/// <param name="anchor"> : 開始点のアンカーポイント (初期値は中心)</param>
 		void Initialize(
-			const uint32_t changeFrame, const uint32_t loadFrame, 
+			const uint32_t changeFrame, const uint32_t loadFrame,
 			const YMath::Vector2& leftTop, const float size, const YMath::Vector2& num,
 			const YMath::Vector2& anchor = { 0.5f,0.5f });
 		// リセット(中身だけ初期化)
@@ -88,7 +88,7 @@ namespace YGame
 		void BlockPropagate(const size_t x, const size_t y);
 	private:
 		// スプライト(2D)
-		static std::unique_ptr<Sprite2D> sBlockSpr_;
+		static Sprite2D* spBlockSpr_;
 	public:
 		// 静的初期化
 		static void StaticInitialize();

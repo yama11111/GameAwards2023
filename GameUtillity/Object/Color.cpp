@@ -19,17 +19,17 @@ Color* Color::Create(const YMath::Vector4& color, const YMath::Vector4& original
 	return instance;
 }
 
-void Color::Initialize(const YMath::Vector4& color, const YMath::Vector4& originalColorRate)
+void Color::Initialize(const YMath::Vector4& color, const YMath::Vector4& originalRate)
 {
 	SetRGBA(color);
-	SetOriginalColorRateRGBA(originalColorRate);
+	SetOriginalRateRGBA(originalRate);
 }
 
 void Color::SetDrawCommand(const UINT rootParamIndex)
 {
 	// 定数バッファに設定
 	cBuff_.map_->color_ = color_;
-	cBuff_.map_->originalColorRate_ = originalColorRate_;
+	cBuff_.map_->originalRate_ = originalRate_;
 	// シェーダーに送る
 	cBuff_.SetDrawCommand(rootParamIndex);
 }
@@ -101,7 +101,7 @@ void Color::SetAlpha(const UINT alpha)
 }
 
 
-void Color::SetOriginalColorRateRGBA(const YMath::Vector4& color)
+void Color::SetOriginalRateRGBA(const YMath::Vector4& color)
 {
 	// 0.0f ~ 1.0f の間になるように
 	float r = Clamp<float>(color.r_, 0.0f, 1.0f);
@@ -110,10 +110,10 @@ void Color::SetOriginalColorRateRGBA(const YMath::Vector4& color)
 	float a = Clamp<float>(color.a_, 0.0f, 1.0f);
 
 	// 定数バッファに設定
-	cBuff_.map_->originalColorRate_ = originalColorRate_ = Vector4(r, g, b, a);
+	cBuff_.map_->originalRate_ = originalRate_ = Vector4(r, g, b, a);
 }
 
-void Color::SetOriginalColorRateRGBA(const UINT R, const UINT G, const UINT B, const UINT A)
+void Color::SetOriginalRateRGBA(const UINT R, const UINT G, const UINT B, const UINT A)
 {
 	// 値を float に
 	float r = R <= 255 ? R / 255.0f : 1.0f;
@@ -122,10 +122,10 @@ void Color::SetOriginalColorRateRGBA(const UINT R, const UINT G, const UINT B, c
 	float a = A <= 255 ? A / 255.0f : 1.0f;
 	Vector4 c = Vector4(r, g, b, a);
 
-	SetOriginalColorRateRGBA(c);
+	SetOriginalRateRGBA(c);
 }
 
-void Color::SetOriginalColorRateRGB(const YMath::Vector3& color)
+void Color::SetOriginalRateRGB(const YMath::Vector3& color)
 {
 	// 0.0f ~ 1.0f の間になるように
 	float r = Clamp<float>(color.x_, 0.0f, 1.0f);
@@ -135,10 +135,10 @@ void Color::SetOriginalColorRateRGB(const YMath::Vector3& color)
 	Vector4 c = { color.x_, color.y_, color.z_, color_.a_ };
 
 	// 定数バッファに設定
-	cBuff_.map_->originalColorRate_ = originalColorRate_ = c;
+	cBuff_.map_->originalRate_ = originalRate_ = c;
 }
 
-void Color::SetOriginalColorRateRGB(const UINT R, const UINT G, const UINT B)
+void Color::SetOriginalRateRGB(const UINT R, const UINT G, const UINT B)
 {
 	// 値を float に
 	float r = R <= 255 ? R / 255.0f : 1.0f;
@@ -146,22 +146,22 @@ void Color::SetOriginalColorRateRGB(const UINT R, const UINT G, const UINT B)
 	float b = B <= 255 ? B / 255.0f : 1.0f;
 	Vector3 c = Vector3(r, g, b);
 
-	SetOriginalColorRateRGB(c);
+	SetOriginalRateRGB(c);
 }
 
-void Color::SetOriginalColorRateAlpha(const float alpha)
+void Color::SetOriginalRateAlpha(const float alpha)
 {
 	// 0.0f ~ 1.0f の間になるように
 	float a = Clamp<float>(alpha, 0.0f, 1.0f);
 
 	// 定数バッファに設定
-	cBuff_.map_->originalColorRate_.a_ = originalColorRate_.a_ = a;
+	cBuff_.map_->originalRate_.a_ = originalRate_.a_ = a;
 }
 
-void Color::SetOriginalColorRateAlpha(const UINT alpha)
+void Color::SetOriginalRateAlpha(const UINT alpha)
 {
 	// 値を float に
 	float a = alpha <= 255 ? alpha / 255.0f : 1.0f;
 
-	SetOriginalColorRateAlpha(a);
+	SetOriginalRateAlpha(a);
 }

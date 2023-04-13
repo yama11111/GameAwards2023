@@ -5,7 +5,7 @@ class TitleDrawerCommon
 {
 protected:
 	// 静的ロゴスプライト
-	static std::unique_ptr<YGame::Sprite2D> sLogoSpr_;
+	static YGame::Sprite2D* spLogoSpr_;
 public:
 	// 静的初期化
 	static void StaticInitialize();

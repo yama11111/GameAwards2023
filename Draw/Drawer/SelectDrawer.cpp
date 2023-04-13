@@ -15,7 +15,7 @@ using YGame::Sprite2DObject;
 using YGame::Sprite2D;
 using YGame::ModelObject;
 using YGame::Model;
-using YGame::TextureManager;
+using YGame::Texture;
 using YGame::Color;
 using YGame::SlimeActor;
 using YGame::LetterBoxDrawer;
@@ -24,8 +24,8 @@ using namespace DrawerConfig::Select;
 
 #pragma endregion
 
-unique_ptr<Model> SelectDrawerCommon::sEarthModel_ = nullptr;
-unique_ptr<Sprite2D> SelectDrawerCommon::sLogoSpr_ = nullptr;
+Model* SelectDrawerCommon::spEarthModel_ = nullptr;
+Sprite2D* SelectDrawerCommon::spLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
 StageConfig* SelectDrawerCommon::spStageConfig_ = nullptr;
 
@@ -36,18 +36,15 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// 代入
 	spVP_ = pVP;
 
-	// テクスチャマネージャー取得
-	TextureManager* pTexMan = TextureManager::GetInstance();
-
 	// ----- スプライト読み込み ----- //
 	
 	// ロゴ
-	sLogoSpr_.reset(Sprite2D::Create({}, { pTexMan->Load("Select/logo.png", false) }));
+	spLogoSpr_ = Sprite2D::Create({}, { Texture::Load("Select/logo.png", false) });
 
 	// ----- モデル読み込み ----- //
 
 	// 地球
-	sEarthModel_.reset(Model::LoadObj("earth", true));
+	spEarthModel_ = Model::Load("earth", true);
 
 
 	// ステージ設定所得
@@ -125,8 +122,10 @@ void SelectDrawer::Initalize()
 
 	// ----- イージング ----- //
 
+
 	// ステージ回転用パワー
-	stageRotaPows_.resize(static_cast<size_t>(spStageConfig_->StageNum_ - 1)); // リサイズ
+	int staNum = spStageConfig_->StageNum_ - 1;
+	stageRotaPows_.resize(static_cast<size_t>(staNum)); // リサイズ
 
 	// リセット
 	Reset();
@@ -252,7 +251,8 @@ void SelectDrawer::UpdateRotaAnimation()
 		bool isRotaAct = false;
 		
 		// 現在のステージ数より番号が小さいなら
-		if (i < static_cast<size_t>(spStageConfig_->GetCurrentStageIndex() - 1))
+		int staIdx = spStageConfig_->GetCurrentStageIndex() - 1;
+		if (i < static_cast<size_t>(staIdx))
 		{
 			// 動作する
 			isRotaAct = true;
@@ -316,7 +316,8 @@ void SelectDrawer::Update()
 		bool isSelect = false;
 
 		// 選択中のステージ番号のとき
-		if (i == spStageConfig_->GetCurrentStageIndex() - 1)
+		int staIdx = spStageConfig_->GetCurrentStageIndex() - 1;
+		if (i == staIdx)
 		{
 			// 選択
 			isSelect = true;
@@ -334,7 +335,7 @@ void SelectDrawer::Update()
 void SelectDrawer::DrawModel()
 {
 	// 地球
-	sEarthModel_->Draw(earthObj_.get());
+	spEarthModel_->Draw(earthObj_.get());
 
 	// ステージ描画
 	for (size_t i = 0; i < stageDras_.size(); i++)
@@ -362,5 +363,5 @@ void SelectDrawer::DrawSprite2D()
 	}
 
 	// ロゴ描画
-	sLogoSpr_->Draw(logoObj_.get());
+	spLogoSpr_->Draw(logoObj_.get());
 }

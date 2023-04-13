@@ -24,7 +24,7 @@ static const size_t MonitorIdx = static_cast<size_t>(FilterDrawerCommon::Parts::
 
 
 // 静的 モデル配列 初期化
-array<unique_ptr<Model>, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::sModels_ =
+array<Model*, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, 
 };
@@ -42,8 +42,8 @@ void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[MonitorIdx].reset(Model::Create());
-	sModels_[1].reset(Model::Create());
+	spModels_[MonitorIdx] = Model::CreateCube();
+	spModels_[1] = Model::CreateCube();
 }
 
 #pragma endregion
@@ -104,7 +104,7 @@ void FilterDrawer::Update()
 void FilterDrawer::Draw()
 {
 	// 描画
-	sModels_[MonitorIdx]->Draw(modelObjs_[MonitorIdx].get());
+	spModels_[MonitorIdx]->Draw(modelObjs_[MonitorIdx].get());
 }
 
 void FilterDrawer::IdleAnimation()

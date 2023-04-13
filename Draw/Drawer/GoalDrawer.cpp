@@ -27,7 +27,7 @@ static const size_t OutsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Ou
 static const size_t BaseIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Base); // ë‰ç¿
 
 // ê√ìI ÉÇÉfÉãîzóÒ èâä˙âª
-array<unique_ptr<Model>, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::sModels_ =
+array<Model*, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr,
 };
@@ -44,10 +44,10 @@ void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- ÉÇÉfÉãì«Ç›çûÇ› ----- //
 
-	sModels_[CoreIdx].reset(Model::LoadObj("goal/core", true)); // äj
-	sModels_[InsideIdx].reset(Model::LoadObj("goal/inside", true)); // ì‡òg
-	sModels_[OutsideIdx].reset(Model::LoadObj("goal/outside", true)); // äOòg
-	sModels_[BaseIdx].reset(Model::LoadObj("goal/base", true)); // ë‰ç¿
+	spModels_[CoreIdx] = Model::Load("goal/core", true); // äj
+	spModels_[InsideIdx] = Model::Load("goal/inside", true); // ì‡òg
+	spModels_[OutsideIdx] = Model::Load("goal/outside", true); // äOòg
+	spModels_[BaseIdx] = Model::Load("goal/base", true); // ë‰ç¿
 }
 
 #pragma endregion
@@ -135,8 +135,8 @@ void GoalDrawer::Update()
 void GoalDrawer::Draw()
 {
 	// ï`âÊ
-	for (size_t i = 0; i < sModels_.size(); i++)
+	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		sModels_[i]->Draw(modelObjs_[i].get());
+		spModels_[i]->Draw(modelObjs_[i].get());
 	}
 }

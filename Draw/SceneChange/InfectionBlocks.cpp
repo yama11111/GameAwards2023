@@ -8,15 +8,15 @@ using YMath::Vector2;
 using YMath::Vector3;
 using YMath::Clamp;
 
-std::unique_ptr<YGame::Sprite2D> InfectionBlocks::sBlockSpr_ = nullptr;
+YGame::Sprite2D* InfectionBlocks::spBlockSpr_ = nullptr;
 
 void InfectionBlocks::StaticInitialize()
 {
 	// テクスチャ読み込み
-	UINT texIdx = TextureManager::GetInstance()->Load("white1x1.png", false);
+	Texture* pTex = Texture::Load("white1x1.png", false);
 
 	// スプライト生成
-	sBlockSpr_.reset(Sprite2D::Create({}, { texIdx }));
+	spBlockSpr_ = Sprite2D::Create({}, { pTex });
 }
 
 void InfectionBlocks::Initialize(
@@ -122,9 +122,11 @@ void InfectionBlocks::Activate()
 		static_cast<float>(blocks_.size() - 1)
 	};
 
+
 	// アンカーポイント基準の位置 を 始点 とする
-	size_t sX = static_cast<size_t>(anchor_.x_ * size.x_);
-	size_t sY = static_cast<size_t>(anchor_.y_ * size.y_);
+	Vector2 start = anchor_ - size;
+	size_t sX = static_cast<size_t>(start.x_);
+	size_t sY = static_cast<size_t>(start.y_);
 
 	// 始点のタイマー開始
 	blocks_[sY][sX]->SetTimerActive(true);
@@ -333,7 +335,7 @@ void InfectionBlocks::Draw()
 	{
 		for (size_t x = 0; x < blocks_[y].size(); x++)
 		{
-			sBlockSpr_->Draw(blocks_[y][x]->obj_.get());
+			spBlockSpr_->Draw(blocks_[y][x]->obj_.get());
 		}
 	}
 }

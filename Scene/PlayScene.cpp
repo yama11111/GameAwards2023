@@ -252,10 +252,6 @@ void PlayScene::DrawBackSprite2Ds()
 	
 }
 
-void PlayScene::DrawBackSprite3Ds()
-{
-}
-
 void PlayScene::DrawModels()
 {
 	// 天球描画
@@ -302,7 +298,7 @@ void PlayScene::DrawModels()
 	// --------------- //
 }
 
-void PlayScene::DrawFrontSprite3Ds()
+void PlayScene::DrawSprite3Ds()
 {
 
 }
@@ -316,35 +312,29 @@ void PlayScene::DrawFrontSprite2Ds()
 void PlayScene::Draw()
 {
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
-	// ----- 背景スプライト2D----- //
+	Sprite2D::Common::StaticSetPipeline();
+	// ----- 背景スプライト ----- //
 
 	DrawBackSprite2Ds();
 
 	// -------------------------- //
-	Sprite3DCommon::StaticSetDrawCommand();
-	// ----- 前景スプライト3D ----- //
-
-	DrawBackSprite3Ds();
-
-	// -------------------------- //
-	ModelCommon::StaticSetDrawCommand();
+	Model::Common::StaticSetPipeline();
 	// --------- モデル --------- //
 
 	DrawModels();
 
 	// -------------------------- //
-	Sprite3DCommon::StaticSetDrawCommand();
-	// ----- 前景スプライト3D ----- //
+	Sprite3D::Common::StaticSetPipeline();
+	// ------- ビルボード ------- //
 
-	DrawFrontSprite3Ds();
+	DrawSprite3Ds();
 
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
-	// ----- 前景スプライト2D ----- //
+	Sprite2D::Common::StaticSetPipeline();
+	// ----- 前景スプライト ----- //
 
 	DrawFrontSprite2Ds();
-	
+
 	// -------------------------- //
 }
 #pragma endregion

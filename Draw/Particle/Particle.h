@@ -56,9 +56,9 @@ namespace YGame
 		void Update() override;
 		void Draw() override;
 	private:
-		static std::unique_ptr<YGame::Model> sModel_;
+		static YGame::Model* spModel_;
 	public:
-		static void StaticInitialize(YGame::Model* model);
+		static void StaticInitialize(YGame::Model* pModel);
 	public:
 		~FireWork() = default;
 	};

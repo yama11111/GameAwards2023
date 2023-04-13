@@ -8,7 +8,7 @@ namespace YGame
 	{
 	protected:
 		// 静的スプライト
-		static std::unique_ptr<YGame::Sprite2D> sSpr_;
+		static YGame::Sprite2D* spSpr_;
 	public:
 		// 静的初期化
 		static void StaticInitialize();

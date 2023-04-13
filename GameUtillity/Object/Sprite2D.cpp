@@ -3,9 +3,10 @@
 
 #pragma region 名前空間
 
+using std::unique_ptr;
 using YGame::Sprite2DObject;
-using YGame::Sprite2DCommon;
 using YGame::Sprite2D;
+using YDX::PipelineSet;
 using YMath::Vector2;
 using YMath::Matrix4;
 
@@ -13,65 +14,21 @@ using YMath::Matrix4;
 
 #pragma region ルートパラメータ番号
 
-static const UINT TraIndex	 = static_cast<UINT>(Sprite2DCommon::RootParameterIndex::TransformCB); // obj
-static const UINT ColIndex	 = static_cast<UINT>(Sprite2DCommon::RootParameterIndex::ColorCB); // color
-static const UINT TexIndex	 = static_cast<UINT>(Sprite2DCommon::RootParameterIndex::TexDT); // tex
+static const UINT TraIndex	 = static_cast<UINT>(Sprite2D::Common::RootParameterIndex::TransformCB); // obj
+static const UINT ColIndex	 = static_cast<UINT>(Sprite2D::Common::RootParameterIndex::ColorCB); // color
+static const UINT TexIndex	 = static_cast<UINT>(Sprite2D::Common::RootParameterIndex::TexDT); // tex
 
 #pragma endregion
 
+#pragma region Static
 
-#pragma region Sprite2DCBSet
-
-Sprite2DObject* Sprite2DObject::Create(const Status& status)
-{
-	// インスタンスを返す
-	return Create(status, nullptr);
-}
-
-Sprite2DObject* Sprite2DObject::Create(const Status& status, Color* pColor)
-{
-	// インスタンス生成 (動的)
-	Sprite2DObject* instance = new Sprite2DObject();
-
-	// 定数バッファ生成
-	instance->cBuff_.Create();
-
-	// 初期化(デフォルト)
-	instance->Initialize(status);
-	instance->SetColor(pColor);
-
-	// インスタンスを返す
-	return instance;
-}
-
-void Sprite2DObject::SetColor(Color* pColor)
-{
-	// nullなら
-	if (pColor == nullptr)
-	{
-		// デフォルト代入
-		pColor_ = sDefColor_.get();
-		return;
-	}
-
-	// 代入
-	pColor_ = pColor;
-}
-
-void Sprite2DObject::SetDrawCommand()
-{
-	// 行列
-	cBuff_.map_->matWorld_ = m_ * sProjection_;
-	cBuff_.SetDrawCommand(TraIndex);
-
-	// 色
-	pColor_->SetDrawCommand(ColIndex);
-}
+std::vector<std::unique_ptr<Sprite2D>> Sprite2D::sprites_{};
+Sprite2D::Common Sprite2D::common_{};
+YDX::PipelineSet Sprite2D::Common::sPipelineSet_{};
 
 #pragma endregion
 
-
-#pragma region Sprite2DCBSet
+#pragma region Sprite2D
 
 Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 {
@@ -79,8 +36,8 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 	Sprite2D* instance = new Sprite2D();
 	
 	// テクスチャのサイズを取得
-	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
-	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
+	float rscSizeX = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Width);
+	float rscSizeY = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Height);
 
 	// ----- Status ----- //
 
@@ -125,12 +82,21 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 	instance->isFlipX_ = status.isFlipX_; // X反転
 	instance->isFlipY_ = status.isFlipY_; // Y反転
 
-	instance->tex_		  = texStatus.index_; // テクスチャインデックス
+	instance->pTex_		  = texStatus.pTex_; // テクスチャインデックス
 	instance->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
 	instance->texSize_	  = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 
 	// インスタンスを返す
 	return instance;
+}
+
+void Sprite2D::AllClear()
+{
+	// スプライト2D全消去
+	for (size_t i = 0; i < sprites_.size(); i++)
+	{
+		sprites_[i].reset();
+	}
 }
 
 void Sprite2D::Draw(Sprite2DObject* pObj)
@@ -139,10 +105,10 @@ void Sprite2D::Draw(Sprite2DObject* pObj)
 	if (isInvisible_) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj->SetDrawCommand();
+	pObj->SetDrawCommand(TraIndex, ColIndex);
 
 	// テクスチャ
-	spTexManager_->SetDrawCommand(TexIndex, tex_);
+	pTex_->SetDrawCommand(TexIndex);
 
 	// 頂点バッファを送る + 描画コマンド
 	vt_.Draw();
@@ -151,17 +117,17 @@ void Sprite2D::Draw(Sprite2DObject* pObj)
 void Sprite2D::SetSize(const Vector2& size)
 {
 	if (size_ == size) { return; }
-	SetAllStatus({ false, size, anchor_, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size, anchor_, isFlipX_, isFlipY_ }, { pTex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetAnchorPoint(const Vector2& anchor)
 {
 	if (anchor_ == anchor) { return; }
-	SetAllStatus({ false, size_, anchor, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size_, anchor, isFlipX_, isFlipY_ }, { pTex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetFrip(const bool isFlipX, const bool isFlipY)
 {
 	if (isFlipX_ == isFlipX && isFlipY_ == isFlipY) { return; }
-	SetAllStatus({ false, size_, anchor_, isFlipX, isFlipY }, { tex_, false, texLeftTop_, texLeftTop_ });
+	SetAllStatus({ false, size_, anchor_, isFlipX, isFlipY }, { pTex_, false, texLeftTop_, texLeftTop_ });
 }
 void Sprite2D::SetTextureLeftTop(const Vector2& leftTop, const bool adjust)
 {
@@ -170,25 +136,26 @@ void Sprite2D::SetTextureLeftTop(const Vector2& leftTop, const bool adjust)
 	float adjX = adjust && (texLeftTop_.x_ < leftTop.x_) ? (leftTop.x_ - texLeftTop_.x_) : 0.0f;
 	float adjY = adjust && (texLeftTop_.y_ < leftTop.y_) ? (leftTop.y_ - texLeftTop_.y_) : 0.0f;
 
-	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, leftTop, texSize_ - Vector2(adjX, adjY) });
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { pTex_, false, leftTop, texSize_ - Vector2(adjX, adjY) });
 }
 void Sprite2D::SetTextureSize(const Vector2& texSize)
 {
 	if (texSize_ == texSize) { return; }
-	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, texLeftTop_, texSize });
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { pTex_, false, texLeftTop_, texSize });
 }
 void Sprite2D::SetTextureRectangle(const Vector2& leftTop, const Vector2& texSize)
 {
 	if (texLeftTop_ == leftTop && texSize_ == texSize) { return; }
-	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { tex_, false, leftTop, texSize });
+	SetAllStatus({ false, size_, anchor_, isFlipX_, isFlipY_ }, { pTex_, false, leftTop, texSize });
 }
 void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus)
 {
+	// 頂点データ
 	std::vector<VData> v;
 
 	// テクスチャのサイズを取得
-	float rscSizeX = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Width);
-	float rscSizeY = static_cast<float>(spTexManager_->TextureBuffer(texStatus.index_)->GetDesc().Height);
+	float rscSizeX = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Width);
+	float rscSizeY = static_cast<float>(texStatus.pTex_->Buffer()->GetDesc().Height);
 
 	// ----- Status ----- //
 	
@@ -231,9 +198,130 @@ void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus)
 	isFlipX_ = status.isFlipX_; // X反転
 	isFlipY_ = status.isFlipY_; // Y反転
 
-	tex_	    = texStatus.index_; // テクスチャインデックス
+	pTex_	    = texStatus.pTex_; // テクスチャインデックス
 	texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
 	texSize_    = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
+}
+
+#pragma endregion
+
+#pragma region Sprite2DCommon
+
+void Sprite2D::Common::StaticInitialize()
+{
+	// パイプライン初期化
+	std::unique_ptr<PipelineSet::IStatus> pplnState = std::make_unique<PipelineSetStatus>();
+	sPipelineSet_.Initialize(pplnState.get());
+}
+
+void Sprite2D::Common::ShaderSet::Load(ID3DBlob* errorBlob)
+{
+	ID3DBlob* vs = nullptr;
+	ID3DBlob* ps = nullptr;
+
+	// 頂点シェーダの読み込みとコンパイル
+	LoadShader(L"Resources/Shaders/Sprite2DVS.hlsl", "main", "vs_5_0", vs, errorBlob);
+	// ピクセルシェーダの読み込みとコンパイル
+	LoadShader(L"Resources/Shaders/Sprite2DPS.hlsl", "main", "ps_5_0", ps, errorBlob);
+
+	vsBlob_ = vs;
+	psBlob_ = ps;
+}
+
+void Sprite2D::Common::PipelineSetStatus::Initialize(ID3DBlob* errorBlob_)
+{
+	// シェーダー読み込み
+	ShaderSet shdrs;
+	shdrs.Load(errorBlob_);
+
+	// 頂点レイアウトの設定
+	inputLayout_ =
+	{
+		// 頂点座標	 (x, y, z)
+		{
+			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		},
+		// UV座標	 (x, y)
+		{
+			"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0
+		}
+	};
+
+	// テクスチャサンプラーの設定
+	{
+		D3D12_STATIC_SAMPLER_DESC sampleDesc{};
+		sampleDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 横折り返し   (タイリング)
+		sampleDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 縦折り返し   (タイリング)
+		sampleDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 奥行折り返し (タイリング)
+		sampleDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK; // ボーダーの時は黒
+		sampleDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;   // 全てリニア補間
+		sampleDesc.MaxLOD = D3D12_FLOAT32_MAX; // ミニマップ最大値
+		sampleDesc.MinLOD = 0.0f;              // ミニマップ最小値
+		sampleDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		sampleDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // ピクセルシェーダーからのみ使用可能
+
+		sampleDesc_.push_back(sampleDesc);
+	}
+
+	// ルートパラメータの設定
+	{
+		size_t rpIdxCBNum = static_cast<size_t> (RootParameterIndex::TexDT);
+
+		for (size_t i = 0; i < rpIdxCBNum; i++)
+		{
+			// 定数バッファ
+			D3D12_ROOT_PARAMETER rootParam{};
+			rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // 定数バッファビュー
+			rootParam.Descriptor.ShaderRegister = static_cast<UINT>(i); // 定数バッファ番号
+			rootParam.Descriptor.RegisterSpace = 0;					  // デフォルト値
+			rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダから見える
+
+			rootParams_.push_back(rootParam);
+		}
+
+		// デスクリプタレンジの設定
+		descriptorRange_.NumDescriptors = 1; // 1度の描画に使うテクスチャが1枚なので1
+		descriptorRange_.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorRange_.BaseShaderRegister = 0; // テクスチャレジスタ0番
+		descriptorRange_.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+		// テクスチャレジスタ
+		D3D12_ROOT_PARAMETER rootParam{};
+		rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParam.DescriptorTable.pDescriptorRanges = &descriptorRange_;
+		rootParam.DescriptorTable.NumDescriptorRanges = 1;
+		rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダから見える
+
+		rootParams_.push_back(rootParam);
+	}
+
+	// パイプライン設定
+	{
+		// シェーダーの設定
+		pipelineDesc_.VS.pShaderBytecode = shdrs.vsBlob_.Get()->GetBufferPointer();
+		pipelineDesc_.VS.BytecodeLength = shdrs.vsBlob_.Get()->GetBufferSize();
+		pipelineDesc_.PS.pShaderBytecode = shdrs.psBlob_.Get()->GetBufferPointer();
+		pipelineDesc_.PS.BytecodeLength = shdrs.psBlob_.Get()->GetBufferSize();
+
+		// ラスタライザの設定
+		pipelineDesc_.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+
+		// デプスステンシルステートの設定
+		pipelineDesc_.DepthStencilState.DepthEnable = false; // 深度テストしない
+		pipelineDesc_.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
+
+		// 図形の形状設定
+		pipelineDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	}
+
+	// プリミティブ形状の設定
+	primitive_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; // 三角形ストリップ
+}
+
+void Sprite2D::Common::StaticSetPipeline()
+{
+	// パイプラインをセット
+	sPipelineSet_.SetDrawCommand();
 }
 
 #pragma endregion

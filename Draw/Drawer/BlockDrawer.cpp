@@ -29,7 +29,7 @@ static const size_t CubeIdx = static_cast<size_t>(BlockDrawerCommon::Parts::Cube
 
 
 // 静的 モデル配列 初期化
-array<unique_ptr<Model>, BlockDrawerCommon::PartsNum_> BlockDrawerCommon::sModels_ =
+array<Model*, BlockDrawerCommon::PartsNum_> BlockDrawerCommon::spModels_ =
 {
 	nullptr, nullptr,
 };
@@ -46,8 +46,8 @@ void BlockDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	sModels_[CubeIdx].reset(Model::Create("blockInvisible.png")); // 立方体
-	sModels_[1].reset(Model::Create());
+	spModels_[CubeIdx] = Model::CreateCube("blockInvisible.png"); // 立方体
+	spModels_[1] = Model::CreateCube();
 }
 
 #pragma endregion
@@ -146,7 +146,7 @@ void BlockDrawer::Update()
 void BlockDrawer::Draw()
 {
 	// 描画
-	sModels_[CubeIdx]->Draw(modelObjs_[CubeIdx].get());
+	spModels_[CubeIdx]->Draw(modelObjs_[CubeIdx].get());
 }
 
 void BlockDrawer::FadeInAnimation(const unsigned int frame)

@@ -12,18 +12,18 @@ protected:
 	static YInput::Keys* sKeys_;
 
 	// WASD
-	static std::unique_ptr<YGame::Sprite2D> keyWASDSpr_;
+	static YGame::Sprite2D* spKeyWASDSpr_;
 	// WASD_PUSH
-	static std::unique_ptr<YGame::Sprite2D> keyWPushSpr_;
-	static std::unique_ptr<YGame::Sprite2D> keyAPushSpr_;
-	static std::unique_ptr<YGame::Sprite2D> keySPushSpr_;
-	static std::unique_ptr<YGame::Sprite2D> keyDPushSpr_;
+	static YGame::Sprite2D* spKeyWPushSpr_;
+	static YGame::Sprite2D* spKeyAPushSpr_;
+	static YGame::Sprite2D* spKeySPushSpr_;
+	static YGame::Sprite2D* spKeyDPushSpr_;
 	// S_DEAD
-	static std::unique_ptr<YGame::Sprite2D> keySDeadSpr_;
+	static YGame::Sprite2D* spKeySDeadSpr_;
 	// SPACE
-	static std::array<std::unique_ptr<YGame::Sprite2D>, 2> keySpaceSpr_;
+	static std::array<YGame::Sprite2D*, 2> spKeySpaceSpr_;
 	// TAB
-	static std::array<std::unique_ptr<YGame::Sprite2D>, 2> keyTabSpr_;
+	static std::array<YGame::Sprite2D*, 2> spKeyTabSpr_;
 public:
 	// ê√ìIèâä˙âª
 	static void StaticInitialize();

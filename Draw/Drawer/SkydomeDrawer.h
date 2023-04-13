@@ -5,7 +5,7 @@ class SkydomeDrawerCommon
 {
 protected:
 	// Ã“Iƒ‚ƒfƒ‹
-	static std::unique_ptr<YGame::Model> sModel_;
+	static YGame::Model* spModel_;
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();

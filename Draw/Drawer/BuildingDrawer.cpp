@@ -17,7 +17,7 @@ using YMath::Vector3;
 #pragma region Static
 
 // 静的 モデル配列 初期化
-std::array<std::unique_ptr<Model>, BuildingDrawerCommon::PartsNum_> BuildingDrawerCommon::sModels_ =
+std::array<Model*, BuildingDrawerCommon::PartsNum_> BuildingDrawerCommon::spModels_ = 
 { nullptr, nullptr, };
 YGame::ViewProjection* BuildingDrawerCommon::spVP_ = nullptr;
 
@@ -31,8 +31,8 @@ void BuildingDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 
 	// 体
-	sModels_[static_cast<size_t>(Parts::Building)].reset(Model::LoadObj("building", true));
-	sModels_[static_cast<size_t>(1)].reset(Model::LoadObj("building", true));
+	spModels_[static_cast<size_t>(Parts::Building)] = Model::Load("building", true);
+	spModels_[static_cast<size_t>(1)] = Model::Load("building", true);
 }
 
 #pragma endregion
@@ -110,9 +110,9 @@ void BuildingDrawer::Update()
 void BuildingDrawer::Draw()
 {
 	// 描画
-	for (size_t i = 0; i < sModels_.size(); i++)
+	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		sModels_[i]->Draw(modelObjs_[i].get());
+		spModels_[i]->Draw(modelObjs_[i].get());
 	}
 }
 

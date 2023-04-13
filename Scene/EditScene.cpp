@@ -90,25 +90,25 @@ void EditScene::DrawFrontSprite2Ds()
 void EditScene::Draw()
 {
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
+	Sprite2D::Common::StaticSetPipeline();
 	// ----- 背景スプライト ----- //
 
 	DrawBackSprite2Ds();
 
 	// -------------------------- //
-	ModelCommon::StaticSetDrawCommand();
+	Model::Common::StaticSetPipeline();
 	// --------- モデル --------- //
 
 	DrawModels();
 
 	// -------------------------- //
-	Sprite3DCommon::StaticSetDrawCommand();
+	Sprite3D::Common::StaticSetPipeline();
 	// ------- ビルボード ------- //
 
 	DrawSprite3Ds();
 
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
+	Sprite2D::Common::StaticSetPipeline();
 	// ----- 前景スプライト ----- //
 
 	DrawFrontSprite2Ds();

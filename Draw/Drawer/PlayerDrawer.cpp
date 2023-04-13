@@ -28,7 +28,7 @@ static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Bod
 
 
 // 静的 モデル配列 初期化
-array<unique_ptr<Model>, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::sModels_ =
+array<Model*, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr
 };
@@ -45,8 +45,8 @@ void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル読み込み ----- //
 
-	sModels_[BodyIdx].reset(Model::LoadObj("player", true)); // 体
-	sModels_[1].reset(Model::Create());
+	spModels_[BodyIdx] = Model::Load("player", true); // 体
+	spModels_[1] = Model::CreateCube();
 }
 
 #pragma endregion
@@ -182,13 +182,13 @@ void PlayerDrawer::Update()
 void PlayerDrawer::PreDraw()
 {
 	// 透明描画
-	sModels_[BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
+	spModels_[BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
 
 	// 通常なら
 	if (current_ == Mode::Normal)
 	{
 		// 描画
-		sModels_[BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
+		spModels_[BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
 	}
 }
 
@@ -198,7 +198,7 @@ void PlayerDrawer::PostDraw()
 	if (current_ == Mode::Red)
 	{
 		// 描画
-		sModels_[BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
+		spModels_[BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
 	}
 }
 

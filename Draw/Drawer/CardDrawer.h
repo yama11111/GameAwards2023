@@ -8,9 +8,9 @@ class CardDrawerCommon
 {
 protected:
 	// 静的数字スプライト
-	static std::array<std::unique_ptr<YGame::Sprite2D>, 10> sNumberSpr_;
+	static std::array<YGame::Sprite2D*, 10> spNumberSpr_;
 	// 静的スプライト
-	static std::unique_ptr<YGame::Sprite2D> sCardSpr_;
+	static YGame::Sprite2D* spCardSpr_;
 public:
 	// 静的初期化
 	static void StaticInitialize();

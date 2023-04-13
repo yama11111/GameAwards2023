@@ -19,14 +19,14 @@ protected:
 	static YInput::Keys* sKeys_;
 
 	// pause
-	static std::unique_ptr<YGame::Sprite2D> pauseSpr_;
+	static YGame::Sprite2D* spPauseSpr_;
 	// resume
-	static std::unique_ptr<YGame::Sprite2D> resumeSpr_;
+	static YGame::Sprite2D* spResumeSpr_;
 	// title
-	static std::unique_ptr<YGame::Sprite2D> titleSpr_;
+	static YGame::Sprite2D* spTitleSpr_;
 	
 	// curten
-	static std::unique_ptr<YGame::Sprite2D> curtenSpr_;
+	static YGame::Sprite2D* spCurtenSpr_;
 public:
 	// ê√ìIèâä˙âª
 	static void StaticInitialize();

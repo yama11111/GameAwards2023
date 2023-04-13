@@ -7,9 +7,9 @@ class StageDrawerCommon
 {
 protected:
 	// 静的数字スプライト
-	static std::array<std::unique_ptr<YGame::Sprite3D>, 10> sNumberSpr_;
+	static std::array<YGame::Sprite3D*, 10> spNumberSpr_;
 	// 静的モデル
-	static std::unique_ptr<YGame::Model> sBuildingModel_;
+	static YGame::Model* spBuildingModel_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 public:

@@ -13,9 +13,9 @@ public:
 	};
 protected:	
 	// player
-	static std::unique_ptr<YGame::Sprite2D> playerSpr_;
+	static YGame::Sprite2D* spPlayerSpr_;
 	// filter
-	static std::unique_ptr<YGame::Sprite2D> filterSpr_;
+	static YGame::Sprite2D* spFilterSpr_;
 public:
 	// Ã“I‰Šú‰»
 	static void StaticInitialize();

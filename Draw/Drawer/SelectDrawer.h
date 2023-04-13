@@ -10,9 +10,9 @@ class SelectDrawerCommon
 {
 protected:
 	// 静的地球モデル
-	static std::unique_ptr<YGame::Model> sEarthModel_;
+	static YGame::Model* spEarthModel_;
 	// 静的ロゴスプライト
-	static std::unique_ptr<YGame::Sprite2D> sLogoSpr_;
+	static YGame::Sprite2D* spLogoSpr_;
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 	// ステージ設定ポインタ

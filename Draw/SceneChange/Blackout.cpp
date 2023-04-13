@@ -4,15 +4,15 @@
 using YGame::Blackout;
 using YMath::Vector2;
 
-std::unique_ptr<YGame::Sprite2D> Blackout::sCurtenSpr_ = nullptr;
+YGame::Sprite2D* Blackout::spCurtenSpr_ = nullptr;
 
 void Blackout::StaticInitialize()
 {
 	// テクスチャ読み込み
-	UINT texIdx = TextureManager::GetInstance()->Load("white1x1.png", false);
+	Texture* pTex = Texture::Load("white1x1.png", false);
 	
 	// スプライト生成
-	sCurtenSpr_.reset(Sprite2D::Create({ false, WinSize }, { texIdx }));
+	spCurtenSpr_ = Sprite2D::Create({ false, WinSize }, { pTex });
 }
 
 void Blackout::Initialize(const uint32_t changeFrame, const uint32_t loadFrame)
@@ -159,5 +159,5 @@ void Blackout::Update()
 
 void Blackout::Draw()
 {
-	sCurtenSpr_->Draw(obj_.get());
+	spCurtenSpr_->Draw(obj_.get());
 }

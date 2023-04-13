@@ -30,7 +30,7 @@ static const size_t OutsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::O
 static const size_t OutLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::OutsideLight); // ŠO˜g (Œõ)
 
 // Ã“I ƒ‚ƒfƒ‹”z—ñ ‰Šú‰»
-array<unique_ptr<Model>, GateDrawerCommon::PartsNum_> GateDrawerCommon::sModels_ =
+array<Model*, GateDrawerCommon::PartsNum_> GateDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr,
 };
@@ -47,10 +47,10 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- ƒ‚ƒfƒ‹“Ç‚İ‚İ ----- //
 
-	sModels_[InsideIdx]	 .reset(Model::LoadObj("gate/inside", true)); // “à˜g
-	sModels_[InLightIdx] .reset(Model::LoadObj("gate/insideLight", true)); // “à˜g (Œõ)
-	sModels_[OutsideIdx] .reset(Model::LoadObj("gate/outside", true)); // ŠO˜g
-	sModels_[OutLightIdx].reset(Model::LoadObj("gate/outsideLight", true)); // ŠO˜g (Œõ)
+	spModels_[InsideIdx]   = Model::Load("gate/inside", true); // “à˜g
+	spModels_[InLightIdx]  = Model::Load("gate/insideLight", true); // “à˜g (Œõ)
+	spModels_[OutsideIdx]  = Model::Load("gate/outside", true); // ŠO˜g
+	spModels_[OutLightIdx] = Model::Load("gate/outsideLight", true); // ŠO˜g (Œõ)
 }
 
 #pragma endregion
@@ -132,18 +132,18 @@ void GateDrawer::Update()
 void GateDrawer::PreDraw()
 {
 	// “§–¾•`‰æ
-	for (size_t i = 0; i < sModels_.size(); i++)
+	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		sModels_[i]->Draw(modelObjs_[InvisibleIdx][i].get());
+		spModels_[i]->Draw(modelObjs_[InvisibleIdx][i].get());
 	}
 
 	// ’Êí‚È‚ç
 	if (current_ == Mode::Normal)
 	{
 		// •`‰æ
-		for (size_t i = 0; i < sModels_.size(); i++)
+		for (size_t i = 0; i < spModels_.size(); i++)
 		{
-			sModels_[i]->Draw(modelObjs_[NormalIdx][i].get());
+			spModels_[i]->Draw(modelObjs_[NormalIdx][i].get());
 		}
 	}
 }
@@ -154,9 +154,9 @@ void GateDrawer::PostDraw()
 	if (current_ == Mode::Red)
 	{
 		// •`‰æ
-		for (size_t i = 0; i < sModels_.size(); i++)
+		for (size_t i = 0; i < spModels_.size(); i++)
 		{
-			sModels_[i]->Draw(modelObjs_[RedIdx][i].get());
+			spModels_[i]->Draw(modelObjs_[RedIdx][i].get());
 		}
 	}
 }

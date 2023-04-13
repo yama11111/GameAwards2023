@@ -85,20 +85,8 @@
     <Filter Include="Shader\Model">
       <UniqueIdentifier>{2948526d-2d37-441e-a520-769e91dc00ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameUtil\Object">
-      <UniqueIdentifier>{9e186df4-6779-4074-bf07-d96daf3a8771}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Draw\Stuff">
       <UniqueIdentifier>{7faaa0fc-33e9-48ee-a06d-9f2c68a6445f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameUtil\Object\Model">
-      <UniqueIdentifier>{de1f8dd6-8271-4eb1-b69f-ad5c2f820209}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameUtil\Object\Sprite2D">
-      <UniqueIdentifier>{dba57100-b834-4a22-9036-5c52d178dd84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameUtil\Object\Sprite3D">
-      <UniqueIdentifier>{a0a9e3c4-d9e0-4de9-a19f-60e4a7e5eea2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Draw\Drawer\Base">
       <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
@@ -117,6 +105,18 @@
     </Filter>
     <Filter Include="GameUtil\Resource">
       <UniqueIdentifier>{28e50d81-eb17-4533-a659-ee5403e36748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Object">
+      <UniqueIdentifier>{5b49a32d-655f-4aff-bad9-1d276da48a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Object\Sprite2D">
+      <UniqueIdentifier>{6309ffa5-f8a7-4326-9a6f-ea113275b030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Object\Sprite3D">
+      <UniqueIdentifier>{15c54766-27c2-46a3-a4b7-5cc62ba23541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Object\Model">
+      <UniqueIdentifier>{03f42933-aa46-467b-a0f7-90d19eff6fb2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -300,27 +300,6 @@
     <ClCompile Include="Draw\Stuff\Skydome.cpp">
       <Filter>Draw\Stuff</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Material.cpp">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Model.cpp">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\ModelCommon.cpp">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Sprite2D.cpp">
-      <Filter>GameUtil\Object\Sprite2D</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Sprite2DCommon.cpp">
-      <Filter>GameUtil\Object\Sprite2D</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Sprite3D.cpp">
-      <Filter>GameUtil\Object\Sprite3D</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Sprite3DCommon.cpp">
-      <Filter>GameUtil\Object\Sprite3D</Filter>
-    </ClCompile>
     <ClCompile Include="MyGame.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -402,17 +381,41 @@
     <ClCompile Include="ScrollCamera.cpp">
       <Filter>GameUtil\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\Transform.cpp">
-      <Filter>GameUtil\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Color.cpp">
-      <Filter>GameUtil\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\AudioManager.cpp">
+    <ClCompile Include="GameUtillity\Audio.cpp">
       <Filter>GameUtil\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\TextureManager.cpp">
+    <ClCompile Include="GameUtillity\Texture.cpp">
       <Filter>GameUtil\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Color.cpp">
+      <Filter>GameUtil\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Transform.cpp">
+      <Filter>GameUtil\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Material.cpp">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Mesh.cpp">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Model.cpp">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\ModelObject.cpp">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Sprite2D.cpp">
+      <Filter>GameUtil\Object\Sprite2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Sprite2DObject.cpp">
+      <Filter>GameUtil\Object\Sprite2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Sprite3D.cpp">
+      <Filter>GameUtil\Object\Sprite3D</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Sprite3DObject.cpp">
+      <Filter>GameUtil\Object\Sprite3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -605,27 +608,6 @@
     <ClInclude Include="Draw\Stuff\Skydome.h">
       <Filter>Draw\Stuff</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Material.h">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Model.h">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\ModelCommon.h">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Sprite2D.h">
-      <Filter>GameUtil\Object\Sprite2D</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Sprite2DCommon.h">
-      <Filter>GameUtil\Object\Sprite2D</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Sprite3D.h">
-      <Filter>GameUtil\Object\Sprite3D</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Sprite3DCommon.h">
-      <Filter>GameUtil\Object\Sprite3D</Filter>
-    </ClInclude>
     <ClInclude Include="MyGame.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -716,17 +698,41 @@
     <ClInclude Include="GameUtillity\Camera\ScrollCamera.h">
       <Filter>GameUtil\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\Transform.h">
-      <Filter>GameUtil\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\Color.h">
-      <Filter>GameUtil\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GameUtillity\AudioManager.h">
+    <ClInclude Include="GameUtillity\Audio.h">
       <Filter>GameUtil\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\TextureManager.h">
+    <ClInclude Include="GameUtillity\Texture.h">
       <Filter>GameUtil\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Color.h">
+      <Filter>GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Transform.h">
+      <Filter>GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Material.h">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Mesh.h">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Model.h">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\ModelObject.h">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Sprite2D.h">
+      <Filter>GameUtil\Object\Sprite2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Sprite2DObject.h">
+      <Filter>GameUtil\Object\Sprite2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Sprite3D.h">
+      <Filter>GameUtil\Object\Sprite3D</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Sprite3DObject.h">
+      <Filter>GameUtil\Object\Sprite3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,36 +1,25 @@
-#include "AudioManager.h"
+#include "Audio.h"
 #include "YAssert.h"
 #include <fstream>
 
 #pragma region 名前空間
 
-using YGame::AudioManager;
+using std::unique_ptr;
+using YGame::Audio;
 using YDX::Result;
 
 #pragma endregion
 
-AudioManager* AudioManager::GetInstance()
-{
-	// インスタンス生成 (静的)
-	static AudioManager instance;
+#pragma region Static
 
-	// インスタンスを返す
-	return &instance;
-}
+std::vector<unique_ptr<Audio>> Audio::audios_{};
+Audio::Common Audio::common_{};
+Microsoft::WRL::ComPtr<IXAudio2> Audio::Common::xAudio2_{};
+IXAudio2MasteringVoice* Audio::Common::masterVoice_ = nullptr;
 
-AudioManager::~AudioManager()
-{
-	xAudio2_.Reset();
-	if (!audios_.empty())
-	{
-		for (size_t i = 0; i < audios_.size(); i++)
-		{
-			delete[] audios_[i].pBuff_;
-		}
-	}
-}
+#pragma endregion
 
-void AudioManager::Initialize()
+void Audio::Common::StaticInitialize()
 {
 	// XAudio2のインスタンス生成
 	Result(XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR));
@@ -39,8 +28,22 @@ void AudioManager::Initialize()
 	Result(xAudio2_->CreateMasteringVoice(&masterVoice_));
 }
 
-UINT AudioManager::Load(const char* fileName)
+Audio* Audio::Load(const std::string& fileName)
 {
+	// 読み込んだことがあるかチェック
+	for (size_t i = 0; i < audios_.size(); i++)
+	{
+		// ファイルパス が同じなら
+		if (fileName == audios_[i]->fileName_)
+		{
+			// そのテクスチャポインタを返す
+			return audios_[i].get();
+		}
+	}
+
+	// テクスチャ生成
+	unique_ptr<Audio> newAudio = std::make_unique<Audio>();
+
 	// ファイル入力ストリームのインスタンス
 	std::ifstream file;
 	// .wavファイルをバイナリモードで開く
@@ -90,56 +93,48 @@ UINT AudioManager::Load(const char* fileName)
 	sound.pBuff_ = reinterpret_cast<BYTE*>(pBuff);
 	sound.buffSize_ = data.size_;
 
-	// サウンドデータを保存
-	audios_.push_back(sound);
+	// 代入
+	newAudio->sound_ = sound;
 
-	// オーディオ番号を返す
-	return static_cast<UINT>(audios_.size() - 1);
+
+	// ポインタを取得
+	Audio* newAudioPtr = newAudio.get();
+
+	// サウンドデータを保存
+	audios_.push_back(std::move(newAudio));
+
+	// オーディオポインタを返す
+	return newAudioPtr;
 }
 
-
-//UINT AudioManager::Load(wchar_t* fileName)
-//{
-//	// ファイル操作
-//	HMMIO mmio;
-//	MMIOINFO info;
-//	mmio = mmioOpen(fileName, &info, MMIO_READ);
-//	assert(mmio);
-//
-//	// RIFF 読み込み
-//	MMCKINFO riffChunk;
-//	riffChunk.fccType = mmioFOURCC('W', 'A', 'V', 'E');
-//	assert(mmioDescend(mmio, &riffChunk, nullptr, MMIO_FINDRIFF) == MMSYSERR_NOERROR);
-//
-//	// fmt 読み込み
-//	MMCKINFO chunk;
-//	chunk.ckid = mmioFOURCC('f', 'm', 't', ' ');
-//	assert(mmioDescend(mmio, &chunk, &riffChunk, MMIO_FINDCHUNK) == MMSYSERR_NOERROR);
-//
-//	WAVEFORMATEX format;
-//	assert(mmioRead(mmio, (HPSTR)&format, chunk.cksize) == chunk.cksize);
-//
-//	// data 読み込み
-//	chunk.ckid = mmioFOURCC('d', 'a', 't', 'a');
-//	assert(mmioDescend(mmio, &chunk, &riffChunk, MMIO_FINDCHUNK) == MMSYSERR_NOERROR);
-//
-//	return 0;
-//}
-
-
-void AudioManager::Play(const UINT audioIndex)
+void Audio::Play()
 {
 	// 波形フォーマットを元にSourceVoice生成
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	Result(xAudio2_->CreateSourceVoice(&pSourceVoice, &audios_[audioIndex].wfex_));
+	Result(common_.xAudio2_->CreateSourceVoice(&pSourceVoice, &sound_.wfex_));
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buff{};
-	buff.pAudioData = audios_[audioIndex].pBuff_;
-	buff.AudioBytes = audios_[audioIndex].buffSize_;
+	buff.pAudioData = sound_.pBuff_;
+	buff.AudioBytes = sound_.buffSize_;
 	buff.Flags = XAUDIO2_END_OF_STREAM;
 
 	// 波形データの再生
 	Result(pSourceVoice->SubmitSourceBuffer(&buff));
 	Result(pSourceVoice->Start());
+}
+
+void Audio::AllClear()
+{
+	// オーディオ全消去
+	for (size_t i = 0; i < audios_.size(); i++)
+	{
+		delete[] audios_[i]->sound_.pBuff_;
+		audios_[i].reset(nullptr);
+	}
+}
+
+Audio::Common::~Common()
+{
+	xAudio2_.Reset();
 }

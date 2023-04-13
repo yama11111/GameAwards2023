@@ -13,7 +13,7 @@ using std::unique_ptr;
 using YGame::Transform;
 using YGame::Sprite2DObject;
 using YGame::Sprite2D;
-using YGame::TextureManager;
+using YGame::Texture;
 using YGame::Color;
 using YGame::SlimeActor;
 using YMath::Vector3;
@@ -21,31 +21,28 @@ using namespace DrawerConfig::Card;
 
 #pragma endregion
 
-std::array<std::unique_ptr<YGame::Sprite2D>, 10> CardDrawerCommon::sNumberSpr_ =
+std::array<YGame::Sprite2D*, 10> CardDrawerCommon::spNumberSpr_ =
 { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-std::unique_ptr<YGame::Sprite2D> CardDrawerCommon::sCardSpr_ = nullptr;
+YGame::Sprite2D* CardDrawerCommon::spCardSpr_ = nullptr;
 
 void CardDrawerCommon::StaticInitialize()
 {
-	// テクスチャマネージャー取得
-	TextureManager* pTexMan = TextureManager::GetInstance();
-
 	// ----- スプライト読み込み ----- //
 
 	// 数字
-	sNumberSpr_[0].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/0.png", false) }));
-	sNumberSpr_[1].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/1.png", false) }));
-	sNumberSpr_[2].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/2.png", false) }));
-	sNumberSpr_[3].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/3.png", false) }));
-	sNumberSpr_[4].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/4.png", false) }));
-	sNumberSpr_[5].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/5.png", false) }));
-	sNumberSpr_[6].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/6.png", false) }));
-	sNumberSpr_[7].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/7.png", false) }));
-	sNumberSpr_[8].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/8.png", false) }));
-	sNumberSpr_[9].reset(Sprite2D::Create({}, { pTexMan->Load("Numbers/9.png", false) }));
+	spNumberSpr_[0] = Sprite2D::Create({}, { Texture::Load("Numbers/0.png", false) });
+	spNumberSpr_[1] = Sprite2D::Create({}, { Texture::Load("Numbers/1.png", false) });
+	spNumberSpr_[2] = Sprite2D::Create({}, { Texture::Load("Numbers/2.png", false) });
+	spNumberSpr_[3] = Sprite2D::Create({}, { Texture::Load("Numbers/3.png", false) });
+	spNumberSpr_[4] = Sprite2D::Create({}, { Texture::Load("Numbers/4.png", false) });
+	spNumberSpr_[5] = Sprite2D::Create({}, { Texture::Load("Numbers/5.png", false) });
+	spNumberSpr_[6] = Sprite2D::Create({}, { Texture::Load("Numbers/6.png", false) });
+	spNumberSpr_[7] = Sprite2D::Create({}, { Texture::Load("Numbers/7.png", false) });
+	spNumberSpr_[8] = Sprite2D::Create({}, { Texture::Load("Numbers/8.png", false) });
+	spNumberSpr_[9] = Sprite2D::Create({}, { Texture::Load("Numbers/9.png", false) });
 
 	// ステージカード
-	sCardSpr_.reset(Sprite2D::Create({}, { pTexMan->Load("Select/card.png", false) }));
+	spCardSpr_ = Sprite2D::Create({}, { Texture::Load("Select/card.png", false) });
 }
 
 void CardDrawer::Initialize(YGame::Transform* pParent, const int number)
@@ -265,14 +262,14 @@ void CardDrawer::Draw()
 {
 	// カード描画
 
-	sCardSpr_->Draw(cardObjs_.get());
+	spCardSpr_->Draw(cardObjs_.get());
 
 	// 数字
 	// 10未満なら
 	if (number_ < 10)
 	{
 		// 1つだけ映す
-		sNumberSpr_[number_]->Draw(numObjs_[0].get());
+		spNumberSpr_[number_]->Draw(numObjs_[0].get());
 	}
 	// それ以外なら
 	else
@@ -280,8 +277,8 @@ void CardDrawer::Draw()
 		int ones = static_cast<int>(number_) % 10;
 		int tens = static_cast<int>(number_) / 10;
 
-		sNumberSpr_[ones]->Draw(numObjs_[1].get());
-		sNumberSpr_[tens]->Draw(numObjs_[2].get());
+		spNumberSpr_[ones]->Draw(numObjs_[1].get());
+		spNumberSpr_[tens]->Draw(numObjs_[2].get());
 	}
 }
 

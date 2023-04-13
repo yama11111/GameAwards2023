@@ -292,26 +292,26 @@ void TestScene::DrawFrontSprite2Ds()
 void TestScene::Draw()
 {
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
-	// ----- 背景スプライト2D----- //
+	Sprite2D::Common::StaticSetPipeline();
+	// ----- 背景スプライト ----- //
 
 	DrawBackSprite2Ds();
 
 	// -------------------------- //
-	ModelCommon::StaticSetDrawCommand();
+	Model::Common::StaticSetPipeline();
 	// --------- モデル --------- //
 
 	DrawModels();
 
 	// -------------------------- //
-	Sprite3DCommon::StaticSetDrawCommand();
-	// ----- スプライト3D ----- //
+	Sprite3D::Common::StaticSetPipeline();
+	// ------- ビルボード ------- //
 
 	DrawSprite3Ds();
 
 	// -------------------------- //
-	Sprite2DCommon::StaticSetDrawCommand();
-	// ----- 前景スプライト2D ----- //
+	Sprite2D::Common::StaticSetPipeline();
+	// ----- 前景スプライト ----- //
 
 	DrawFrontSprite2Ds();
 

@@ -16,7 +16,7 @@ void ParticleManager::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- ƒ‚ƒfƒ‹İ’è ----- //
 	
 	// ‰Ô‰Î
-	FireWork::StaticInitialize(Model::Create());
+	FireWork::StaticInitialize(Model::CreateCube());
 }
 
 void ParticleManager::Initialize()

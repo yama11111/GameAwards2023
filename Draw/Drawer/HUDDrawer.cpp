@@ -4,20 +4,20 @@
 using YGame::Sprite2D;
 using YGame::Sprite2DObject;
 using YGame::Color;
-using YGame::TextureManager;
+using YGame::Texture;
 using namespace HUDConfig::Pilot;
 
 #pragma region HUDDrawerCommon
 
-std::unique_ptr<Sprite2D> HUDDrawerCommon::playerSpr_ = nullptr;
-std::unique_ptr<Sprite2D> HUDDrawerCommon::filterSpr_ = nullptr;
+Sprite2D* HUDDrawerCommon::spPlayerSpr_ = nullptr;
+Sprite2D* HUDDrawerCommon::spFilterSpr_ = nullptr;
 
 void HUDDrawerCommon::StaticInitialize()
 {
 	// player
-	playerSpr_.reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/player.png") }));
+	spPlayerSpr_ = Sprite2D::Create({}, { Texture::Load("UI/player.png") });
 	// filter
-	filterSpr_.reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/filter.png") }));
+	spFilterSpr_ = Sprite2D::Create({}, { Texture::Load("UI/filter.png") });
 
 
 	// input
@@ -104,17 +104,17 @@ void HUDDrawer::Draw()
 	if (pilot_ == Pilot::Player)
 	{
 		// filter (æ)
-		filterSpr_->Draw(filterObj_.get());
+		spFilterSpr_->Draw(filterObj_.get());
 		// player
-		playerSpr_->Draw(playerObj_.get());
+		spPlayerSpr_->Draw(playerObj_.get());
 	}
 	// filter‚È‚ç
 	else if (pilot_ == Pilot::Filter)
 	{
 		// player (æ)
-		playerSpr_->Draw(playerObj_.get());
+		spPlayerSpr_->Draw(playerObj_.get());
 		// filter
-		filterSpr_->Draw(filterObj_.get());
+		spFilterSpr_->Draw(filterObj_.get());
 	}
 
 	// pause

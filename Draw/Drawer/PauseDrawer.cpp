@@ -5,7 +5,7 @@
 using YGame::Sprite2D;
 using YGame::Sprite2DObject;
 using YGame::Color;
-using YGame::TextureManager;
+using YGame::Texture;
 using YMath::Vector3;
 using YScene::SceneManager;
 using namespace HUDConfig::Pause;
@@ -13,10 +13,10 @@ using namespace HUDConfig::Pause;
 #pragma region PauseDrawerCommon
 
 YInput::Keys* PauseDrawerCommon::sKeys_ = nullptr;
-std::unique_ptr<Sprite2D> PauseDrawerCommon::pauseSpr_ = nullptr;
-std::unique_ptr<Sprite2D> PauseDrawerCommon::resumeSpr_ = nullptr;
-std::unique_ptr<Sprite2D> PauseDrawerCommon::titleSpr_ = nullptr;
-std::unique_ptr<Sprite2D> PauseDrawerCommon::curtenSpr_ = nullptr;
+Sprite2D* PauseDrawerCommon::spPauseSpr_ = nullptr;
+Sprite2D* PauseDrawerCommon::spResumeSpr_ = nullptr;
+Sprite2D* PauseDrawerCommon::spTitleSpr_ = nullptr;
+Sprite2D* PauseDrawerCommon::spCurtenSpr_ = nullptr;
 
 void PauseDrawerCommon::StaticInitialize()
 {
@@ -24,14 +24,14 @@ void PauseDrawerCommon::StaticInitialize()
 	sKeys_ = YInput::Keys::GetInstance();
 	
 	// pause
-	pauseSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/pause.png") }));
+	spPauseSpr_		= Sprite2D::Create({}, { Texture::Load("UI/pause.png") });
 	// resume
-	resumeSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/resume.png") }));
+	spResumeSpr_	= Sprite2D::Create({}, { Texture::Load("UI/resume.png") });
 	// title
-	titleSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("UI/title.png") }));
+	spTitleSpr_		= Sprite2D::Create({}, { Texture::Load("UI/title.png") });
 
 	// curten
-	curtenSpr_.	reset(Sprite2D::Create({}, { TextureManager::GetInstance()->Load("white1x1.png") }));
+	spCurtenSpr_	= Sprite2D::Create({}, { Texture::Load("white1x1.png") });
 }
 
 #pragma endregion
@@ -175,14 +175,14 @@ void PauseDrawer::Draw()
 	if (isPause_ == false) { return; }
 
 	// curten
-	curtenSpr_->Draw(curtenObj_.get());
+	spCurtenSpr_->Draw(curtenObj_.get());
 
 	// pause
-	pauseSpr_->Draw(pauseObj_.get());
+	spPauseSpr_->Draw(pauseObj_.get());
 	// resume
-	resumeSpr_->Draw(resumeObj_.get());
+	spResumeSpr_->Draw(resumeObj_.get());
 	// title
-	titleSpr_->Draw(titleObj_.get());
+	spTitleSpr_->Draw(titleObj_.get());
 }
 
 #pragma endregion
