@@ -489,6 +489,11 @@ void PlayScene::Update()
 	for (int i = 0; i < block.size(); i++)
 	{
 		block[i]->Update(filter->GetTransform());
+
+		if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+		{
+			block[i]->SetClearFlag(true);
+		}
 	}
 
 	//格納
@@ -548,7 +553,7 @@ void PlayScene::Update()
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, false))
+							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
@@ -606,7 +611,7 @@ void PlayScene::Update()
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, false))
+							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
@@ -663,7 +668,7 @@ void PlayScene::Update()
 							/*while (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{*/
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, false))
+							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								//ちょっと戻す
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
@@ -716,7 +721,7 @@ void PlayScene::Update()
 								//ちょっと戻す
 							//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, false))
+							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 							}
@@ -730,6 +735,8 @@ void PlayScene::Update()
 		}
 	}
 
+	//位置更新
+	player->Update();
 
 	// ゲート
 	gate_.UpdateMatrix();

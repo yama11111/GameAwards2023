@@ -91,6 +91,15 @@ void Player::PostDraw()
 	filterDra_.Draw();
 }
 
+void Player::Update()
+{
+	//çXêV
+	player_.UpdateMatrix();
+	playerDra_.Update();
+
+	filterDra_.Update();
+}
+
 void Player::Update(Transform filterPos)
 {
 	YMath::Vector2 playerPos = { 0,0 };

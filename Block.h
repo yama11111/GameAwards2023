@@ -59,7 +59,7 @@ public:
 	int GetKind() { return nowKind; };
 
 	//ClearFlag‚É‘ã“ü
-	void SetClearFlag(bool flag) { flag = ClearFlag; };
+	void SetClearFlag(bool flag) { ClearFlag = flag; };
 
 	//ClearFlag‚ð“üŽè
 	bool GetClearFlag() { return ClearFlag; };

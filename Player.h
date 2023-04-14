@@ -54,6 +54,7 @@ public:
 	//更新
 	//void Update(YGame::Transform filterPos, YMath::Vector2 filterSizeLR, YMath::Vector2 filterSizeUD);
 	void Update(YGame::Transform filterPos);
+	void Update();
 
 	//Pre描画(フィルターの前)
 	void PreDraw();
