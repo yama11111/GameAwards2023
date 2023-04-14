@@ -85,8 +85,19 @@ void BlockDrawer::Reset(const Mode& mode)
 		modelObjs_[i]->Initialize({});
 	}
 
-	// 色初期化
-	color_->Initialize(DefColor::Red);
+	// 状態毎に色初期化
+	if (mode == Mode::Normal)
+	{
+		color_->Initialize(DefColor::Normal);
+	}
+	else if(mode == Mode::Red)
+	{
+		color_->Initialize(DefColor::Red);
+	}
+	else if(mode == Mode::Invisivle)
+	{
+		color_->Initialize(DefColor::Invisible);
+	}
 
 	// 状態を保存
 	save_ = current_;
@@ -118,23 +129,26 @@ void BlockDrawer::Update()
 	// 基底クラス更新 
 	IDrawer::Update({});
 
-	// フェードイン中なら
-	if (isFadeIn_)
+	// 通常状態じゃないときのみ
+	if (current_ != Mode::Normal)
 	{
-		// フェードイン用タイマー更新
-		fadeInTim_.Update();
-		// フェードイン用の色計算
-		Vector4 fadeInColor = fadeInColorEas_.In(fadeInTim_.Ratio());
+		// フェードイン中なら
+		if (isFadeIn_)
+		{
+			// フェードイン用タイマー更新
+			fadeInTim_.Update();
+			// フェードイン用の色計算
+			Vector4 fadeInColor = fadeInColorEas_.In(fadeInTim_.Ratio());
 
-		// 代入
-		color_->SetRGBA(fadeInColor);
+			// 代入
+			color_->SetRGBA(fadeInColor);
+		}
+		else
+		{
+			// 状態を戻す
+			current_ = save_;
+		}
 	}
-	else
-	{
-		// 状態を戻す
-		current_ = save_;
-	}
-
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

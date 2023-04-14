@@ -60,9 +60,9 @@ void PlayerDrawer::Initialize(YGame::Transform* pParent, Vector3* pDirection, co
 	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
 
 	// 色生成
-	colors_[NormalIdx]	 .reset(Color::Create());
-	colors_[RedIdx]		 .reset(Color::Create());
-	colors_[InvisibleIdx].reset(Color::Create());
+	colors_[NormalIdx]	 .reset(Color::Create(DefColor::Normal));
+	colors_[RedIdx]		 .reset(Color::Create(DefColor::Red));
+	colors_[InvisibleIdx].reset(Color::Create(DefColor::Invisible));
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
