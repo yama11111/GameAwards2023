@@ -667,6 +667,18 @@ void PlayScene::Update()
 				block[i]->SetTimer(50);
 			}
 		}
+
+		if (block[i]->GetKind() == Normal)
+		{
+			//透けるフラグをonに
+			block[i]->SetClearFlag(false);
+
+			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+			{
+				//透けるフラグをonに
+				block[i]->SetClearFlag(true);
+			}
+		}
 	}
 
 	//格納
@@ -701,26 +713,26 @@ void PlayScene::Update()
 		player->AddGravity();
 
 		//フィルターと重なっているか
-		player->SetClearFlag(BoxCollision(player->GetTransform(), filter->GetTransform(), true));
+		//player->SetClearFlag(BoxCollision(player->GetTransform(), filter->GetTransform(), true));
 
 		//ジャンプフラグがONなら
 		if (player->GetJumpFlag())
 		{
-			//if (player->GetGravity() < 0.3f)
-			//{
-			//	//入力方向手動代入
-			//	DS.x_ = 0;
-			//	DS.y_ = 1.0f;
-			//	AW.x_ = 0;
-			//	AW.y_ = 0.0f;
-			//}
-			//else
+			if (player->GetGravity() < 0.3f)
 			{
 				//入力方向手動代入
 				DS.x_ = 0;
 				DS.y_ = 0.0f;
 				AW.x_ = 0;
 				AW.y_ = 1.0f;
+			}
+			else
+			{
+				//入力方向手動代入
+				DS.x_ = 0;
+				DS.y_ = 1.0f;
+				AW.x_ = 0;
+				AW.y_ = 0.0f;
 			}
 
 

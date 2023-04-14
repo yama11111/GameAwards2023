@@ -42,7 +42,7 @@ void Block::Draw()
 {
 	if (nowKind != None)
 	{
-		if (ClearFlag == false)
+		if (ClearFlag == false || nowKind != ColorB)
 		{
 			blockDra_.Draw();
 		}
