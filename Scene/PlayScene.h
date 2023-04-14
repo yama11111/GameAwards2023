@@ -29,6 +29,9 @@ namespace YScene
 
 		// ----- スプライト (2D) ----- //
 
+		YGame::Sprite2D* conSpr_ = nullptr;
+		YGame::Sprite2D* conSpr2_ = nullptr;
+
 		// ----- スプライト (3D) ----- //
 
 		// ----- モデル ----- //
@@ -36,6 +39,9 @@ namespace YScene
 #pragma endregion
 
 #pragma region ゲームオブジェクト
+
+		std::unique_ptr<YGame::Sprite2DObject> conObj_;
+		std::unique_ptr<YGame::Sprite2DObject> conObj2_;
 
 		// プレイヤー
 		std::unique_ptr<Player> player;

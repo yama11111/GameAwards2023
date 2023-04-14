@@ -221,6 +221,9 @@ void PlayScene::Load()
 
 	// ----- スプライト (2D) ----- //
 
+	conSpr_ = Sprite2D::Create({}, { Texture::Load("operateSign.png") });
+	conSpr2_ = Sprite2D::Create({}, { Texture::Load("forFilter.png") });
+
 	// ----- スプライト (3D) ----- //
 
 	// ------- モデル ------- //
@@ -242,6 +245,9 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
+	conObj_.reset(Sprite2DObject::Create({ {WinSize.x_ - 100, WinSize.y_ - 220, 0.0f},{},{0.5f,0.5f,0.0f} }));
+	conObj2_.reset(Sprite2DObject::Create({ {WinSize.x_ - 165, WinSize.y_ - 80, 0.0f},{},{0.5f,0.5f,0.0f} }));
+
 	float scaleVal = 1.0f;
 	Vector3 scale = { scaleVal,scaleVal,scaleVal };
 
@@ -1002,6 +1008,9 @@ void PlayScene::DrawFrontSprite2Ds()
 {
 	// HUD描画
 	hud_.Draw();
+
+	conSpr_->Draw(conObj_.get());
+	conSpr2_->Draw(conObj2_.get());
 }
 
 void PlayScene::Draw()
