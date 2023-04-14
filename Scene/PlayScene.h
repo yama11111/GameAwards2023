@@ -31,6 +31,7 @@ namespace YScene
 
 		YGame::Sprite2D* conSpr_ = nullptr;
 		YGame::Sprite2D* conSpr2_ = nullptr;
+		YGame::Sprite2D* conSpr3_ = nullptr;
 
 		// ----- スプライト (3D) ----- //
 
@@ -42,6 +43,7 @@ namespace YScene
 
 		std::unique_ptr<YGame::Sprite2DObject> conObj_;
 		std::unique_ptr<YGame::Sprite2DObject> conObj2_;
+		std::unique_ptr<YGame::Sprite2DObject> conObj3_;
 
 		// プレイヤー
 		std::unique_ptr<Player> player;
