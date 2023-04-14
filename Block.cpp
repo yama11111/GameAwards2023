@@ -191,10 +191,6 @@ void Block::PostDraw()
 		{
 			blockDra_.PostDraw();
 		}
-		else if (ClearFlag == true)
-		{
-			int a = 0;
-		}
 	}
 }
 

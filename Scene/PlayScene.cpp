@@ -783,6 +783,15 @@ void PlayScene::Update()
 
 	//updownで奥行き確認
 	transferVP_.eye_.z_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.1f;
+
+
+	transferVP_.target_.x_ = player->GetTransform().pos_.x_;
+	transferVP_.target_.y_ = player->GetTransform().pos_.y_;
+	transferVP_.eye_.x_ = player->GetTransform().pos_.x_;
+	transferVP_.eye_.y_ = player->GetTransform().pos_.y_;
+
+	// ビュープロジェクション
+	transferVP_.UpdateMatrix();
 }
 #pragma endregion
 
