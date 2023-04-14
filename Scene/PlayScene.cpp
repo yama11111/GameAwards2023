@@ -410,7 +410,7 @@ void PlayScene::Initialize()
 	particleMan_.Initialize();
 
 	// スクロールカメラ
-	scrollCamera_.Initialize({ 0,+10,-50 }, &player_.pos_, { 0.0f,0.0f,0.0f });
+	scrollCamera_.Initialize({ 0,+10,-50 }, { 0.0f,0.0f,0.0f });
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
@@ -463,8 +463,8 @@ void PlayScene::Update()
 	filter->SetMovePos(result);
 
 	//入力状態を入手
-	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD);
-	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD);
+	result.x_ = (float)sKeys_->Horizontal(Keys::MoveStandard::WASD);
+	result.y_ = (float)sKeys_->Vertical(Keys::MoveStandard::WASD);
 	result.z_ = 0.0f;
 
 	//移動量

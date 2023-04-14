@@ -44,7 +44,7 @@ void Block::PreDraw()
 	{
 		if (ClearFlag == false)
 		{
-			blockDra_.PreDraw();
+			//blockDra_.PreDraw();
 		}
 	}
 }
@@ -56,7 +56,7 @@ void Block::PostDraw()
 	{
 		if (ClearFlag == false)
 		{
-			blockDra_.PostDraw();
+			//blockDra_.PostDraw();
 		}
 	}
 }

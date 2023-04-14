@@ -144,7 +144,6 @@
     <ClCompile Include="Draw\Stuff\Floor.cpp" />
     <ClCompile Include="Draw\Stuff\Skydome.cpp" />
     <ClCompile Include="Filter.cpp" />
-    <ClCompile Include="GameUtillity\AudioManager.cpp" />
     <ClCompile Include="GameUtillity\Audio.cpp" />
     <ClCompile Include="GameUtillity\Camera\Camera.cpp" />
     <ClCompile Include="GameUtillity\Camera\ViewProjection.cpp" />
@@ -253,7 +252,6 @@
     <ClInclude Include="Draw\Stuff\Skydome.h" />
     <ClInclude Include="GameUtillity\Audio.h" />
     <ClInclude Include="Filter.h" />
-    <ClInclude Include="GameUtillity\AudioManager.h" />
     <ClInclude Include="GameUtillity\Camera\Camera.h" />
     <ClInclude Include="GameUtillity\Camera\ScrollCamera.h" />
     <ClInclude Include="GameUtillity\Camera\ViewProjection.h" />
