@@ -96,6 +96,8 @@ public:
 	void SetMovePos(YMath::Vector3 pos) { movePos = pos; };
 	void SetJumpPower(float power) { JumpPower = power; };
 	void SetJump(float power) { Jump = power; };
+	void SetGravityPower(float power) { GravityPower = power; };
+	void SetGravity(float power) { Gravity = power; };
 
 	//Vector3‚ð“üŽè
 	YMath::Vector3 GetPos() { return player_.pos_; };

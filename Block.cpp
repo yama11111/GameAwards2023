@@ -22,7 +22,7 @@ void Block::Initialize()
 //更新
 void Block::Update(YGame::Transform filter)
 {
-	ClearFlag = false;
+	//ClearFlag = false;
 
 	//プレイヤーの上下左右
 	float b_top = block_.pos_.y_ - block_.scale_.y_;
@@ -31,109 +31,139 @@ void Block::Update(YGame::Transform filter)
 	float b_left = block_.pos_.x_ - block_.scale_.x_;
 
 	//フィルターの上下左右
-	float f_top = filter.pos_.y_ - (filter.scale_.y_ * 2);
-	float f_bottom = filter.pos_.y_ + (filter.scale_.y_ * 2);
-	float f_right = filter.pos_.x_ + (filter.scale_.x_ * 2);
-	float f_left = filter.pos_.x_ - (filter.scale_.x_ * 2);
+	float f_top = filter.pos_.y_ - (filter.scale_.y_);
+	float f_bottom = filter.pos_.y_ + (filter.scale_.y_);
+	float f_right = filter.pos_.x_ + (filter.scale_.x_);
+	float f_left = filter.pos_.x_ - (filter.scale_.x_);
 
 	SetClearFlag(false);
 
-	if (nowKind == ColorB)
-	{
+	bool left = b_left < f_right;
+	bool right = b_right > f_left;
+	bool top = b_top < f_bottom;
+	bool bottom = b_bottom > f_top;
+
+	int count = 0;
+
+	count = (int)left + (int)right + (int)top + (int)bottom;
+
+	//if (true)//nowKind == ColorB)
+	//{
 		//フィルターに当たっているか
-		if (b_left < f_right ||
-			b_right > f_left ||
-			b_top  < f_bottom ||
-			b_bottom > f_top)
-		{
-			////完全にフィルター内にいるか
-			//if (b_right < f_right &&
-			//	b_left > f_left &&
-			//	b_bottom  < f_bottom &&
-			//	b_top > f_top)
-			//{
-			//	ClearFlag = true;
-			//}
-			//else
-			//{
-			//	///どこの辺がプレイヤーに当たっているか
-			//	//右上
-			//	if (b_right > f_right &&
-			//		b_left < f_right &&
-			//		b_bottom > f_top &&
-			//		b_top < f_top)
-			//	{
-			//		block_.scale_.y_ = block_.pos_.x_ - f_right;
+	if (b_left < f_right &&
+		b_right > f_left &&
+		b_top  < f_bottom &&
+		b_bottom > f_top)
+	{
+		ClearFlag = true;
 
-			//		block_.scale_.y_ = f_top - block_.pos_.y_;
-			//		ClearFlag = true;
-			//	}
-			//	//右下
-			//	else if (
-			//		b_right > f_right &&
-			//		b_left < f_right &&
-			//		b_bottom > f_bottom &&
-			//		b_top < f_bottom)
-			//	{
-			//		block_.scale_.y_ = block_.pos_.x_ - f_right;
+		//完全にフィルター内にいるか
+		/*if (b_right < f_right &&
+		b_left > f_left &&
+		b_bottom  < f_bottom &&
+		b_top > f_top)
+		{*/
+		///どこの辺がプレイヤーに当たっているか
+		//右上
+		//if (b_right > f_right &&
+		//	b_left < f_right &&
+		//	b_bottom > f_top &&
+		//	b_top < f_top)
+		//{
+		//	//block_.scale_.y_ = block_.pos_.x_ - f_right;
 
-			//		block_.scale_.x_ = block_.pos_.y_ - f_bottom;
-			//		ClearFlag = true;
-			//	}
-			//	//左上
-			//	else if (
-			//		b_right > f_left &&
-			//		b_left < f_left &&
-			//		b_bottom > f_top &&
-			//		b_top < f_top)
-			//	{
-			//		block_.scale_.x_ = f_left - block_.pos_.x_;
+		//	//block_.scale_.y_ = f_top - block_.pos_.y_;
 
-			//		block_.scale_.y_ = f_top - block_.pos_.y_;
-			//		ClearFlag = true;
-			//	}
-			//	//左下
-			//	else if (
-			//		b_right > f_left &&
-			//		b_left < f_left &&
-			//		b_bottom > f_bottom &&
-			//		b_top < f_bottom)
-			//	{
-			//		block_.scale_.x_ = f_left - block_.pos_.x_;
+		//	ClearFlag = true;
+		//}
+		////右下
+		//else if (
+		//	b_right > f_right &&
+		//	b_left < f_right &&
+		//	b_bottom > f_bottom &&
+		//	b_top < f_bottom)
+		//{
+		//	//	block_.scale_.y_ = block_.pos_.x_ - f_right;
 
-			//		block_.scale_.x_ = block_.pos_.y_ - f_bottom;
-			//		ClearFlag = true;
-			//	}
-			//	//右
-			//	else if (b_left < f_right)
-			//	{
-			//		block_.scale_.x_ = block_.pos_.x_ - f_right;
-			//		ClearFlag = true;
+		//		//block_.scale_.x_ = block_.pos_.y_ - f_bottom;
 
-			//	}
-			//	//左
-			//	else if (b_right > f_left)
-			//	{
-			//		block_.scale_.x_ = f_left - block_.pos_.x_;
-			//		ClearFlag = true;
-			//	}
-			//	//上
-			//	else if (b_bottom > f_top)
-			//	{
-			//		//あってる
-			//		ClearFlag = true;
-			//		block_.scale_.y_ = f_top - block_.pos_.y_;
-			//	}
+		//	ClearFlag = true;
+		//}
+		////左上
+		//else if (
+		//	b_right > f_left &&
+		//	b_left < f_left &&
+		//	b_bottom > f_top &&
+		//	b_top < f_top)
+		//{
+		//	//block_.scale_.x_ = f_left - block_.pos_.x_;
 
-			//	else if (b_top < f_bottom)
-			//	{
-			//		//できた
-			//		block_.scale_.y_ = block_.pos_.y_ - f_bottom;
-			//		ClearFlag = true;
-			//	}
-			//}
-		}
+		//	//block_.scale_.y_ = f_top - block_.pos_.y_;
+
+		//	ClearFlag = true;
+		//}
+		////左下
+		//else if (
+		//	b_right > f_left &&
+		//	b_left < f_left &&
+		//	b_bottom > f_bottom &&
+		//	b_top < f_bottom)
+		//{
+		//	//block_.scale_.x_ = f_left - block_.pos_.x_;
+
+		////	block_.scale_.x_ = block_.pos_.y_ - f_bottom;
+
+		//	ClearFlag = true;
+		//}
+		////右
+		//else if (b_left < f_right)
+		//{
+		//	//block_.scale_.x_ = block_.pos_.x_ - f_right;
+
+		//	ClearFlag = true;
+		//}
+		////左
+		//else if (b_right > f_left)
+		//{
+		//	//block_.scale_.x_ = f_left - block_.pos_.x_;
+
+		//	ClearFlag = true;
+		//}
+		////上
+		//else if (b_bottom > f_top)
+		//{
+		//	//あってる
+		//	//ClearFlag = true;
+
+		//	block_.scale_.y_ = f_top - block_.pos_.y_;
+		//}
+
+		//else if (b_top < f_bottom)
+		//{
+		//	//できた
+		//	//block_.scale_.y_ = block_.pos_.y_ - f_bottom;
+
+		//	ClearFlag = true;
+		//}
+
+		//else
+		//{
+		//	ClearFlag = false;
+		//}
+
 	}
+
+
+	if (count > 1)
+	{
+		ClearFlag = true;
+	}
+	else
+	{
+		ClearFlag = false;
+	}
+	//	}
+
 
 	// ブロック
 	block_.UpdateMatrix();
@@ -145,7 +175,10 @@ void Block::PreDraw()
 {
 	if (nowKind != None)
 	{
-		blockDra_.PreDraw();
+		if (ClearFlag == false)
+		{
+			blockDra_.PreDraw();
+		}
 	}
 }
 
@@ -154,7 +187,10 @@ void Block::PostDraw()
 {
 	if (nowKind != None)
 	{
-		blockDra_.PostDraw();
+		if (ClearFlag == false)
+		{
+			blockDra_.PostDraw();
+		}
 	}
 }
 

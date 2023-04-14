@@ -492,7 +492,7 @@ void PlayScene::Update()
 	}
 
 	//格納
-	YGame::Transform CheckTrans1 = player->GetTransform();
+	YGame::Transform CheckTrans1;
 
 	//格納
 	YGame::Transform CheckTrans2;
@@ -512,44 +512,66 @@ void PlayScene::Update()
 		}
 
 		//プレイヤージャンプ処理
+		//if (player->GetJumpFlag())
+		//{
+		//	//重力0
+		//	player->SetGravity(0.0f);
+		//	player->SetGravityPower(0.00f);
+		//}
+
+		//重力、浮力を加算
+		player->AddGravity();
+
 		if (player->GetJumpFlag())
 		{
-			//重力、浮力を加算
-			player->AddGravity();
-		}
+			//入力方向手動代入
+			DS.x_ = 0;
+			DS.y_ = 0;
+			AW.x_ = 0;
+			AW.y_ = 1.0f;
 
-		//入力方向手動代入
-		DS.x_ = 0;
-		DS.y_ = 0;
-		AW.x_ = 0;
-		AW.y_ = 0.1f;
-
-		//フィルターの中にいるか
-		if (player->GetClearFlag() == false)
-		{
-			//ブロック分繰り返す
-			for (int i = 0; i < block.size(); i++)
+			//フィルターの中にいるか
+			if (player->GetClearFlag() == false)
 			{
-				//ブロックの種類が空白か
-				if (block[i]->GetKind() != None)
+				//ブロック分繰り返す
+				for (int i = 0; i < block.size(); i++)
 				{
-					//ブロックがフィルターの中にいるか
-					if (block[i]->GetClearFlag() == false)
+					//ブロックの種類が空白か
+					if (block[i]->GetKind() != None)
 					{
-						//ブロックのTransformを代入
-						CheckTrans2 = block[i]->GetTransform();
-
-						//判定外に出るまで繰り返す
-						while (BoxCollision(CheckTrans1, CheckTrans2, true))
+						//ブロックがフィルターの中にいるか
+						if (block[i]->GetClearFlag() == false)
 						{
-							//ちょっと戻す
-							player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
-
-							//再代入
+							//プレイヤーのTransformを代入
 							CheckTrans1 = player->GetTransform();
 
-							//下に埋まった瞬間ジャンプフラグをfalseに
-							player->SetJumpFlag(false);
+							//ブロックのTransformを代入
+							CheckTrans2 = block[i]->GetTransform();
+
+							if (BoxCollision(CheckTrans1, CheckTrans2, false))
+							{
+								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+
+								//下に埋まった瞬間ジャンプフラグをfalseに
+								player->SetJumpFlag(false);
+
+								player->JumpReset();
+
+								player->SetJumpFlag(false);
+							}
+
+							////判定外に出るまで繰り返す
+							//while (BoxCollision(CheckTrans1, CheckTrans2, false))
+							//{
+							//	//ちょっと戻す
+							//	player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+							//	//再代入
+							//	CheckTrans1 = player->GetTransform();
+
+							//	//下に埋まった瞬間ジャンプフラグをfalseに
+							//	player->SetJumpFlag(false);
+							//}
 						}
 					}
 				}
@@ -558,11 +580,11 @@ void PlayScene::Update()
 
 		//ジャンプがfalseなら上に修正
 		//ジャンプがtrueなら下に修正
-		if (player->GetJumpFlag())
+		if (!player->GetJumpFlag())
 		{
 			//入力方向手動代入
 			DS.x_ = 0;
-			DS.y_ = 0.1f;
+			DS.y_ = 1.0f;
 			AW.x_ = 0;
 			AW.y_ = 0;
 
@@ -578,18 +600,29 @@ void PlayScene::Update()
 						//ブロックがフィルターの中にいるか
 						if (block[i]->GetClearFlag() == false)
 						{
+							//プレイヤーのTransformを代入
+							CheckTrans1 = player->GetTransform();
+
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
-							//判定外に出るまで繰り返す
-							while (BoxCollision(CheckTrans1, CheckTrans2, true))
+							if (BoxCollision(CheckTrans1, CheckTrans2, false))
 							{
-								//ちょっと戻す
-								player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
-								//再代入
-								CheckTrans1 = player->GetTransform();
+								//下に埋まった瞬間ジャンプフラグをfalseに
+								player->SetJumpFlag(false);
 							}
+
+							////判定外に出るまで繰り返す
+							//while (BoxCollision(CheckTrans1, CheckTrans2, false))
+							//{
+							//	//ちょっと戻す
+							//	player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+
+							//	//再代入
+							//	CheckTrans1 = player->GetTransform();
+							//}
 						}
 					}
 				}
@@ -620,6 +653,9 @@ void PlayScene::Update()
 						//ブロックがフィルターの中にいるか
 						if (block[i]->GetClearFlag() == false)
 						{
+							//プレイヤーのTransformを代入
+							CheckTrans1 = player->GetTransform();
+
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
@@ -627,7 +663,7 @@ void PlayScene::Update()
 							/*while (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{*/
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
+							if (BoxCollision(CheckTrans1, CheckTrans2, false))
 							{
 								//ちょっと戻す
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
@@ -668,6 +704,9 @@ void PlayScene::Update()
 						//ブロックがフィルターの中にいるか
 						if (block[i]->GetClearFlag() == false)
 						{
+							//プレイヤーのTransformを代入
+							CheckTrans1 = player->GetTransform();
+
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
@@ -677,7 +716,7 @@ void PlayScene::Update()
 								//ちょっと戻す
 							//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
+							if (BoxCollision(CheckTrans1, CheckTrans2, false))
 							{
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 							}

@@ -511,13 +511,13 @@ void Player::Update(Transform filterPos)
 
 	}
 
-	if (GetClearFlag())
+	/*if (GetClearFlag())
 	{
 
-	}
+	}*/
 
 	ImGui::Begin("Player");
-	ImGui::SliderFloat("J", &Jump, 0, 2);
+	ImGui::Checkbox("J", &JumpFlag);
 	ImGui::SliderFloat("JP", &JumpPower, 0, 10);
 	ImGui::SliderFloat("G", &Gravity, 0, 10);
 	ImGui::SliderFloat("GP", &GravityPower, 0, 10);
@@ -589,6 +589,13 @@ void Player::AddGravity()
 			//座標から引く
 			player_.pos_.y_ += Jump;
 		}
+
+		//重力
+		if (Gravity < 0.2f)
+		{
+			GravityPower += 0.02f;
+			Gravity += GravityPower;
+		}
 	}
 
 	//ジャンプ力がなくなったら
@@ -597,15 +604,11 @@ void Player::AddGravity()
 		JumpFlag = false;
 	}*/
 
-	//重力
-	if (Gravity < 0.2f)
-	{
-		GravityPower += 0.02f;
-		Gravity += GravityPower;
-	}
-
-	//重力かける
-	player_.pos_.y_ -= Gravity;
+	//////if (!JumpFlag)
+//	{
+		//重力かける
+		player_.pos_.y_ -= Gravity;
+//	}
 }
 
 void Player::PlayerMove(YMath::Vector3 pos)
