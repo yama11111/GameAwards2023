@@ -222,7 +222,7 @@ void PlayScene::Load()
 	// ----- スプライト (2D) ----- //
 
 	// ----- スプライト (3D) ----- //
-	
+
 	// ------- モデル ------- //
 
 	// ----- 静的初期化 ----- //
@@ -244,7 +244,7 @@ void PlayScene::Initialize()
 {
 	float scaleVal = 1.0f;
 	Vector3 scale = { scaleVal,scaleVal,scaleVal };
-	
+
 	// ----- プレイヤー ----- //
 
 	// 生成
@@ -394,7 +394,7 @@ void PlayScene::Initialize()
 
 	// 天球初期化
 	skydome_.Initialize();
-	
+
 	// HUD初期化
 	hud_.Initalize();
 
@@ -798,6 +798,14 @@ void PlayScene::Update()
 	{
 		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
 	}
+
+	//死亡判定
+	if (player->GetPos().y_ < -15)
+	{
+		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
+		player->Reset();
+		filter->Reset();
+	}
 }
 #pragma endregion
 
@@ -805,7 +813,7 @@ void PlayScene::Update()
 #pragma region 描画
 void PlayScene::DrawBackSprite2Ds()
 {
-	
+
 }
 
 void PlayScene::DrawModels()
@@ -814,10 +822,10 @@ void PlayScene::DrawModels()
 	skydome_.Draw();
 
 	// ----- Pre ----- // 
-	
+
 	// プレイヤー前描画
 	player->PreDraw();
-	
+
 	// ブロック前描画
 	for (size_t i = 0; i < block.size(); i++)
 	{
@@ -842,7 +850,7 @@ void PlayScene::DrawModels()
 
 
 	// ----- Post ----- //
-	
+
 	// プレイヤー後描画
 	player->PostDraw();
 
