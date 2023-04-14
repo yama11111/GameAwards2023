@@ -464,12 +464,14 @@ void PlayScene::Update()
 	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD);
 	result.z_ = 0.0f;
 
+	//移動量
 	float playerA = 0.3f;
 	float filterA = 0.3f;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
 	{
+		//移動量
 		result.x_ *= playerA;
 
 		//プレイヤーはy軸はジャンプのみ
@@ -480,6 +482,7 @@ void PlayScene::Update()
 	}
 	else
 	{
+		//移動量
 		result.x_ *= filterA;
 
 		//フィルターの移動量格納
@@ -498,8 +501,10 @@ void PlayScene::Update()
 		//更新
 		block[i]->Update(filter->GetTransform());
 
+		//赤い色なら
 		if (block[i]->GetKind() == ColorB)
 		{
+			//playerと当たってたら延長
 			if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
 			{
 				//タイマーを設定
@@ -539,13 +544,7 @@ void PlayScene::Update()
 		}
 
 		//プレイヤージャンプ処理
-		//if (player->GetJumpFlag())
-		//{
-		//	//重力0
-		//	player->SetGravity(0.0f);
-		//	player->SetGravityPower(0.00f);
-		//}
-
+		
 		//重力、浮力を加算
 		player->AddGravity();
 
@@ -604,19 +603,6 @@ void PlayScene::Update()
 								//フラグをOFFに
 								player->SetJumpFlag(false);
 							}
-
-							////判定外に出るまで繰り返す
-							//while (BoxCollision(CheckTrans1, CheckTrans2, false))
-							//{
-							//	//ちょっと戻す
-							//	player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
-
-							//	//再代入
-							//	CheckTrans1 = player->GetTransform();
-
-							//	//下に埋まった瞬間ジャンプフラグをfalseに
-							//	player->SetJumpFlag(false);
-							//}
 						}
 					}
 				}
@@ -661,16 +647,6 @@ void PlayScene::Update()
 								//下に埋まった瞬間ジャンプフラグをfalseに
 								player->SetJumpFlag(false);
 							}
-
-							////判定外に出るまで繰り返す
-							//while (BoxCollision(CheckTrans1, CheckTrans2, false))
-							//{
-							//	//ちょっと戻す
-							//	player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
-
-							//	//再代入
-							//	CheckTrans1 = player->GetTransform();
-							//}
 						}
 					}
 				}
@@ -707,21 +683,11 @@ void PlayScene::Update()
 							//ブロックのTransformを代入
 							CheckTrans2 = block[i]->GetTransform();
 
-							//判定外に出るまで繰り返す
-							/*while (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{*/
-
 							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
 								//ちょっと戻す
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 							}
-
-							//再代入
-							//CheckTrans1 = player->GetTransform();
-						//}
-
-						//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
 						}
 					}
 				}
