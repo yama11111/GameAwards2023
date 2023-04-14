@@ -718,7 +718,7 @@ void PlayScene::Update()
 		//ジャンプフラグがONなら
 		if (player->GetJumpFlag())
 		{
-			if (player->GetGravity() < 0.3f)
+			if (player->GetJump() < 0.0f)
 			{
 				//入力方向手動代入
 				DS.x_ = 0;
@@ -734,7 +734,6 @@ void PlayScene::Update()
 				AW.x_ = 0;
 				AW.y_ = 0.0f;
 			}
-
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -778,7 +777,7 @@ void PlayScene::Update()
 		else
 		{
 			//重力加算
-			player->SetGravity(0.1f);
+			player->SetGravity(0.3f);
 
 			//入力方向手動代入
 			DS.x_ = 0;

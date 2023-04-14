@@ -18,7 +18,7 @@ Filter::~Filter()
 void Filter::Initialize()
 {
 	// フィルター
-	filter_.Initialize({ {}, {}, {3.0f,2.0f,1.0f} });
+	filter_.Initialize({ {}, {}, {2.0f,2.0f,1.0f} });
 	filterDra_.Initialize(&filter_);
 }
 
@@ -57,7 +57,7 @@ void Filter::Draw()
 void Filter::Reset()
 {
 	// フィルター
-	filter_.Initialize({ {}, {}, {2.5f,1.5f,1.0f} });
+	filter_.Initialize({ {}, {}, {2.0f,2.0f,1.0f} });
 
 	//必ずリセットすること
 	filterDra_.Reset();

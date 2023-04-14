@@ -527,7 +527,7 @@ void Player::Update(Transform filterPos)
 
 	ImGui::Begin("Player");
 	ImGui::Checkbox("J", &JumpFlag);
-	ImGui::SliderFloat("JP", &JumpPower, 0, 10);
+	ImGui::SliderFloat("J", &Jump, 0, 10);
 	ImGui::SliderFloat("G", &Gravity, 0, 10);
 	ImGui::SliderFloat("GP", &GravityPower, 0, 10);
 	ImGui::SliderFloat("X", &player_.pos_.x_, 0, 10);
@@ -545,7 +545,7 @@ void Player::Update(Transform filterPos)
 
 void Player::Reset()
 {
-	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.45f,0.45f,0.45f} });
+	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.49f,0.9f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Reset(IDrawer::Mode::Red);
 	filterDra_.Reset();

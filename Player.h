@@ -110,6 +110,7 @@ public:
 	YMath::Vector3 GetStartPos() { return startPos; };
 	YMath::Vector3 GetMovePos() { return movePos; };
 	float GetGravity() { return Gravity; };
+	float GetJump() { return Jump; };
 
 	//‚·‚®‚ÉˆÚ“®
 	void PlayerMove(YMath::Vector3 pos);

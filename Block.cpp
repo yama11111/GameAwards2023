@@ -42,6 +42,7 @@ void Block::Draw()
 {
 	if (nowKind != None)
 	{
+		//右の条件消すとブロック消えるよ
 		if (ClearFlag == false || nowKind != ColorB)
 		{
 			blockDra_.Draw();
