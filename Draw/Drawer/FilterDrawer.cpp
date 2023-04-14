@@ -80,9 +80,9 @@ void FilterDrawer::Reset()
 	// ƒ‚ƒjƒ^[
 	modelObjs_[MonitorIdx]->Initialize(
 		{
-			{0.0f,0.0f,-4.0f},
+			{0.0f,0.0f,0.0f},
 			{},
-			{1.0f,1.0f,0.0001f},
+			{1.0f,1.0f,1.0f},
 		}
 	);
 

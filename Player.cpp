@@ -578,6 +578,8 @@ void Player::JumpReset()
 
 	Gravity = 0;
 	GravityPower = 0;
+
+	playerDra_.JumpAnimation();
 }
 
 //d—ÍA•‚—Í‚Ì‰ÁZ

@@ -442,6 +442,11 @@ void PlayScene::Update()
 			if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
 			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
 		}
+		else
+		{
+			// カメラ揺れる
+			scrollCamera_.Shaking(10, 2);
+		}
 	}
 
 	////デバッグ用のリセットボタン
@@ -645,6 +650,7 @@ void PlayScene::Update()
 
 								//下に埋まった瞬間ジャンプフラグをfalseに
 								player->SetJumpFlag(false);
+								//player->Landing();
 							}
 						}
 					}

@@ -23,7 +23,7 @@ private:
 	YMath::Vector3 movePos = { 0.0f,0.0f,0.0f };
 
 	//操作してるかどうか
-	bool PlayFlag = false;
+	bool PlayFlag = true;
 
 	//プレイヤーがすり抜けるか
 	bool ClearFlag = false;
@@ -70,6 +70,9 @@ public:
 
 	//重力、ジャンプの力を加算
 	void AddGravity();
+
+	// 着地
+	void Landing() { playerDra_.LandingAnimation(); }
 
 	//GetFlag関数
 	bool GetClearFlag() { return ClearFlag; };
