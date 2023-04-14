@@ -166,20 +166,23 @@ static YMath::Vector3 BoxCollision(YMath::Vector3 posP, YMath::Vector2 sizePRL, 
 //Posを返すBoxCollision(Transformのみ)
 static YMath::Vector3 BoxCollision(YGame::Transform posP, YGame::Transform posF, YMath::Vector2 DS, YMath::Vector2 AW)
 {
-	YMath::Vector3 nowPosP = posP.pos_;
-	YMath::Vector3 nowPosF = posF.pos_;
+	YGame::Transform nowPosP = posP;
+	YGame::Transform nowPosF = posF;
+
+	posP.scale_ *= 2;
+	posF.scale_ *= 2;
 
 	//プレイヤーの上下左右
-	float p_top = nowPosP.y_ - posP.scale_.y_;
-	float p_bottom = nowPosP.y_ + posP.scale_.y_;
-	float p_right = nowPosP.x_ + posP.scale_.x_;
-	float p_left = nowPosP.x_ - posP.scale_.x_;
+	float p_top = nowPosP.pos_.y_ - posP.scale_.y_;
+	float p_bottom = nowPosP.pos_.y_ + posP.scale_.y_;
+	float p_right = nowPosP.pos_.x_ + posP.scale_.x_;
+	float p_left = nowPosP.pos_.x_ - posP.scale_.x_;
 
 	//フィルターの上下左右
-	float f_top = nowPosF.y_ - posF.scale_.y_;
-	float f_bottom = nowPosF.y_ + posF.scale_.y_;
-	float f_right = nowPosF.x_ + posF.scale_.x_;
-	float f_left = nowPosF.x_ - posF.scale_.x_;
+	float f_top = nowPosF.pos_.y_ - posF.scale_.y_;
+	float f_bottom = nowPosF.pos_.y_ + posF.scale_.y_;
+	float f_right = nowPosF.pos_.x_ + posF.scale_.x_;
+	float f_left = nowPosF.pos_.x_ - posF.scale_.x_;
 
 	//フィルターに当たっているか
 	if (p_left < f_right &&
@@ -192,21 +195,21 @@ static YMath::Vector3 BoxCollision(YGame::Transform posP, YGame::Transform posF,
 			p_top  < f_bottom &&
 			p_bottom > f_top)
 		{
-			nowPosP.x_ -= DS.x_ * 0.01f;
-			nowPosP.y_ -= DS.y_ * 0.01f;
+			nowPosP.pos_.x_ -= DS.x_ * 0.01f;
+			nowPosP.pos_.y_ -= DS.y_ * 0.01f;
 
-			nowPosP.x_ += AW.x_ * 0.01f;
-			nowPosP.y_ += AW.y_ * 0.01f;
+			nowPosP.pos_.x_ += AW.x_ * 0.01f;
+			nowPosP.pos_.y_ += AW.y_ * 0.01f;
 
 			//プレイヤーの上下左右
-			p_top = nowPosP.y_ - posP.scale_.y_;
-			p_bottom = nowPosP.y_ + posP.scale_.y_;
-			p_right = nowPosP.x_ + posP.scale_.x_;
-			p_left = nowPosP.x_ - posP.scale_.x_;
+			p_top = nowPosP.pos_.y_ - posP.scale_.y_;
+			p_bottom = nowPosP.pos_.y_ + posP.scale_.y_;
+			p_right = nowPosP.pos_.x_ + posP.scale_.x_;
+			p_left = nowPosP.pos_.x_ - posP.scale_.x_;
 		}
 	}
 
-	return nowPosP;
+	return nowPosP.pos_;
 }
 
 #pragma region 読み込み
@@ -531,9 +534,9 @@ void PlayScene::Update()
 		{
 			//入力方向手動代入
 			DS.x_ = 0;
-			DS.y_ = 0;
+			DS.y_ = 1.0f;
 			AW.x_ = 0;
-			AW.y_ = 1.0f;
+			AW.y_ = 0.0f;
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -582,16 +585,18 @@ void PlayScene::Update()
 				}
 			}
 		}
-
 		//ジャンプがfalseなら上に修正
 		//ジャンプがtrueなら下に修正
-		if (!player->GetJumpFlag())
+		//if (true)//player->GetJumpFlag())
+		else
 		{
+			player->SetGravity(0.1f);
+
 			//入力方向手動代入
 			DS.x_ = 0;
-			DS.y_ = 1.0f;
+			DS.y_ = 0.0f;
 			AW.x_ = 0;
-			AW.y_ = 0;
+			AW.y_ = 1;
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -616,7 +621,7 @@ void PlayScene::Update()
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
 								//下に埋まった瞬間ジャンプフラグをfalseに
-								player->SetJumpFlag(false);
+								//player->SetJumpFlag(false);
 							}
 
 							////判定外に出るまで繰り返す

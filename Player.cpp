@@ -607,6 +607,7 @@ void Player::AddGravity()
 		}
 	}
 
+
 	//ƒWƒƒƒ“ƒv—Í‚ª‚È‚­‚È‚Á‚½‚ç
 	/*if (Jump < 0)
 	{
@@ -616,8 +617,8 @@ void Player::AddGravity()
 	//////if (!JumpFlag)
 //	{
 		//d—Í‚©‚¯‚é
-		player_.pos_.y_ -= Gravity;
-//	}
+	player_.pos_.y_ -= Gravity;
+	//	}
 }
 
 void Player::PlayerMove(YMath::Vector3 pos)
