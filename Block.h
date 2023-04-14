@@ -70,6 +70,8 @@ public:
 
 	void SetTimer(int time) { timer_ = time; };
 
+	void CountDown() { timer_--; };
+
 	//Vector3‚ð“üŽè
 	YMath::Vector3 GetPos() { return block_.pos_; };
 	YMath::Vector3 GetScale() { return block_.scale_; };

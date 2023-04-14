@@ -604,7 +604,7 @@ void Player::AddGravity()
 		//d—Í
 		if (Gravity < 0.2f)
 		{
-			GravityPower += 0.02f;
+			GravityPower += 0.01f;
 			Gravity += GravityPower;
 		}
 	}

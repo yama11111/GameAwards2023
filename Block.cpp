@@ -22,10 +22,10 @@ void Block::Initialize()
 //çXêV
 void Block::Update(YGame::Transform filter)
 {
-	if (ClearFlag)
+	/*if (ClearFlag)
 	{
 		timer_--;
-	}
+	}*/
 
 	if (timer_ < 1)
 	{

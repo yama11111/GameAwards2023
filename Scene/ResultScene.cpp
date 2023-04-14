@@ -78,7 +78,8 @@ void ResultScene::Update()
 	{
 		isPush_ = true;
 
-		SceneManager::GetInstance()->Change("TITLE", "INFECTION");
+		//SceneManager::GetInstance()->Change("TITLE", "INFECTION");
+		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
 	}
 
 	logoObj_->UpdateMatrix();

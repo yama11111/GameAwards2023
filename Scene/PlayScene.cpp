@@ -258,8 +258,137 @@ void PlayScene::Initialize()
 
 	player->Reset();
 
+	//config
+	stageConfig_ = StageConfig::GetInstance();
+	//StageConfig::GetCurrentStageIndex();
 	//
 	//player_->SetClearFlag(true);
+
+	int Idx = stageConfig_->GetCurrentStageIndex();
+
+	switch (Idx)
+	{
+	case 1:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map1[i][j];
+			}
+		}
+
+		break;
+
+	case 2:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map2[i][j];
+			}
+		}
+		break;
+
+	case 3:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map3[i][j];
+			}
+		}
+		break;
+
+	case 4:
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map4[i][j];
+			}
+		}
+
+		break;
+
+	case 5:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map5[i][j];
+			}
+		}
+		break;
+
+	case 6:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map6[i][j];
+			}
+		}
+		break;
+
+	case 7:
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map7[i][j];
+			}
+		}
+
+		break;
+
+	case 8:
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map8[i][j];
+			}
+		}
+
+		break;
+
+	case 9:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map9[i][j];
+			}
+		}
+		break;
+
+	case 10:
+
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map10[i][j];
+			}
+		}
+		break;
+
+	default:
+		for (int i = 0; i < blockCountY; i++)
+		{
+			for (int j = 0; j < blockCountX; j++)
+			{
+				map[i][j] = map1[i][j];
+			}
+		}
+		break;
+	}
 
 	// ----- フィルター ----- //
 
@@ -536,6 +665,12 @@ void PlayScene::Update()
 	//プレイヤー操作モードがnの時
 	if (player->GetPlayFlag())
 	{
+		//プレイヤーを操作しているときカウントを進める
+		for (int i = 0; i < block.size(); i++)
+		{
+			block[i]->CountDown();
+		}
+
 		//Wを押してジャンプ処理
 		if (sKeys_->IsTrigger(DIK_W))
 		{
@@ -794,10 +929,11 @@ void PlayScene::Update()
 	}
 
 	// 次のシーンへ
-	if (sKeys_->IsTrigger(DIK_0))
-	{
-		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
-	}
+	//if (sKeys_->IsTrigger(DIK_0))
+	//{
+	//	SceneManager::GetInstance()->Change("SELECT", "INFECTION");
+	//	//SceneManager::GetInstance()->Change("RESULT", "INFECTION");
+	//}
 
 	//死亡判定
 	if (player->GetPos().y_ < -15)
