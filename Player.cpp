@@ -80,15 +80,15 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 //Pre描画(フィルターの前)
 void Player::PreDraw()
 {
-	//playerDra_.PreDraw();
+	playerDra_.PreDraw();
 	//filterDra_.Draw();
 }
 
 //Post描画(フィルターの後)
 void Player::PostDraw()
 {
-	//playerDra_.PostDraw();
-	filterDra_.Draw();
+	playerDra_.PostDraw();
+	//filterDra_.Draw();
 }
 
 void Player::Update()
@@ -545,7 +545,7 @@ void Player::Update(Transform filterPos)
 
 void Player::Reset()
 {
-	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.5f,0.5f,0.5f} });
+	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.45f,0.45f,0.45f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Reset(IDrawer::Mode::Red);
 	filterDra_.Reset();
@@ -571,7 +571,7 @@ void Player::Reset()
 
 void Player::JumpReset()
 {
-	Jump = 1.0f;
+	Jump = 1.2f;
 	JumpPower = 0;
 
 	JumpFlag = true;
@@ -607,18 +607,8 @@ void Player::AddGravity()
 		}
 	}
 
-
-	//ジャンプ力がなくなったら
-	/*if (Jump < 0)
-	{
-		JumpFlag = false;
-	}*/
-
-	//////if (!JumpFlag)
-//	{
-		//重力かける
+	//重力かける
 	player_.pos_.y_ -= Gravity;
-	//	}
 }
 
 void Player::PlayerMove(YMath::Vector3 pos)

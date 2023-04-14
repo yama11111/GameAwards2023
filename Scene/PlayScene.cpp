@@ -255,10 +255,12 @@ void PlayScene::Initialize()
 	// ----- プレイヤー ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
-	player->Initialize({ -50.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, scale * 2.0f);
+	player->Initialize({ -50.0f,0.0f,0.0f }, { 0.0f,0.0f,0.0f }, { scale.x_ * 2.0f - 0.2f,scale.y_ * 2.0f - 0.2f,scale.z_ * 2.0f - 0.2f });
 
 	//ディレクション(向き)
 	player->SetDirection(YMath::Vector3{ +1.0f, 0.0f, 0.0f });
+
+	player->Reset();
 
 	//
 	//player_->SetClearFlag(true);
@@ -267,6 +269,8 @@ void PlayScene::Initialize()
 
 	// トランスフォーム (位置、回転、大きさ)
 	filter->Initialize({ 0.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
+
+	filter->Reset();
 
 	// ----- ゴール ----- //
 
@@ -461,7 +465,7 @@ void PlayScene::Update()
 	result.z_ = 0.0f;
 
 	float playerA = 0.3f;
-	float filterA = 0.5f;
+	float filterA = 0.3f;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
@@ -491,11 +495,26 @@ void PlayScene::Update()
 	// ブロック
 	for (int i = 0; i < block.size(); i++)
 	{
+		//更新
 		block[i]->Update(filter->GetTransform());
 
-		if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+		if (block[i]->GetKind() == ColorB)
 		{
-			block[i]->SetClearFlag(true);
+			if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
+			{
+				//タイマーを設定
+				block[i]->SetTimer(10);
+			}
+
+			//フィルターと当たってたら
+			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+			{
+				//透けるフラグをonに
+				block[i]->SetClearFlag(true);
+
+				//タイマーを設定
+				block[i]->SetTimer(50);
+			}
 		}
 	}
 
@@ -530,13 +549,29 @@ void PlayScene::Update()
 		//重力、浮力を加算
 		player->AddGravity();
 
+		//フィルターと重なっているか
+		player->SetClearFlag(BoxCollision(player->GetTransform(), filter->GetTransform(), true));
+
+		//ジャンプフラグがONなら
 		if (player->GetJumpFlag())
 		{
-			//入力方向手動代入
-			DS.x_ = 0;
-			DS.y_ = 1.0f;
-			AW.x_ = 0;
-			AW.y_ = 0.0f;
+			//if (player->GetGravity() < 0.3f)
+			//{
+			//	//入力方向手動代入
+			//	DS.x_ = 0;
+			//	DS.y_ = 1.0f;
+			//	AW.x_ = 0;
+			//	AW.y_ = 0.0f;
+			//}
+			//else
+			{
+				//入力方向手動代入
+				DS.x_ = 0;
+				DS.y_ = 0.0f;
+				AW.x_ = 0;
+				AW.y_ = 1.0f;
+			}
+
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -563,8 +598,10 @@ void PlayScene::Update()
 								//下に埋まった瞬間ジャンプフラグをfalseに
 								player->SetJumpFlag(false);
 
+								//重力関係リセット
 								player->JumpReset();
 
+								//フラグをOFFに
 								player->SetJumpFlag(false);
 							}
 
@@ -590,13 +627,14 @@ void PlayScene::Update()
 		//if (true)//player->GetJumpFlag())
 		else
 		{
+			//重力加算
 			player->SetGravity(0.1f);
 
 			//入力方向手動代入
 			DS.x_ = 0;
 			DS.y_ = 0.0f;
 			AW.x_ = 0;
-			AW.y_ = 1;
+			AW.y_ = 1.0f;
 
 			//フィルターの中にいるか
 			if (player->GetClearFlag() == false)
@@ -621,7 +659,7 @@ void PlayScene::Update()
 								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
 								//下に埋まった瞬間ジャンプフラグをfalseに
-								//player->SetJumpFlag(false);
+								player->SetJumpFlag(false);
 							}
 
 							////判定外に出るまで繰り返す
@@ -783,20 +821,19 @@ void PlayScene::Update()
 	ImGui::End();*/
 
 	//rightleftで横移動
-	transferVP_.eye_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
-	transferVP_.target_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
+	//transferVP_.eye_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
+	//transferVP_.target_.x_ += sKeys_->Horizontal(Keys::MoveStandard::Arrow) * 0.1f;
 
-	//updownで奥行き確認
-	transferVP_.eye_.z_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.1f;
-
+	////updownで奥行き確認
+	//transferVP_.eye_.z_ += sKeys_->Vertical(Keys::MoveStandard::Arrow) * 0.1f;
 
 	transferVP_.target_.x_ = player->GetTransform().pos_.x_;
 	transferVP_.target_.y_ = player->GetTransform().pos_.y_;
 	transferVP_.eye_.x_ = player->GetTransform().pos_.x_;
 	transferVP_.eye_.y_ = player->GetTransform().pos_.y_;
 
-	// ビュープロジェクション
-	transferVP_.UpdateMatrix();
+	//// ビュープロジェクション
+	//transferVP_.UpdateMatrix();
 }
 #pragma endregion
 

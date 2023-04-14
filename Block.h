@@ -29,6 +29,8 @@ private:
 	//bool sukeF = false;
 	bool ClearFlag = false;
 
+	//–ß‚éŠÔ
+	int timer_ = 0;
 public:
 
 	//ƒCƒ“ƒNƒŠƒƒ“ƒg
@@ -68,6 +70,8 @@ public:
 	void SetPos(YMath::Vector3 pos) { block_.pos_ = pos; };
 	void SetScale(YMath::Vector3 scale) { block_.scale_ = scale; };
 	void SetRot(YMath::Vector3 rot) { block_.rota_ = rot; };
+
+	void SetTimer(int time) { timer_ = time; };
 
 	//Vector3‚ğ“üè
 	YMath::Vector3 GetPos() { return block_.pos_; };
