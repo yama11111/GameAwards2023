@@ -14,6 +14,8 @@ namespace YScene
 		// 次のシーン
 		BaseScene* nextScene_ = nullptr;
 		
+		// デスクリプタヒープポインタ
+		YDX::DescriptorHeap* pDescHeap_ = nullptr;
 
 		// シーンファクトリー
 		std::unique_ptr<ISceneFactory> sceneFactory_;
@@ -64,8 +66,14 @@ namespace YScene
 		/// 遷移ファクトリー設定
 		/// </summary>
 		/// <param name="transitionFactory"> : 遷移ファクトリー</param>
-		void SetSceneFactory(ITransitionFactory* transitionFactory);
+		void SetTransitionFactory(ITransitionFactory* transitionFactory);
 	
+		/// <summary>
+		/// デスクリプタヒープポインタ設定
+		/// </summary>
+		/// <param name="sceneFactory"> : デスクリプタヒープポインタ</param>
+		void SetDescriptorHeapPointer(YDX::DescriptorHeap* pDescHeap);
+
 	public:
 		
 		// シングルトン

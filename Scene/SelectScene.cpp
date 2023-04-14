@@ -1,5 +1,6 @@
 #include "SelectScene.h"
 #include "SceneManager.h"
+#include "TransitionManager.h"
 #include "Def.h"
 #include <cassert>
 #include <imgui.h>
@@ -83,17 +84,20 @@ void SelectScene::Update()
 	// pause更新
 	pauseDra_.Update();
 
-
 	// ステージ番号取得
 	int stageIdx = stageConfig_->GetCurrentStageIndex();
 
-	// ステージ選択 (A or D)
-	stageIdx += 
-		+ (sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
-		- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
+	// 遷移中じゃないなら
+	if (TransitionManager::GetInstance()->IsPreChange() == false)
+	{
+		// ステージ選択 (A or D)
+		stageIdx +=
+			+(sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
+			- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
 
-	// ステージ番号設定
-	stageConfig_->SetCurrentStageIndex(stageIdx);
+		// ステージ番号設定
+		stageConfig_->SetCurrentStageIndex(stageIdx);
+	}
 
 	ImGui::Begin("StageIdx");
 	ImGui::Text("%d", stageIdx);

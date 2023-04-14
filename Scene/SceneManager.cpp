@@ -56,6 +56,9 @@ void SceneManager::Update()
 				scene_.reset();
 			}
 
+			// バッファクリア
+			pDescHeap_->ClearMutableCount();
+
 			// 次のシーンを挿入
 			scene_.reset(nextScene_);
 			nextScene_ = nullptr;
@@ -101,13 +104,22 @@ void SceneManager::SetSceneFactory(ISceneFactory* sceneFactory)
 	sceneFactory_.reset(sceneFactory);
 }
 
-void SceneManager::SetSceneFactory(ITransitionFactory* transitionFactory)
+void SceneManager::SetTransitionFactory(ITransitionFactory* transitionFactory)
 {
 	// nullチェック
 	assert(transitionFactory);
 
 	// 専用遷移ファクトリー設定
 	transitionFactory_.reset(transitionFactory);
+}
+
+void SceneManager::SetDescriptorHeapPointer(YDX::DescriptorHeap* pDescHeap)
+{
+	// nullチェック
+	assert(pDescHeap);
+
+	// 代入
+	pDescHeap_ = pDescHeap;
 }
 
 SceneManager* SceneManager::GetInstance()

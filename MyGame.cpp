@@ -24,10 +24,10 @@ bool MyGame::Initialize()
 	// シーンファクトリー設定
 	sceneMan_->SetSceneFactory(new YGameSceneFactory());
 	// 遷移ファクトリー設定
-	sceneMan_->SetSceneFactory(new YGameTransitionFactory());
+	sceneMan_->SetTransitionFactory(new YGameTransitionFactory());
 
 	// シーンマネージャー初期化
-	sceneMan_->Initialize("TEST");
+	sceneMan_->Initialize("PLAY");
 
 	return true;
 }

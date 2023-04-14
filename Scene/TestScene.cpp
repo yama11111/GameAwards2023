@@ -56,7 +56,7 @@ void TestScene::Initialize()
 	isPlayer_ = true;
 
 	// プレイヤー描画用クラス初期化
-	playerDra_.Initialize(&core_, &direction_, IDrawer::Mode::Red);
+	playerDra_.Initialize(&core_, &direction_, IDrawer::Mode::Normal);
 	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
 	// プレイヤー描画するか
@@ -68,7 +68,7 @@ void TestScene::Initialize()
 	isDrawFilter_ = false;
 	
 	// ブロック描画用クラス初期化
-	blockDra_.Initialize(&core_, IDrawer::Mode::Red);
+	blockDra_.Initialize(&core_, IDrawer::Mode::Normal);
 	// ブロック描画するか
 	isDrawBlock_ = true;
 

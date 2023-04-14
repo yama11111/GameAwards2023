@@ -17,9 +17,9 @@ namespace DrawerConfig
 		namespace DefColor
 		{
 			// í èÌ
-			const YMath::Vector4 Normal	   = { 0.0f,0.0f,1.0f,1.0f };
+			const YMath::Vector4 Normal	   = { 0.1f,0.9f,0.8f,1.0f };
 			// ê‘
-			const YMath::Vector4 Red	   = { 0.0f,0.0f,0.0f,1.0f };
+			const YMath::Vector4 Red	   = { 1.0f,0.2f,0.1f,1.0f };
 			// ìßñæ
 			const YMath::Vector4 Invisible = { 1.0f,1.0f,1.0f,0.4f };
 		}
@@ -132,7 +132,7 @@ namespace DrawerConfig
 		namespace DefColor
 		{
 			// í èÌ
-			const YMath::Vector4 Normal	   = { 0.0f,0.0f,1.0f,1.0f };
+			const YMath::Vector4 Normal	   = { 0.0f,0.0f,0.3f,1.0f };
 			// ê‘
 			const YMath::Vector4 Red	   = { 1.0f,0.0f,0.0f,1.0f };
 			// ìßñæ

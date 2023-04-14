@@ -102,7 +102,9 @@ bool YFramework::Initialize()
 
 	// ƒV[ƒ“‰Šú‰»
 	BaseScene::StaticInitialize(&worldRuler_);
+	
 	sceneMan_ = SceneManager::GetInstance();
+	sceneMan_->SetDescriptorHeapPointer(&descHeap_);
 
 #pragma endregion
 
