@@ -42,5 +42,8 @@ public:
 
 	//移動量セット
 	void SetMovePos(YMath::Vector3 pos) { movePos = pos; };
+
+	//posセット
+	void SetPos(YMath::Vector3 pos) { filter_.pos_ = pos; };
 };
 

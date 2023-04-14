@@ -402,7 +402,7 @@ void PlayScene::Initialize()
 	filter.reset(new Filter());
 
 	// トランスフォーム (位置、回転、大きさ)
-	filter->Initialize({ 0.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
+	filter->Initialize({ -10.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
 
 	filter->Reset();
 
@@ -525,6 +525,11 @@ void PlayScene::Initialize()
 	{
 		block[i]->SetMode();
 	}
+
+	//フィルターの位置をプレイヤーの上に
+	YMath::Vector3 Ppos = player->GetPos();
+	Ppos.y_ += 10.0f;
+	filter->SetPos(Ppos);
 
 
 	// 天球初期化
