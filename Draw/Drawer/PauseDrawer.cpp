@@ -103,7 +103,7 @@ void PauseDrawer::Reset()
 void PauseDrawer::Update()
 {
 	// TAB → ポーズ切り替え
-	if (sKeys_->IsTrigger(DIK_TAB))
+	if (sKeys_->IsTrigger(DIK_ESCAPE))
 	{
 		// ポーズ中じゃないなら
 		if (isPause_ == false) 

@@ -20,6 +20,9 @@ void SceneManager::Initialize(const std::string& sceneName)
 	scene_->Load();
 	// 現在シーン初期化
 	scene_->Initialize();
+
+	// 終了フラグ初期化
+	isEnd_ = false;
 }
 
 void SceneManager::Finalize()

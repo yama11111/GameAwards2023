@@ -156,10 +156,13 @@ void YFramework::Update()
 	imguiMan_.End();
 
 	// ------------------- 終了処理 ------------------- //
+	
 	// ×ボタンで終了メッセージ
 	if (window_.CheckMessage()) { isEnd_ = true; }
-	// ESCキーで終了
-	if (inputMan_->keys_->IsTrigger(DIK_ESCAPE)) { isEnd_ = true; }
+
+	// シーンマネージャー終了フラグ
+	if (sceneMan_->IsEnd()) { isEnd_ = true; }
+
 	// ------------------------------------------------ //
 }
 

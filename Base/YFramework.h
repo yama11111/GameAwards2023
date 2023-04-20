@@ -70,7 +70,13 @@ namespace YBase
 		/// 終了フラグ取得
 		/// </summary>
 		/// <returns>終了フラグ</returns>
-		virtual bool IsEnd() { return isEnd_; }
+		bool IsEnd() { return isEnd_; }
+
+		/// <summary>
+		/// 終了フラグ設定
+		/// </summary>
+		/// <param name="isEnd"> : 終了フラグ</param>
+		void SetEnd(const bool isEnd) { isEnd_ = isEnd; }
 	
 	public:
 

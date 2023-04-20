@@ -378,9 +378,6 @@
     <ClCompile Include="StageConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ScrollCamera.cpp">
-      <Filter>GameUtil\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="GameUtillity\Audio.cpp">
       <Filter>GameUtil\Resource</Filter>
     </ClCompile>
@@ -425,6 +422,9 @@
     </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Camera\ScrollCamera.cpp">
+      <Filter>GameUtil\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

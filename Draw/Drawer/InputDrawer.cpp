@@ -18,7 +18,7 @@ Sprite2D* InputDrawerCommon::spKeySPushSpr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeyDPushSpr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeySDeadSpr_ = nullptr;
 std::array<Sprite2D*, 2> InputDrawerCommon::spKeySpaceSpr_ = { nullptr, nullptr };
-std::array<Sprite2D*, 2> InputDrawerCommon::spKeyTabSpr_ = { nullptr, nullptr };
+std::array<Sprite2D*, 2> InputDrawerCommon::spKeyEscSpr_ = { nullptr, nullptr };
 
 void InputDrawerCommon::StaticInitialize()
 {
@@ -37,9 +37,9 @@ void InputDrawerCommon::StaticInitialize()
 	// SPACE
 	spKeySpaceSpr_[0] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE.png") });
 	spKeySpaceSpr_[1] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE_PUSH.png") });
-	// TAB
-	spKeyTabSpr_[0]	  = Sprite2D::Create({}, { Texture::Load("UI/key_TAB.png") });
-	spKeyTabSpr_[1]	  = Sprite2D::Create({}, { Texture::Load("UI/key_TAB_PUSH.png") });
+	// ESC
+	spKeyEscSpr_[0]	  = Sprite2D::Create({}, { Texture::Load("UI/key_ESC.png") });
+	spKeyEscSpr_[1]	  = Sprite2D::Create({}, { Texture::Load("UI/key_ESC_PUSH.png") });
 }
 
 #pragma endregion
@@ -61,7 +61,7 @@ void InputDrawer::Initalize(const SceneType& sceneType)
 	// SPACE
 	keySpaceObj_.reset(Sprite2DObject::Create({}));
 	// TAB
-	keyTabObj_.reset(Sprite2DObject::Create({}));
+	keyEscObj_.reset(Sprite2DObject::Create({}));
 
 
 	// リセット
@@ -73,6 +73,10 @@ void InputDrawer::Reset(const SceneType& sceneType)
 	// ----- Object初期化 ----- //
 
 	// WASD (シーンの種類によって変える)
+	if (sceneType == SceneType::Title)
+	{
+		keyWASDObj_->Initialize({ Title::Key::WASD, {}, Title::Key::Scale });
+	}
 	if (sceneType == SceneType::Select)
 	{
 		keyWASDObj_->Initialize({ Select::Key::WASD, {}, Select::Key::Scale });
@@ -94,6 +98,10 @@ void InputDrawer::Reset(const SceneType& sceneType)
 	keyDObj_->parent_ = &keyWASDObj_->m_;
 
 	// SPACE (シーンの種類によって変える)
+	if (sceneType == SceneType::Title)
+	{
+		keySpaceObj_->Initialize({ Title::Key::Space, {}, Title::Key::Scale });
+	}
 	if (sceneType == SceneType::Select)
 	{
 		keySpaceObj_->Initialize({ Select::Key::Space, {}, Select::Key::Scale });
@@ -104,13 +112,17 @@ void InputDrawer::Reset(const SceneType& sceneType)
 	}
 
 	// TAB (シーンの種類によって変える)
+	if (sceneType == SceneType::Title)
+	{
+		keyEscObj_->Initialize({ Title::Key::Esc, {}, Title::Key::Scale });
+	}
 	if (sceneType == SceneType::Select)
 	{
-		keyTabObj_->Initialize({ Select::Key::Tab, {}, Select::Key::Scale });
+		keyEscObj_->Initialize({ Select::Key::Esc, {}, Select::Key::Scale });
 	}
 	else if (sceneType == SceneType::Play)
 	{
-		keyTabObj_->Initialize({ Play::Key::Tab, {}, Play::Key::Scale });
+		keyEscObj_->Initialize({ Play::Key::Esc, {}, Play::Key::Scale });
 	}
 
 
@@ -124,7 +136,7 @@ void InputDrawer::Reset(const SceneType& sceneType)
 	// SPACE
 	isPushSpace_ = false;
 	// TAB
-	isPushTab_ = false;
+	isPushEsc_ = false;
 }
 
 void InputDrawer::UpdatePushFlags()
@@ -136,8 +148,8 @@ void InputDrawer::UpdatePushFlags()
 	isPushD_ = sKeys_->IsDown(DIK_D);
 	// SPACE
 	isPushSpace_ = sKeys_->IsDown(DIK_SPACE);
-	// TAB
-	isPushTab_ = sKeys_->IsDown(DIK_TAB);
+	// ESC
+	isPushEsc_ = sKeys_->IsDown(DIK_ESCAPE);
 }
 
 void InputDrawer::UpdateObjects()
@@ -152,7 +164,7 @@ void InputDrawer::UpdateObjects()
 	// SPACE
 	keySpaceObj_->UpdateMatrix();
 	// TAB
-	keyTabObj_->UpdateMatrix();
+	keyEscObj_->UpdateMatrix();
 }
 
 void InputDrawer::Update()
@@ -178,7 +190,7 @@ void InputDrawer::Draw(const bool isPlayer)
 	// SPACE
 	spKeySpaceSpr_[isPushSpace_]->Draw(keySpaceObj_.get());
 	// TAB
-	spKeyTabSpr_[isPushTab_]->Draw(keyTabObj_.get());
+	spKeyEscSpr_[isPushEsc_]->Draw(keyEscObj_.get());
 }
 
 #pragma endregion

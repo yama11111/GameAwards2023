@@ -51,7 +51,6 @@ void SelectScene::Initialize()
 
 	// ステージ設定
 	stageConfig_ = StageConfig::GetInstance();
-	stageConfig_->SetCurrentStageIndex(1);
 
 	// 描画用クラス初期化
 	dra_.Initalize();
@@ -84,6 +83,9 @@ void SelectScene::Update()
 	// pause更新
 	pauseDra_.Update();
 
+	// ポーズ中なら弾く
+	if (pauseDra_.IsPause()) { return; }
+
 	// ステージ番号取得
 	int stageIdx = stageConfig_->GetCurrentStageIndex();
 
@@ -97,17 +99,17 @@ void SelectScene::Update()
 
 		// ステージ番号設定
 		stageConfig_->SetCurrentStageIndex(stageIdx);
+
+		// 次のシーンへ (SPACE)
+		if (sKeys_->IsTrigger(DIK_SPACE))
+		{
+			SceneManager::GetInstance()->Change("PLAY", "INFECTION");
+		}
 	}
 
 	ImGui::Begin("StageIdx");
 	ImGui::Text("%d", stageIdx);
 	ImGui::End();
-
-	// 次のシーンへ (SPACE)
-	if (sKeys_->IsTrigger(DIK_SPACE))
-	{
-		SceneManager::GetInstance()->Change("PLAY", "INFECTION");
-	}
 
 
 	// 描画用クラス更新

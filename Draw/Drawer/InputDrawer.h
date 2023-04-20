@@ -22,8 +22,8 @@ protected:
 	static YGame::Sprite2D* spKeySDeadSpr_;
 	// SPACE
 	static std::array<YGame::Sprite2D*, 2> spKeySpaceSpr_;
-	// TAB
-	static std::array<YGame::Sprite2D*, 2> spKeyTabSpr_;
+	// ESC
+	static std::array<YGame::Sprite2D*, 2> spKeyEscSpr_;
 public:
 	// 静的初期化
 	static void StaticInitialize();
@@ -45,8 +45,8 @@ private:
 	std::unique_ptr<YGame::Sprite2DObject> keyDObj_;
 	// SPACE
 	std::unique_ptr<YGame::Sprite2DObject> keySpaceObj_;
-	// TAB
-	std::unique_ptr<YGame::Sprite2DObject> keyTabObj_;
+	// ESC
+	std::unique_ptr<YGame::Sprite2DObject> keyEscObj_;
 
 	// ----- フラグ ----- //
 
@@ -57,12 +57,13 @@ private:
 	bool isPushD_ = false;
 	// SPACE
 	bool isPushSpace_ = false;
-	// TAB
-	bool isPushTab_ = false;
+	// ESC
+	bool isPushEsc_ = false;
 public:
 	// 初期化用シーン
 	enum class SceneType
 	{
+		Title, // タイトル
 		Select, // ステージセレクト
 		Play, // ゲーム
 	};

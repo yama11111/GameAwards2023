@@ -211,6 +211,47 @@ namespace DrawerConfig
 		}
 	}
 
+	// タイトル
+	namespace Title
+	{
+		// ロゴ
+		namespace Logo
+		{
+			// 位置
+			const YMath::Vector3 Pos = { WinSize.x_ / 2.0f - 160.0f, WinSize.y_ / 2.0f - 200.0f, 0.0f };
+
+			// 大きさ
+			const YMath::Vector3 Scale = { 0.6f,0.6f,0.0f };
+		}
+
+		// 影
+		namespace Shadow
+		{
+			// 位置
+			const YMath::Vector3 Pos = { WinSize.x_ - 360.0f,WinSize.y_ / 2.0f,0.0f };
+
+			// 大きさ
+			const YMath::Vector3 Scale = { 1.0f,WinSize.y_,0.0f };
+		}
+		
+		// 選択
+		namespace UI
+		{
+			// スタート位置
+			const YMath::Vector3 Start = { WinSize.x_ - 240.0f,WinSize.y_ - 240.0f,0.0f };
+			
+			// 終了位置
+			const YMath::Vector3 Exit  = { WinSize.x_ - 240.0f,WinSize.y_ - 120.0f,0.0f };
+
+			// 選択中色
+			const YMath::Vector4 OnColor  = { 1.0f,1.0f,1.0f,1.0f };
+			
+			// 無選択色
+			const YMath::Vector4 OffColor = { 0.4f,0.4f,0.4f,0.75f };
+		}
+
+	}
+	
 	// セレクトシーン
 	namespace Select 
 	{
