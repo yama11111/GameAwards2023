@@ -29,10 +29,10 @@ void Block::Update(YGame::Transform filter)
 		timer_--;
 	}*/
 
-	if (timer_ < 1)
+	/*if (timer_ < 1)
 	{
 		ClearFlag = false;
-	}
+	}*/
 
 	// ブロック
 	block_.UpdateMatrix();
@@ -45,7 +45,7 @@ void Block::Draw()
 	if (nowKind != None)
 	{
 		//右の条件消すとブロック消えるよ
-		if (ClearFlag == false || nowKind != ColorB)
+		if (ClearFlag == false)
 		{
 			blockDra_.Draw();
 		}

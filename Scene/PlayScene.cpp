@@ -530,9 +530,16 @@ void PlayScene::Initialize()
 
 	//フィルターの位置をプレイヤーの上に
 	YMath::Vector3 Ppos = player->GetPos();
-	Ppos.y_ += 10.0f;
+	Ppos.y_ += harfScale * 10;
 	filter->SetPos(Ppos);
 
+	for (int i = 0; i < blockCountY; i++)
+	{
+		for (int j = 0; j < blockCountX; j++)
+		{
+			filter->InitializeMap(i, j, map[i][j]);
+		}
+	}
 
 	// 天球初期化
 	skydome_.Initialize();
@@ -612,7 +619,7 @@ void PlayScene::Update()
 
 	//移動量
 	float playerA = 0.3f;
-	float filterA = 0.3f;
+	float filterA = harfScale * 2;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
@@ -629,7 +636,8 @@ void PlayScene::Update()
 	else
 	{
 		//移動量
-		result.x_ *= filterA;
+		result.x_ = filterA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
+		result.y_ = filterA * (sKeys_->IsTrigger(DIK_W) - sKeys_->IsTrigger(DIK_S));
 
 		//フィルターの移動量格納
 		filter->SetMovePos(result);
@@ -646,6 +654,24 @@ void PlayScene::Update()
 	{
 		//更新
 		block[i]->Update(filter->GetTransform());
+		 
+		//フィルターと当たってたら
+		for (int j = 0; j < 12; j++)
+		{
+			if (filter->GetDrawFlag(j) == true)
+			{
+				if (block[i]->GetClearFlag() == false)
+				{
+					if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(j), true))
+					{
+						filter->SetDrawFlag(j, false);
+
+						//透けるフラグをonに
+						block[i]->SetClearFlag(true);
+					}
+				}
+			}
+		}
 
 		//赤い色なら
 		if (block[i]->GetKind() == ColorB)
@@ -657,29 +683,29 @@ void PlayScene::Update()
 				block[i]->SetTimer(10);
 			}
 
-			//フィルターと当たってたら
-			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-			{
-				//透けるフラグをonに
-				block[i]->SetClearFlag(true);
+			////フィルターと当たってたら
+			//if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+			//{
+			//	//透けるフラグをonに
+			//	block[i]->SetClearFlag(true);
 
-				//タイマーを設定
-				block[i]->SetTimer(50);
-			}
+			//	//タイマーを設定
+			//	block[i]->SetTimer(50);
+			//}
 		}
 
 		//通常ブロック処理
-		if (block[i]->GetKind() == Normal)
-		{
-			//透けるフラグをonに
-			block[i]->SetClearFlag(false);
+		//if (block[i]->GetKind() == Normal)
+		//{
+		//	//透けるフラグをonに
+		//	block[i]->SetClearFlag(false);
 
-			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-			{
-				//透けるフラグをonに
-				block[i]->SetClearFlag(true);
-			}
-		}
+		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+		//	{
+		//		//透けるフラグをonに
+		//		block[i]->SetClearFlag(true);
+		//	}
+		//}
 
 		//ブロック上げ下げ処置
 		if (player->GetPlayFlag())
@@ -711,21 +737,7 @@ void PlayScene::Update()
 				}
 			}
 		}
-		/*if (i == 32)
-		{
-			if (sKeys_->IsDown(DIK_Q))
-			{
-				block[i]->MovePosYUp();
-			}
-			if (sKeys_->IsDown(DIK_E))
-			{
-				block[i]->MovePosYDown();
-			}
-		}*/
 	}
-
-	//block[32]->MovePos(sKeys_->IsDown(DIK_2) - sKeys_->IsDown(DIK_1));
-
 
 	//格納
 	YGame::Transform CheckTrans1;
