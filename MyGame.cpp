@@ -27,7 +27,8 @@ bool MyGame::Initialize()
 	sceneMan_->SetTransitionFactory(new YGameTransitionFactory());
 
 	// シーンマネージャー初期化
-	sceneMan_->Initialize("TITLE");
+	sceneMan_->Initialize("PLAY");
+	//sceneMan_->Initialize("TITLE");
 
 	return true;
 }

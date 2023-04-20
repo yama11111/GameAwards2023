@@ -22,6 +22,9 @@ private:
 	// ブロック描画クラス
 	BlockDrawer blockDra_;
 
+	//総ブロック数
+	BlockDrawer blocksDra_[16];
+
 	//ブロックの種類
 	int nowKind = None;
 
@@ -31,6 +34,15 @@ private:
 
 	//戻る時間
 	int timer_ = 0;
+
+	//上がる
+	bool upFlag = false;
+
+	int upTimer = 0;
+
+	//void LoadCSVFile(std::vector<std::vector<int>>& data, const char* fileName, int _height, int _width);
+
+	std::vector<std::vector<int>> r_data;
 public:
 
 	//インクリメント
@@ -62,15 +74,28 @@ public:
 
 	//ClearFlagを入手
 	bool GetClearFlag() { return ClearFlag; };
+	bool GetUpFlag() { return upFlag; };
+	void SetUpFlag(bool flag) { upFlag = flag; };
 
 	//Vector3に代入
 	void SetPos(YMath::Vector3 pos) { block_.pos_ = pos; };
 	void SetScale(YMath::Vector3 scale) { block_.scale_ = scale; };
 	void SetRot(YMath::Vector3 rot) { block_.rota_ = rot; };
 
-	void SetTimer(int time) { timer_ = time; };
+	//全ブロックの位置代入
+	void SetBlocksPos(YMath::Vector3 pos);
 
+	//復活する時間
+	void SetTimer(int time) { timer_ = time; };
+	void SetUpTimer(int time) { upTimer = time; };
+
+	//タイマー現象
 	void CountDown() { timer_--; };
+
+	//移動
+	void MovePosYUp(int block);
+	void MovePosYDown();
+	void MovePos(int block);
 
 	//Vector3を入手
 	YMath::Vector3 GetPos() { return block_.pos_; };

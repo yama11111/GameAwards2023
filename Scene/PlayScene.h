@@ -327,6 +327,8 @@ namespace YScene
 		// ゴール描画クラス
 		GoalDrawer goalDra_;
 
+		//後で消す
+		int blockcount = 1;
 
 		// 天球
 		Skydome skydome_;

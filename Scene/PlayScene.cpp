@@ -668,6 +668,7 @@ void PlayScene::Update()
 			}
 		}
 
+		//通常ブロック処理
 		if (block[i]->GetKind() == Normal)
 		{
 			//透けるフラグをonに
@@ -679,7 +680,52 @@ void PlayScene::Update()
 				block[i]->SetClearFlag(true);
 			}
 		}
+
+		//ブロック上げ下げ処置
+		if (player->GetPlayFlag())
+		{
+			//上がるフラグがonなら
+			if (block[i]->GetUpFlag())
+			{
+				//ブロックのpos,scaleを拡大
+				block[i]->MovePosYUp(blockcount);
+			}
+			else
+			{
+				//ブロックのpos,scaleを縮小
+				block[i]->MovePosYDown();
+
+				if (sKeys_->IsTrigger(DIK_7))
+				{
+					blockcount = 1;
+				}
+
+				if (sKeys_->IsTrigger(DIK_8))
+				{
+					blockcount = 2;
+				}
+
+				if (sKeys_->IsTrigger(DIK_9))
+				{
+					blockcount = 3;
+				}
+			}
+		}
+		/*if (i == 32)
+		{
+			if (sKeys_->IsDown(DIK_Q))
+			{
+				block[i]->MovePosYUp();
+			}
+			if (sKeys_->IsDown(DIK_E))
+			{
+				block[i]->MovePosYDown();
+			}
+		}*/
 	}
+
+	//block[32]->MovePos(sKeys_->IsDown(DIK_2) - sKeys_->IsDown(DIK_1));
+
 
 	//格納
 	YGame::Transform CheckTrans1;
@@ -810,6 +856,16 @@ void PlayScene::Update()
 								//下に埋まった瞬間ジャンプフラグをfalseに
 								player->SetJumpFlag(false);
 								//player->Landing();
+
+
+								if (sKeys_->IsTrigger(DIK_C))
+								{
+									if (block[i]->GetUpFlag() == false)
+									{
+										block[i]->SetUpFlag(true);
+										block[i]->SetUpTimer(50);
+									}
+								}
 							}
 						}
 					}
