@@ -41,7 +41,7 @@ void TestScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
+	DrawerManager::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 }
 #pragma endregion
 
@@ -72,6 +72,11 @@ void TestScene::Initialize()
 	// ブロック描画するか
 	isDrawBlock_ = true;
 
+	// グリッド
+	grid_.Initalize({ 0.0f,0.0f,-0.1f }, { 20.0f,20.0f,1.0f }, 3.0f);
+	// グリッド描画するか
+	isDrawGrid_ = false;
+
 	// ゲート描画用クラス初期化
 	gateDra_.Initialize(&core_, IDrawer::Mode::Red);
 	// ゲート描画するか
@@ -99,6 +104,13 @@ void TestScene::Initialize()
 	// エフェクト初期化
 	effectMan_.Initialize();
 
+
+	// カメラ無し用
+	noneVP_.Initialize({});
+
+	// カメラ
+	camera_.Initialize({ 0,0,-50 }, {});
+
 	// スクロールカメラ
 	scrollCamera_.Initialize({ 0,+10,-50 }, &core_.pos_, { 0.0f,0.0f,0.0f });
 
@@ -123,11 +135,14 @@ void TestScene::Update()
 	ImGui::Checkbox("Player", &isDrawPlayer_);
 	ImGui::Checkbox("Filter", &isDrawFilter_);
 	ImGui::Checkbox("Block", &isDrawBlock_);
+	ImGui::Checkbox("Grid", &isDrawGrid_);
 	ImGui::Checkbox("Gate", &isDrawGate_);
 	ImGui::Checkbox("Goal", &isDrawGoal_);
 	ImGui::Checkbox("Skydome", &isDrawSkydome_);
 	ImGui::Checkbox("HUD", &isDrawHUD_);
 	ImGui::End();
+
+#pragma region HUD
 
 	// HUD更新
 	hud_.Update();
@@ -150,6 +165,10 @@ void TestScene::Update()
 		}
 	}
 
+#pragma endregion
+
+
+#pragma region Object
 
 	// プレイヤー
 	if (sKeys_->IsTrigger(DIK_W))
@@ -159,14 +178,6 @@ void TestScene::Update()
 	if (sKeys_->IsTrigger(DIK_S))
 	{
 		playerDra_.LandingAnimation();
-	}
-	if (sKeys_->IsTrigger(DIK_K))
-	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Normal);
-	}
-	if (sKeys_->IsTrigger(DIK_L))
-	{
-		playerDra_.ChangeColorAnimation(IDrawer::Mode::Red);
 	}
 	if (sKeys_->IsTrigger(DIK_N))
 	{
@@ -182,26 +193,56 @@ void TestScene::Update()
 
 	
 	// ブロック
-	if (sKeys_->IsTrigger(DIK_N))
+	if (sKeys_->IsTrigger(DIK_1))
 	{
-		blockDra_.FadeInAnimation(40);
+		blockDra_.SetIsRetrievable(true);
+	}
+	if (sKeys_->IsTrigger(DIK_2))
+	{
+		blockDra_.SetIsRetrievable(false);
+	}
+	if (sKeys_->IsTrigger(DIK_3))
+	{
+		blockDra_.SetIsCanPlace(true);
+	}
+	if (sKeys_->IsTrigger(DIK_4))
+	{
+		blockDra_.SetIsCanPlace(false);
+	}
+	if (sKeys_->IsTrigger(DIK_5))
+	{
+		blockDra_.PlaceAnimation();
+	}
+	if (sKeys_->IsTrigger(DIK_6))
+	{
+		blockDra_.CanNotPlaceAnimation();
 	}
 
 	blockDra_.Update();
 
+	// グリッド
+	if (sKeys_->IsTrigger(DIK_N))
+	{
+		grid_.ActAlphaAnimation();
+	}
+
+	grid_.Update();
 	
 	// ゲート
-
 	gateDra_.Update();
 
 	
 	// ゴール
-
 	goalDra_.Update();
 
 	
 	// 天球更新
 	skydome_.Update();
+
+#pragma endregion
+
+
+#pragma region Particle
 
 	// パーティクル更新
 	particleMan_.Update();
@@ -209,21 +250,82 @@ void TestScene::Update()
 	// エフェクト更新
 	effectMan_.Update();
 
-	// カメラ更新
-	scrollCamera_.Update();
+#pragma endregion
 
-	// ビュープロジェクションにカメラ代入
-	transferVP_ = scrollCamera_.GetViewProjection();
+
+#pragma region Camera
+
+	// カメラ設定
+	ImGui::Begin("CameraConfig");
+
+	bool isChecks[3] = { false, false, false };
+
+	if (cameraConfig_ == CameraConfig::None)
+	{
+		ImGui::Text("Current : None (%d)", static_cast<int>(CameraConfig::None));
+		isChecks[0] = true;
+	}
+	else if (cameraConfig_ == CameraConfig::Camera1)
+	{
+		ImGui::Text("Current : Camera1 (%d)", static_cast<int>(CameraConfig::Camera1));
+		isChecks[1] = true;
+	}
+	else if (cameraConfig_ == CameraConfig::ScrollCamera)
+	{
+		ImGui::Text("Current : ScrollCamera (%d)", static_cast<int>(CameraConfig::ScrollCamera));
+		isChecks[2] = true;
+	}
+
+	if (ImGui::Checkbox("None", &isChecks[0])) { cameraConfig_ = CameraConfig::None; }
+	if (ImGui::Checkbox("Camera1", &isChecks[1])) { cameraConfig_ = CameraConfig::Camera1; }
+	if (ImGui::Checkbox("ScrollCamera", &isChecks[2])) { cameraConfig_ = CameraConfig::ScrollCamera; }
+
+	ImGui::End();
+
+	// カメラ無し用更新
+	noneVP_.UpdateMatrix();
+
+	// カメラ更新
+	camera_.Update();
+	
+	// スクロールカメラ更新
+	scrollCamera_.Update();
+	
+	// カメラ1なら
+	if (cameraConfig_ == CameraConfig::None)
+	{
+		// ビュープロジェクションにカメラ代入
+		transferVP_ = noneVP_;
+	}
+	else if (cameraConfig_ == CameraConfig::Camera1)
+	{
+		// ビュープロジェクションにカメラ代入
+		transferVP_ = camera_.GetViewProjection();
+	}
+	// スクロールカメラなら
+	else if (cameraConfig_ == CameraConfig::ScrollCamera)
+	{
+		// ビュープロジェクションにカメラ代入
+		transferVP_ = scrollCamera_.GetViewProjection();
+	}
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
 
+#pragma endregion
+
+
+#pragma region SceneChange
 
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_0))
 	{
 		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
 	}
+
+#pragma endregion
+
+
 }
 #pragma endregion
 
@@ -247,6 +349,9 @@ void TestScene::DrawModels()
 	// ブロック前描画
 	if (isDrawBlock_) { blockDra_.Draw(); }
 	
+	// グリッド描画
+	if (isDrawGrid_) { grid_.Draw(); }
+
 	// ゲート前描画
 	if (isDrawGate_) { gateDra_.PreDraw(); }
 

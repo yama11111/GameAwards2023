@@ -85,8 +85,6 @@ public:
 	void JumpAnimation();
 	// 着地モーション
 	void LandingAnimation();
-	// 色替えアニメーション
-	void ChangeColorAnimation(const Mode& mode);
 	// リスポーンアニメーション
 	void RespawnAnimation();
 private:

@@ -94,61 +94,42 @@ void BlockDrawer::Reset(const Mode& mode)
 	{
 		color_->Initialize(DefColor::Red);
 	}
-	else if(mode == Mode::Invisivle)
-	{
-		color_->Initialize(DefColor::Invisible);
-	}
-
-	// 状態を保存
-	save_ = current_;
 
 	// ----- アニメーション ----- //
 
-	// フェードインフラグ
-	isFadeIn_ = false;
-	// フェードイン用タイマー
-	fadeInTim_.Initialize(0);
-	// フェードイン用色イージング
-	fadeInColorEas_.Initialize(DefColor::Invisible, DefColor::Red, FadeIn::Exponent);
-}
+	// 取得可能状態か
+	isRetrievable_ = false;
 
-void BlockDrawer::ResetAnimation()
-{
-	// ブヨブヨアニメーション初期化
-	SlimeActor::Initialize();
+	// 前は取得可能状態だったか
+	isElderRetrievable_ = false;
 
-	// 立ちモーションタイマーリセット
-	idleTim_.Reset(true);
+	// 取得可能アニメーション用タイマー
+	RetrievableTim_.Initialize(Retrievable::Frame);
 
-	// フェードイン用タイマーリセット
-	fadeInTim_.Initialize(0);
+
+	// 置けない状態か
+	isCanPlace_ = true;
+
+	// 前は置けない状態だったか
+	isElderCanPlace_ = false;
+
+	// 置けない状態用揺れ
+	notPlaceShake_.Initialize();
 }
 
 void BlockDrawer::Update()
 {
+	// 置けなかった時用シェイク更新
+	notPlaceShake_.Update();
+
 	// 基底クラス更新 
-	IDrawer::Update({});
+	IDrawer::Update({ notPlaceShake_.Value() });
 
-	// 通常状態じゃないときのみ
-	if (current_ != Mode::Normal)
-	{
-		// フェードイン中なら
-		if (isFadeIn_)
-		{
-			// フェードイン用タイマー更新
-			fadeInTim_.Update();
-			// フェードイン用の色計算
-			Vector4 fadeInColor = fadeInColorEas_.In(fadeInTim_.Ratio());
-
-			// 代入
-			color_->SetRGBA(fadeInColor);
-		}
-		else
-		{
-			// 状態を戻す
-			current_ = save_;
-		}
-	}
+	// 取得可能アニメーション
+	RetrievableAnimation();
+	
+	// 置けない状態アニメーション
+	NotPlaceAnimation();
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -163,23 +144,81 @@ void BlockDrawer::Draw()
 	spModels_[CubeIdx]->Draw(modelObjs_[CubeIdx].get());
 }
 
-void BlockDrawer::FadeInAnimation(const unsigned int frame)
+void BlockDrawer::PlaceAnimation()
 {
-	// アニメーションリセット
-	ResetAnimation();
+	// パーティクル発生
+	spParticleMan_->EmitPlaceGridBlock(Place::Frame, core_->parent_, Place::Color);
+}
 
-	// 状態を保存
-	save_ = current_;
+void BlockDrawer::CanNotPlaceAnimation()
+{
+	// 揺れ開始
+	notPlaceShake_.Activate(Place::NotShake::Swing, Place::NotShake::Dekey, Place::NotShake::Place);
+}
 
-	// 状態を透明に
-	current_ = Mode::Invisivle;
+void BlockDrawer::RetrievableAnimation()
+{
+	// 取得可能か以前と違うなら
+	if (isRetrievable_ != isElderRetrievable_)
+	{
+		// 取得可能アニメーション用タイマーリセット
+		RetrievableTim_.Reset(false);
 
-	// フェードインタイマー初期化 + 開始
-	fadeInTim_.Initialize(frame);
-	fadeInTim_.SetActive(true);
+		// 取得可能なら
+		if (isRetrievable_)
+		{
+			// パーティクル発生
+			spParticleMan_->EmitIlluminationGridBlock(Retrievable::Frame, core_->parent_, Retrievable::Color);
+		}
+	}
 
-	// フェードインアニメーション開始
-	isFadeIn_ = true;
+	// フラグ保存
+	isElderRetrievable_ = isRetrievable_;
+
+	// 取得可能状態じゃないなら弾く
+	if (isRetrievable_ == false) { return; }
+
+	// 取得可能ならタイマースタート
+	RetrievableTim_.SetActive(isRetrievable_);
+
+	// 取得可能タイマー更新
+	RetrievableTim_.Update();
+
+	// 取得可能タイマーが終了したら
+	if (RetrievableTim_.IsEnd())
+	{
+		// パーティクル発生
+		spParticleMan_->EmitIlluminationGridBlock(Retrievable::Frame, core_->parent_, Retrievable::Color);
+
+		// タイマー初期化
+		RetrievableTim_.Reset(isRetrievable_);
+	}
+}
+
+void BlockDrawer::NotPlaceAnimation()
+{
+	// 置けるか以前と違うなら
+	if (isCanPlace_ != isElderCanPlace_)
+	{
+		// 状態毎に色初期化
+		if (current_ == Mode::Normal)
+		{
+			color_->SetRGBA(DefColor::Normal);
+		}
+		else if (current_ == Mode::Red)
+		{
+			color_->SetRGBA(DefColor::Red);
+		}
+	}
+
+	// フラグ保存
+	isElderCanPlace_ = isCanPlace_;
+
+	// 置けるなら弾く
+	if (isCanPlace_) { return; }
+
+	// 置けない色にする
+	color_->SetRGBA(DefColor::Invisible);
 }
 
 void BlockDrawer::IdleAnimation()

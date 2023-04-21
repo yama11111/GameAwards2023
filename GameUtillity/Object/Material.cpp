@@ -28,7 +28,7 @@ Material::Material() :
 	name_(),
 	ambient_(0.8f, 0.8f, 0.8f),
 	diffuse_(0.5f, 0.5f, 0.5f),
-	specular_(0.10f, 0.10f, 0.10f),
+	specular_(1.0f, 1.0f, 1.0f),
 	alpha_(1.0f),
 	texFileName_(),
 	pTex_(spDefTexIndex_)

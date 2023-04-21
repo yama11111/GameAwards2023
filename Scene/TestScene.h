@@ -6,12 +6,14 @@
 #include "BlockDrawer.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
+#include "GridDrawer.h"
 
 #include "Skydome.h"
 #include "HUDDrawer.h"
 
 #include "EffectManager.h"
 #include "ScrollCamera.h"
+
 
 namespace YScene
 {
@@ -59,6 +61,11 @@ namespace YScene
 		// ブロック描画するか
 		bool isDrawBlock_ = false;
 
+		// グリッド
+		GridDrawer grid_;
+		// グリッド描画するか
+		bool isDrawGrid_ = false;
+
 		// ゲート描画クラス
 		GateDrawer gateDra_;
 		// ゲート描画するか
@@ -68,6 +75,7 @@ namespace YScene
 		GoalDrawer goalDra_;
 		// ゴール描画するか
 		bool isDrawGoal_ = false;
+
 
 		// 天球
 		Skydome skydome_;
@@ -79,12 +87,31 @@ namespace YScene
 		// HUD描画するか
 		bool isDrawHUD_ = false;
 
+
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
 
 		// エフェクトマネージャー
 		YGame::EffectManager effectMan_;
 
+
+		// カメラ設定
+		enum class CameraConfig
+		{
+			None,
+			Camera1,
+			ScrollCamera,
+		};
+
+		// カメラ設定
+		CameraConfig cameraConfig_ = CameraConfig::None;
+
+		// カメラ無し用
+		YGame::ViewProjection noneVP_;
+		
+		// カメラ
+		YGame::Camera camera_;
+		
 		// スクロールカメラ
 		YGame::ScrollCamera scrollCamera_;
 

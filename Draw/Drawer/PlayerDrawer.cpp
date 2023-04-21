@@ -249,29 +249,6 @@ void PlayerDrawer::LandingAnimation()
 	);
 }
 
-void PlayerDrawer::ChangeColorAnimation(const Mode& mode)
-{
-	// 代入
-	current_ = mode;
-	
-	// 色
-	YMath::Vector4 color = {};
-
-	// 通常
-	if (mode == Mode::Normal)
-	{
-		color = { 0.1f,1.0f,0.8f,1.0f };
-	}
-	// 赤
-	else if (mode == Mode::Red)
-	{
-		color = { 1.0f,0.0f,0.3f,1.0f };
-	}
-
-	// 発生
-	spParticleMan_->EmitFireWorks(20, 10, pParent_->pos_, pParent_->scale_.x_, color);
-}
-
 void PlayerDrawer::RespawnAnimation()
 {
 	// アニメーションリセット

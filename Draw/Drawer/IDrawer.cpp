@@ -10,13 +10,17 @@ using YMath::Vector3;
 
 #pragma endregion
 
+YGame::Camera* IDrawer::spCamera_ = nullptr;
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
 
-void IDrawer::StaticInitialize(YGame::ParticleManager* pParticleMan)
+void IDrawer::StaticInitialize(YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
+	assert(pCamera);
 	assert(pParticleMan);
+
 	// 代入
+	spCamera_ = pCamera;
 	spParticleMan_ = pParticleMan;
 }
 
@@ -49,8 +53,6 @@ void IDrawer::Reset(const Mode& mode)
 
 	// 現在の状態
 	current_ = mode;
-	// 変更後の状態
-	next_ = Mode::None;
 
 	// 立ちモーションタイマーリセット
 	idleTim_.Reset(true);

@@ -342,9 +342,12 @@ namespace YScene
 		// エフェクトマネージャー
 		YGame::EffectManager effectMan_;
 
+		// カメラ
+		YGame::Camera camera_;
+
 		// カメラの追従点
 		YMath::Vector3 followPoint_;
-
+		
 		// スクロールカメラ
 		YGame::ScrollCamera scrollCamera_;
 

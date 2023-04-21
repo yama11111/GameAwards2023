@@ -238,7 +238,7 @@ void PlayScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_, &particleMan_);
+	DrawerManager::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 }
 #pragma endregion
 
@@ -546,6 +546,9 @@ void PlayScene::Initialize()
 	// カメラ追従点
 	followPoint_ = {};
 
+	// カメラ
+	camera_.Initialize({ 0,0,-50 }, {});
+
 	// スクロールカメラ
 	scrollCamera_.Initialize({ 0,0,-50 }, &followPoint_, { 0.0f,0.0f,0.0f });
 
@@ -587,7 +590,7 @@ void PlayScene::Update()
 		else
 		{
 			// カメラ揺れる
-			scrollCamera_.Shaking(10, 2);
+			camera_.Shaking(1.0f, 0.2f, 10.0f);
 		}
 	}
 
@@ -994,10 +997,10 @@ void PlayScene::Update()
 	}
 
 	// カメラ更新
-	scrollCamera_.Update();
+	camera_.Update();
 
 	// ビュープロジェクションにカメラ代入
-	transferVP_ = scrollCamera_.GetViewProjection();
+	transferVP_ = camera_.GetViewProjection();
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();

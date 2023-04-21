@@ -84,10 +84,10 @@ void Camera::Update()
 	vp_.UpdateMatrix();
 }
 
-void Camera::Shaking(const int swing, const int dekey)
+void Camera::Shaking(const float swing, const float dekey, const float place)
 {
 	// カメラシェイク
-	shake_.Activate(swing, dekey);
+	shake_.Activate(swing, dekey, place);
 }
 
 ViewProjection Camera::GetViewProjection()
@@ -96,8 +96,8 @@ ViewProjection Camera::GetViewProjection()
 	ViewProjection result = vp_;
 	
 	// カメラシェイク加算
-	result.eye_ += shake_.Value() / 10.0f;
-	result.target_ += shake_.Value() / 10.0f;
+	result.eye_ += shake_.Value();
+	result.target_ += shake_.Value();
 	
 	// 行列更新
 	result.UpdateMatrix();

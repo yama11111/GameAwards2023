@@ -147,11 +147,37 @@ namespace DrawerConfig
 			const unsigned int IntervalTime = 10;
 		}
 
-		// フェードインモーション
-		namespace FadeIn
-		{	
-			// 指数
-			const float Exponent = 3.0f;
+		// 取得可能アニメーション
+		namespace Retrievable
+		{
+			// フレーム
+			const unsigned int Frame = 30;
+
+			// 色
+			const YMath::Vector3 Color = { 0.0f,1.0f,1.0f };
+		}
+
+		// 設置アニメーション
+		namespace Place
+		{
+			// フレーム
+			const int Frame = 10;
+
+			// 色
+			const YMath::Vector3 Color = { 0.0f,1.0f,1.0f };
+
+			// 設置できなかった時の揺れ
+			namespace NotShake
+			{
+				// 揺れ量
+				const float Swing = 0.4f;
+
+				// 収まる量
+				const float Dekey = 0.1f;
+
+				// 扱う位
+				const float Place = 10.0f;
+			}
 		}
 	}
 
@@ -252,7 +278,7 @@ namespace DrawerConfig
 
 	}
 	
-	// セレクトシーン
+	// セレクト
 	namespace Select 
 	{
 		// 地球
@@ -344,6 +370,29 @@ namespace DrawerConfig
 				// 指数
 				const float Exponent = 1.2f;
 			}
+		}
+	}
+
+	// グリッド
+	namespace Grid
+	{
+		// 色
+		const YMath::Vector3 DefColor = { 0.0f,0.8f,0.8f };
+
+		// アルファ値
+		namespace Alpha
+		{
+			// 時間
+			const int Frame = 30;
+
+			// 初期値
+			const float Start = 0.5f;
+
+			// 最終値
+			const float End = 0.2f;
+
+			// 指数
+			const float Exponent = 3.0f;
 		}
 	}
 }

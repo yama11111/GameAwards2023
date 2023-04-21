@@ -426,6 +426,9 @@
     <ClCompile Include="GameUtillity\Camera\ScrollCamera.cpp">
       <Filter>GameUtil\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\Drawer\GridDrawer.cpp">
+      <Filter>Draw\Drawer\ex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -751,6 +754,9 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\GridDrawer.h">
+      <Filter>Draw\Drawer\ex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
