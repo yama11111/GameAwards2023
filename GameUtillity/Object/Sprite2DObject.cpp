@@ -13,6 +13,7 @@ using YMath::Matrix4;
 
 #pragma endregion
 
+
 #pragma region Sprite2DObject
 
 Sprite2DObject* Sprite2DObject::Create(const Status& status, const bool isMutable)
@@ -40,7 +41,7 @@ Sprite2DObject* Sprite2DObject::Create(const Status& status, Color* pColor, cons
 void Sprite2DObject::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
 {
 	// 行列
-	cBuff_.map_->matWorld_ = m_ * common_.sProjection_;
+	cBuff_.map_->matWorld_ = m_ * Default::sProjection_;
 	cBuff_.SetDrawCommand(transformRPIndex);
 
 	// 色
@@ -53,7 +54,7 @@ void Sprite2DObject::SetColor(Color* pColor)
 	if (pColor == nullptr)
 	{
 		// デフォルト代入
-		pColor_ = common_.sDefColor_.get();
+		pColor_ = Default::sColor_.get();
 		return;
 	}
 
@@ -64,18 +65,18 @@ void Sprite2DObject::SetColor(Color* pColor)
 #pragma endregion
 
 
-#pragma region Common
+#pragma region Default
 
-YMath::Matrix4 Sprite2DObject::Common::sProjection_ = YMath::Matrix4::Identity();
-std::unique_ptr<YGame::Color> Sprite2DObject::Common::sDefColor_ = nullptr;
+YMath::Matrix4 Sprite2DObject::Default::sProjection_ = YMath::Matrix4::Identity();
+std::unique_ptr<YGame::Color> Sprite2DObject::Default::sColor_ = nullptr;
 
-void Sprite2DObject::Common::StaticInitialize()
+void Sprite2DObject::Default::StaticInitialize()
 {
 	// プロジェクション行列を設定
 	sProjection_ = YMath::MatOrthoGraphic();
 
-	// 生成
-	sDefColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	// 生成 + 初期化
+	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 }
 
 #pragma endregion

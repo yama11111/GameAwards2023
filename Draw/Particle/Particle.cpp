@@ -37,7 +37,7 @@ void IParticle::Initialize(const uint32_t aliveTime)
 
 	// ê∂ê¨
 	color_.reset(Color::Create());
-	obj_.reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+	obj_.reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 }
 
 bool IParticle::UpdateLife()

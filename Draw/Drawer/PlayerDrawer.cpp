@@ -70,7 +70,7 @@ void PlayerDrawer::Initialize(YGame::Transform* pParent, Vector3* pDirection, co
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
 			// ¶¬
-			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr));
+			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr, nullptr));
 			
 			// es—ñ‘ã“ü
 			modelObjs_[i][j]->parent_ = &core_->m_;

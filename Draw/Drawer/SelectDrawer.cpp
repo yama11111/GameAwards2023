@@ -62,7 +62,7 @@ void SelectDrawer::Initalize()
 	color_.reset(Color::Create());
 
 	// 地球
-	earthObj_.reset(YGame::ModelObject::Create({}, spVP_, color_.get(), nullptr));
+	earthObj_.reset(YGame::ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)

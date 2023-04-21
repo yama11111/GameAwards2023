@@ -1,6 +1,6 @@
 #pragma once
 #include "Mesh.h"
-#include "ShaderCommon.h"
+#include "IShaderSet.h"
 #include "PipelineSet.h"
 #include "ModelObject.h"
 
@@ -10,10 +10,10 @@ namespace YGame
 	class Model
 	{
 	private:
-		
+
 		// メッシュ配列
 		std::vector<std::unique_ptr<Mesh>> meshes_;
-		
+
 		// 非表示
 		bool isInvisible_ = false;
 
@@ -60,72 +60,59 @@ namespace YGame
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		void Draw(ModelObject* pObj);
-		
+
 		/// <summary>
 		/// 非表示設定
 		/// </summary>
 		/// <param name="isInvisible"> : 非表示か</param>
 		void SetInvisible(const bool isInvisible) { isInvisible_ = isInvisible; }
 
-#pragma region Common
+#pragma region Pipeline
 
 	public:
 
-		// コモンクラス
-		class Common
+		// パイプラインクラス
+		class Pipeline
 		{
 		public:
 
 			// ルートパラメータ番号
 			enum class RootParameterIndex
 			{
-				TransformCB	 = 0, // 行列
-				ColorCB		 = 1, // 色
-				LightCB		 = 2, // 光
-				MaterialCB	 = 3, // マテリアル
-				TexDT		 = 4, // テクスチャ
+				TransformCB = 0, // 行列
+				ColorCB = 1, // 色
+				LightCB = 2, // 光
+				MaterialCB = 3, // マテリアル
+				TexDT = 4, // テクスチャ
 			};
 
 		private:
 
 			// シェーダーセット
-			class ShaderSet : public YDX::ShaderCommon
+			class ShaderSet : public YDX::IShaderSet
 			{
 			public:
-				
+
 				// 頂点シェーダオブジェクト
 				Microsoft::WRL::ComPtr<ID3DBlob> vsBlob_ = nullptr;
-				
+
 				// ピクセルシェーダオブジェクト
 				Microsoft::WRL::ComPtr<ID3DBlob> psBlob_ = nullptr;
-			
+
 			public:
-				
+
 				/// <summary>
 				/// シェーダーファイル読み込み
 				/// </summary>
-				/// <param name="errorBlob"> : エラー用</param>
-				void Load(ID3DBlob* errorBlob);
-			
-			};
-			
-			// パイプライン設定構造体
-			struct PipelineSetStatus : public YDX::PipelineSet::IStatus
-			{
+				void Load() override;
 
-				/// <summary>
-				/// 初期化
-				/// </summary>
-				/// <param name="errorBlob_"> : エラー用</param>
-				void Initialize(ID3DBlob* errorBlob_) override;
-			
 			};
 
 		protected:
-			
+
 			// パイプライン設定
 			static YDX::PipelineSet sPipelineSet_;
-		
+
 		public:
 
 			/// <summary>
@@ -134,21 +121,16 @@ namespace YGame
 			static void StaticInitialize();
 
 			/// <summary>
-			/// パイプラインセット
+			/// パイプライン描画コマンド
 			/// </summary>
-			static void StaticSetPipeline();
+			static void StaticSetDrawCommond();
 
 		};
-
-	private:
-
-		// コモン
-		static Common common_;
 
 #pragma endregion
 
 	public:
-		
+
 		Model() = default;
 
 		~Model() = default;

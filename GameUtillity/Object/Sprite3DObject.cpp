@@ -11,6 +11,7 @@ using YMath::Matrix4;
 
 #pragma endregion
 
+
 #pragma region Sprite3D
 
 Sprite3DObject* Sprite3DObject::Create(const Status& status, bool isXAxisBillboard, bool isYAxisBillboard, const bool isMutable)
@@ -87,7 +88,7 @@ void Sprite3DObject::SetViewProjection(ViewProjection* pVP)
 	if (pVP == nullptr)
 	{
 		// デフォルト代入
-		pVP_ = common_.sDefVP_.get();
+		pVP_ = Default::sVP_.get();
 		return;
 	}
 
@@ -100,7 +101,7 @@ void Sprite3DObject::SetColor(Color* pColor)
 	if (pColor == nullptr)
 	{
 		// デフォルト代入
-		pColor_ = common_.sDefColor_.get();
+		pColor_ = Default::sColor_.get();
 		return;
 	}
 
@@ -115,18 +116,20 @@ void Sprite3DObject::SetIsBillboard(bool isXAxisBillboard, bool isYAxisBillboard
 
 #pragma endregion
 
-#pragma region Common
 
-std::unique_ptr<YGame::ViewProjection> Sprite3DObject::Common::sDefVP_ = nullptr;
-std::unique_ptr<YGame::Color> Sprite3DObject::Common::sDefColor_ = nullptr;
+#pragma region Default
 
-void Sprite3DObject::Common::StaticInitialize()
+std::unique_ptr<YGame::ViewProjection> Sprite3DObject::Default::sVP_ = nullptr;
+std::unique_ptr<YGame::Color> Sprite3DObject::Default::sColor_ = nullptr;
+
+void Sprite3DObject::Default::StaticInitialize()
 {
 	// 生成
-	sDefVP_.reset(new YGame::ViewProjection());
-	sDefVP_->Initialize({});
+	sVP_.reset(new YGame::ViewProjection());
+	sVP_->Initialize({});
 
-	sDefColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	// 生成 + 初期化
+	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 }
 
 #pragma endregion

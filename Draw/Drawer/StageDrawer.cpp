@@ -82,7 +82,7 @@ void StageDrawer::Initalize(YGame::Transform* pParent, const int number)
 	buildingObjs_.resize(4);
 	for (size_t i = 0; i < buildingObjs_.size(); i++)
 	{
-		buildingObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		buildingObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 		buildingObjs_[i]->parent_ = &core_->m_;
 	}
 

@@ -64,7 +64,7 @@ void BlockDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// ¶¬
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 		
 		// es—ñ‘}“ü
 		modelObjs_[i]->parent_ = &core_->m_;

@@ -144,9 +144,6 @@
     <ClCompile Include="Base\DX\PipelineSet.cpp">
       <Filter>Base\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Base\DX\ShaderCommon.cpp">
-      <Filter>Base\Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Base\DX\Vertices.cpp">
       <Filter>Base\Pipeline</Filter>
     </ClCompile>
@@ -390,12 +387,6 @@
     <ClCompile Include="GameUtillity\Object\Transform.cpp">
       <Filter>GameUtil\Object</Filter>
     </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Material.cpp">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="GameUtillity\Object\Mesh.cpp">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClCompile>
     <ClCompile Include="GameUtillity\Object\Model.cpp">
       <Filter>GameUtil\Object\Model</Filter>
     </ClCompile>
@@ -429,6 +420,15 @@
     <ClCompile Include="Draw\Drawer\GridDrawer.cpp">
       <Filter>Draw\Drawer\ex</Filter>
     </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Mesh.cpp">
+      <Filter>GameUtil\Object\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="GameUtillity\Object\Material.cpp">
+      <Filter>GameUtil\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\DX\IShaderSet.cpp">
+      <Filter>Base\Pipeline</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -453,9 +453,6 @@
       <Filter>Base\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Base\DX\PipelineSet.h">
-      <Filter>Base\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\DX\ShaderCommon.h">
       <Filter>Base\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Base\DX\Vertices.h">
@@ -722,9 +719,6 @@
     <ClInclude Include="GameUtillity\Object\Transform.h">
       <Filter>GameUtil\Object</Filter>
     </ClInclude>
-    <ClInclude Include="GameUtillity\Object\Material.h">
-      <Filter>GameUtil\Object\Model</Filter>
-    </ClInclude>
     <ClInclude Include="GameUtillity\Object\Mesh.h">
       <Filter>GameUtil\Object\Model</Filter>
     </ClInclude>
@@ -757,6 +751,12 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\GridDrawer.h">
       <Filter>Draw\Drawer\ex</Filter>
+    </ClInclude>
+    <ClInclude Include="GameUtillity\Object\Material.h">
+      <Filter>GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\DX\IShaderSet.h">
+      <Filter>Base\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

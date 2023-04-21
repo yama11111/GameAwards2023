@@ -21,7 +21,7 @@ cbuffer cbuff2 : register(b2)
 	PointLight pointLights[PointLightNum];	 // 点光源
 	//SpotLight spotLights[SpotLightNum];	 // スポットライト光源
 }
-// マテリアル2
+// マテリアル
 cbuffer cbuff3 : register(b3)
 {
 	float3 mAmbient  : packoffset(c0);	 // アンビエント係数
@@ -39,10 +39,10 @@ struct VSInput
 	float3 normal : NORMAL;
 	// uv値
 	float2 uv : TEXCOORD;
-	// 接空間
-	float3 tangent : TANGENT;
-	// 頂点色
-	float4 color : COLOR;
+	//// 接空間
+	//float3 tangent : TANGENT;
+	//// 頂点色
+	//float4 color : COLOR;
 };
 // ピクセルシェーダーの入力構造体 
 struct PSInput

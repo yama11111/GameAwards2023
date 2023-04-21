@@ -1,6 +1,6 @@
 #pragma once
 #include "Vertices.h"
-#include "ShaderCommon.h"
+#include "IShaderSet.h"
 #include "PipelineSet.h"
 #include "Sprite3DObject.h"
 #include "Texture.h"
@@ -11,7 +11,7 @@ namespace YGame
 	class Sprite3D
 	{
 	public:
-		
+
 		// 頂点データ
 		struct VData
 		{
@@ -19,7 +19,7 @@ namespace YGame
 		};
 
 	private:
-		
+
 		// 頂点データ
 		YDX::Vertices<VData> vt_;
 
@@ -36,7 +36,7 @@ namespace YGame
 		static std::vector<std::unique_ptr<Sprite3D>> sprites_;
 
 	public:
-		
+
 		/// <summary>
 		/// 生成
 		/// </summary>
@@ -48,22 +48,23 @@ namespace YGame
 		/// 全削除
 		/// </summary>
 		static void AllClear();
-	
+
 	public:
-		
+
 		/// <summary>
 		/// 描画
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		void Draw(Sprite3DObject* pObj);
-	
-#pragma region Common
+
+#pragma region Pipeline
 
 	public:
 
-		// コモンクラス
-		class Common
+		// パイプラインクラス
+		class Pipeline
 		{
+
 		public:
 
 			// ルートパラメータ番号
@@ -77,7 +78,7 @@ namespace YGame
 		private:
 
 			// シェーダーセット
-			class ShaderSet : public YDX::ShaderCommon
+			class ShaderSet : public YDX::IShaderSet
 			{
 			public:
 
@@ -95,20 +96,7 @@ namespace YGame
 				/// <summary>
 				/// シェーダーファイル読み込み
 				/// </summary>
-				/// <param name="errorBlob"> : エラー用</param>
-				void Load(ID3DBlob* errorBlob);
-
-			};
-
-			// パイプライン設定構造体
-			struct PipelineSetStatus : public YDX::PipelineSet::IStatus
-			{
-
-				/// <summary>
-				/// 初期化
-				/// </summary>
-				/// <param name="errorBlob_"> : エラー用</param>
-				void Initialize(ID3DBlob* errorBlob_) override;
+				void Load() override;
 
 			};
 
@@ -125,24 +113,19 @@ namespace YGame
 			static void StaticInitialize();
 
 			/// <summary>
-			/// パイプラインセット
+			/// パイプライン描画コマンド
 			/// </summary>
-			static void StaticSetPipeline();
+			static void StaticSetDrawCommond();
 
 		};
-
-	private:
-
-		// コモン
-		static Common common_;
 
 #pragma endregion
 
 	public:
-		
+
 		Sprite3D() = default;
 
 		~Sprite3D() = default;
-	
+
 	};
 }

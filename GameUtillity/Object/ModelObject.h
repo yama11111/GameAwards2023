@@ -1,8 +1,9 @@
 #pragma once
 #include "Transform.h"
 #include "ViewProjection.h"
-#include "LightGroup.h"
 #include "Color.h"
+#include "LightGroup.h"
+#include "Material.h"
 #include <memory>
 
 namespace YGame
@@ -10,6 +11,7 @@ namespace YGame
 	// モデル用オブジェクトクラス
 	class ModelObject : public Transform
 	{
+
 	private:
 
 		// 定数バッファデータ構造体
@@ -21,21 +23,24 @@ namespace YGame
 		};
 
 	private:
-		
+
 		// 定数バッファ
 		YDX::ConstBuffer<CBData> cBuff_;
-		
+
 		// ビュープロジェクションポインタ
 		ViewProjection* pVP_ = nullptr;
-		
+
 		// 色ポインタ
 		Color* pColor_ = nullptr;
-		
+
 		// 光源ポインタ
 		LightGroup* pLightGroup_ = nullptr;
-	
+
+		// マテリアルポインタ
+		Material* pMaterial_ = nullptr;
+
 	public:
-		
+
 		/// <summary>
 		/// 生成 + 初期化 (デフォルト初期化)
 		/// </summary>
@@ -46,7 +51,7 @@ namespace YGame
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static ModelObject* Create(const Status& status, const bool isMutable = true);
-		
+
 		/// <summary>
 		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
 		/// </summary>
@@ -58,21 +63,32 @@ namespace YGame
 		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
 		/// <param name="pLightGroup"> : 光源ポインタ</param>
+		/// <param name="pMaterial"> : 光源ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static ModelObject* Create(const Status& status, ViewProjection* pVP, Color* pColor, LightGroup* pLightGroup, 
+		static ModelObject* Create(
+			const Status& status,
+			ViewProjection* pVP,
+			Color* pColor,
+			LightGroup* pLightGroup,
+			Material* pMaterial,
 			const bool isMutable = true);
-	
+
 	public:
-		
+
 		/// <summary>
 		/// 描画前コマンド
 		/// </summary>
-		/// <param name="transformRPIndex"></param>
-		/// <param name="colorRPIndex"></param>
-		/// <param name="lightRPIndex"></param>
-		void SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex, const UINT lightRPIndex);
-		
+		/// <param name="transformRPIndex"> : トランスフォームルートパラメータ番号</param>
+		/// <param name="colorRPIndex"> : 色ルートパラメータ番号</param>
+		/// <param name="lightRPIndex"> : ライトグループルートパラメータ番号</param>
+		/// <param name="materialRPIndex"> : マテリアルルートパラメータ番号</param>
+		void SetDrawCommand(
+			const UINT transformRPIndex,
+			const UINT colorRPIndex,
+			const UINT lightRPIndex,
+			const UINT materialRPIndex);
+
 
 		/// <summary>
 		/// ビュープロジェクション設定 (null = Default)
@@ -85,30 +101,40 @@ namespace YGame
 		/// </summary>
 		/// <param name="pColor"> : 色ポインタ</param>
 		void SetColor(Color* pColor);
-		
+
 		/// <summary>
 		/// 光源設定 (null = Default)
 		/// </summary>
 		/// <param name="pLightGroup"> : 光源ポインタ</param>
 		void SetLightGroup(LightGroup* pLightGroup);
-	
-#pragma region Common
+
+		/// <summary>
+		/// マテリアル設定 (null = Default)
+		/// </summary>
+		/// <param name="pMaterial"> : マテリアルポインタ</param>
+		void SetMaterial(Material* pMaterial);
+
+#pragma region Default
 
 	public:
 
-		// コモンクラス
-		class Common
+		// 既定値クラス
+		class Default
 		{
+
 		public:
 
 			// ビュープロジェクションポインタ (デフォルト)
-			static std::unique_ptr<ViewProjection> sDefVP_;
-			
+			static std::unique_ptr<ViewProjection> sVP_;
+
 			// 光源ポインタ (デフォルト)
-			static std::unique_ptr<LightGroup> sDefLightGroup_;
-			
+			static std::unique_ptr<LightGroup> sLightGroup_;
+
 			// 色 (デフォルト)
-			static std::unique_ptr<Color> sDefColor_;
+			static std::unique_ptr<Color> sColor_;
+
+			// マテリアル (デフォルト)
+			static std::unique_ptr<Material> sMaterial_;
 
 		public:
 
@@ -119,21 +145,16 @@ namespace YGame
 
 		};
 
-	private:
-
-		// コモン
-		static Common common_;
-
 #pragma endregion
 
 	private:
-	
+
 		ModelObject() = default;
 
 	public:
-		
+
 		~ModelObject() = default;
-	
+
 	};
 }
 

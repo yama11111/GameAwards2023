@@ -47,7 +47,7 @@ void GridDrawer::Initalize(const YMath::Vector3& leftTop, const YMath::Vector3& 
 
 				// モデル用オブジェクト
 				std::unique_ptr<ModelObject> newObj;
-				newObj.reset(ModelObject::Create({ leftTop + pos, {}, sca }, spVP_, color_.get(), nullptr));
+				newObj.reset(ModelObject::Create({ leftTop + pos, {}, sca }, spVP_, color_.get(), nullptr, nullptr));
 
 				// 末尾に挿入
 				grids_.push_back(std::move(newObj));

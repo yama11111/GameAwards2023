@@ -67,22 +67,17 @@ bool YFramework::Initialize()
 	PipelineSet::StaticInitialize(pDev, pCmdList);
 
 	// 頂点
-	Vertices<Sprite2D::VData>::StaticInitialize(pCmdList);
-	Vertices<Sprite3D::VData>::StaticInitialize(pCmdList);
-	Vertices<Mesh::VData>::StaticInitialize(pCmdList);
+	VertexCommon::StaticInitialize(pCmdList);
 
 	// コモンクラス静的初期化
-	Sprite2D::Common::StaticInitialize();
-	Sprite3D::Common::StaticInitialize();
-	Model::Common::StaticInitialize();
+	Sprite2D::Pipeline::StaticInitialize();
+	Sprite3D::Pipeline::StaticInitialize();
+	Model::Pipeline::StaticInitialize();
 
-	// オブジェクト静的初期化
-	Sprite2DObject::Common::StaticInitialize();
-	Sprite3DObject::Common::StaticInitialize();
-	ModelObject::Common::StaticInitialize();
-
-	// マテリアル静的初期化
-	Material::StaticInitialize();
+	// オブジェクトデフォルト値静的初期化
+	Sprite2DObject::Default::StaticInitialize();
+	Sprite3DObject::Default::StaticInitialize();
+	ModelObject::Default::StaticInitialize();
 
 #pragma endregion
 

@@ -5,16 +5,16 @@
 namespace YDX
 {
 	// 定数バッファコモンクラス
-	class ConstBufferCommon 
+	class ConstBufferCommon
 	{
 	protected:
-		
+
 		// 静的コマンドリストポインタ
 		static ID3D12GraphicsCommandList* pCmdList_;
-		
+
 		// 静的デスクリプターヒープクラス
 		static DescriptorHeap* pDescHeap_;
-	
+
 	public:
 
 		/// <summary>
@@ -23,8 +23,9 @@ namespace YDX
 		/// <param name="pDevice"> : デバイスポインタ</param>
 		/// <param name="pDescHeap"> : デスクリプターヒープポインタ</param>
 		static void StaticInitialize(ID3D12GraphicsCommandList* pCmdList, DescriptorHeap* pDescHeap);
-	
+
 	};
+
 
 	// 定数バッファ
 	template <typename T>
@@ -34,17 +35,17 @@ namespace YDX
 
 		// マッピング用
 		T* map_ = nullptr;
-	
+
 	private:
-		
+
 		// バッファ
 		GPUResource rsc_;
-		
+
 		// CBV設定
 		D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc_{};
-	
+
 	public:
-		
+
 		/// <summary>
 		/// 定数バッファの生成 + マッピング
 		/// </summary>
@@ -56,6 +57,6 @@ namespace YDX
 		/// </summary>
 		/// <param name="rootParamIndex"> : ルートパラメータ番号</param>
 		void SetDrawCommand(const UINT rootParamIndex);
-	
+
 	};
 }

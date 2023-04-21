@@ -53,7 +53,7 @@ void BuildingDrawer::Initialize(YMath::Matrix4* pParent)
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 

@@ -60,7 +60,7 @@ void FilterDrawer::Initialize(YGame::Transform* pParent)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// ¶¬
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
 		
 		// es—ñ‘ã“ü
 		modelObjs_[i]->parent_ = &core_->m_;

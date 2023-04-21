@@ -17,15 +17,17 @@ namespace YGame
 		};
 
 	private:
+		
+		// 定数バッファ(色)
+		YDX::ConstBuffer<CBData> cBuff_;
+
+	private:
 
 		// 色
 		YMath::Vector4 color_;
 		
 		// 元の色の割合
 		YMath::Vector4 originalRate_;
-		
-		// 定数バッファ(マテリアル1)
-		YDX::ConstBuffer<CBData> cBuff_;
 
 	public:
 
@@ -35,12 +37,11 @@ namespace YGame
 		/// <param name="color"> : 色</param>
 		/// <param name="originalRate"> : 元の色の割合</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
-		/// <returns></returns>
+		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Color* Create(
 			const YMath::Vector4& color = { 1.0f,1.0f,1.0f,1.0f },
 			const YMath::Vector4& originalRate = { 1.0f,1.0f,1.0f,1.0f },
-			const bool isMutable = true
-		);
+			const bool isMutable = true);
 
 	public:
 		
@@ -51,8 +52,7 @@ namespace YGame
 		/// <param name="originalRate"> : 元の色の割合</param>
 		void Initialize(
 			const YMath::Vector4& color = { 1.0f,1.0f,1.0f,1.0f },
-			const YMath::Vector4& originalRate = { 1.0f,1.0f,1.0f,1.0f }
-		);
+			const YMath::Vector4& originalRate = { 1.0f,1.0f,1.0f,1.0f });
 
 		/// <summary>
 		/// 描画前コマンド
@@ -162,7 +162,7 @@ namespace YGame
 
 	private:
 
-		Color();
+		Color() = default;
 
 	public:
 
