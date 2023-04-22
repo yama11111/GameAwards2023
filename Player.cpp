@@ -586,28 +586,28 @@ void Player::JumpReset()
 void Player::AddGravity()
 {
 	//フラグがonなら
-	if (JumpFlag)
-	{
-		//加算する力が残っているなら
-		if (Jump > 0)
-		{
-			//重力分加算
-			JumpPower += Gravity;
+	//if (JumpFlag)
+	//{
+	//	//加算する力が残っているなら
+	//	if (Jump > 0)
+	//	{
+	//		//重力分加算
+	//		JumpPower += Gravity;
 
-			//ジャンプ力減算
-			Jump -= JumpPower;
+	//		//ジャンプ力減算
+	//		Jump -= JumpPower;
 
-			//座標から引く
-			player_.pos_.y_ += Jump;
-		}
+	//		//座標から引く
+	//		player_.pos_.y_ += Jump;
+	//	}
 
-		//重力
-		if (Gravity < 0.2f)
-		{
-			GravityPower += 0.01f;
-			Gravity += GravityPower;
-		}
-	}
+	//	//重力
+	//	if (Gravity < 0.2f)
+	//	{
+	//		GravityPower += 0.01f;
+	//		Gravity += GravityPower;
+	//	}
+	//}
 
 	//重力かける
 	player_.pos_.y_ -= Gravity;

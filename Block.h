@@ -40,7 +40,9 @@ private:
 
 	int upTimer = 0;
 
-	//void LoadCSVFile(std::vector<std::vector<int>>& data, const char* fileName, int _height, int _width);
+	void LoadCSVFile(std::vector<std::vector<int>>& data, const char* fileName, int _height, int _width);
+
+	void LoadCSV(std::string csvPath);
 
 	std::vector<std::vector<int>> r_data;
 public:

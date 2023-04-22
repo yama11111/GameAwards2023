@@ -39,6 +39,7 @@ private:
 	//重力関係
 	float Gravity = 0;
 	float GravityPower = 0;
+
 public:
 
 	//インクリメント

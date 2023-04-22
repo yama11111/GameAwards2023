@@ -618,14 +618,15 @@ void PlayScene::Update()
 	result.z_ = 0.0f;
 
 	//移動量
-	float playerA = 0.3f;
+	float playerA = harfScale * 2;
 	float filterA = harfScale * 2;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
 	{
 		//移動量
-		result.x_ *= playerA;
+		//result.x_ *= playerA;
+		result.x_ = filterA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
 
 		//プレイヤーはy軸はジャンプのみ
 		result.y_ = 0.0f;
@@ -668,6 +669,9 @@ void PlayScene::Update()
 
 						//透けるフラグをonに
 						block[i]->SetClearFlag(true);
+
+						// カメラ揺れる
+						scrollCamera_.Shaking(10, 2);
 					}
 				}
 			}
@@ -1002,7 +1006,7 @@ void PlayScene::Update()
 	else
 	{
 		// プレイヤー追従
-		followPoint_ = filter->GetTransform().pos_;
+		followPoint_ = filter->GetTransform(5).pos_;
 	}
 
 	// カメラ更新

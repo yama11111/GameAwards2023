@@ -16,15 +16,15 @@ private:
 	YMath::Vector3 movePos = { 0.0f,0.0f,0.0f };
 
 	// フィルター
-	YGame::Transform filters[12];
+	YGame::Transform filters[9];
 
 	// フィルター描画クラス
-	FilterDrawer filterDras[12];
+	FilterDrawer filterDras[9];
 
-	bool drawFlag[12];
+	bool drawFlag[9];
 
 	//縦横
-	const int countX = 4;
+	const int countX = 3;
 	const int countY = 3;
 
 	const int mapCountY = 14;

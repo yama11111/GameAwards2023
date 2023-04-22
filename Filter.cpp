@@ -86,6 +86,9 @@ void Filter::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 	for (int i = 0; i < countY * countX; i++)
 	{
 		filters[i].Initialize({ pos_, rot_, {0.5f,0.5f,0.5f} });
+
+		filters[i].pos_.y_ += harfscale * 4;
+		
 		filterDras[i].Initialize(&filters[i]);
 
 		drawFlag[i] = true;
@@ -96,12 +99,12 @@ void Filter::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 		filters[i].pos_.x_ += (filters[i].scale_.x_);
 		filters[i + countY].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 2);
 		filters[i + (2 * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 4);
-		filters[i + (3 * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 6);
+		//filters[i + (3 * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 6);
 
 		filters[i].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
 		filters[i + countY].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
 		filters[i + (2 * countY)].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
-		filters[i + (3 * countY)].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
+		//filters[i + (3 * countY)].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
 	}
 }
 
