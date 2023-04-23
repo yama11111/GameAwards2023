@@ -118,7 +118,7 @@
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\CardDrawer.cpp" />
-    <ClCompile Include="Draw\Drawer\DrawerManager.cpp" />
+    <ClCompile Include="Draw\Drawer\DrawerHelper.cpp" />
     <ClCompile Include="Draw\Drawer\FilterDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GoalDrawer.cpp" />
@@ -225,7 +225,7 @@
     <ClInclude Include="Draw\Drawer\BuildingDrawer.h" />
     <ClInclude Include="Draw\Drawer\CardDrawer.h" />
     <ClInclude Include="Draw\Drawer\DrawerConfig.h" />
-    <ClInclude Include="Draw\Drawer\DrawerManager.h" />
+    <ClInclude Include="Draw\Drawer\DrawerHelper.h" />
     <ClInclude Include="Draw\Drawer\FilterDrawer.h" />
     <ClInclude Include="Draw\Drawer\GateDrawer.h" />
     <ClInclude Include="Draw\Drawer\GoalDrawer.h" />

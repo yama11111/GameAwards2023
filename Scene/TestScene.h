@@ -60,6 +60,9 @@ namespace YScene
 		BlockDrawer blockDra_;
 		// ブロック描画するか
 		bool isDrawBlock_ = false;
+		// アニメーション用フラグ
+		bool isCanCatch_ = false;
+		bool isCanPlace_ = false;
 
 		// グリッド
 		GridDrawer grid_;

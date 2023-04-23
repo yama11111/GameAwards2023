@@ -8,49 +8,44 @@
 
 using std::array;
 using std::unique_ptr;
+
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
+
 using YGame::SlimeActor;
+
 using YMath::Vector3;
+using YMath::Vector4;
+
 using namespace DrawerConfig::Goal;
 
 #pragma endregion
 
 #pragma region Static
 
+array<Model*, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::spModels_ =
+{
+	nullptr, nullptr, nullptr, 
+};
+
+#pragma endregion
+
 // インデックス
 static const size_t CoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Core); // 核
 static const size_t InsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Inside); // 内枠
 static const size_t OutsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Outside); // 外枠
-static const size_t BaseIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Base); // 台座
 
-// 静的 モデル配列 初期化
-array<Model*, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::spModels_ =
+void GoalDrawerCommon::StaticInitialize()
 {
-	nullptr, nullptr, nullptr, nullptr,
-};
-
-// 静的ビュープロジェクション
-YGame::ViewProjection* GoalDrawerCommon::spVP_ = nullptr;
-
-void GoalDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
-{
-	// nullチェック
-	assert(pVP);
-	// 代入
-	spVP_ = pVP;
-
 	// ----- モデル読み込み ----- //
 
 	spModels_[CoreIdx] = Model::Load("goal/core", true); // 核
 	spModels_[InsideIdx] = Model::Load("goal/inside", true); // 内枠
 	spModels_[OutsideIdx] = Model::Load("goal/outside", true); // 外枠
-	spModels_[BaseIdx] = Model::Load("goal/base", true); // 台座
 }
 
-#pragma endregion
 
 void GoalDrawer::Initialize(YGame::Transform* pParent)
 {
@@ -60,7 +55,7 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr, nullptr));
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr, spMate_));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
@@ -88,7 +83,6 @@ void GoalDrawer::Reset()
 	modelObjs_[CoreIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 核
 	modelObjs_[InsideIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 内枠
 	modelObjs_[OutsideIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 外枠
-	modelObjs_[BaseIdx]->Initialize({}); // 台座
 
 	// ----- タイマー初期化 ----- //
 	

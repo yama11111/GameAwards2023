@@ -80,7 +80,7 @@ namespace YGame
 	public:
 
 		// コモンクラス
-		class Common
+		class Base
 		{
 		public:
 
@@ -99,15 +99,15 @@ namespace YGame
 
 		public:
 
-			Common() = default;
+			Base() = default;
 
-			~Common();
+			~Base();
 		};
 
 	public:
 
 		// コモン
-		static Common common_;
+		static Base common_;
 
 	public:
 		

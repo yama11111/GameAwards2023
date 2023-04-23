@@ -7,112 +7,84 @@
 
 using std::array;
 using std::unique_ptr;
+
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
+
 using YGame::SlimeActor;
+
 using YMath::Vector3;
+using YMath::Vector4;
+
 using namespace DrawerConfig::Player;
 
 #pragma endregion
 
 #pragma region Static
 
-// インデックス
-static const size_t NormalIdx = static_cast<size_t>(IDrawer::Mode::Normal); // 通常
-static const size_t RedIdx = static_cast<size_t>(IDrawer::Mode::Red); // 赤
-static const size_t InvisibleIdx = static_cast<size_t>(IDrawer::Mode::Invisivle); // 透明
-
-static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Body); // 体
-
-
-// 静的 モデル配列 初期化
 array<Model*, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr
 };
 
-// 静的ビュープロジェクション
-YGame::ViewProjection* PlayerDrawerCommon::spVP_ = nullptr;
+#pragma endregion
 
-void PlayerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
+// インデックス
+static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Body); // 体
+
+void PlayerDrawerCommon::StaticInitialize()
 {
-	// nullチェック
-	assert(pVP);
-	// 代入
-	spVP_ = pVP;
-
 	// ----- モデル読み込み ----- //
 
 	spModels_[BodyIdx] = Model::Load("player", true); // 体
 	spModels_[1] = Model::CreateCube();
 }
 
-#pragma endregion
 
-void PlayerDrawer::Initialize(YGame::Transform* pParent, Vector3* pDirection, const Mode& mode)
+void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 {
 	// nullチェック
 	assert(pDirection);
 
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
+	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
 
 	// 色生成
-	colors_[NormalIdx]	 .reset(Color::Create());
-	colors_[RedIdx]		 .reset(Color::Create());
-	colors_[InvisibleIdx].reset(Color::Create());
+	color_.reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			// 生成
-			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr, nullptr));
-			
-			// 親行列代入
-			modelObjs_[i][j]->parent_ = &core_->m_;
-		}
+		// 生成
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, spMate_));
+
+		// 親行列代入
+		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// 向きポインタ挿入
 	pDirection_ = pDirection;
 
 	// リセット
-	Reset(mode);
+	Reset();
 }
 
-void PlayerDrawer::Reset(const Mode& mode)
+void PlayerDrawer::Reset()
 {
 	// リセット
-	IDrawer::Reset(mode);
+	IDrawer::Reset(Mode::Normal);
 
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			// 大きさ
-			Vector3 scale = DefScale;
-
-			// 透明なら
-			if (i == InvisibleIdx)
-			{
-				// 大きさ調整
-				scale *= DrawerConfig::InvisibleScale;
-			}
-
-			// 初期化
-			modelObjs_[i][j]->Initialize({ {}, {}, scale });
-		}
+		// 初期化
+		modelObjs_[i]->Initialize({ {}, {}, DefScale });
 	}
 
 	// 色初期化
-	colors_[NormalIdx]->Initialize(DefColor::Normal, DefColor::Normal);
-	colors_[RedIdx]->Initialize(DefColor::Red, DefColor::Red);
-	colors_[InvisibleIdx]->Initialize(DefColor::Invisible);
+	color_->SetRGB(DefColor);
 
 	// ----- アニメーション ----- //
 	
@@ -161,9 +133,7 @@ void PlayerDrawer::Update()
 		float respAlpha = respAlphaEas_.In(respawnTim_.Ratio());
 
 		// 代入
-		colors_[NormalIdx]->SetAlpha(respAlpha);
-		colors_[RedIdx]->SetAlpha(respAlpha);
-		colors_[InvisibleIdx]->SetAlpha(respAlpha);
+		color_->SetAlpha(respAlpha);
 	}
 
 	// 基底クラス更新 
@@ -172,34 +142,18 @@ void PlayerDrawer::Update()
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			modelObjs_[i][j]->UpdateMatrix();
-		}
+		modelObjs_[i]->UpdateMatrix();
 	}
 }
 
-void PlayerDrawer::PreDraw()
+void PlayerDrawer::Draw()
 {
-	// 透明描画
-	spModels_[BodyIdx]->Draw(modelObjs_[InvisibleIdx][BodyIdx].get());
-
-	// 通常なら
-	if (current_ == Mode::Normal)
-	{
-		// 描画
-		spModels_[BodyIdx]->Draw(modelObjs_[NormalIdx][BodyIdx].get());
-	}
-}
-
-void PlayerDrawer::PostDraw()
-{
-	// 赤なら
-	if (current_ == Mode::Red)
-	{
-		// 描画
-		spModels_[BodyIdx]->Draw(modelObjs_[RedIdx][BodyIdx].get());
-	}
+	//// モデルの数描画
+	//for (size_t i = 0; i < spModels_.size(); i++)
+	//{
+	//	spModels_[i]->Draw(modelObjs_[i].get());
+	//}
+	spModels_[BodyIdx]->Draw(modelObjs_[BodyIdx].get());
 }
 
 void PlayerDrawer::JumpAnimation()

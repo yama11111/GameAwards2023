@@ -10,16 +10,26 @@ using YMath::Vector3;
 
 #pragma endregion
 
+YGame::ViewProjection* IDrawer::spVP_ = nullptr;
+YGame::Material* IDrawer::spMate_ = nullptr;
 YGame::Camera* IDrawer::spCamera_ = nullptr;
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
 
-void IDrawer::StaticInitialize(YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan)
+void IDrawer::StaticInitialize(
+	YGame::ViewProjection* pVP,
+	YGame::Material* pMate,
+	YGame::Camera* pCamera,
+	YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
+	assert(pVP);
+	assert(pMate);	
 	assert(pCamera);
 	assert(pParticleMan);
 
 	// 代入
+	spVP_ = pVP;
+	spMate_ = pMate;
 	spCamera_ = pCamera;
 	spParticleMan_ = pParticleMan;
 }
@@ -51,8 +61,8 @@ void IDrawer::Reset(const Mode& mode)
 	// オブジェクト初期化
 	core_->Initialize({});
 
-	// 現在の状態
-	current_ = mode;
+	// 状態変更
+	ChangeMode(mode);
 
 	// 立ちモーションタイマーリセット
 	idleTim_.Reset(true);
@@ -83,4 +93,13 @@ void IDrawer::Update(const YGame::Transform::Status& status)
 			SlimeActor::JiggleValue() + status.scale_
 		}
 	);
+}
+
+void IDrawer::ChangeMode(const Mode& mode)
+{
+	// 現在の状態
+	current_ = mode;
+
+	// 現在の状態番号
+	currentIdx_ = static_cast<size_t>(current_);
 }

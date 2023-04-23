@@ -14,15 +14,7 @@ namespace DrawerConfig
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
 
 		// 色
-		namespace DefColor
-		{
-			// 通常
-			const YMath::Vector4 Normal	   = { 0.1f,0.9f,0.8f,1.0f };
-			// 赤
-			const YMath::Vector4 Red	   = { 1.0f,0.2f,0.1f,1.0f };
-			// 透明
-			const YMath::Vector4 Invisible = { 1.0f,1.0f,1.0f,0.4f };
-		}
+		const YMath::Vector3 DefColor = { 0.1f,0.9f,0.8f };
 
 		// 置けないときの色
 		const YMath::Vector3 BadColor = { 1.0f,0.0f,1.0f };
@@ -111,6 +103,9 @@ namespace DrawerConfig
 		// 大きさ
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
 
+		// 色
+		const YMath::Vector4 DefColor = { 1.0f,0.0f,0.0f,0.25f };
+
 		// 置けないときの色
 		const YMath::Vector3 BadColor = { 0.1f,0.1f,0.1f };
 
@@ -129,17 +124,35 @@ namespace DrawerConfig
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
 
 		// 色
-		namespace DefColor
+		namespace CoreColor
 		{
+			// フレーム
+			const unsigned int Frame = 120;
+
 			// 通常
-			const YMath::Vector4 Normal	   = { 0.0f,0.0f,0.3f,1.0f };
+			namespace Normal
+			{
+				// 初期値
+				const YMath::Vector4 Start = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+				// 最終値
+				const YMath::Vector4 End   = { 0.15f, 0.15f, 0.15f, 1.0f };
+			}
+
 			// 赤
-			const YMath::Vector4 Red	   = { 1.0f,0.0f,0.0f,1.0f };
-			// 透明
-			const YMath::Vector4 Invisible = { 1.0f,1.0f,1.0f,0.25f };
+			namespace Red
+			{
+				// 初期値
+				const YMath::Vector4 Start = { 0.6f, 0.0f, 0.0f, 1.0f };
+
+				// 最終値
+				const YMath::Vector4 End   = { 1.0f, 0.0f, 0.0f, 1.0f };
+			}
+
+			// 指数
+			const float Exponent = 3.0f;
 		}
-
-
+		
 		// 立ちモーション
 		namespace Idle
 		{
@@ -147,36 +160,105 @@ namespace DrawerConfig
 			const unsigned int IntervalTime = 10;
 		}
 
-		// 取得可能アニメーション
-		namespace Retrievable
+		// 取得アニメーション
+		namespace Catch
 		{
-			// フレーム
-			const unsigned int Frame = 30;
+			// 成功
+			namespace Success
+			{
+				// フレーム
+				const unsigned int Frame = 10;
 
-			// 色
-			const YMath::Vector3 Color = { 0.0f,1.0f,1.0f };
+
+				// 初期値
+				const float Start = 0.0f;
+				
+				// 最終値
+				const float End = 0.0f;
+				
+				// 指数
+				const float Exponent = 0.0f;
+			}
+
+			// 失敗
+			namespace Failure
+			{
+				// フレーム
+				const unsigned int Frame = 10;
+
+
+				// 初期値
+				const float Start = 0.0f;
+
+				// 最終値
+				const float End = 0.0f;
+
+				// 指数
+				const float Exponent = 0.0f;
+
+				// 揺れ
+				namespace Shake
+				{
+					// 揺れ量
+					const float Swing = 0.4f;
+
+					// 収まる量
+					const float Dekey = 0.1f;
+
+					// 扱う位
+					const float Place = 10.0f;
+				}
+			}
 		}
 
 		// 設置アニメーション
 		namespace Place
 		{
-			// フレーム
-			const int Frame = 10;
-
-			// 色
-			const YMath::Vector3 Color = { 0.0f,1.0f,1.0f };
-
-			// 設置できなかった時の揺れ
-			namespace NotShake
+			// 成功
+			namespace Success
 			{
-				// 揺れ量
-				const float Swing = 0.4f;
+				// フレーム
+				const unsigned int Frame = 10;
 
-				// 収まる量
-				const float Dekey = 0.1f;
 
-				// 扱う位
-				const float Place = 10.0f;
+				// 初期値
+				const float Start = 0.0f;
+
+				// 最終値
+				const float End = 0.0f;
+
+				// 指数
+				const float Exponent = 0.0f;
+			}
+
+			// 失敗
+			namespace Failure
+			{
+				// フレーム
+				const unsigned int Frame = 10;
+
+
+				// 初期値
+				const float Start = 0.0f;
+
+				// 最終値
+				const float End = 0.0f;
+
+				// 指数
+				const float Exponent = 0.0f;
+
+				// 揺れ
+				namespace Shake
+				{
+					// 揺れ量
+					const float Swing = 0.4f;
+
+					// 収まる量
+					const float Dekey = 0.1f;
+
+					// 扱う位
+					const float Place = 10.0f;
+				}
 			}
 		}
 	}
@@ -186,6 +268,9 @@ namespace DrawerConfig
 	{
 		// 大きさ
 		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+		
+		// 色
+		const YMath::Vector3 DefColor = { 1.0f,1.0f,1.0f };
 
 		// 立ちモーション
 		namespace Idle

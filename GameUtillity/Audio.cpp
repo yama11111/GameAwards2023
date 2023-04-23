@@ -13,13 +13,13 @@ using YDX::Result;
 #pragma region Static
 
 std::vector<unique_ptr<Audio>> Audio::audios_{};
-Audio::Common Audio::common_{};
-Microsoft::WRL::ComPtr<IXAudio2> Audio::Common::xAudio2_{};
-IXAudio2MasteringVoice* Audio::Common::masterVoice_ = nullptr;
+Audio::Base Audio::common_{};
+Microsoft::WRL::ComPtr<IXAudio2> Audio::Base::xAudio2_{};
+IXAudio2MasteringVoice* Audio::Base::masterVoice_ = nullptr;
 
 #pragma endregion
 
-void Audio::Common::StaticInitialize()
+void Audio::Base::StaticInitialize()
 {
 	// XAudio2のインスタンス生成
 	Result(XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR));
@@ -135,7 +135,7 @@ void Audio::AllClear()
 	audios_.clear();
 }
 
-Audio::Common::~Common()
+Audio::Base::~Base()
 {
 	xAudio2_.Reset();
 }

@@ -306,7 +306,7 @@
     <ClCompile Include="Draw\Particle\EffectManager.cpp">
       <Filter>Draw\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\DrawerManager.cpp">
+    <ClCompile Include="Draw\Drawer\DrawerHelper.cpp">
       <Filter>Draw\Drawer\Base</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\IDrawer.cpp">
@@ -629,7 +629,7 @@
     <ClInclude Include="Draw\Drawer\DrawerConfig.h">
       <Filter>Draw\Drawer\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\DrawerManager.h">
+    <ClInclude Include="Draw\Drawer\DrawerHelper.h">
       <Filter>Draw\Drawer\Base</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Stuff\Buildings.h">

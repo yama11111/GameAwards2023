@@ -6,7 +6,7 @@
 #include <cassert>
 #include "imgui.h"
 
-#include "DrawerManager.h"
+#include "DrawerHelper.h"
 
 #pragma region 名前空間宣言
 using YScene::PlayScene;
@@ -238,7 +238,7 @@ void PlayScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_, &camera_, &particleMan_);
+	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 }
 #pragma endregion
 
@@ -975,6 +975,10 @@ void PlayScene::Update()
 	goalDra_.Update();
 
 
+	// DrawerHelper更新
+	DrawerHelper::StaticUpdate();
+
+
 	// 天球更新
 	skydome_.Update();
 
@@ -1039,11 +1043,9 @@ void PlayScene::DrawModels()
 {
 	// 天球描画
 	skydome_.Draw();
-
-	// ----- Pre ----- // 
-
-	// プレイヤー前描画
-	player->PreDraw();
+	
+	// プレイヤー描画
+	player->Draw();
 
 	// ブロック前描画
 	for (size_t i = 0; i < block.size(); i++)
@@ -1061,19 +1063,8 @@ void PlayScene::DrawModels()
 	// エフェクト
 	effectMan_.Draw();
 
-	// --------------- //
-
-
 	// フィルター描画
 	filter->Draw();
-
-
-	// ----- Post ----- //
-
-	// プレイヤー後描画
-	player->PostDraw();
-
-	// --------------- //
 }
 
 void PlayScene::DrawSprite3Ds()

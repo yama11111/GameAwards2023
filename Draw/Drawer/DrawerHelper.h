@@ -2,8 +2,13 @@
 #include "ParticleManager.h"
 #include "Camera.h"
 
-class DrawerManager
+class DrawerHelper
 {
+
+private:
+
+	// デフォルトマテリアル
+	static std::unique_ptr<YGame::Material> sDefMate_;
 
 public:
 	
@@ -14,6 +19,16 @@ public:
 	/// <param name="pCamera"> : カメラポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
 	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan);
+
+	/// <summary>
+	/// 静的リセット
+	/// </summary>
+	static void StaticReset();
+
+	/// <summary>
+	/// 静的更新
+	/// </summary>
+	static void StaticUpdate();
 
 };
 

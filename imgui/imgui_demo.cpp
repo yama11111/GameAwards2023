@@ -2923,7 +2923,7 @@ static void ShowDemoWindowLayout()
             // Otherwise you can use SmallButton() (smaller fit).
             ImGui::AlignTextToFramePadding();
 
-            // Common mistake to avoid: if we want to SameLine after TreeNode we need to do it before we add
+            // Base mistake to avoid: if we want to SameLine after TreeNode we need to do it before we add
             // other contents below the node.
             bool node_open = ImGui::TreeNode("Node##2");
             ImGui::SameLine(0.0f, spacing); ImGui::Button("Button##2");

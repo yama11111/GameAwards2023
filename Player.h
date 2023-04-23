@@ -56,11 +56,14 @@ public:
 	void Update(YGame::Transform filterPos);
 	void Update();
 
-	//Pre描画(フィルターの前)
-	void PreDraw();
+	////Pre描画(フィルターの前)
+	//void PreDraw();
 
-	//Post描画(フィルターの後)
-	void PostDraw();
+	////Post描画(フィルターの後)
+	//void PostDraw();
+
+	// 描画
+	void Draw();
 
 	//リセット
 	void Reset();

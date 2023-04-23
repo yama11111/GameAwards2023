@@ -7,21 +7,22 @@
 
 using std::array;
 using std::unique_ptr;
+
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
+
 using YGame::SlimeActor;
+
 using YMath::Vector3;
+using YMath::Vector4;
+
 using namespace DrawerConfig::Filter;
 
 #pragma endregion
 
 #pragma region Static
-
-// インデックス
-static const size_t MonitorIdx = static_cast<size_t>(FilterDrawerCommon::Parts::Monitor); // モニター
-
 
 // 静的 モデル配列 初期化
 array<Model*, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::spModels_ =
@@ -29,16 +30,13 @@ array<Model*, FilterDrawerCommon::PartsNum_> FilterDrawerCommon::spModels_ =
 	nullptr, nullptr, 
 };
 
-// 静的ビュープロジェクション
-YGame::ViewProjection* FilterDrawerCommon::spVP_ = nullptr;
+#pragma endregion
 
-void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
+// インデックス
+static const size_t MonitorIdx = static_cast<size_t>(FilterDrawerCommon::Parts::Monitor); // モニター
+
+void FilterDrawerCommon::StaticInitialize()
 {
-	// nullチェック
-	assert(pVP);
-	// 代入
-	spVP_ = pVP;
-
 	// ----- モデル読み込み ----- //
 
 	// 体
@@ -46,7 +44,6 @@ void FilterDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spModels_[1] = Model::CreateCube();
 }
 
-#pragma endregion
 
 void FilterDrawer::Initialize(YGame::Transform* pParent)
 {
@@ -54,7 +51,7 @@ void FilterDrawer::Initialize(YGame::Transform* pParent)
 	IDrawer::Initialze(pParent, Mode::Red, Idle::IntervalTime);
 
 	// 色生成
-	color_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }));
+	color_.reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -86,7 +83,8 @@ void FilterDrawer::Reset()
 		}
 	);
 
-	color_->SetRGBA({ 1.0f,0.0f,0.0f,0.25f });
+	// 色初期化
+	color_->SetRGBA(DefColor);
 }
 
 void FilterDrawer::Update()

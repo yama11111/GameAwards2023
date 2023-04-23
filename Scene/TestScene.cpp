@@ -6,7 +6,7 @@
 #include <cassert>
 #include <imgui.h>
 
-#include "DrawerManager.h"
+#include "DrawerHelper.h"
 
 #pragma region 名前空間宣言
 using YScene::TestScene;
@@ -41,7 +41,7 @@ void TestScene::Load()
 	EffectManager::StaticInitialize(&particleMan_);
 
 	// 描画クラス全て
-	DrawerManager::StaticInitialize(&transferVP_, &camera_, &particleMan_);
+	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 }
 #pragma endregion
 
@@ -56,7 +56,7 @@ void TestScene::Initialize()
 	isPlayer_ = true;
 
 	// プレイヤー描画用クラス初期化
-	playerDra_.Initialize(&core_, &direction_, IDrawer::Mode::Normal);
+	playerDra_.Initialize(&core_, &direction_);
 	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
 	// プレイヤー描画するか
@@ -73,12 +73,12 @@ void TestScene::Initialize()
 	isDrawBlock_ = true;
 
 	// グリッド
-	grid_.Initalize({ 0.0f,0.0f,-0.1f }, { 20.0f,20.0f,1.0f }, 3.0f);
+	grid_.Initalize({ 0.0f,0.0f,-0.1f }, { 20.0f,20.0f,1.0f }, 6.0f);
 	// グリッド描画するか
 	isDrawGrid_ = false;
 
 	// ゲート描画用クラス初期化
-	gateDra_.Initialize(&core_, IDrawer::Mode::Red);
+	gateDra_.Initialize(&core_);
 	// ゲート描画するか
 	isDrawGate_ = false;
 
@@ -193,32 +193,53 @@ void TestScene::Update()
 
 	
 	// ブロック
-	if (sKeys_->IsTrigger(DIK_1))
+	if (isDrawBlock_)
 	{
-		blockDra_.SetIsRetrievable(true);
-	}
-	if (sKeys_->IsTrigger(DIK_2))
-	{
-		blockDra_.SetIsRetrievable(false);
-	}
-	if (sKeys_->IsTrigger(DIK_3))
-	{
-		blockDra_.SetIsCanPlace(true);
-	}
-	if (sKeys_->IsTrigger(DIK_4))
-	{
-		blockDra_.SetIsCanPlace(false);
-	}
-	if (sKeys_->IsTrigger(DIK_5))
-	{
-		blockDra_.PlaceAnimation();
-	}
-	if (sKeys_->IsTrigger(DIK_6))
-	{
-		blockDra_.CanNotPlaceAnimation();
-	}
+		ImGui::Begin("Block");
+		
+		ImGui::Text("---------------");
+		
+		if (ImGui::Button("Reset : Normal"))
+		{
+			blockDra_.Reset(IDrawer::Mode::Normal);
+		}
+		if (ImGui::Button("Reset : Red"))
+		{
+			blockDra_.Reset(IDrawer::Mode::Red);
+		}
 
-	blockDra_.Update();
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Catch"))
+		{
+			blockDra_.CatchAnimation();
+		}
+		if (ImGui::Button("FailToCatch"))
+		{
+			blockDra_.FailToCatchAnimation();
+		}
+
+		ImGui::Checkbox("IsCanCatch", &isCanCatch_);
+		blockDra_.SetIsCanCatch(isCanCatch_);
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Place"))
+		{
+			blockDra_.PlaceAnimation();
+		}
+		if (ImGui::Button("FailToPlace"))
+		{
+			blockDra_.FailToPlaceAnimation();
+		}
+
+		ImGui::Checkbox("IsCanPlace", &isCanPlace_);
+		blockDra_.SetIsCanPlace(isCanPlace_);
+
+		ImGui::End();
+
+		blockDra_.Update();
+	}
 
 	// グリッド
 	if (sKeys_->IsTrigger(DIK_N))
@@ -238,6 +259,9 @@ void TestScene::Update()
 	
 	// 天球更新
 	skydome_.Update();
+
+	// 描画クラス静的更新
+	DrawerHelper::StaticUpdate();
 
 #pragma endregion
 
@@ -341,10 +365,9 @@ void TestScene::DrawModels()
 	// 天球描画
 	if (isDrawSkydome_) { skydome_.Draw(); }
 
-	// ----- Pre ----- // 
 
 	// プレイヤー前描画
-	if (isDrawPlayer_) { playerDra_.PreDraw(); }
+	if (isDrawPlayer_) { playerDra_.Draw(); }
 
 	// ブロック前描画
 	if (isDrawBlock_) { blockDra_.Draw(); }
@@ -353,34 +376,19 @@ void TestScene::DrawModels()
 	if (isDrawGrid_) { grid_.Draw(); }
 
 	// ゲート前描画
-	if (isDrawGate_) { gateDra_.PreDraw(); }
+	if (isDrawGate_) { gateDra_.Draw(); }
 
 	// ゴール描画
 	if (isDrawGoal_) { goalDra_.Draw(); }
-
 
 	// パーティクル
 	particleMan_.Draw();
 
 	// エフェクト
 	effectMan_.Draw();
-
-	// --------------- //
-
-
+	
 	// フィルター描画
 	if (isDrawFilter_) { filterDra_.Draw(); }
-
-
-	// ----- Post ----- //
-
-	// プレイヤー後描画
-	if (isDrawPlayer_) { playerDra_.PostDraw(); }
-
-	// ゲート後描画
-	if (isDrawGate_) { gateDra_.PostDraw(); }
-
-	// --------------- //
 }
 
 void TestScene::DrawSprite3Ds()

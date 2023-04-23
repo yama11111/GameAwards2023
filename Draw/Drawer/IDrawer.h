@@ -14,26 +14,26 @@ public:
 	{
 		Normal	  = 0, // 通常
 		Red		  = 1, // 赤
-		Invisivle = 2, // 透明
-		None, // 無し
 	};
 	
-	// モードの数
-	static const size_t ModeNum_ = 3;
-
 protected:
-	
+
 	// トランスフォーム 
 	std::unique_ptr<YGame::Transform> core_;
 	
-	// 現在の状態
-	Mode current_ = Mode::Normal;
+	// 親ポインタ
+	YGame::Transform* pParent_ = nullptr;
 	
 	// 立ちモーション用タイマー
 	YMath::Timer idleTim_;
+
+private:
 	
-	// 親ポインタ
-	YGame::Transform* pParent_ = nullptr;
+	// 現在の状態
+	Mode current_ = Mode::Normal;
+
+	// 現在の状態番号
+	size_t currentIdx_ = 0;
 
 protected:
 
@@ -66,6 +66,32 @@ protected:
 
 protected:
 	
+	/// <summary>
+	/// 現在の状態番号取得
+	/// </summary>
+	/// <returns>現在の状態番号</returns>
+	size_t CurrentModeIndex() { return currentIdx_; }
+	
+	/// <summary>
+	/// 現在の状態取得
+	/// </summary>
+	/// <returns>現在の状態</returns>
+	Mode CurrentMode() { return current_; }
+
+	/// <summary>
+	/// 状態変更
+	/// </summary>
+	/// <param name="mode"> : 状態</param>
+	void ChangeMode(const Mode& mode);
+
+protected:
+	
+	// ビュープロジェクションポインタ
+	static YGame::ViewProjection* spVP_;
+
+	// マテリアルポインタ
+	static YGame::Material* spMate_;
+
 	// 静的カメラポインタ
 	static YGame::Camera* spCamera_;
 
@@ -77,9 +103,15 @@ public:
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
+	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
+	/// <param name="pMate"> : マテリアルポインタ</param>
 	/// <param name="pCamera"> : カメラポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
-	static void StaticInitialize(YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(
+		YGame::ViewProjection* pVP, 
+		YGame::Material* pMate, 
+		YGame::Camera* pCamera, 
+		YGame::ParticleManager* pParticleMan);
 
 public:
 	

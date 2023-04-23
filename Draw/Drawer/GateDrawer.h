@@ -5,7 +5,9 @@
 // ゲート描画用コモンクラス
 class GateDrawerCommon
 {
+
 public:
+	
 	// パーツの名前
 	enum class Parts
 	{
@@ -14,18 +16,26 @@ public:
 		Outside, // 外枠
 		OutsideLight, // 外枠 (光)
 	};
+
 protected:
+	
 	// パーツの総数
 	static const size_t PartsNum_ = 4;
+
 protected:
+	
 	// モデル (パーツの数だけ)
 	static std::array<YGame::Model*, PartsNum_> spModels_;
-	// ビュープロジェクションポインタ
-	static YGame::ViewProjection* spVP_;
+
 public:
-	// 静的初期化
-	static void StaticInitialize(YGame::ViewProjection* pVP);
+
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	static void StaticInitialize();
+
 public:
+	
 	virtual ~GateDrawerCommon() = default;
 };
 
@@ -34,42 +44,41 @@ class GateDrawer :
 	private IDrawer,
 	private GateDrawerCommon
 {
+
 private:
+	
 	// モデル用オブジェクト (子)
-	std::array<std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_>, ModeNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 
 	// 色 (普通, 赤, 透明)
-	std::array<std::unique_ptr<YGame::Color>, ModeNum_> colors_;
+	std::unique_ptr<YGame::Color> color_;
+
 public:
+	
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
-	/// <param name="mode"> : 状態</param>
-	/// <param name="---------------------------------------------"></param>
-	/// <param name="Mode::Noraml"> : 通常状態</param>
-	/// <param name="Mode::Red"> : 赤色状態</param>
-	/// <param name="Mode::None"> : 無し (使わない)</param>
-	void Initialize(YGame::Transform* pParent, const Mode& mode);
+	void Initialize(YGame::Transform* pParent);
+	
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
-	/// <param name="mode"> : 状態</param>
-	/// <param name="---------------------------------------------"></param>
-	/// <param name="Mode::Noraml"> : 通常状態</param>
-	/// <param name="Mode::Red"> : 赤色状態</param>
-	/// <param name="Mode::None"> : 無し (使わない)</param>
-	void Reset(const Mode& mode);
+	void Reset();
+	
 	// 更新
 	void Update();
-	// 前方描画 (フィルターより 先 に呼ぶ)
-	void PreDraw();
-	// 後方描画 (フィルターより 後 に呼ぶ)
-	void PostDraw();
+	
+	// 描画
+	void Draw();
+
 private:
+	
 	// 立ちモーション
 	void IdleAnimation() override;
+
 public:
+	
 	~GateDrawer() = default;
 };
 

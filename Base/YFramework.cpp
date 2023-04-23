@@ -87,7 +87,7 @@ bool YFramework::Initialize()
 	imguiMan_.Initialize({ window_.HandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });
 
 	// オーディオ初期化
-	Audio::Common::StaticInitialize();
+	Audio::Base::StaticInitialize();
 	Audio::AllClear();
 
 	// シーン遷移初期化

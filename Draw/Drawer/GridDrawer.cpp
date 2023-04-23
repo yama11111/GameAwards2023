@@ -42,7 +42,7 @@ void GridDrawer::Initalize(const YMath::Vector3& leftTop, const YMath::Vector3& 
 				Vector3 sca = { scaleSize, scaleSize, scaleSize };
 
 				// 位置
-				Vector3 pos = { (scaleSize * 4.0f) * x, -(scaleSize * 4.0f) * y, (scaleSize * 4.0f) * z };
+				Vector3 pos = { (scaleSize * 2.0f) * x, -(scaleSize * 2.0f) * y, (scaleSize * 2.0f) * z };
 
 
 				// モデル用オブジェクト

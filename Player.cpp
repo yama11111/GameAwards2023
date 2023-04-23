@@ -14,7 +14,7 @@ Player::Player()
 {
 	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	playerDra_.Initialize(&player_, &direction_);
 	filterDra_.Initialize(&player_);
 
 	player_.scale_.x_ = 4.0f;
@@ -41,7 +41,7 @@ void Player::Initialize()
 {
 	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	playerDra_.Initialize(&player_, &direction_);
 	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
@@ -61,7 +61,7 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 	// フィルター
 	player_.Initialize({ pos_, rot_, scale_ });
 	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Initialize(&player_, &direction_, IDrawer::Mode::Red);
+	playerDra_.Initialize(&player_, &direction_);
 	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
@@ -77,18 +77,23 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 }
 
 
-//Pre描画(フィルターの前)
-void Player::PreDraw()
-{
-	playerDra_.PreDraw();
-	//filterDra_.Draw();
-}
+////Pre描画(フィルターの前)
+//void Player::PreDraw()
+//{
+//	playerDra_.PreDraw();
+//	//filterDra_.Draw();
+//}
+//
+////Post描画(フィルターの後)
+//void Player::PostDraw()
+//{
+//	playerDra_.PostDraw();
+//	//filterDra_.Draw();
+//}
 
-//Post描画(フィルターの後)
-void Player::PostDraw()
+void Player::Draw()
 {
-	playerDra_.PostDraw();
-	//filterDra_.Draw();
+	playerDra_.Draw();
 }
 
 void Player::Update()
@@ -547,7 +552,7 @@ void Player::Reset()
 {
 	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.49f,0.9f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
-	playerDra_.Reset(IDrawer::Mode::Red);
+	playerDra_.Reset();
 	filterDra_.Reset();
 
 	//位置

@@ -11896,7 +11896,7 @@ bool ImGui::BeginDragDropSource(ImGuiDragDropFlags flags)
         source_id = g.LastItemData.ID;
         if (source_id != 0)
         {
-            // Common path: items with ID
+            // Base path: items with ID
             if (g.ActiveId != source_id)
                 return false;
             if (g.ActiveIdMouseButton != -1)

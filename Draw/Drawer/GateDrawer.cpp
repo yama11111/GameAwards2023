@@ -7,44 +7,38 @@
 
 using std::array;
 using std::unique_ptr;
+
 using YGame::Transform;
 using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
+
 using YGame::SlimeActor;
+
 using YMath::Vector3;
+using YMath::Vector4;
+
 using namespace DrawerConfig::Gate;
 
 #pragma endregion
 
 #pragma region Static
 
-// インデックス
-static const size_t NormalIdx = 0; // 通常
-static const size_t RedIdx = 1; // 赤
-static const size_t InvisibleIdx = 2; // 透明
-
-static const size_t InsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Inside); // 内枠
-static const size_t InLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::InsideLight); // 内枠 (光)
-static const size_t OutsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Outside); // 外枠
-static const size_t OutLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::OutsideLight); // 外枠 (光)
-
-// 静的 モデル配列 初期化
 array<Model*, GateDrawerCommon::PartsNum_> GateDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr,
 };
 
-// 静的ビュープロジェクション
-YGame::ViewProjection* GateDrawerCommon::spVP_ = nullptr;
+#pragma endregion
 
-void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
+// インデックス
+static const size_t InsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Inside); // 内枠
+static const size_t InLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::InsideLight); // 内枠 (光)
+static const size_t OutsideIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::Outside); // 外枠
+static const size_t OutLightIdx	 = static_cast<size_t>(GateDrawerCommon::Parts::OutsideLight); // 外枠 (光)
+
+void GateDrawerCommon::StaticInitialize()
 {
-	// nullチェック
-	assert(pVP);
-	// 代入
-	spVP_ = pVP;
-
 	// ----- モデル読み込み ----- //
 
 	spModels_[InsideIdx]   = Model::Load("gate/inside", true); // 内枠
@@ -53,39 +47,33 @@ void GateDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spModels_[OutLightIdx] = Model::Load("gate/outsideLight", true); // 外枠 (光)
 }
 
-#pragma endregion
 
-void GateDrawer::Initialize(YGame::Transform* pParent, const Mode& mode)
+void GateDrawer::Initialize(YGame::Transform* pParent)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, mode, Idle::IntervalTime);
+	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
 
 	// 色生成
-	colors_[NormalIdx].reset(Color::Create());
-	colors_[RedIdx].reset(Color::Create());
-	colors_[InvisibleIdx].reset(Color::Create());
+	color_.reset(Color::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			// 生成
-			modelObjs_[i][j].reset(ModelObject::Create({}, spVP_, colors_[i].get(), nullptr, nullptr));
+		// 生成
+		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, spMate_));
 
-			// 親行列挿入
-			modelObjs_[i][j]->parent_ = &core_->m_;
-		}
+		// 親行列挿入
+		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// リセット
-	Reset(mode);
+	Reset();
 }
 
-void GateDrawer::Reset(const Mode& mode)
+void GateDrawer::Reset()
 {
 	// リセット
-	IDrawer::Reset(mode);
+	IDrawer::Reset(Mode::Normal);
 
 	// ----- モデル用オブジェクト初期化 ----- //
 
@@ -93,25 +81,11 @@ void GateDrawer::Reset(const Mode& mode)
 
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		// 大きさ
-		Vector3 scale = Vector3(1.0f, 1.0f, 1.0f);
-		
-		// 透明なら
-		if (i == InvisibleIdx)
-		{
-			scale *= DrawerConfig::InvisibleScale;
-		}
-
-		modelObjs_[i][InsideIdx]->Initialize({ {}, {}, scale }); // 内枠
-		modelObjs_[i][InLightIdx]->Initialize({ {}, {}, scale }); // 内枠 (光)
-		modelObjs_[i][OutsideIdx]->Initialize({ {}, {}, scale }); // 外枠
-		modelObjs_[i][OutLightIdx]->Initialize({ {}, {}, scale }); // 外枠 (光)
+		modelObjs_[i]->Initialize({ {}, {}, DefScale });
 	}
 
 	// 色初期化
-	colors_[NormalIdx]->Initialize();
-	colors_[RedIdx]->Initialize();
-	colors_[InvisibleIdx]->Initialize();
+	color_->SetRGB(DefColor);
 }
 
 void GateDrawer::Update()
@@ -122,42 +96,16 @@ void GateDrawer::Update()
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		for (size_t j = 0; j < modelObjs_[i].size(); j++)
-		{
-			modelObjs_[i][j]->UpdateMatrix();
-		}
+		modelObjs_[i]->UpdateMatrix();
 	}
 }
 
-void GateDrawer::PreDraw()
+void GateDrawer::Draw()
 {
-	// 透明描画
+	// モデルの数描画
 	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		spModels_[i]->Draw(modelObjs_[InvisibleIdx][i].get());
-	}
-
-	// 通常なら
-	if (current_ == Mode::Normal)
-	{
-		// 描画
-		for (size_t i = 0; i < spModels_.size(); i++)
-		{
-			spModels_[i]->Draw(modelObjs_[NormalIdx][i].get());
-		}
-	}
-}
-
-void GateDrawer::PostDraw()
-{
-	// 赤なら
-	if (current_ == Mode::Red)
-	{
-		// 描画
-		for (size_t i = 0; i < spModels_.size(); i++)
-		{
-			spModels_[i]->Draw(modelObjs_[RedIdx][i].get());
-		}
+		spModels_[i]->Draw(modelObjs_[i].get());
 	}
 }
 

@@ -133,12 +133,12 @@ void Block::SetMode()
 		return;
 	}
 
-	//‰½‚à•`‰æ‚µ‚È‚¢
-	if (nowKind == None)
-	{
-		blockDra_.Initialize(&block_, IDrawer::Mode::None);
-		return;
-	}
+	////‰½‚à•`‰æ‚µ‚È‚¢
+	//if (nowKind == None)
+	//{
+	//	blockDra_.Initialize(&block_, IDrawer::Mode::None);
+	//	return;
+	//}
 
 	//•’Ê‚ÌƒuƒƒbƒN
 	if (nowKind == Normal)
