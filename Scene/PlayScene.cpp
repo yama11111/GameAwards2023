@@ -274,6 +274,7 @@ void PlayScene::Initialize()
 
 	int Idx = stageConfig_->GetCurrentStageIndex();
 
+	//mapコピー
 	switch (Idx)
 	{
 	case 1:
@@ -406,6 +407,7 @@ void PlayScene::Initialize()
 	// トランスフォーム (位置、回転、大きさ)
 	filter->Initialize({ -10.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
 
+	//一回リセット
 	filter->Reset();
 
 	// ----- ゴール ----- //
@@ -579,31 +581,31 @@ void PlayScene::Update()
 
 
 	// 操作切り替え
-	if (sKeys_->IsTrigger(DIK_SPACE))
-	{
-		//プレイヤーとフィルターが当たってないなら
-		if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
-		{
-			//操作フラグを反転
-			player->ChengePlayFlag();
-
-			//操作してるobjを表示するスプライトの変更
-			if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
-		}
-		else
-		{
-			// カメラ揺れる
-			scrollCamera_.Shaking(10, 2);
-		}
-	}
-
-	////デバッグ用のリセットボタン
-	//if (sKeys_->IsTrigger(DIK_R))
+	//if (sKeys_->IsTrigger(DIK_SPACE))
 	//{
-	//	player->Reset();
-	//	filter->Reset();
+	//	//プレイヤーとフィルターが当たってないなら
+	//	if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
+	//	{
+	//		//操作フラグを反転
+	//		player->ChengePlayFlag();
+
+	//		//操作してるobjを表示するスプライトの変更
+	//		if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+	//		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+	//	}
+	//	else
+	//	{
+	//		// カメラ揺れる
+	//		scrollCamera_.Shaking(10, 2);
+	//	}
 	//}
+
+	//デバッグ用のリセットボタン
+	if (sKeys_->IsTrigger(DIK_R))
+	{
+		player->Reset();
+		filter->Reset();
+	}
 
 	//格納用Vector
 	YMath::Vector3 result(0.0f, 0.0f, 0.0f);
@@ -626,10 +628,13 @@ void PlayScene::Update()
 	{
 		//移動量
 		//result.x_ *= playerA;
-		result.x_ = filterA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
+		result.x_ = playerA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
 
 		//プレイヤーはy軸はジャンプのみ
 		result.y_ = 0.0f;
+
+		//右左
+		player->SetDirection((sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A)));
 
 		//プレイヤーの移動量格納
 		player->SetMovePos(result);
@@ -650,30 +655,90 @@ void PlayScene::Update()
 	//filterのUpdate
 	filter->Update();
 
+	if (sKeys_->IsTrigger(DIK_SPACE))
+	{
+		//allFlag
+		filter->SetBlockFlag(filter->GetBlockFlag());
+	}
+
 	// ブロック
 	for (int i = 0; i < block.size(); i++)
 	{
 		//更新
 		block[i]->Update(filter->GetTransform());
-		 
-		//フィルターと当たってたら
-		for (int j = 0; j < 12; j++)
+
+		//space押さなかったらfo文入らない
+		if (sKeys_->IsTrigger(DIK_SPACE))
 		{
-			if (filter->GetDrawFlag(j) == true)
+			//全部描画するかどうか	allblock
+
+			//フィルターと当たってたら
+			for (int j = 0; j < 9; j++)
 			{
-				if (block[i]->GetClearFlag() == false)
+				//allBlockFlag
+				if (filter->GetBlockFlag() == false)
 				{
-					if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(j), true))
+					//個々のブロックの描画するかどうか
+					if (filter->GetDrawFlag(j) == true)
 					{
-						filter->SetDrawFlag(j, false);
+						//透明になっているかどうか
+						if (block[i]->GetClearFlag() == false)
+						{
 
-						//透けるフラグをonに
-						block[i]->SetClearFlag(true);
+							if (filter->GetBlockFlag(j) == false)
+							{
+								if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(j), true))
+								{
 
-						// カメラ揺れる
-						scrollCamera_.Shaking(10, 2);
+									filter->SetDrawFlag(j, false);
+									filter->SetBlockFlag(j, true);
+
+									//透けるフラグをonに
+									block[i]->SetClearFlag(true);
+
+									// カメラ揺れる
+									//scrollCamera_.Shaking(10, 2);
+								}
+								else
+								{
+									filter->SetBlockFlag(j, false);
+								}
+							}
+						}
 					}
 				}
+				else
+				{
+					//trueなら
+					if (filter->GetBlockFlag(j))
+					{
+						//falseにしておく
+						filter->SetBlockFlag(j, false);
+
+						//生成
+						std::unique_ptr<Block> newBlock;
+						newBlock.reset(new Block());
+
+						//初期化
+						newBlock->Initialize();
+
+						//種類を格納
+						newBlock->SetKind(Normal);
+
+						//位置
+						newBlock->SetBlocksPos(filter->GetTransform(j).pos_);
+
+						//scale
+						newBlock->SetScale(result);
+
+						//代入
+						block.push_back(std::move(newBlock));
+					}
+				}
+
+				//全部描画する
+				filter->SetDrawFlag(j, true);
+
 			}
 		}
 
@@ -686,62 +751,9 @@ void PlayScene::Update()
 				//タイマーを設定
 				block[i]->SetTimer(10);
 			}
-
-			////フィルターと当たってたら
-			//if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-			//{
-			//	//透けるフラグをonに
-			//	block[i]->SetClearFlag(true);
-
-			//	//タイマーを設定
-			//	block[i]->SetTimer(50);
-			//}
-		}
-
-		//通常ブロック処理
-		//if (block[i]->GetKind() == Normal)
-		//{
-		//	//透けるフラグをonに
-		//	block[i]->SetClearFlag(false);
-
-		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-		//	{
-		//		//透けるフラグをonに
-		//		block[i]->SetClearFlag(true);
-		//	}
-		//}
-
-		//ブロック上げ下げ処置
-		if (player->GetPlayFlag())
-		{
-			//上がるフラグがonなら
-			if (block[i]->GetUpFlag())
-			{
-				//ブロックのpos,scaleを拡大
-				block[i]->MovePosYUp(blockcount);
-			}
-			else
-			{
-				//ブロックのpos,scaleを縮小
-				block[i]->MovePosYDown();
-
-				if (sKeys_->IsTrigger(DIK_7))
-				{
-					blockcount = 1;
-				}
-
-				if (sKeys_->IsTrigger(DIK_8))
-				{
-					blockcount = 2;
-				}
-
-				if (sKeys_->IsTrigger(DIK_9))
-				{
-					blockcount = 3;
-				}
-			}
 		}
 	}
+
 
 	//格納
 	YGame::Transform CheckTrans1;
@@ -874,14 +886,14 @@ void PlayScene::Update()
 								//player->Landing();
 
 
-								if (sKeys_->IsTrigger(DIK_C))
+								/*if (sKeys_->IsTrigger(DIK_C))
 								{
 									if (block[i]->GetUpFlag() == false)
 									{
 										block[i]->SetUpFlag(true);
 										block[i]->SetUpTimer(50);
 									}
-								}
+								}*/
 							}
 						}
 					}
@@ -964,7 +976,7 @@ void PlayScene::Update()
 							//while (BoxCollision(CheckTrans1, CheckTrans2, true))
 							//{
 								//ちょっと戻す
-							//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+								//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
 
 							if (BoxCollision(CheckTrans1, CheckTrans2, true))
 							{
@@ -979,6 +991,9 @@ void PlayScene::Update()
 			}
 		}
 	}
+
+	//描画する位置
+	filter->SetDirection(player->GetTransform(), player->GetDirectionM());
 
 	//位置更新
 	player->Update();
@@ -995,19 +1010,19 @@ void PlayScene::Update()
 	// パーティクル更新
 	particleMan_.Update();
 
-
-	// プレイヤー操縦なら
-	if (player->GetPlayFlag())
-	{
-		// プレイヤー追従
-		followPoint_ = player->GetPos();
-	}
-	// それ以外なら
-	else
-	{
-		// プレイヤー追従
-		followPoint_ = filter->GetTransform(5).pos_;
-	}
+	followPoint_ = player->GetPos();
+	//// プレイヤー操縦なら
+	//if (player->GetPlayFlag())
+	//{
+	//	// プレイヤー追従
+	//	followPoint_ = player->GetPos();
+	//}
+	//// それ以外なら
+	//else
+	//{
+	//	// プレイヤー追従
+	//	followPoint_ = filter->GetTransform(5).pos_;
+	//}
 
 	// カメラ更新
 	scrollCamera_.Update();

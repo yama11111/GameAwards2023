@@ -5,13 +5,13 @@
 Filter::Filter()
 {
 	// フィルター
-	filter_.Initialize({ {}, {}, {3.0f,2.0f,1.0f} });
+	filter_.Initialize({ {}, {}, {1.5f,1.5f,1.5f} });
 	filterDra_.Initialize(&filter_);
 
 	//初期化
 	for (int i = 0; i < countX * countY; i++)
 	{
-		filters[i].Initialize({ {}, {}, {3.0f,2.0f,1.0f} });
+		filters[i].Initialize({ {}, {}, {scales,scales,scales} });
 		filterDras[i].Initialize(&filters[i]);
 
 		drawFlag[i] = true;
@@ -36,13 +36,13 @@ Filter::~Filter()
 void Filter::Initialize()
 {
 	// フィルター
-	filter_.Initialize({ {}, {}, {2.0f,2.0f,1.0f} });
+	filter_.Initialize({ {}, {}, {0.5f,0.5f,0.5f} });
 	filterDra_.Initialize(&filter_);
 
 	//初期化
 	for (int i = 0; i < countX * countY; i++)
 	{
-		filters[i].Initialize({ {}, {}, {0.5f,0.5f,0.5f} });
+		filters[i].Initialize({ {}, {}, {scales,scales,scales} });
 
 		drawFlag[i] = true;
 	}
@@ -85,26 +85,29 @@ void Filter::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 	//初期化
 	for (int i = 0; i < countY * countX; i++)
 	{
-		filters[i].Initialize({ pos_, rot_, {0.5f,0.5f,0.5f} });
+		filters[i].Initialize({ pos_, rot_, {scales,scales,scales } });
 
 		filters[i].pos_.y_ += harfscale * 4;
-		
+
 		filterDras[i].Initialize(&filters[i]);
 
 		drawFlag[i] = true;
 	}
 
-	for (int i = 0; i < countX - 1; i++)
+	//全部の位置一旦初期化
+	for (int i = 0; i < countX; i++)
 	{
-		filters[i].pos_.x_ += (filters[i].scale_.x_);
-		filters[i + countY].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 2);
-		filters[i + (2 * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 4);
-		//filters[i + (3 * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * 6);
+		//横列分
+		for (int j = 0; j < countY; j++)
+		{
+			filters[i + (j * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * (j * 2));
+		}
 
-		filters[i].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
-		filters[i + countY].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
-		filters[i + (2 * countY)].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
-		//filters[i + (3 * countY)].pos_.y_ += (filters[i].scale_.y_) * (countX * i);
+		//縦列分
+		for (int j = 0; j < countY; j++)
+		{
+			filters[i + (j * countY)].pos_.y_ += (filters[i].scale_.y_) * (countY * i);
+		}
 	}
 }
 
@@ -117,15 +120,6 @@ void Filter::InitializeMap(int i, int j, int chenge)
 //更新
 void Filter::Update()
 {
-	//動きを足す
-	//filter_.pos_ += movePos;
-
-	for (int i = 0; i < countX * countY; i++)
-	{
-		//動きを足す
-		filters[i].pos_ += movePos;
-	}
-
 	//更新
 	filter_.UpdateMatrix();
 	filterDra_.Update();
@@ -137,11 +131,11 @@ void Filter::Update()
 		filterDras[i].Update();
 	}
 
+	//ImGui関係
 	ImGui::Begin("Filter_");
-	ImGui::SliderFloat("pos", &filters[0].pos_.x_, -500, 500);
-	ImGui::SliderFloat("pos", &filters[0].pos_.y_, -500, 500);
-	ImGui::SliderFloat("pos", &filters[8].pos_.x_, -500, 500);
-	ImGui::SliderFloat("pos", &filters[8].pos_.y_, -500, 500);
+	ImGui::Checkbox("allBlockFlag", &allBlockFlag);
+	ImGui::Checkbox("drawFlag", &drawFlag[0]);
+	ImGui::Checkbox("blockFlag", &blockFlag[0]);
 	ImGui::End();
 }
 
@@ -151,8 +145,14 @@ void Filter::Draw()
 	//描画
 	//filterDra_.Draw();
 
+	//複数描画
 	for (int i = 0; i < countX * countY; i++)
 	{
+		if (i == 3 || i == 4 || i == 5)
+		{
+			//continue;
+		}
+
 		if (drawFlag[i] == true)
 		{
 			filterDras[i].Draw();
@@ -164,8 +164,102 @@ void Filter::Draw()
 void Filter::Reset()
 {
 	// フィルター
-	filter_.Initialize({ {}, {}, {2.0f,2.0f,1.0f} });
+	filter_.Initialize({ {}, {}, {1.5f,1.5f,0.5f} });
 
 	//必ずリセットすること
 	filterDra_.Reset();
+
+	//半径
+	float harfscale = 1.0f;
+
+	allBlockFlag = false;
+
+	for (int i = 0; i < countX * countY; i++)
+	{
+		//全部の位置一旦初期化
+		for (int i = 0; i < countX; i++)
+		{
+			//横列分
+			for (int j = 0; j < countY; j++)
+			{
+				filters[i + (j * countY)].pos_.x_ += (filters[i].scale_.x_) + (harfscale * (j * 2));
+			}
+
+			//縦列分
+			for (int j = 0; j < countY; j++)
+			{
+				filters[i + (j * countY)].pos_.y_ += (filters[i].scale_.y_) * (countY * i);
+			}
+		}
+
+		drawFlag[i] = true;
+		blockFlag[i] = false;
+	}
+}
+
+//向き変更
+void Filter::DirectionSet(int direction)
+{
+
+}
+
+//描画する向き
+void Filter::SetDirection(YGame::Transform player, int direction)
+{
+	//動きを足す
+	if (direction != 0)
+	{
+		filter_.pos_ = player.pos_;
+	}
+
+	if (direction == 1)
+	{
+		filter_.pos_.x_ += FilterToPlayer;
+	}
+	else if (direction == -1)
+	{
+		filter_.pos_.x_ -= FilterToPlayer;
+	}
+
+	for (int i = 0; i < countX * countY; i++)
+	{
+		//動きを足す
+		filters[i].pos_ += movePos;
+	}
+
+	//更新
+	filter_.UpdateMatrix();
+	filterDra_.Update();
+
+	//半径
+	float harfscale = 0.5f * 2;
+
+	//
+	if (direction != 0)
+	{
+		for (int i = 0; i < countX; i++)
+		{
+			//横列分
+			for (int j = 0; j < countY; j++)
+			{
+				filters[i + (j * countY)].pos_.x_ = player.pos_.x_ + player.scale_.x_ + ((filters[i].scale_.x_ * 2) + (harfscale * (j * 2))) * direction;
+
+				filters[i + (j * countY)].pos_.x_ += (FilterToPlayer)*direction;
+			}
+
+			//縦列分
+			for (int j = 0; j < countY; j++)
+			{
+				filters[i + (j * countY)].pos_.y_ = player.pos_.y_ - player.scale_.x_ + ((filters[i].scale_.y_) * (countY * i));
+				//filters[i + (j * countY)].pos_.y_ += FilterToPlayer * direction;
+			}
+		}
+	}
+
+	//更新
+	for (int i = 0; i < countX * countY; i++)
+	{
+		filters[i].UpdateMatrix();
+		filterDras[i].Update();
+	}
 }

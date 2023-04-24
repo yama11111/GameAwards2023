@@ -40,6 +40,8 @@ private:
 	float Gravity = 0;
 	float GravityPower = 0;
 
+	//Œü‚«
+	int direction = 0;
 public:
 
 	//ƒCƒ“ƒNƒŠƒƒ“ƒg
@@ -122,4 +124,8 @@ public:
 	//directionŠÖŒW
 	void SetDirection(YMath::Vector3 direction) { direction_ = direction; };
 	YMath::Vector3 GetDirection() { return direction_; };
+
+	//direction
+	void SetDirection(int i) { direction = i; };
+	int GetDirectionM() { return direction; };
 };

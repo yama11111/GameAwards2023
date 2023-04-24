@@ -21,7 +21,13 @@ private:
 	// フィルター描画クラス
 	FilterDrawer filterDras[9];
 
+	//描画するフラグ
 	bool drawFlag[9];
+
+	//ブロックを出せるかどうか
+	bool blockFlag[9];
+
+	bool allBlockFlag;
 
 	//縦横
 	const int countX = 3;
@@ -33,6 +39,10 @@ private:
 	//フィルター用マップ
 	int Fmap[14][40];
 
+	//フィルターとプレイヤーの距離
+	float FilterToPlayer = 2.0f;
+
+	float scales = 0.5f;
 public:
 	//インクリメント
 	Filter();
@@ -71,5 +81,18 @@ public:
 	//複数フィルターのDrawFlag
 	void SetDrawFlag(int i, bool flag) { drawFlag[i] = flag; };
 	bool GetDrawFlag(int i) { return drawFlag[i]; };
+
+	//個々のブロックのフラグ
+	bool GetBlockFlag(int i) { return blockFlag[i]; };
+	void SetBlockFlag(int i, bool flag) { blockFlag[i] = flag; };
+
+	//ブロックを追加するかどうか
+	bool GetBlockFlag() { return allBlockFlag; };
+	void SetBlockFlag(bool flag) { allBlockFlag = flag; };
+
+	//向いている変更
+	void DirectionSet(int direction);
+
+	void SetDirection(YGame::Transform player, int direction);
 };
 
