@@ -45,15 +45,15 @@ void SelectScene::Load()
 void SelectScene::Initialize()
 {
 	// input
-	inputDra_.Initalize(InputDrawer::SceneType::Select);
+	inputDra_.Initialize(InputDrawer::SceneType::Select);
 	// pause
-	pauseDra_.Initalize();
+	pauseDra_.Initialize();
 
 	// ステージ設定
 	stageConfig_ = StageConfig::GetInstance();
 
 	// 描画用クラス初期化
-	dra_.Initalize();
+	dra_.Initialize();
 	dra_.SetActive(true);
 
 	// 天球初期化

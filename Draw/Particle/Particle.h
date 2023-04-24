@@ -69,70 +69,25 @@ namespace YGame
 	
 	};
 
-	// 光るグリッドブロック
-	class IlluminationGridBlock : public IParticle
+	class BubbleGrid : public IParticle
 	{
-	private:
-
-		// アルファ値用パワー
-		YMath::Power alphaPow_;
-
-		// アルファ値パワーを動かすか
-		bool isActAlphaPower_ = false;
-
-		// アルファ値イージング
-		YMath::Ease<float> alphaEas_;
-
-	public:
-
-		/// <summary>
-		/// 発生
-		/// </summary>
-		/// <param name="aliveTime"> : 生存時間</param>
-		/// <param name="pParent"> : 親行列</param>
-		/// <param name="color"> : 色</param>
-		/// <param name="alphaEas"> : アルファ値イージング</param>
-		void Emit(
-			const uint32_t aliveTime,
-			YMath::Matrix4* pParent,
-			const YMath::Vector3& color,
-			const YMath::Ease<float> alphaEas);
-
-		/// <summary>
-		/// 更新
-		/// </summary>
-		void Update() override;
-
-		/// <summary>
-		/// 描画
-		/// </summary>
-		void Draw() override;
 
 	private:
 
-		// 静的モデルポインタ
-		static YGame::Model* spModel_;
+		// 移動スピード
+		YMath::Vector3 moveSpeed_;
 
-	public:
+		// 回転スピード
+		YMath::Vector3 rotaSpeed_;
 
-		/// <summary>
-		/// 静的初期化
-		/// </summary>
-		/// <param name="pModel"> : モデルポインタ</param>
-		static void StaticInitialize(YGame::Model* pModel);
 
-	public:
+		// 発生 + 消滅スケール用パワースイッチ
+		bool isScalePowerSwitch_ = false;
+		
+		// 発生 + 消滅用スケール用パワー
+		YMath::Power scalePow_;
 
-		~IlluminationGridBlock() = default;
-
-	};
-
-	// 設置グリッドブロック
-	class PlaceGridBlock : public IParticle
-	{
-	private:
-
-		// 大きさイージング
+		// 発生 + 消滅用スケールイージング
 		YMath::Ease<float> scaleEas_;
 
 	public:
@@ -141,13 +96,15 @@ namespace YGame
 		/// 発生
 		/// </summary>
 		/// <param name="aliveTime"> : 生存時間</param>
-		/// <param name="pParent"> : 親行列</param>
-		/// <param name="scaleEas"> : 大きさイージング</param>
+		/// <param name="status"> : トランスフォーム設定ステータス</param>
+		/// <param name="moveSpeed"> : 移動スピード</param>
+		/// <param name="rotaSpeed"> : 回転スピード</param>
 		/// <param name="color"> : 色</param>
 		void Emit(
 			const uint32_t aliveTime,
-			YMath::Matrix4* pParent,
-			const YMath::Ease<float> scaleEas,
+			const YGame::Transform::Status status,
+			const YMath::Vector3& moveSpeed,
+			const YMath::Vector3& rotaSpeed,
 			const YMath::Vector3& color);
 
 		/// <summary>
@@ -175,7 +132,8 @@ namespace YGame
 
 	public:
 
-		~PlaceGridBlock() = default;
+		~BubbleGrid() = default;
 
 	};
+
 }

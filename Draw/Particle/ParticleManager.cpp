@@ -3,10 +3,14 @@
 #include "YAssert.h"
 #include "Def.h"
 
+using std::unique_ptr;
 using YGame::ParticleManager;
+using YGame::Transform;
+using YGame::ModelObject;
 using YGame::Model;
 using YMath::Ease;
 using YMath::Vector3;
+using YMath::Vector4;
 
 void ParticleManager::StaticInitialize(YGame::ViewProjection* pVP)
 {
@@ -15,11 +19,8 @@ void ParticleManager::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ----- モデル設定 ----- //
 	
-	// 光るグリッドブロック
-	IlluminationGridBlock::StaticInitialize(Model::Load("grid", false));
-	
-	// 設置グリッドブロック
-	PlaceGridBlock::StaticInitialize(Model::Load("grid", false));
+	// 泡グリッド
+	BubbleGrid::StaticInitialize(Model::Load("grid", false));
 }
 
 void ParticleManager::Initialize()
@@ -52,36 +53,18 @@ void ParticleManager::Draw()
 	}
 }
 
-void ParticleManager::EmitIlluminationGridBlock(
-	const uint32_t frame, 
-	YMath::Matrix4* pParent, 
-	const YMath::Vector3& color)
+void ParticleManager::EmitBubbleGrid(
+	const uint32_t frame,
+	const Transform::Status status,
+	const Vector3& moveSpeed,
+	const Vector3& rotaSpeed,
+	const Vector3& color)
 {
-	// パーティクル
-	std::unique_ptr<IlluminationGridBlock> newParticle = std::make_unique<IlluminationGridBlock>();
-
-	// アルファ値イージング
-	Ease<float> alphaEas;
-	alphaEas.Initialize(0.4f, 0.8f, 3.0f);
+	// パーティクル生成
+	unique_ptr<BubbleGrid> newParticle = std::make_unique<BubbleGrid>();
 
 	// 発生
-	newParticle->Emit(frame, pParent, color, alphaEas);
-
-	// 挿入
-	particles_.push_back(std::move(newParticle));
-}
-
-void ParticleManager::EmitPlaceGridBlock(const uint32_t frame, YMath::Matrix4* pParent, const YMath::Vector3& color)
-{
-	// パーティクル
-	std::unique_ptr<PlaceGridBlock> newParticle = std::make_unique<PlaceGridBlock>();
-
-	// 大きさイージング
-	Ease<float> scaleEas;
-	scaleEas.Initialize(1.5f, 1.01f, 4.0f);
-
-	// 発生
-	newParticle->Emit(frame, pParent, scaleEas, color);
+	newParticle->Emit(frame, status, moveSpeed, rotaSpeed, color);
 
 	// 挿入
 	particles_.push_back(std::move(newParticle));

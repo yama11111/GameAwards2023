@@ -26,6 +26,8 @@ namespace YMath
 		float Ratio();
 		// 現在パワー
 		float Current() { return count_; }
+		// 最大パワー
+		float Max() { return max_; }
 		// 最大か
 		bool IsMax() { return count_ == max_; }
 		// ゼロか

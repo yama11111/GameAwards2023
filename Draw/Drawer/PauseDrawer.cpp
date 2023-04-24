@@ -39,7 +39,7 @@ void PauseDrawerCommon::StaticInitialize()
 
 #pragma region PauseDrawer
 
-void PauseDrawer::Initalize()
+void PauseDrawer::Initialize()
 {
 	// ----- ê∂ê¨ ----- //
 

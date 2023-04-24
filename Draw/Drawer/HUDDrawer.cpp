@@ -32,7 +32,7 @@ void HUDDrawerCommon::StaticInitialize()
 
 #pragma region HUDDrawer
 
-void HUDDrawer::Initalize(const Pilot& pilot)
+void HUDDrawer::Initialize(const Pilot& pilot)
 {
 	// ----- ¶¬ ----- //
 
@@ -48,10 +48,10 @@ void HUDDrawer::Initalize(const Pilot& pilot)
 
 
 	// input
-	inputDra_.Initalize(InputDrawer::SceneType::Play);
+	inputDra_.Initialize(InputDrawer::SceneType::Play);
 
 	// pause
-	pauseDra_.Initalize();
+	pauseDra_.Initialize();
 
 	// ƒŠƒZƒbƒg
 	Reset(pilot);
@@ -100,22 +100,22 @@ void HUDDrawer::Draw()
 	// input
 	inputDra_.Draw(pilot_ == Pilot::Player);
 
-	// player‚È‚ç
-	if (pilot_ == Pilot::Player)
-	{
-		// filter (æ)
-		spFilterSpr_->Draw(filterObj_.get());
-		// player
-		spPlayerSpr_->Draw(playerObj_.get());
-	}
-	// filter‚È‚ç
-	else if (pilot_ == Pilot::Filter)
-	{
-		// player (æ)
-		spPlayerSpr_->Draw(playerObj_.get());
-		// filter
-		spFilterSpr_->Draw(filterObj_.get());
-	}
+	//// player‚È‚ç
+	//if (pilot_ == Pilot::Player)
+	//{
+	//	// filter (æ)
+	//	spFilterSpr_->Draw(filterObj_.get());
+	//	// player
+	//	spPlayerSpr_->Draw(playerObj_.get());
+	//}
+	//// filter‚È‚ç
+	//else if (pilot_ == Pilot::Filter)
+	//{
+	//	// player (æ)
+	//	spPlayerSpr_->Draw(playerObj_.get());
+	//	// filter
+	//	spFilterSpr_->Draw(filterObj_.get());
+	//}
 
 	// pause
 	pauseDra_.Draw();

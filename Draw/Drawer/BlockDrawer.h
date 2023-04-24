@@ -17,11 +17,11 @@ public:
 
 protected:
 
-	// パーツの総数
-	static const size_t PartsNum_ = 2;
-
 	// 状態の数
 	static const size_t ModeNum_ = 2;
+
+	// パーツの総数
+	static const size_t PartsNum_ = 2;
 
 protected:
 

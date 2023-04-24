@@ -32,25 +32,18 @@ namespace YGame
 	public:
 		
 		/// <summary>
-		/// 光るグリッドブロック発生
+		/// 泡グリッド発生
 		/// </summary>
-		/// <param name="frame"> : 生存時間</param>
-		/// <param name="pParent"> : 親行列</param>
+		/// <param name="frame"> : </param>
+		/// <param name="status"> : トランスフォーム設定ステータス</param>
+		/// <param name="moveSpeed"> : 移動スピード</param>
+		/// <param name="rotaSpeed"> : 回転スピード</param>
 		/// <param name="color"> : 色</param>
-		void EmitIlluminationGridBlock(
+		void EmitBubbleGrid(
 			const uint32_t frame,
-			YMath::Matrix4* pParent,
-			const YMath::Vector3& color);
-
-		/// <summary>
-		/// 設置グリッドブロック発生
-		/// </summary>
-		/// <param name="frame"> : 生存時間</param>
-		/// <param name="pParent"> : 親行列</param>
-		/// <param name="color"> : 色</param>
-		void EmitPlaceGridBlock(
-			const uint32_t frame,
-			YMath::Matrix4* pParent,
+			const YGame::Transform::Status status,
+			const YMath::Vector3& moveSpeed,
+			const YMath::Vector3& rotaSpeed,
 			const YMath::Vector3& color);
 
 	public:

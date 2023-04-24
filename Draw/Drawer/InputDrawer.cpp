@@ -47,7 +47,7 @@ void InputDrawerCommon::StaticInitialize()
 
 #pragma region InputDrawer
 
-void InputDrawer::Initalize(const SceneType& sceneType)
+void InputDrawer::Initialize(const SceneType& sceneType)
 {
 	// ----- ê∂ê¨ ----- //
 

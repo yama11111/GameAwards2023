@@ -133,10 +133,10 @@ namespace DrawerConfig
 			namespace Normal
 			{
 				// 初期値
-				const YMath::Vector4 Start = { 0.1f, 0.1f, 0.1f, 1.0f };
+				const YMath::Vector4 Start = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 				// 最終値
-				const YMath::Vector4 End   = { 0.15f, 0.15f, 0.15f, 1.0f };
+				const YMath::Vector4 End   = { 0.4f, 0.4f, 0.4f, 1.0f };
 			}
 
 			// 赤
@@ -319,6 +319,156 @@ namespace DrawerConfig
 			
 			// 指数
 			const float Exponent = 2.0f;
+		}
+	}
+
+	// タワー
+	namespace Tower
+	{
+		// 色
+		namespace CoreColor
+		{
+			// フレーム
+			const unsigned int Frame = 120;
+
+			// 通常
+			namespace Normal
+			{
+				// 初期値
+				const YMath::Vector4 Start = { 0.025f, 0.025f, 0.025f, 1.0f };
+
+				// 最終値
+				const YMath::Vector4 End   = { 0.050f, 0.050f, 0.050f, 1.0f };
+			}
+
+			// 赤
+			namespace Red
+			{
+				// 初期値
+				const YMath::Vector4 Start = { 0.3f, 0.0f, 0.0f, 1.0f };
+
+				// 最終値
+				const YMath::Vector4 End   = { 0.6f, 0.0f, 0.0f, 1.0f };
+			}
+
+			// 指数
+			const float Exponent = 3.0f;
+		}
+	}
+
+	// 背景
+	namespace Background
+	{
+		// タワー
+		namespace Towers
+		{
+			// 数
+			const unsigned int Num = 5;
+
+			// 位置
+			const YMath::Vector3 Poss[Num] =
+			{
+				YMath::Vector3(- 200.0f, - 200.0f, + 225.0f),
+				YMath::Vector3(-  35.0f, - 200.0f, + 225.0f),
+
+				YMath::Vector3(+ 400.0f, - 300.0f, + 450.0f),
+
+				YMath::Vector3(- 230.0f, - 350.0f, + 600.0f),
+				YMath::Vector3(+ 250.0f, - 350.0f, + 600.0f),
+			};
+
+			// 回転
+			const YMath::Vector3 Rotas[Num] =
+			{
+				YMath::Vector3(0.0f, - PI * 1.4f, 0.0f),
+				YMath::Vector3(0.0f, + PI * 0.4f, 0.0f),
+
+				YMath::Vector3(0.0f, - PI * 1.2f, 0.0f),
+
+				YMath::Vector3(0.0f, - PI * 0.6f, 0.0f),
+				YMath::Vector3(0.0f, - PI * 1.6f, 0.0f),
+			};
+
+			// 大きさ
+			const YMath::Vector3 Scales[Num] =
+			{
+				YMath::Vector3(  32.0f,  64.0f,  32.0f),
+				YMath::Vector3(  32.0f,  48.0f,  32.0f),
+
+				YMath::Vector3(  64.0f, 128.0f,  64.0f),
+
+				YMath::Vector3(  48.0f,  64.0f,  48.0f),
+				YMath::Vector3(  48.0f,  80.0f,  48.0f),
+			};
+
+			// 状態番号 (0 : 通常, 1 : 赤)
+			const unsigned int ModeIdx[Num] =
+			{
+				0,
+				0,
+
+				0,
+
+				0,
+				1,
+			};
+		}
+
+		// 天球サイズ
+		const float SkydomeSize = 800.0f;
+
+		// 泡グリッド
+		namespace Emit
+		{
+			// 間隔
+			const unsigned int IntervalFrame = 240;
+			
+
+			// 位
+			const float Place = 100.0f;
+			
+
+			// 生存時間
+			const unsigned int AliveFrame = 720;
+			
+
+			// 最小発生数
+			const unsigned int MinNum = 2;
+			
+			// 最大発生数
+			const unsigned int MaxNum = 4;
+
+
+			// 中心
+			const YMath::Vector3 Center = { 0.0f, -50.0f, +150.0f };
+
+			// 範囲
+			const YMath::Vector3 Range = { 150.0f, 50.0f, 10.0f };
+
+			
+			// 最小スケールサイズ
+			const float MinScaleSize = 1.5f;
+			
+			// 最大スケールサイズ
+			const float MaxScaleSize = 3.0f;
+
+
+			// 最小移動スピード
+			const float MinMoveSpeed = +0.1f;
+
+			// 最大移動スピード
+			const float MaxMoveSpeed = +0.3f;
+
+
+			// 最小回転スピード
+			const float MinRotaSpeed = -0.01f;
+
+			// 最大回転スピード
+			const float MaxRotaSpeed = +0.01f;
+
+
+			// 色
+			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
 		}
 	}
 

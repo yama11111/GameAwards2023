@@ -10,6 +10,9 @@ private:
 	// デフォルトマテリアル
 	static std::unique_ptr<YGame::Material> sDefMate_;
 
+	// 背景マテリアル
+	static std::unique_ptr<YGame::Material> sBackMate_;
+
 public:
 	
 	/// <summary>

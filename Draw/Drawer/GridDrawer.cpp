@@ -23,7 +23,7 @@ void GridDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spGridMod_ = Model::Load("grid", false);
 }
 
-void GridDrawer::Initalize(const YMath::Vector3& leftTop, const YMath::Vector3& num, const float scaleSize)
+void GridDrawer::Initialize(const YMath::Vector3& leftTop, const YMath::Vector3& num, const float scaleSize)
 {
 	// êFê∂ê¨
 	color_.reset(Color::Create());

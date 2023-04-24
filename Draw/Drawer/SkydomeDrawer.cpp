@@ -12,7 +12,7 @@ void SkydomeDrawerCommon::StaticInitialize()
 	spModel_ = Model::Load("skydome", true);
 }
 
-void SkydomeDrawer::Initalize(YMath::Matrix4* pParent)
+void SkydomeDrawer::Initialize(YMath::Matrix4* pParent, const float scaleSize)
 {
 	// 色生成
 	color_.reset(Color::Create());
@@ -24,17 +24,17 @@ void SkydomeDrawer::Initalize(YMath::Matrix4* pParent)
 	obj_->parent_ = pParent;
 
 	// リセット
-	Reset();
+	Reset(scaleSize);
 }
 
-void SkydomeDrawer::Reset()
+void SkydomeDrawer::Reset(const float scaleSize)
 {
 	// オブジェクト初期化
 	obj_->Initialize(
 		{
 			{},
 			{},
-			{ 200.0f, 200.0f, 200.0f }
+			{ scaleSize, scaleSize, scaleSize }
 		}
 	);
 }

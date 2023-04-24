@@ -47,7 +47,7 @@ private:
 	PauseDrawer pauseDra_;
 public:
 	// 初期化
-	void Initalize(const Pilot& pilot = Pilot::Player);
+	void Initialize(const Pilot& pilot = Pilot::Player);
 	// リセット
 	void Reset(const Pilot& pilot = Pilot::Player);
 	// 更新

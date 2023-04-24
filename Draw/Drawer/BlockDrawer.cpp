@@ -48,13 +48,17 @@ Ease<float> BlockDrawerCommon::failToPlaceGridScaleValueEas_;
 
 #pragma endregion
 
-// インデックス
+#pragma region インデックス
+
 static const size_t NormalIdx = static_cast<size_t>(IDrawer::Mode::Normal); // 通常
 static const size_t RedIdx = static_cast<size_t>(IDrawer::Mode::Red); // 赤
 
 static const size_t CoreIdx = static_cast<size_t>(BlockDrawerCommon::Parts::Core); // 核
 static const size_t ShellIdx = static_cast<size_t>(BlockDrawerCommon::Parts::Shell); // 殻
 
+#pragma endregion
+
+#pragma region Common
 
 void BlockDrawerCommon::StaticInitialize()
 {
@@ -162,6 +166,9 @@ void BlockDrawerCommon::StaticUpdate()
 	}
 }
 
+#pragma endregion
+
+#pragma region Drawer
 
 void BlockDrawer::Initialize(Transform* pParent, const Mode& mode)
 {
@@ -538,3 +545,5 @@ void BlockDrawer::NotPlaceAnimation()
 void BlockDrawer::IdleAnimation()
 {
 }
+
+#pragma endregion

@@ -31,6 +31,8 @@ namespace YMath
 		float Ratio();
 		// Œ»İ
 		float Current() { return count_; }
+		// ÅIŠÔ
+		float End() { return end_; }
 		// “®‚¢‚Ä‚¢‚é‚©
 		bool IsAct() { return isAct_; }
 		// I—¹‚µ‚½‚©

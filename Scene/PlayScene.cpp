@@ -246,6 +246,10 @@ void PlayScene::Load()
 #pragma region 初期化
 void PlayScene::Initialize()
 {
+	// パーティクル初期化
+	particleMan_.Initialize();
+
+
 	conObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f + 220, WinSize.y_ - 100, 0.0f},{},{0.5f,0.5f,0.0f} }));
 	conObj2_.reset(Sprite2DObject::Create({ {WinSize.x_ - 165, WinSize.y_ - 180, 0.0f},{},{0.5f,0.5f,0.0f} }));
 	conObj3_.reset(Sprite2DObject::Create({ {WinSize.x_ - 165, WinSize.y_ - 70, 0.0f},{},{0.5f,0.5f,0.0f} }));
@@ -534,20 +538,17 @@ void PlayScene::Initialize()
 	filter->SetPos(Ppos);
 
 
-	// 天球初期化
-	skydome_.Initialize();
+	// 背景初期化
+	background_.Initialize();
 
 	// HUD初期化
-	hud_.Initalize();
-
-	// パーティクル初期化
-	particleMan_.Initialize();
+	hud_.Initialize();
 
 	// カメラ追従点
 	followPoint_ = {};
 
 	// カメラ
-	camera_.Initialize({ 0,0,-50 }, {});
+	camera_.Initialize({ 0,+10,-40 }, {});
 
 	// スクロールカメラ
 	scrollCamera_.Initialize({ 0,0,-50 }, &followPoint_, { 0.0f,0.0f,0.0f });
@@ -975,12 +976,12 @@ void PlayScene::Update()
 	goalDra_.Update();
 
 
+	// 背景更新
+	background_.Update();
+
 	// DrawerHelper更新
 	DrawerHelper::StaticUpdate();
 
-
-	// 天球更新
-	skydome_.Update();
 
 
 	// パーティクル更新
@@ -1041,8 +1042,8 @@ void PlayScene::DrawBackSprite2Ds()
 
 void PlayScene::DrawModels()
 {
-	// 天球描画
-	skydome_.Draw();
+	// 背景描画
+	background_.Draw();
 	
 	// プレイヤー描画
 	player->Draw();
@@ -1077,9 +1078,9 @@ void PlayScene::DrawFrontSprite2Ds()
 	// HUD描画
 	hud_.Draw();
 
-	conSpr_->Draw(conObj_.get());
-	conSpr2_->Draw(conObj2_.get());
-	conSpr3_->Draw(conObj3_.get());
+	//conSpr_->Draw(conObj_.get());
+	//conSpr2_->Draw(conObj2_.get());
+	//conSpr3_->Draw(conObj3_.get());
 }
 
 void PlayScene::Draw()

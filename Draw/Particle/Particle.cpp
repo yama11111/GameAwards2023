@@ -2,18 +2,17 @@
 #include <cassert>
 
 using YGame::IParticle;
-using YGame::IlluminationGridBlock;
-using YGame::PlaceGridBlock;
+using YGame::BubbleGrid;
 using YGame::ModelObject;
 using YGame::ViewProjection;
 using YGame::Model;
 using YGame::Color;
 using YMath::Vector3;
 using YMath::Vector4;
+using YMath::Matrix4;
 
 ViewProjection* IParticle::spVP_ = nullptr;
-Model* IlluminationGridBlock::spModel_ = nullptr;
-Model* PlaceGridBlock::spModel_ = nullptr;
+Model* BubbleGrid::spModel_ = nullptr;
 
 #pragma region IParticle
 
@@ -56,139 +55,98 @@ bool IParticle::UpdateLife()
 
 #pragma endregion
 
+#pragma region BubbleGrid
 
-#pragma region IlluminationGridBlock
-
-void IlluminationGridBlock::Emit(
+void BubbleGrid::Emit(
 	const uint32_t aliveTime,
-	YMath::Matrix4* pParent,
-	const YMath::Vector3& color,
-	const YMath::Ease<float> alphaEas)
+	const YGame::Transform::Status status,
+	const Vector3& moveSpeed,
+	const Vector3& rotaSpeed,
+	const Vector3& color)
 {
 	// ---------- Object ---------- //
-	
+
 	// 基底クラス初期化
 	IParticle::Initialize(aliveTime);
 
-	// 親行列代入
-	obj_->parent_ = pParent;
-
-	// 少し大きく
-	obj_->scale_ += Vector3(+0.05f, +0.05f, +0.05f);
+	// オブジェクト初期化
+	obj_->Initialize(status);
 
 	// 色初期化
 	color_->SetRGB(color);
 
 	// ---------- Animation ---------- //
 
-	// アルファ値用パワー
-	alphaPow_.Initialize(aliveTime / 2);
+	// 移動スピード
+	moveSpeed_ = moveSpeed;
 
-	// アルファ値パワーを動かす
-	isActAlphaPower_ = true;
+	// 回転スピード
+	rotaSpeed_ = rotaSpeed;
 
-	// アルファ値イージング代入
-	alphaEas_ = alphaEas;
+
+	// 発生時は動かす
+	isScalePowerSwitch_ = true;
+
+	// スケールパワー
+	scalePow_.Initialize(10);
+
+	// スケールイージング
+	scaleEas_.Initialize(0.0f, status.scale_.x_, 3.0f);
 }
 
-void IlluminationGridBlock::Update()
+void BubbleGrid::Update()
 {
 	// 生命更新
 	if (IParticle::UpdateLife() == false) { return; }
 
-	// Object更新
-	obj_->UpdateMatrix();
-
-
-	// アルファ値用パワー更新
-	alphaPow_.Update(isActAlphaPower_);
+	// 移動
+	obj_->pos_ += moveSpeed_;
 	
-	// アルファ値用パワーが最大なら
-	if (alphaPow_.IsMax())
+	// 回転
+	obj_->rota_ += rotaSpeed_;
+
+
+	// 生存時間がパワー最大値より少ななら
+	if (aliveTim_.End() - aliveTim_.Current() <= scalePow_.Max())
 	{
-		// 更新を止める
-		isActAlphaPower_ = false;
+		// スイッチオフ
+		isScalePowerSwitch_ = false;
 	}
 
-	// アルファ値パワーを動かすなら
-	if (isActAlphaPower_)
+	// パワー更新
+	scalePow_.Update(isScalePowerSwitch_);
+
+	// 保存用スケール
+	float sca = 0.0f;
+	
+	// スイッチオンなら
+	if (isScalePowerSwitch_)
 	{
-		// アルファ値更新 (イーズアウト)
-		color_->SetAlpha(alphaEas_.Out(alphaPow_.Ratio()));
+		// イーズイン
+		sca = scaleEas_.In(scalePow_.Ratio());
+
 	}
 	// それ以外なら
 	else
 	{
-		// アルファ値更新 (イーズイン)
-		color_->SetAlpha(alphaEas_.In(alphaPow_.Ratio()));
+		// イーズアウト
+		sca = scaleEas_.Out(scalePow_.Ratio());
 	}
-}
 
-void IlluminationGridBlock::Draw()
-{
-	// 描画
-	spModel_->Draw(obj_.get());
-}
-
-void IlluminationGridBlock::StaticInitialize(Model* pModel)
-{
-	// nullチェック
-	assert(pModel);
-	// 初期化
-	spModel_ = pModel;
-}
-
-#pragma endregion
-
-
-#pragma region PlaceGridBlock
-
-void PlaceGridBlock::Emit(
-	const uint32_t aliveTime, 
-	YMath::Matrix4* pParent, 
-	const YMath::Ease<float> scaleEas, 
-	const YMath::Vector3& color)
-{
-	// ---------- Object ---------- //
-
-	// 基底クラス初期化
-	IParticle::Initialize(aliveTime);
-
-	// 親行列代入
-	obj_->parent_ = pParent;
-
-	// 色初期化
-	color_->SetRGB(color);
-
-	// ---------- Animation ---------- //
-
-	// 大きさイージング
-	scaleEas_ = scaleEas;
-
-}
-
-void PlaceGridBlock::Update()
-{
-	// 生命更新
-	if (IParticle::UpdateLife() == false) { return; }
-
-	// 大きさイージング
-	float sca = scaleEas_.Out(aliveTim_.Ratio());
-	
-	// 代入
-	obj_->scale_ = { sca, sca, sca };
+	// スケールに適用
+	obj_->scale_ = Vector3(sca, sca, sca);
 
 	// Object更新
 	obj_->UpdateMatrix();
 }
 
-void PlaceGridBlock::Draw()
+void BubbleGrid::Draw()
 {
 	// 描画
 	spModel_->Draw(obj_.get());
 }
 
-void PlaceGridBlock::StaticInitialize(Model* pModel)
+void BubbleGrid::StaticInitialize(Model* pModel)
 {
 	// nullチェック
 	assert(pModel);

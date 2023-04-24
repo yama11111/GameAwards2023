@@ -57,7 +57,7 @@ private:
 public:
 
 	// ‰Šú‰»
-	void Initalize(const YMath::Vector3& leftTop, const YMath::Vector3& num, const float scaleSize);
+	void Initialize(const YMath::Vector3& leftTop, const YMath::Vector3& num, const float scaleSize);
 
 	// ƒŠƒZƒbƒg
 	void Reset();

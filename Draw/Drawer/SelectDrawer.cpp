@@ -51,7 +51,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spStageConfig_ = StageConfig::GetInstance();
 }
 
-void SelectDrawer::Initalize()
+void SelectDrawer::Initialize()
 {
 	// ----- 生成 ----- //
 
@@ -85,13 +85,13 @@ void SelectDrawer::Initalize()
 		if (i < aliveStages_.size())
 		{
 			// 使う用のトランスフォームを代入
-			stageDras_[i]->Initalize(aliveStages_[i].get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1));
 		}
 		// それ以外なら
 		else
 		{
 			// 使わない用のトランスフォームを代入
-			stageDras_[i]->Initalize(deadStage_.get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1));
 		}
 	}
 	

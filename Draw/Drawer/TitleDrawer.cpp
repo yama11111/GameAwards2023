@@ -46,7 +46,7 @@ void TitleDrawerCommon::StaticInitialize()
 	spExitSpr_	 = Sprite2D::Create({}, { Texture::Load("Title/exit.png") });
 }
 
-void TitleDrawer::Initalize()
+void TitleDrawer::Initialize()
 {
 	// Šj
 	core_.reset(new Transform());

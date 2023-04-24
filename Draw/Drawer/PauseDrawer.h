@@ -68,7 +68,7 @@ private:
 
 public:
 	// 初期化
-	void Initalize();
+	void Initialize();
 	// リセット
 	void Reset();
 	// 更新

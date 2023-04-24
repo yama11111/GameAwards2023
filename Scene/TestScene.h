@@ -8,7 +8,7 @@
 #include "GoalDrawer.h"
 #include "GridDrawer.h"
 
-#include "Skydome.h"
+#include "BackgroundDrawer.h"
 #include "HUDDrawer.h"
 
 #include "EffectManager.h"
@@ -80,10 +80,10 @@ namespace YScene
 		bool isDrawGoal_ = false;
 
 
-		// 天球
-		Skydome skydome_;
-		// 天球描画するか
-		bool isDrawSkydome_ = false;
+		// 背景
+		BackgroundDrawer background_;
+		// 背景描画するか
+		bool isDrawBackground_ = false;
 
 		// HUD
 		HUDDrawer hud_;
@@ -93,9 +93,13 @@ namespace YScene
 
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
+		// パーティクル描画するか
+		bool isDrawParticle_ = false;
 
 		// エフェクトマネージャー
 		YGame::EffectManager effectMan_;
+		// エフェクト描画するか
+		bool isDrawEffect_ = false;
 
 
 		// カメラ設定

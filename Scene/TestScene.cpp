@@ -49,6 +49,16 @@ void TestScene::Load()
 #pragma region 初期化
 void TestScene::Initialize()
 {
+	// パーティクル初期化
+	particleMan_.Initialize();
+	// パーティクル描画するか
+	isDrawParticle_ = true;
+
+	// エフェクト初期化
+	effectMan_.Initialize();
+	// エフェクト描画するか
+	isDrawEffect_ = true;
+
 	// 核初期化
 	core_.Initialize({ {}, {}, {3.0f,3.0f,3.0f} });
 
@@ -70,10 +80,10 @@ void TestScene::Initialize()
 	// ブロック描画用クラス初期化
 	blockDra_.Initialize(&core_, IDrawer::Mode::Normal);
 	// ブロック描画するか
-	isDrawBlock_ = true;
+	isDrawBlock_ = false;
 
 	// グリッド
-	grid_.Initalize({ 0.0f,0.0f,-0.1f }, { 20.0f,20.0f,1.0f }, 6.0f);
+	grid_.Initialize({ 0.0f,0.0f,-0.1f }, { 20.0f,20.0f,1.0f }, 6.0f);
 	// グリッド描画するか
 	isDrawGrid_ = false;
 
@@ -88,21 +98,15 @@ void TestScene::Initialize()
 	isDrawGoal_ = false;
 
 
-	// 天球初期化
-	skydome_.Initialize();
-	// 天球描画するか
-	isDrawSkydome_ = true;
+	// 背景初期化
+	background_.Initialize();
+	// 背景描画するか
+	isDrawBackground_ = true;
 
 	// HUD初期化
-	hud_.Initalize();
+	hud_.Initialize();
 	// HUD描画するか
 	isDrawHUD_ = false;
-
-	// パーティクル初期化
-	particleMan_.Initialize();
-	
-	// エフェクト初期化
-	effectMan_.Initialize();
 
 
 	// カメラ無し用
@@ -138,8 +142,10 @@ void TestScene::Update()
 	ImGui::Checkbox("Grid", &isDrawGrid_);
 	ImGui::Checkbox("Gate", &isDrawGate_);
 	ImGui::Checkbox("Goal", &isDrawGoal_);
-	ImGui::Checkbox("Skydome", &isDrawSkydome_);
+	ImGui::Checkbox("Background", &isDrawBackground_);
 	ImGui::Checkbox("HUD", &isDrawHUD_);
+	ImGui::Checkbox("Particle", &isDrawParticle_);
+	ImGui::Checkbox("Effect", &isDrawEffect_);
 	ImGui::End();
 
 #pragma region HUD
@@ -188,7 +194,6 @@ void TestScene::Update()
 
 
 	// フィルター
-
 	filterDra_.Update();
 
 	
@@ -199,11 +204,11 @@ void TestScene::Update()
 		
 		ImGui::Text("---------------");
 		
-		if (ImGui::Button("Reset : Normal"))
+		if (ImGui::Button("Reset (Normal)"))
 		{
 			blockDra_.Reset(IDrawer::Mode::Normal);
 		}
-		if (ImGui::Button("Reset : Red"))
+		if (ImGui::Button("Reset (Red)"))
 		{
 			blockDra_.Reset(IDrawer::Mode::Red);
 		}
@@ -237,9 +242,9 @@ void TestScene::Update()
 		blockDra_.SetIsCanPlace(isCanPlace_);
 
 		ImGui::End();
-
-		blockDra_.Update();
 	}
+
+	blockDra_.Update();
 
 	// グリッド
 	if (sKeys_->IsTrigger(DIK_N))
@@ -257,8 +262,9 @@ void TestScene::Update()
 	goalDra_.Update();
 
 	
-	// 天球更新
-	skydome_.Update();
+	// 背景更新
+	background_.Update();
+
 
 	// 描画クラス静的更新
 	DrawerHelper::StaticUpdate();
@@ -362,9 +368,8 @@ void TestScene::DrawBackSprite2Ds()
 
 void TestScene::DrawModels()
 {
-	// 天球描画
-	if (isDrawSkydome_) { skydome_.Draw(); }
-
+	// 背景描画
+	if (isDrawBackground_) { background_.Draw(); }
 
 	// プレイヤー前描画
 	if (isDrawPlayer_) { playerDra_.Draw(); }
@@ -382,10 +387,10 @@ void TestScene::DrawModels()
 	if (isDrawGoal_) { goalDra_.Draw(); }
 
 	// パーティクル
-	particleMan_.Draw();
+	if (isDrawParticle_) { particleMan_.Draw(); }
 
 	// エフェクト
-	effectMan_.Draw();
+	if (isDrawEffect_) { effectMan_.Draw(); }
 	
 	// フィルター描画
 	if (isDrawFilter_) { filterDra_.Draw(); }

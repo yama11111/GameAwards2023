@@ -37,9 +37,9 @@ void TitleScene::Load()
 #pragma region ‰Šú‰»
 void TitleScene::Initialize()
 {
-	inputDra_.Initalize(InputDrawer::SceneType::Title);
+	inputDra_.Initialize(InputDrawer::SceneType::Title);
 	
-	dra_.Initalize();
+	dra_.Initialize();
 }
 #pragma endregion
 

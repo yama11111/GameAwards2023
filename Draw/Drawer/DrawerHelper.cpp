@@ -7,13 +7,13 @@
 #include "GridDrawer.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
-#include "BuildingDrawer.h"
-#include "SkydomeDrawer.h"
+#include "BackgroundDrawer.h"
 #include "hUDDrawer.h"
 
 using YGame::Model;
 
 std::unique_ptr<YGame::Material> DrawerHelper::sDefMate_;
+std::unique_ptr<YGame::Material> DrawerHelper::sBackMate_;
 
 void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan)
 {
@@ -24,6 +24,9 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 
 	// 生成
 	sDefMate_.reset(YGame::Material::Create());
+
+	// 生成
+	sBackMate_.reset(YGame::Material::Create({ 0.4f,0.3f,0.3f }));
 
 	// ----- 静的初期化 ----- // 
 	
@@ -49,11 +52,14 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	// グリッド
 	GridDrawerCommon::StaticInitialize(pVP);
 	
-	// ビル
-	BuildingDrawerCommon::StaticInitialize(pVP);
+	// タワー
+	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
 	
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize();
+
+	// 背景
+	BackgroundDrawerCommon::StaticInitialize(pParticleMan);
 
 	// HUD
 	HUDDrawerCommon::StaticInitialize();
@@ -63,10 +69,16 @@ void DrawerHelper::StaticReset()
 {
 	// ブロック
 	BlockDrawerCommon::StaticReset();
+
+	// タワー
+	TowerDrawerCommon::StaticReset();
 }
 
 void DrawerHelper::StaticUpdate()
 {
 	// ブロック
 	BlockDrawerCommon::StaticUpdate();
+
+	// タワー
+	TowerDrawerCommon::StaticUpdate();
 }

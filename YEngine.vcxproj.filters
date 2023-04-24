@@ -88,12 +88,6 @@
     <Filter Include="Draw\Stuff">
       <UniqueIdentifier>{7faaa0fc-33e9-48ee-a06d-9f2c68a6445f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Draw\Drawer\Base">
-      <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Draw\Drawer\ex">
-      <UniqueIdentifier>{380b8772-2e64-4451-bb3e-6a8bb4fb65c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Factory">
       <UniqueIdentifier>{240ab8c4-0938-43ad-89f4-2b5403078b24}</UniqueIdentifier>
     </Filter>
@@ -117,6 +111,15 @@
     </Filter>
     <Filter Include="GameUtil\Object\Model">
       <UniqueIdentifier>{03f42933-aa46-467b-a0f7-90d19eff6fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw\Drawer\Obj\Base">
+      <UniqueIdentifier>{67c39d7e-cd3d-46ce-a9a0-34dfb533a221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw\Drawer\Scene">
+      <UniqueIdentifier>{6c87fccd-9e73-4d8f-98b1-f18e04224a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw\Drawer\Ex">
+      <UniqueIdentifier>{380b8772-2e64-4451-bb3e-6a8bb4fb65c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,29 +309,23 @@
     <ClCompile Include="Draw\Particle\EffectManager.cpp">
       <Filter>Draw\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\DrawerHelper.cpp">
-      <Filter>Draw\Drawer\Base</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Drawer\IDrawer.cpp">
-      <Filter>Draw\Drawer\Base</Filter>
+      <Filter>Draw\Drawer\Obj\Base</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Stuff\Buildings.cpp">
       <Filter>Draw\Stuff</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\BuildingDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+    <ClCompile Include="Draw\Drawer\TowerDrawer.cpp">
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
     <ClCompile Include="Scene\YGameSceneFactory.cpp">
       <Filter>Scene\Factory</Filter>
     </ClCompile>
     <ClCompile Include="Scene\YGameTransitionFactory.cpp">
       <Filter>Scene\Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\Drawer\TitleDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp">
       <Filter>Draw\Drawer\Obj</Filter>
@@ -354,17 +351,14 @@
     <ClCompile Include="Draw\Drawer\PauseDrawer.cpp">
       <Filter>Draw\Drawer\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\SelectDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Drawer\StageDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\LetterBoxDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\CardDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
     <ClCompile Include="Scene\EditScene.cpp">
       <Filter>Scene</Filter>
@@ -418,7 +412,7 @@
       <Filter>GameUtil\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Draw\Drawer\GridDrawer.cpp">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
     <ClCompile Include="GameUtillity\Object\Mesh.cpp">
       <Filter>GameUtil\Object\Model</Filter>
@@ -428,6 +422,18 @@
     </ClCompile>
     <ClCompile Include="Base\DX\IShaderSet.cpp">
       <Filter>Base\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\BackgroundDrawer.cpp">
+      <Filter>Draw\Drawer\Ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\DrawerHelper.cpp">
+      <Filter>Draw\Drawer</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\TitleDrawer.cpp">
+      <Filter>Draw\Drawer\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\SelectDrawer.cpp">
+      <Filter>Draw\Drawer\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -626,20 +632,14 @@
     <ClInclude Include="Draw\Particle\EffectManager.h">
       <Filter>Draw\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\DrawerConfig.h">
-      <Filter>Draw\Drawer\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\DrawerHelper.h">
-      <Filter>Draw\Drawer\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Draw\Stuff\Buildings.h">
       <Filter>Draw\Stuff</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\SkydomeDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\BuildingDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+    <ClInclude Include="Draw\Drawer\TowerDrawer.h">
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
     <ClInclude Include="Scene\ITransitionFactory.h">
       <Filter>Scene\Base</Filter>
@@ -649,9 +649,6 @@
     </ClInclude>
     <ClInclude Include="Scene\YGameTransitionFactory.h">
       <Filter>Scene\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\TitleDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\BlockDrawer.h">
       <Filter>Draw\Drawer\Obj</Filter>
@@ -681,22 +678,19 @@
       <Filter>Draw\Drawer\UI</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\IDrawer.h">
-      <Filter>Draw\Drawer\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\Drawer\SelectDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Obj\Base</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\StageDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
     <ClInclude Include="StageConfig.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\LetterBoxDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\CardDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
     <ClInclude Include="Scene\EditScene.h">
       <Filter>Scene</Filter>
@@ -750,13 +744,28 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\GridDrawer.h">
-      <Filter>Draw\Drawer\ex</Filter>
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
     <ClInclude Include="GameUtillity\Object\Material.h">
       <Filter>GameUtil\Object</Filter>
     </ClInclude>
     <ClInclude Include="Base\DX\IShaderSet.h">
       <Filter>Base\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\BackgroundDrawer.h">
+      <Filter>Draw\Drawer\Ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\DrawerConfig.h">
+      <Filter>Draw\Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\DrawerHelper.h">
+      <Filter>Draw\Drawer</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\TitleDrawer.h">
+      <Filter>Draw\Drawer\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\SelectDrawer.h">
+      <Filter>Draw\Drawer\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

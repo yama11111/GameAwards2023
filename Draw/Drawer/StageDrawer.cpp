@@ -53,7 +53,7 @@ void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spBuildingModel_ = Model::Load("building", true);
 }
 
-void StageDrawer::Initalize(YGame::Transform* pParent, const int number)
+void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
 {
 	// ”š
 	// 0ˆÈ‰º‚È‚ç’e‚­

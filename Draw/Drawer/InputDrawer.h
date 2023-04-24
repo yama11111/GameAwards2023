@@ -69,7 +69,7 @@ public:
 	};
 public:
 	// 初期化
-	void Initalize(const SceneType& sceneType);
+	void Initialize(const SceneType& sceneType);
 	// リセット
 	void Reset(const SceneType& sceneType);
 	// 更新

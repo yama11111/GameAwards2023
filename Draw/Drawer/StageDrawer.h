@@ -37,7 +37,7 @@ private:
 	int number_ = 0;
 public:
 	// 初期化
-	void Initalize(YGame::Transform* pParent, const int number);
+	void Initialize(YGame::Transform* pParent, const int number);
 	// リセット
 	void Reset();
 	// 更新

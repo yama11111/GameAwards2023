@@ -86,7 +86,7 @@ private:
 public:
 
 	// ‰Šú‰»
-	void Initalize();
+	void Initialize();
 
 	// ƒŠƒZƒbƒg
 	void Reset();

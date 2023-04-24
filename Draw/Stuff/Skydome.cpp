@@ -5,7 +5,7 @@ void Skydome::Initialize()
 {
 	// ‰Šú‰»
 	transform_.Initialize({});
-	drawer_.Initalize(&transform_.m_);
+	drawer_.Initialize(&transform_.m_, 200.0f);
 
 	// ƒŠƒZƒbƒg
 	Reset();
@@ -14,7 +14,7 @@ void Skydome::Initialize()
 void Skydome::Reset()
 {
 	transform_.Initialize({});
-	drawer_.Reset();
+	drawer_.Reset(200.0f);
 }
 
 void Skydome::Update()

@@ -7,7 +7,7 @@
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
 
-#include "Skydome.h"
+#include "BackgroundDrawer.h"
 #include "HUDDrawer.h"
 
 #include "EffectManager.h"
@@ -330,8 +330,8 @@ namespace YScene
 		//å„Ç≈è¡Ç∑
 		int blockcount = 1;
 
-		// ìVãÖ
-		Skydome skydome_;
+		// îwåi
+		BackgroundDrawer background_;
 
 		// HUD
 		HUDDrawer hud_;
