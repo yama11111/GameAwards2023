@@ -579,27 +579,6 @@ void PlayScene::Update()
 	// ポーズ中なら弾く
 	if (hud_.IsPause()) { return; }
 
-
-	// 操作切り替え
-	//if (sKeys_->IsTrigger(DIK_SPACE))
-	//{
-	//	//プレイヤーとフィルターが当たってないなら
-	//	if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
-	//	{
-	//		//操作フラグを反転
-	//		player->ChengePlayFlag();
-
-	//		//操作してるobjを表示するスプライトの変更
-	//		if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-	//		else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
-	//	}
-	//	else
-	//	{
-	//		// カメラ揺れる
-	//		scrollCamera_.Shaking(10, 2);
-	//	}
-	//}
-
 	//デバッグ用のリセットボタン
 	if (sKeys_->IsTrigger(DIK_R))
 	{
@@ -620,140 +599,31 @@ void PlayScene::Update()
 	result.z_ = 0.0f;
 
 	//移動量
-	float playerA = harfScale * 2;
-	float filterA = harfScale * 2;
+	float playerSpd = 0.5f;
 
 	//今のアクティブ状態
-	if (player->GetPlayFlag())
-	{
-		//移動量
-		//result.x_ *= playerA;
-		result.x_ = playerA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
 
-		//プレイヤーはy軸はジャンプのみ
-		result.y_ = 0.0f;
+	//移動量
+	result.x_ = playerSpd * (sKeys_->IsDown(DIK_D) - sKeys_->IsDown(DIK_A));
 
-		//右左
-		player->SetDirection((sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A)));
+	//プレイヤーはy軸はジャンプのみ
+	result.y_ = 0.0f;
 
-		//プレイヤーの移動量格納
-		player->SetMovePos(result);
-	}
-	else
-	{
-		//移動量
-		result.x_ = filterA * (sKeys_->IsTrigger(DIK_D) - sKeys_->IsTrigger(DIK_A));
-		result.y_ = filterA * (sKeys_->IsTrigger(DIK_W) - sKeys_->IsTrigger(DIK_S));
+	//右左
+	player->SetDirection((sKeys_->IsDown(DIK_D) - sKeys_->IsDown(DIK_A)));
 
-		//フィルターの移動量格納
-		filter->SetMovePos(result);
-	}
+	//プレイヤーの移動量格納
+	player->SetMovePos(result);
 
 	//PlayerのUpdate
 	player->Update(filter->GetTransform());
-
-	//filterのUpdate
-	filter->Update();
-
-	if (sKeys_->IsTrigger(DIK_SPACE))
-	{
-		//allFlag
-		filter->SetBlockFlag(filter->GetBlockFlag());
-	}
 
 	// ブロック
 	for (int i = 0; i < block.size(); i++)
 	{
 		//更新
 		block[i]->Update(filter->GetTransform());
-
-		//space押さなかったらfo文入らない
-		if (sKeys_->IsTrigger(DIK_SPACE))
-		{
-			//全部描画するかどうか	allblock
-
-			//フィルターと当たってたら
-			for (int j = 0; j < 9; j++)
-			{
-				//allBlockFlag
-				if (filter->GetBlockFlag() == false)
-				{
-					//個々のブロックの描画するかどうか
-					if (filter->GetDrawFlag(j) == true)
-					{
-						//透明になっているかどうか
-						if (block[i]->GetClearFlag() == false)
-						{
-
-							if (filter->GetBlockFlag(j) == false)
-							{
-								if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(j), true))
-								{
-
-									filter->SetDrawFlag(j, false);
-									filter->SetBlockFlag(j, true);
-
-									//透けるフラグをonに
-									block[i]->SetClearFlag(true);
-
-									// カメラ揺れる
-									//scrollCamera_.Shaking(10, 2);
-								}
-								else
-								{
-									filter->SetBlockFlag(j, false);
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					//trueなら
-					if (filter->GetBlockFlag(j))
-					{
-						//falseにしておく
-						filter->SetBlockFlag(j, false);
-
-						//生成
-						std::unique_ptr<Block> newBlock;
-						newBlock.reset(new Block());
-
-						//初期化
-						newBlock->Initialize();
-
-						//種類を格納
-						newBlock->SetKind(Normal);
-
-						//位置
-						newBlock->SetBlocksPos(filter->GetTransform(j).pos_);
-
-						//scale
-						newBlock->SetScale(result);
-
-						//代入
-						block.push_back(std::move(newBlock));
-					}
-				}
-
-				//全部描画する
-				filter->SetDrawFlag(j, true);
-
-			}
-		}
-
-		//赤い色なら
-		if (block[i]->GetKind() == ColorB)
-		{
-			//playerと当たってたら延長
-			if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
-			{
-				//タイマーを設定
-				block[i]->SetTimer(10);
-			}
-		}
 	}
-
 
 	//格納
 	YGame::Transform CheckTrans1;
@@ -761,239 +631,174 @@ void PlayScene::Update()
 	//格納
 	YGame::Transform CheckTrans2;
 
-	//プレイヤー操作モードがnの時
-	if (player->GetPlayFlag())
+	//Wを押してジャンプ処理
+	if (sKeys_->IsTrigger(DIK_W))
 	{
-		//プレイヤーを操作しているときカウントを進める
-		for (int i = 0; i < block.size(); i++)
+		//ジャンプフラグがoffの時
+		if (!player->GetJumpFlag())
 		{
-			block[i]->CountDown();
+			//重力関係リセット
+			player->JumpReset();
 		}
+	}
 
-		//Wを押してジャンプ処理
-		if (sKeys_->IsTrigger(DIK_W))
+	//プレイヤージャンプ処理
+
+	//重力、浮力を加算
+	player->AddGravity();
+
+	//ジャンプフラグがONなら
+	if (player->GetJumpFlag())
+	{
+		if (player->GetJump() < 0.0f)
 		{
-			//ジャンプフラグがoffの時
-			if (!player->GetJumpFlag())
-			{
-				//重力関係リセット
-				player->JumpReset();
-			}
-		}
-
-		//プレイヤージャンプ処理
-
-		//重力、浮力を加算
-		player->AddGravity();
-
-		//フィルターと重なっているか
-		//player->SetClearFlag(BoxCollision(player->GetTransform(), filter->GetTransform(), true));
-
-		//ジャンプフラグがONなら
-		if (player->GetJumpFlag())
-		{
-			if (player->GetJump() < 0.0f)
-			{
-				//入力方向手動代入
-				DS.x_ = 0;
-				DS.y_ = 0.0f;
-				AW.x_ = 0;
-				AW.y_ = 1.0f;
-			}
-			else
-			{
-				//入力方向手動代入
-				DS.x_ = 0;
-				DS.y_ = 1.0f;
-				AW.x_ = 0;
-				AW.y_ = 0.0f;
-			}
-
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
-			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
-				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
-					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-
-								//下に埋まった瞬間ジャンプフラグをfalseに
-								player->SetJumpFlag(false);
-
-								//重力関係リセット
-								player->JumpReset();
-
-								//フラグをOFFに
-								player->SetJumpFlag(false);
-							}
-						}
-					}
-				}
-			}
-		}
-		//ジャンプがfalseなら上に修正
-		//ジャンプがtrueなら下に修正
-		//if (true)//player->GetJumpFlag())
-		else
-		{
-			//重力加算
-			player->SetGravity(0.3f);
-
 			//入力方向手動代入
 			DS.x_ = 0;
 			DS.y_ = 0.0f;
 			AW.x_ = 0;
 			AW.y_ = 1.0f;
-
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
-			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
-				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
-					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-
-								//下に埋まった瞬間ジャンプフラグをfalseに
-								player->SetJumpFlag(false);
-								//player->Landing();
-
-
-								/*if (sKeys_->IsTrigger(DIK_C))
-								{
-									if (block[i]->GetUpFlag() == false)
-									{
-										block[i]->SetUpFlag(true);
-										block[i]->SetUpTimer(50);
-									}
-								}*/
-							}
-						}
-					}
-				}
-			}
 		}
-
-		//右を押してるとき左に修正
-		if (sKeys_->IsDown(DIK_D))
-		{
-			//入力方向手動代入
-			DS.x_ = 1.0f;
-			DS.y_ = 0;
-			AW.x_ = 0;
-			AW.y_ = 0;
-
-			//横移動
-			player->PlayerMove(player->GetMovePos());
-
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
-			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
-				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
-					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								//ちょっと戻す
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//左を押してるとき右に修正
-		if (sKeys_->IsDown(DIK_A))
+		else
 		{
 			//入力方向手動代入
 			DS.x_ = 0;
-			DS.y_ = 0;
-			AW.x_ = 1.0f;
-			AW.y_ = 0;
+			DS.y_ = 1.0f;
+			AW.x_ = 0;
+			AW.y_ = 0.0f;
+		}
 
-			//横移動
-			player->PlayerMove(player->GetMovePos());
-
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
+		//ブロック分繰り返す
+		for (int i = 0; i < block.size(); i++)
+		{
+			//ブロックの種類が空白か
+			if (block[i]->GetKind() != None)
 			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
+				//プレイヤーのTransformを代入
+				CheckTrans1 = player->GetTransform();
+
+				//ブロックのTransformを代入
+				CheckTrans2 = block[i]->GetTransform();
+
+				//プレイヤーとブロックの判定
+				if (BoxCollision(CheckTrans1, CheckTrans2, true))
 				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
-					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
+					//プレイヤーの位置を戻す
+					player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
+					//重力関係リセット
+					player->JumpReset();
 
-							//判定外に出るまで繰り返す
-							//while (BoxCollision(CheckTrans1, CheckTrans2, true))
-							//{
-								//ちょっと戻す
-								//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
+					//フラグをOFFに
+					player->SetJumpFlag(false);
+				}
+			}
+		}
+	}
+	//ジャンプがfalseなら上に修正
+	//ジャンプがtrueなら下に修正
+	else
+	{
+		//重力加算
+		player->SetGravity(0.3f);
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-							}
-							//再代入
-						//	CheckTrans1 = player->GetTransform();
-						//}
-						}
-					}
+		//入力方向手動代入
+		DS.x_ = 0;
+		DS.y_ = 0.0f;
+		AW.x_ = 0;
+		AW.y_ = 1.0f;
+
+		//ブロック分繰り返す
+		for (int i = 0; i < block.size(); i++)
+		{
+			//ブロックの種類が空白か
+			if (block[i]->GetKind() != None)
+			{
+				//プレイヤーのTransformを代入
+				CheckTrans1 = player->GetTransform();
+
+				//ブロックのTransformを代入
+				CheckTrans2 = block[i]->GetTransform();
+
+				//プレイヤーとブロックの判定
+				if (BoxCollision(CheckTrans1, CheckTrans2, true))
+				{
+					//プレイヤーの位置を戻す
+					player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+
+					//下に埋まった瞬間ジャンプフラグをfalseに
+					player->SetJumpFlag(false);
 				}
 			}
 		}
 	}
 
-	//描画する位置
-	filter->SetDirection(player->GetTransform(), player->GetDirectionM());
+	//右を押してるとき左に修正
+	if (sKeys_->IsDown(DIK_D))
+	{
+		//入力方向手動代入
+		DS.x_ = 1.0f;
+		DS.y_ = 0;
+		AW.x_ = 0;
+		AW.y_ = 0;
+
+		//横移動
+		player->PlayerMove(player->GetMovePos());
+
+		//ブロック分繰り返す
+		for (int i = 0; i < block.size(); i++)
+		{
+			//ブロックの種類が空白か
+			if (block[i]->GetKind() != None)
+			{
+				//プレイヤーのTransformを代入
+				CheckTrans1 = player->GetTransform();
+
+				//ブロックのTransformを代入
+				CheckTrans2 = block[i]->GetTransform();
+
+				//プレイヤーとブロックの判定
+				if (BoxCollision(CheckTrans1, CheckTrans2, true))
+				{
+					//プレイヤーの位置を戻す
+					player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+				}
+			}
+		}
+	}
+
+	//左を押してるとき右に修正
+	if (sKeys_->IsDown(DIK_A))
+	{
+		//入力方向手動代入
+		DS.x_ = 0;
+		DS.y_ = 0;
+		AW.x_ = 1.0f;
+		AW.y_ = 0;
+
+		//横移動
+		player->PlayerMove(player->GetMovePos());
+
+		//ブロック分繰り返す
+		for (int i = 0; i < block.size(); i++)
+		{
+			//ブロックの種類が空白か
+			if (block[i]->GetKind() != None)
+			{
+				//プレイヤーのTransformを代入
+				CheckTrans1 = player->GetTransform();
+
+				//ブロックのTransformを代入
+				CheckTrans2 = block[i]->GetTransform();
+
+				//プレイヤーとブロックの判定
+				if (BoxCollision(CheckTrans1, CheckTrans2, true))
+				{
+					//プレイヤーの位置を戻す
+					player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+				}
+			}
+		}
+	}
 
 	//位置更新
 	player->Update();
@@ -1002,27 +807,13 @@ void PlayScene::Update()
 	goal_.UpdateMatrix();
 	goalDra_.Update();
 
-
 	// 天球更新
 	skydome_.Update();
-
 
 	// パーティクル更新
 	particleMan_.Update();
 
 	followPoint_ = player->GetPos();
-	//// プレイヤー操縦なら
-	//if (player->GetPlayFlag())
-	//{
-	//	// プレイヤー追従
-	//	followPoint_ = player->GetPos();
-	//}
-	//// それ以外なら
-	//else
-	//{
-	//	// プレイヤー追従
-	//	followPoint_ = filter->GetTransform(5).pos_;
-	//}
 
 	// カメラ更新
 	scrollCamera_.Update();
@@ -1038,13 +829,6 @@ void PlayScene::Update()
 	{
 		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
 	}
-
-	// 次のシーンへ
-	//if (sKeys_->IsTrigger(DIK_0))
-	//{
-	//	SceneManager::GetInstance()->Change("SELECT", "INFECTION");
-	//	//SceneManager::GetInstance()->Change("RESULT", "INFECTION");
-	//}
 
 	//死亡判定
 	if (player->GetPos().y_ < -15)
@@ -1090,10 +874,6 @@ void PlayScene::DrawModels()
 	effectMan_.Draw();
 
 	// --------------- //
-
-
-	// フィルター描画
-	filter->Draw();
 
 
 	// ----- Post ----- //
