@@ -1,6 +1,7 @@
 #include "BackgroundDrawer.h"
 #include "CalcTransform.h"
 #include "MathUtillity.h"
+#include "CoreColor.h"
 #include "DrawerConfig.h"
 #include <cassert>
 
@@ -16,6 +17,7 @@ using YGame::Color;
 using YGame::Material;
 
 using YMath::Ease;
+using YMath::Timer;
 using YMath::Power;
 using YMath::Vector3;
 using YMath::Vector4;
@@ -25,15 +27,71 @@ using namespace DrawerConfig::Background;
 
 #pragma endregion
 
-YGame::ParticleManager* BackgroundDrawerCommon::spParticleMan_ = nullptr;
+#pragma region Static
 
-void BackgroundDrawerCommon::StaticInitialize(YGame::ParticleManager* pParticleMan)
+YGame::ParticleManager* BackgroundDrawerCommon::spParticleMan_ = nullptr;
+unique_ptr<Material> BackgroundDrawerCommon::sBackMate_;
+bool BackgroundDrawerCommon::sIsUnify_ = false;
+Timer BackgroundDrawerCommon::sUnifyTim_;
+Ease<Vector3> BackgroundDrawerCommon::sUnifyAmbientEas_;
+
+#pragma endregion
+
+void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pParticleMan);
 	
 	// 代入
 	spParticleMan_ = pParticleMan;
+
+
+	// 生成
+	sBackMate_.reset(YGame::Material::Create(Ambient));
+
+
+	// クリア時アンビエント用タイマー
+	sUnifyTim_.Initialize(Unify::Frame);
+
+	// クリア時背景アンビエントイージング
+	sUnifyAmbientEas_.Initialize(Ambient, ClearAmbient, Unify::Exponent);
+	
+
+	// タワー
+	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
+
+	// 天球
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));
+}
+
+void BackgroundDrawerCommon::StaticReset()
+{
+	// 統一フラグ
+	sIsUnify_ = false;
+
+	// クリア時アンビエント用タイマー
+	sUnifyTim_.Reset(false);
+}
+
+void BackgroundDrawerCommon::StaticUpdate()
+{
+	// クリア時アンビエント用タイマー
+	sUnifyTim_.Update();
+
+	// イーズイン
+	Vector3 ambient = sUnifyAmbientEas_.In(sUnifyTim_.Ratio());
+
+	// アンビエント設定
+	sBackMate_->SetAmbient(ambient);
+}
+
+void BackgroundDrawerCommon::StaticUnify()
+{
+	// 統一開始
+	sIsUnify_ = true;
+
+	// タイマーリセット + 開始
+	sUnifyTim_.Reset(true);
 }
 
 void BackgroundDrawer::Initialize()

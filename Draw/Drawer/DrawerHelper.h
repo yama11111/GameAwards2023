@@ -10,12 +10,12 @@ private:
 	// デフォルトマテリアル
 	static std::unique_ptr<YGame::Material> sDefMate_;
 
-	// 背景マテリアル
-	static std::unique_ptr<YGame::Material> sBackMate_;
-
 
 	// ゴールフラグ
 	static bool sIsGoal_;
+
+	// 前回ゴールフラグ
+	static bool sIsElderGoal_;
 
 public:
 	

@@ -31,7 +31,7 @@ void SelectScene::Load()
 	InputDrawerCommon::StaticInitialize();
 	PauseDrawerCommon::StaticInitialize();
 
-	SkydomeDrawerCommon::StaticInitialize();
+	SkydomeDrawerCommon::StaticInitialize(nullptr);
 	
 	LetterBoxDrawerCommon::StaticInitialize();
 	StageDrawerCommon::StaticInitialize(&transferVP_);

@@ -30,9 +30,6 @@ private:
 	// 核色値
 	static std::array<YMath::Vector3, sTypeNum_> sColorValues_;
 
-	// 色統一用イージング
-	static std::array<YMath::Ease<YMath::Vector3>, sTypeNum_> sColorValueEass_;
-
 
 	// 核色明滅パワー
 	static YMath::Power sFlickeringPow_;
@@ -42,6 +39,16 @@ private:
 
 	// 核色明滅割合イージング
 	static YMath::Ease<float> sFlickeringColorRateEas_;
+
+
+	// 色統一用フラグ
+	static bool sIsUnify_;
+
+	// 色統一用タイマー
+	static YMath::Timer sUnifyTim_;
+
+	// 色統一用イージング
+	static std::array<YMath::Ease<YMath::Vector3>, sTypeNum_> sUnifyColorEass_;
 
 public:
 
@@ -66,7 +73,7 @@ public:
 	/// 全ての色を統一する
 	/// </summary>
 	/// <param name="colorType"> : 色のタイプ</param>
-	static void StaticAllChange(const ColorType& colorType);
+	static void StaticUnify(const ColorType& colorType);
 
 public:
 

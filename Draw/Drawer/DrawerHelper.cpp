@@ -38,7 +38,9 @@ using namespace DrawerConfig;
 #pragma region Static
 
 unique_ptr<Material> DrawerHelper::sDefMate_;
-unique_ptr<Material> DrawerHelper::sBackMate_;
+
+bool DrawerHelper::sIsGoal_ = false;
+bool DrawerHelper::sIsElderGoal_ = false;
 
 #pragma endregion
 
@@ -52,10 +54,6 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	// 生成
 	sDefMate_.reset(YGame::Material::Create());
 
-	// 生成
-	sBackMate_.reset(YGame::Material::Create(Background::Ambient));
-
-
 	// ----- 静的初期化 ----- // 
 	{
 		// 基底クラス
@@ -63,6 +61,7 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 
 		// 核色
 		CoreColor::StaticInitialize();
+
 
 		// プレイヤー
 		PlayerDrawerCommon::StaticInitialize();
@@ -77,14 +76,8 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 		GoalDrawerCommon::StaticInitialize();
 
 
-		// タワー
-		TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
-
-		// 天球
-		SkydomeDrawerCommon::StaticInitialize();
-
 		// 背景
-		BackgroundDrawerCommon::StaticInitialize(pParticleMan);
+		BackgroundDrawerCommon::StaticInitialize(pVP, pParticleMan);
 
 
 		// グリッド
@@ -101,12 +94,37 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 
 void DrawerHelper::StaticReset()
 {
+	// ゴールフラグ
+	sIsGoal_ = false;
+
+	// 前回ゴールフラグ
+	sIsElderGoal_ = false;
+
 	// 核色リセット
 	CoreColor::StaticReset();
+
+	// 背景リセット
+	BackgroundDrawerCommon::StaticReset();
 }
 
 void DrawerHelper::StaticUpdate()
 {
+	// ゴールした瞬間
+	if (sIsGoal_ && sIsElderGoal_ == false)
+	{
+		// 色統一
+		CoreColor::StaticUnify(CoreColor::ColorType::Blue);
+
+		// 背景のマテリアル統一
+		BackgroundDrawerCommon::StaticUnify();
+	}
+
 	// 核色更新
 	CoreColor::StaticUpdate();
+
+	// 背景更新
+	BackgroundDrawerCommon::StaticUpdate();
+
+	// 前回ゴールフラグ保存
+	sIsElderGoal_ = sIsGoal_;
 }

@@ -256,6 +256,19 @@ void TestScene::Update()
 	background_.Update();
 
 
+	ImGui::Begin("DrawerHelper");
+	if (ImGui::Button("Reset"))
+	{
+		// リセット
+		DrawerHelper::StaticReset();
+	}
+	if(ImGui::Button("Clear"))
+	{
+		// ゴール
+		DrawerHelper::StaticGoal();
+	}
+	ImGui::End();
+
 	// 描画クラス静的更新
 	DrawerHelper::StaticUpdate();
 

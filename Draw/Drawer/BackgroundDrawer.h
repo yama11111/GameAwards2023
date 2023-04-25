@@ -11,13 +11,45 @@ protected:
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
 
+	
+	// 背景マテリアル
+	static std::unique_ptr<YGame::Material> sBackMate_;
+
+
+	// 統一用フラグ
+	static bool sIsUnify_;
+
+	// アンビエント統一用タイマー
+	static YMath::Timer sUnifyTim_;
+
+	// アンビエント統一イージング
+	static YMath::Ease<YMath::Vector3> sUnifyAmbientEas_;
+
 public:
 
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
+		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
-	static void StaticInitialize(YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
+
+	/// <summary>
+	/// 静的リセット
+	/// </summary>
+	static void StaticReset();
+
+	/// <summary>
+	/// 静的更新
+	/// </summary>
+	static void StaticUpdate();
+
+public:
+
+	/// <summary>
+	/// 統一
+	/// </summary>
+	static void StaticUnify();
 
 public:
 

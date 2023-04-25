@@ -31,6 +31,16 @@ namespace DrawerConfig
 			// 指数
 			const float Exponent = 3.0f;
 		}
+
+		// 統一
+		namespace Unify
+		{
+			// フレーム
+			const unsigned int Frame = 60;
+
+			// 指数
+			const float Exponent = 3.0f;
+		}
 	}
 
 	// プレイヤー
@@ -330,6 +340,19 @@ namespace DrawerConfig
 	{
 		// アンビエント
 		const YMath::Vector3 Ambient = { 0.3f,0.2f,0.2f };
+		
+		// クリア時用アンビエント
+		const YMath::Vector3 ClearAmbient = { 0.5f,0.5f,0.7f };
+
+		// 統一
+		namespace Unify
+		{
+			// フレーム
+			const unsigned int Frame = 60;
+
+			// 指数
+			const float Exponent = 3.0f;
+		}
 
 		// タワー
 		namespace Towers

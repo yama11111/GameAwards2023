@@ -10,6 +10,7 @@ using std::unique_ptr;
 using YGame::Color;
 
 using YMath::Ease;
+using YMath::Timer;
 using YMath::Power;
 using YMath::Vector3;
 using YMath::Vector4;
@@ -22,11 +23,14 @@ using namespace DrawerConfig::CoreColorConfig;
 
 array<unique_ptr<Color>, CoreColor::sTypeNum_> CoreColor::sColors_;
 array<Vector3, CoreColor::sTypeNum_> CoreColor::sColorValues_;
-array<Ease<Vector3>, CoreColor::sTypeNum_> CoreColor::sColorValueEass_;
 
 Power CoreColor::sFlickeringPow_;
 bool CoreColor::sIsSwitchFlickeringPow_ = false;
 Ease<float> CoreColor::sFlickeringColorRateEas_;
+
+bool CoreColor::sIsUnify_ = false;
+Timer CoreColor::sUnifyTim_;
+array<Ease<Vector3>, CoreColor::sTypeNum_> CoreColor::sUnifyColorEass_;
 
 #pragma endregion
 
@@ -42,6 +46,11 @@ void CoreColor::StaticInitialize()
 	// 色値
 	sColorValues_ = { Normal, Movable, Clear };
 
+
+	// 色統一用タイマー
+	sUnifyTim_.Initialize(Unify::Frame);
+
+
 	// 明滅パワー
 	sFlickeringPow_.Initialize(Flickering::Frame);
 
@@ -54,11 +63,23 @@ void CoreColor::StaticInitialize()
 
 void CoreColor::StaticReset()
 {
-	// 核色初期化
+	// 色の数だけ
 	for (size_t i = 0; i < sColors_.size(); i++)
 	{
+		// 核色初期化
 		sColors_[i] ->SetRGB(sColorValues_[i]);
+		
+		// 核色値初期化
+		sUnifyColorEass_[i].Initialize({}, {}, 0.0f);
 	}
+
+
+	// 色統一用フラグ
+	sIsUnify_ = false;
+
+	// 色統一用タイマー
+	sUnifyTim_.Reset(false);
+
 
 	// 明滅パワーリセット
 	sFlickeringPow_.Reset();
@@ -88,16 +109,6 @@ void CoreColor::StaticUpdate()
 		rate = sFlickeringColorRateEas_.In(sFlickeringPow_.Ratio());
 	}
 
-	// 核色毎に
-	for (size_t i = 0; i < sColors_.size(); i++)
-	{
-		// 設定色
-		Vector3 color = sColorValues_[i] * rate;
-
-		// 色更新
-		sColors_[i]->SetRGB(color);
-	}
-
 	// パワーがマックスなら
 	if (sFlickeringPow_.IsMax())
 	{
@@ -110,6 +121,57 @@ void CoreColor::StaticUpdate()
 		// スイッチオフ
 		sIsSwitchFlickeringPow_ = true;
 	}
+
+	// タイマー更新
+	sUnifyTim_.Update();
+
+	// 核色毎に
+	for (size_t i = 0; i < sColors_.size(); i++)
+	{
+		// 設定色
+		Vector3 color{};
+		
+		// 統一中なら
+		if (sIsUnify_)
+		{
+			// イーズイン
+			color = sUnifyColorEass_[i].In(sUnifyTim_.Ratio()) * rate;
+		}
+		// それ以外なら
+		else
+		{
+			// 色値 * 割合
+			color = sColorValues_[i] * rate;
+		}
+
+		// 色更新
+		sColors_[i]->SetRGB(color);
+	}
+}
+
+void CoreColor::StaticUnify(const ColorType& colorType)
+{
+	// 統一開始
+	sIsUnify_ = true;
+
+	// インデックス
+	size_t idx = static_cast<size_t>(colorType);
+
+	// 最終値設定
+	Vector3 end = Vector3(sColorValues_[idx]);
+
+	// 色の数だけ
+	for (size_t i = 0; i < sColors_.size(); i++)
+	{
+		// 初期値設定
+		Vector3 start = sColorValues_[i];
+
+		// 色統一用イージング初期化
+		sUnifyColorEass_[i].Initialize(start, end, Unify::Exponent);
+	}
+
+	// タイマーリセット + 開始
+	sUnifyTim_.Reset(true);
 }
 
 Color* CoreColor::ColorPtr(const ColorType& colorType)

@@ -9,12 +9,16 @@ protected:
 	// 静的モデル
 	static YGame::Model* spModel_;
 
+	// 静的色ポインタ
+	static YGame::Color* spColor_;
+
 public:
 	
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	static void StaticInitialize();
+	/// <param name="pColor"> : 色ポインタ</param>
+	static void StaticInitialize(YGame::Color* pColor);
 
 public:
 	
@@ -30,9 +34,6 @@ private:
 	
 	// オブジェクト
 	std::unique_ptr<YGame::ModelObject> obj_;
-	
-	// 色
-	std::unique_ptr<YGame::Color> color_;
 
 public:
 
