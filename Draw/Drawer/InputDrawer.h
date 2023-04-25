@@ -75,7 +75,7 @@ public:
 	// 更新
 	void Update();
 	// 描画
-	void Draw(const bool isPlayer);
+	void Draw();
 private:
 	// フラグ更新
 	void UpdatePushFlags();

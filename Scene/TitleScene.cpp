@@ -100,7 +100,7 @@ void TitleScene::DrawFrontSprite2Ds()
 {
 	dra_.DrawSprite2D();
 
-	inputDra_.Draw(false);
+	inputDra_.Draw();
 }
 
 void TitleScene::Draw()

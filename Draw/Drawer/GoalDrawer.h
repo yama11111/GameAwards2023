@@ -133,7 +133,7 @@ public:
 private:
 
 	// ログイン開始
-	void StartLogin(const Vector3& emitStartPos);
+	void StartLogin(const YMath::Vector3& emitStartPos);
 	
 	// ハッキング回転開始
 	void StartHackRota();

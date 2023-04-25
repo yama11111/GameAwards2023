@@ -1,7 +1,9 @@
 #include "SelectDrawer.h"
 #include "CalcTransform.h"
+#include "MathUtillity.h"
 #include "DrawerConfig.h"
 #include "StageConfig.h"
+#include "CoreColor.h"
 #include <cassert>
 #include <cmath>
 
@@ -20,6 +22,7 @@ using YGame::Color;
 using YGame::SlimeActor;
 using YGame::LetterBoxDrawer;
 using YMath::Vector3;
+using YMath::GetRand;
 using namespace DrawerConfig::Select;
 
 #pragma endregion
@@ -28,13 +31,17 @@ Model* SelectDrawerCommon::spEarthModel_ = nullptr;
 Sprite2D* SelectDrawerCommon::spLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
 StageConfig* SelectDrawerCommon::spStageConfig_ = nullptr;
+std::unique_ptr<YGame::Material> SelectDrawerCommon::sMate_;
+YGame::ParticleManager* SelectDrawerCommon::spParticleMan_ = nullptr;
 
-void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
+void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pVP);
+	assert(pParticleMan);
 	// 代入
 	spVP_ = pVP;
+	spParticleMan_ = pParticleMan;
 
 	// ----- スプライト読み込み ----- //
 	
@@ -49,6 +56,30 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 
 	// ステージ設定所得
 	spStageConfig_ = StageConfig::GetInstance();
+
+
+	// 生成
+	sMate_.reset(YGame::Material::Create(Ambient));
+
+
+	// 核色
+	CoreColor::StaticInitialize();
+
+	// タワー
+	TowerDrawerCommon::StaticInitialize(pVP, sMate_.get());
+
+	// 天球
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));
+
+
+	// レターボックス
+	YGame::LetterBoxDrawerCommon::StaticInitialize();
+
+	// ステージ
+	StageDrawerCommon::StaticInitialize(pVP);
+
+	// カード
+	CardDrawerCommon::StaticInitialize();
 }
 
 void SelectDrawer::Initialize()
@@ -62,7 +93,7 @@ void SelectDrawer::Initialize()
 	color_.reset(Color::Create());
 
 	// 地球
-	earthObj_.reset(YGame::ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
+	earthObj_.reset(YGame::ModelObject::Create({}, spVP_, color_.get(), nullptr, sMate_.get()));
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)
@@ -120,12 +151,18 @@ void SelectDrawer::Initialize()
 	logoObj_.reset(Sprite2DObject::Create({}));
 
 
-	// ----- イージング ----- //
+	// 天球
+	skydome_.reset(new Transform());
+	skydomeDra_.Initialize(&skydome_->m_, 800.0f);
 
+	// ----- イージング ----- //
 
 	// ステージ回転用パワー
 	int staNum = spStageConfig_->StageNum_ - 1;
 	stageRotaPows_.resize(static_cast<size_t>(staNum)); // リサイズ
+
+	// 泡グリッド発生用タイマー
+	emitBubbleGridTim_.Initialize(BubbleGrid::IntervalFrame);
 
 	// リセット
 	Reset();
@@ -145,7 +182,7 @@ void SelectDrawer::Reset()
 
 	// 地球
 	earthObj_->Initialize({ {},{},{earthScaleVal,earthScaleVal,earthScaleVal} });
-	color_->Initialize({ 0.1f,0.0f,0.1f,1.0f });
+	color_->Initialize({ 0.01f,0.0f,0.0f,1.0f });
 
 	// ----- ステージ ----- //
 
@@ -209,6 +246,8 @@ void SelectDrawer::Reset()
 	// ロゴ
 	logoObj_->Initialize({ Logo::Pos });
 
+	// 天球
+	skydomeDra_.Reset(800.0f);
 
 	// ----- その他初期化 ----- //
 
@@ -231,6 +270,12 @@ void SelectDrawer::Reset()
 	{
 		stageRotaPows_[i].Initialize(Stage::Frame);
 	}
+
+	// 泡グリッド発生用タイマー
+	emitBubbleGridTim_.Reset(true);
+
+	// 泡グリッド発生
+	EmitBubbleGrid();
 }
 
 void SelectDrawer::UpdateRotaAnimation()
@@ -330,10 +375,53 @@ void SelectDrawer::Update()
 
 	// レターボックス
 	lbDra_->Update();
+
+	// 天球
+	skydomeDra_.Update();
+
+	// エミッター更新
+	UpdateEmitter();
 }
+
+void SelectDrawer::UpdateEmitter()
+{
+	// 発生タイマー更新
+	emitBubbleGridTim_.Update();
+
+	// タイマー終了時
+	if (emitBubbleGridTim_.IsEnd())
+	{
+		// 泡グリッド発生
+		EmitBubbleGrid();
+
+		// タイマーリセット + 開始
+		emitBubbleGridTim_.Reset(true);
+	}
+}
+
+void SelectDrawer::EmitBubbleGrid()
+{
+	// ランダムな数発生
+	size_t emitNum = GetRand(BubbleGrid::MinNum, BubbleGrid::MaxNum);
+
+	// パーティクル発生
+	spParticleMan_->EmitBubbleGrid(
+		emitNum,
+		BubbleGrid::AliveFrame,
+		BubbleGrid::Center, BubbleGrid::Range,
+		BubbleGrid::MinScaleSize, BubbleGrid::MaxScaleSize,
+		BubbleGrid::MinMoveSpeed, BubbleGrid::MaxMoveSpeed,
+		BubbleGrid::MinRotaSpeed, BubbleGrid::MaxRotaSpeed,
+		BubbleGrid::Color, BubbleGrid::Place);
+
+}
+
 
 void SelectDrawer::DrawModel()
 {
+	// 天球
+	skydomeDra_.Draw();
+
 	// 地球
 	spEarthModel_->Draw(earthObj_.get());
 

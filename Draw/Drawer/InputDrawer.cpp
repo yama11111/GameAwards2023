@@ -26,12 +26,15 @@ void InputDrawerCommon::StaticInitialize()
 	sKeys_ = YInput::Keys::GetInstance();
 
 	// WASD
-	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
+	//spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
+	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_AD.png") });
 	// WASD_PUSH
 	spKeyWPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_W_PUSH.png") });
-	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
+	//spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
+	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH_2.png") });
 	spKeySPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_PUSH.png") });
-	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
+	//spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
+	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH_2.png") });
 	// S_DEAD
 	spKeySDeadSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_DEAD.png") });
 	// SPACE
@@ -142,10 +145,10 @@ void InputDrawer::Reset(const SceneType& sceneType)
 void InputDrawer::UpdatePushFlags()
 {
 	// WASD
-	isPushW_ = sKeys_->IsDown(DIK_W);
-	isPushA_ = sKeys_->IsDown(DIK_A);
-	isPushS_ = sKeys_->IsDown(DIK_S);
-	isPushD_ = sKeys_->IsDown(DIK_D);
+	isPushW_ = sKeys_->IsDown(DIK_W) || sKeys_->IsDown(DIK_UP);
+	isPushA_ = sKeys_->IsDown(DIK_A) || sKeys_->IsDown(DIK_LEFT);
+	isPushS_ = sKeys_->IsDown(DIK_S) || sKeys_->IsDown(DIK_DOWN);
+	isPushD_ = sKeys_->IsDown(DIK_D) || sKeys_->IsDown(DIK_RIGHT);
 	// SPACE
 	isPushSpace_ = sKeys_->IsDown(DIK_SPACE);
 	// ESC
@@ -176,20 +179,20 @@ void InputDrawer::Update()
 	UpdateObjects();
 }
 
-void InputDrawer::Draw(const bool isPlayer)
+void InputDrawer::Draw()
 {
 	// WASD
 	spKeyWASDSpr_->Draw(keyWASDObj_.get());
 	// WASD_PUSH
-	if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
+	//if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
 	if (isPushA_) { spKeyAPushSpr_->Draw(keyAObj_.get()); }
-	if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
+	//if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
 	if (isPushD_) { spKeyDPushSpr_->Draw(keyDObj_.get()); }
 	// S_DEAD
-	if (isPlayer) { spKeySDeadSpr_->Draw(keySObj_.get()); }
+	//if (false) { spKeySDeadSpr_->Draw(keySObj_.get()); }
 	// SPACE
 	spKeySpaceSpr_[isPushSpace_]->Draw(keySpaceObj_.get());
-	// TAB
+	// ESC
 	spKeyEscSpr_[isPushEsc_]->Draw(keyEscObj_.get());
 }
 

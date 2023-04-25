@@ -1,6 +1,7 @@
 #include "SelectScene.h"
 #include "SceneManager.h"
 #include "TransitionManager.h"
+#include "CoreColor.h"
 #include "Def.h"
 #include <cassert>
 #include <imgui.h>
@@ -28,15 +29,17 @@ void SelectScene::Load()
 
 	// ----- 静的初期化 ----- //
 
-	InputDrawerCommon::StaticInitialize();
-	PauseDrawerCommon::StaticInitialize();
+	// パーティクル
+	ParticleManager::StaticInitialize(&transferVP_);
 
-	SkydomeDrawerCommon::StaticInitialize(nullptr);
+	// input
+	InputDrawerCommon::StaticInitialize();
 	
-	LetterBoxDrawerCommon::StaticInitialize();
-	StageDrawerCommon::StaticInitialize(&transferVP_);
-	CardDrawerCommon::StaticInitialize();
-	SelectDrawerCommon::StaticInitialize(&transferVP_);
+	// pause
+	PauseDrawerCommon::StaticInitialize();
+	
+	// ステージセレクト
+	SelectDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
 }
 #pragma endregion
 
@@ -44,8 +47,12 @@ void SelectScene::Load()
 #pragma region 初期化
 void SelectScene::Initialize()
 {
+	// パーティクル初期化
+	particleMan_.Initialize();
+
 	// input
 	inputDra_.Initialize(InputDrawer::SceneType::Select);
+	
 	// pause
 	pauseDra_.Initialize();
 
@@ -56,12 +63,9 @@ void SelectScene::Initialize()
 	dra_.Initialize();
 	dra_.SetActive(true);
 
-	// 天球初期化
-	skydome_.Initialize();
-
 	// カメラ初期化
 	camera_.Initialize({ +4.0f,+31.0f,-15.0f }, { -PI / 15.0f,-PI / 30.0f,-PI / 45.0f });
-	//camera_.Initialize({ {0,0,-100}, {} });
+	//camera_.Initialize({ 0,0,-100 }, {});
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
@@ -80,8 +84,10 @@ void SelectScene::Update()
 {
 	// input更新
 	inputDra_.Update();
+	
 	// pause更新
 	pauseDra_.Update();
+
 
 	// ポーズ中なら弾く
 	if (pauseDra_.IsPause()) { return; }
@@ -115,8 +121,11 @@ void SelectScene::Update()
 	// 描画用クラス更新
 	dra_.Update();
 
-	// 天球更新
-	skydome_.Update();
+	// 核の色更新
+	CoreColor::StaticUpdate();
+
+	// パーティクル更新
+	particleMan_.Update();
 
 	// カメラ更新 + 代入
 	camera_.Update();
@@ -133,11 +142,11 @@ void SelectScene::DrawBackSprite2Ds()
 
 void SelectScene::DrawModels()
 {
-	// 天球描画
-	skydome_.Draw();
-
 	// 描画用クラス更新
 	dra_.DrawModel();
+
+	// パーティクル描画
+	particleMan_.Draw();
 }
 
 void SelectScene::DrawSprite3Ds()
@@ -151,8 +160,10 @@ void SelectScene::DrawFrontSprite2Ds()
 	// 描画
 	dra_.DrawSprite2D();
 
+
 	// input描画
-	inputDra_.Draw(false);
+	inputDra_.Draw();
+	
 	// pause描画
 	pauseDra_.Draw();
 }

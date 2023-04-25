@@ -283,7 +283,7 @@ namespace DrawerConfig
 			namespace RelayBug
 			{
 				// 数
-				const unsigned int Num = 10;
+				const unsigned int Num = 24;
 
 				// フレーム (初期位置 → 中継地点)
 				const unsigned int StartToRelayFrame = 10;
@@ -292,27 +292,27 @@ namespace DrawerConfig
 				const unsigned int RelayToEndFrame = 20;
 
 				// リレー範囲
-				const YMath::Vector3 RelayRange = {};
+				const YMath::Vector3 RelayRange = { 20.0f,20.0f,20.0f };
 
 
 				// 最小回転
-				const YMath::Vector3 MinRota = {};
+				const YMath::Vector3 MinRota = { -PI / 2.0f,-PI / 2.0f ,-PI / 2.0f };
 
 				// 最大回転
-				const YMath::Vector3 MaxRota = {};
+				const YMath::Vector3 MaxRota = { +PI / 2.0f, +PI / 2.0f, +PI / 2.0f };
 
 
 				// 最小スケール
-				const float MinScale = {};
+				const float MinScale = 0.5f;
 
 				// 最大スケール
-				const float MaxScale = {};
+				const float MaxScale = 1.5f;
 
 				// 色
-				const YMath::Vector3 Color = {};
+				const YMath::Vector3 Color = { 0.1f,0.9f,0.8f };
 
 				// 位
-				const float Place = 0.0f;
+				const float Place = 100.0f;
 			}
 		}
 
@@ -494,10 +494,10 @@ namespace DrawerConfig
 			
 
 			// 最小発生数
-			const unsigned int MinNum = 2;
+			const unsigned int MinNum = 4;
 			
 			// 最大発生数
-			const unsigned int MaxNum = 4;
+			const unsigned int MaxNum = 6;
 
 
 			// 中心
@@ -621,6 +621,63 @@ namespace DrawerConfig
 		{
 			// 位置
 			const YMath::Vector3 Pos = { 224.0f,48.0f,0.0f };
+		}
+
+		// アンビエント
+		const YMath::Vector3 Ambient = { 0.8f,0.6f,0.6f };
+
+		// 泡グリッド
+		namespace BubbleGrid
+		{
+			// 間隔
+			const unsigned int IntervalFrame = 240;
+			
+
+			// 位
+			const float Place = 100.0f;
+			
+
+			// 生存時間
+			const unsigned int AliveFrame = 720;
+			
+
+			// 最小発生数
+			const unsigned int MinNum = 4;
+			
+			// 最大発生数
+			const unsigned int MaxNum = 6;
+
+
+			// 中心
+			const YMath::Vector3 Center = { -10.0f, 0.0f, +150.0f };
+
+			// 範囲
+			const YMath::Vector3 Range = { 100.0f, 20.0f, 50.0f };
+
+			
+			// 最小スケールサイズ
+			const float MinScaleSize = 1.5f;
+			
+			// 最大スケールサイズ
+			const float MaxScaleSize = 3.0f;
+
+
+			// 最小移動スピード
+			const YMath::Vector3 MinMoveSpeed = { +0.0f, +0.1f, +0.0f };
+
+			// 最大移動スピード
+			const YMath::Vector3 MaxMoveSpeed = { +0.0f, +0.3f, +0.0f };
+
+
+			// 最小回転スピード
+			const YMath::Vector3 MinRotaSpeed = { -0.01f, -0.01f, -0.01f };
+
+			// 最大回転スピード
+			const YMath::Vector3 MaxRotaSpeed = { +0.01f, +0.01f, +0.01f };
+
+
+			// 色
+			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
 		}
 	}
 

@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
+	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
 	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
 
@@ -110,7 +110,7 @@ public:
 	/// </summary>
 	void Draw();
 
-public:
+private:
 
 	/// <summary>
 	/// タワー初期化

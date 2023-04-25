@@ -221,10 +221,6 @@ void PlayScene::Load()
 
 	// ----- スプライト (2D) ----- //
 
-	conSpr_ = Sprite2D::Create({}, { Texture::Load("operateSign.png") });
-	conSpr2_ = Sprite2D::Create({}, { Texture::Load("forFilter.png") });
-	conSpr3_ = Sprite2D::Create({}, { Texture::Load("forFilter2.png") });
-
 	// ----- スプライト (3D) ----- //
 
 	// ------- モデル ------- //
@@ -249,10 +245,6 @@ void PlayScene::Initialize()
 	// パーティクル初期化
 	particleMan_.Initialize();
 
-
-	conObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f + 220, WinSize.y_ - 100, 0.0f},{},{0.5f,0.5f,0.0f} }));
-	conObj2_.reset(Sprite2DObject::Create({ {WinSize.x_ - 165, WinSize.y_ - 180, 0.0f},{},{0.5f,0.5f,0.0f} }));
-	conObj3_.reset(Sprite2DObject::Create({ {WinSize.x_ - 165, WinSize.y_ - 70, 0.0f},{},{0.5f,0.5f,0.0f} }));
 
 	float scaleVal = 1.0f;
 	Vector3 scale = { scaleVal,scaleVal,scaleVal };
@@ -1001,15 +993,8 @@ void PlayScene::Update()
 	//ゴール判定
 	if (BoxCollision(player->GetTransform(), goal_, false))
 	{
-		SceneManager::GetInstance()->Change("RESULT", "BLACKOUT");
+		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
 	}
-
-	// 次のシーンへ
-	//if (sKeys_->IsTrigger(DIK_0))
-	//{
-	//	SceneManager::GetInstance()->Change("SELECT", "INFECTION");
-	//	//SceneManager::GetInstance()->Change("RESULT", "INFECTION");
-	//}
 
 	//死亡判定
 	if (player->GetPos().y_ < -15)
@@ -1065,10 +1050,6 @@ void PlayScene::DrawFrontSprite2Ds()
 {
 	// HUD描画
 	hud_.Draw();
-
-	//conSpr_->Draw(conObj_.get());
-	//conSpr2_->Draw(conObj2_.get());
-	//conSpr3_->Draw(conObj3_.get());
 }
 
 void PlayScene::Draw()

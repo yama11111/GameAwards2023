@@ -164,7 +164,7 @@ void GoalDrawer::ActivateClearAnimation(const Vector3& playerPos)
 	isClear_ = true;
 
 	// ログイン開始
-	StartLogin();
+	StartLogin(playerPos);
 }
 
 void GoalDrawer::StartLogin(const Vector3& emitStartPos)
@@ -184,8 +184,7 @@ void GoalDrawer::StartLogin(const Vector3& emitStartPos)
 		Login::RelayBug::MinRota, Login::RelayBug::MaxRota, 
 		Login::RelayBug::MinScale, Login::RelayBug::MaxScale, 
 		Login::RelayBug::Color, 
-		Login::RelayBug::Place
-	);
+		Login::RelayBug::Place);
 }
 
 void GoalDrawer::StartHackRota()

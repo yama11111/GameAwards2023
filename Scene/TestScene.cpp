@@ -150,21 +150,6 @@ void TestScene::Update()
 	// ƒ|[ƒY’†‚È‚ç’e‚­
 	if (hud_.IsPause()) { return; }
 
-
-	// ‘€ìØ‚è‘Ö‚¦
-	if (sKeys_->IsTrigger(DIK_SPACE))
-	{
-		isPlayer_ = !isPlayer_;
-		if (isPlayer_)
-		{
-			hud_.SetPilot(HUDDrawerCommon::Pilot::Player);
-		}
-		else
-		{
-			hud_.SetPilot(HUDDrawerCommon::Pilot::Filter);
-		}
-	}
-
 #pragma endregion
 
 

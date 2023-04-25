@@ -23,7 +23,6 @@ using YMath::Vector3;
 
 std::array<YGame::Sprite3D*, 10> StageDrawerCommon::spNumberSpr_ =
 { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-YGame::Model* StageDrawerCommon::spBuildingModel_ = nullptr;
 YGame::ViewProjection* StageDrawerCommon::spVP_ = nullptr;
 
 void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
@@ -48,9 +47,6 @@ void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	spNumberSpr_[9] = Sprite3D::Create(Texture::Load("Numbers/9.png"));
 
 	// ----- モデル読み込み ----- //
-
-	// ビル
-	spBuildingModel_ = Model::Load("building", true);
 }
 
 void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
@@ -78,13 +74,8 @@ void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 
-	// ビル
-	buildingObjs_.resize(4);
-	for (size_t i = 0; i < buildingObjs_.size(); i++)
-	{
-		buildingObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, nullptr));
-		buildingObjs_[i]->parent_ = &core_->m_;
-	}
+	// タワー
+	towerDra_.Initialize(&core_->m_, IMode::Type::Normal);
 
 	// リセット
 	Reset();
@@ -112,11 +103,7 @@ void StageDrawer::Reset()
 	}
 
 	// ビル
-	buildingObjs_[0]->Initialize({});
-	buildingObjs_[1]->Initialize({});
-	buildingObjs_[2]->Initialize({});
-	buildingObjs_[3]->Initialize({});
-
+	towerDra_.Reset(IMode::Type::Normal);
 
 	// 色初期化
 	color_->SetRGBA({ 1.0f,1.0f,1.0f,1.0f });
@@ -132,21 +119,13 @@ void StageDrawer::Update()
 	{
 		numObjs_[i]->UpdateMatrix();
 	}
-	
-	// ビル
-	for (size_t i = 0; i < buildingObjs_.size(); i++)
-	{
-		buildingObjs_[i]->UpdateMatrix();
-	}
+
+	towerDra_.Update();
 }
 
 void StageDrawer::DrawModel()
 {
-	// ビル
-	for (size_t i = 0; i < buildingObjs_.size(); i++)
-	{
-		spBuildingModel_->Draw(buildingObjs_[i].get());
-	}
+	towerDra_.Draw();
 }
 
 void StageDrawer::DrawSprite3D()

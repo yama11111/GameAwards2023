@@ -31,17 +31,21 @@ namespace YScene
 
 		// input
 		InputDrawer inputDra_;
+		
 		// pause
 		PauseDrawer pauseDra_;
+
 
 		// ステージ設定
 		StageConfig* stageConfig_;
 
+
 		// ステージセレクト描画クラス
 		SelectDrawer dra_;
 
-		// 天球
-		Skydome skydome_;
+
+		// パーティクルマネージャー
+		YGame::ParticleManager particleMan_;
 
 		// カメラ
 		YGame::Camera camera_;

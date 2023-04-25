@@ -9,17 +9,8 @@ using namespace HUDConfig::Pilot;
 
 #pragma region HUDDrawerCommon
 
-Sprite2D* HUDDrawerCommon::spPlayerSpr_ = nullptr;
-Sprite2D* HUDDrawerCommon::spFilterSpr_ = nullptr;
-
 void HUDDrawerCommon::StaticInitialize()
 {
-	// player
-	spPlayerSpr_ = Sprite2D::Create({}, { Texture::Load("UI/player.png") });
-	// filter
-	spFilterSpr_ = Sprite2D::Create({}, { Texture::Load("UI/filter.png") });
-
-
 	// input
 	InputDrawerCommon::StaticInitialize();
 
@@ -32,44 +23,17 @@ void HUDDrawerCommon::StaticInitialize()
 
 #pragma region HUDDrawer
 
-void HUDDrawer::Initialize(const Pilot& pilot)
+void HUDDrawer::Initialize()
 {
-	// ----- ¶¬ ----- //
-
-	// playerColor
-	playerColor_.reset(Color::Create());
-	// player
-	playerObj_.reset(Sprite2DObject::Create({}, playerColor_.get()));
-	
-	// filterColor
-	filterColor_.reset(Color::Create());
-	// filter
-	filterObj_.reset(Sprite2DObject::Create({}, filterColor_.get()));
-
-
 	// input
 	inputDra_.Initialize(InputDrawer::SceneType::Play);
 
 	// pause
 	pauseDra_.Initialize();
-
-	// ƒŠƒZƒbƒg
-	Reset(pilot);
 }
 
-void HUDDrawer::Reset(const Pilot& pilot)
+void HUDDrawer::Reset()
 {
-	// ‘€cŽmÝ’è
-	SetPilot(pilot);
-
-	// ----- Object ----- //
-	
-	// player
-	playerObj_->Initialize({ Player, {}, Scale });
-	// filter
-	filterObj_->Initialize({ Filter, {}, Scale });
-
-
 	// input
 	inputDra_.Reset(InputDrawer::SceneType::Play);
 
@@ -84,11 +48,6 @@ void HUDDrawer::Update()
 
 	// ƒ|[ƒY’†‚È‚ç’e‚­
 	if (pauseDra_.IsPause()) { return; }
-	
-	// player
-	playerObj_->UpdateMatrix();
-	// filter
-	filterObj_->UpdateMatrix();
 
 
 	// input
@@ -98,48 +57,10 @@ void HUDDrawer::Update()
 void HUDDrawer::Draw()
 {
 	// input
-	inputDra_.Draw(pilot_ == Pilot::Player);
-
-	//// player‚È‚ç
-	//if (pilot_ == Pilot::Player)
-	//{
-	//	// filter (æ)
-	//	spFilterSpr_->Draw(filterObj_.get());
-	//	// player
-	//	spPlayerSpr_->Draw(playerObj_.get());
-	//}
-	//// filter‚È‚ç
-	//else if (pilot_ == Pilot::Filter)
-	//{
-	//	// player (æ)
-	//	spPlayerSpr_->Draw(playerObj_.get());
-	//	// filter
-	//	spFilterSpr_->Draw(filterObj_.get());
-	//}
+	inputDra_.Draw();
 
 	// pause
 	pauseDra_.Draw();
-}
-
-void HUDDrawer::SetPilot(const Pilot& pilot)
-{
-	// ‘ã“ü
-	pilot_ = pilot;
-
-	// player‚È‚ç
-	if (pilot == Pilot::Player)
-	{
-		// ‘€c’†‚©•ª‚©‚é‚æ‚¤‚É
-		playerColor_->SetRGBA(OnColor);
-		filterColor_->SetRGBA(OffColor);
-	}
-	// filter‚È‚ç
-	else if (pilot == Pilot::Filter)
-	{
-		// ‘€c’†‚©•ª‚©‚é‚æ‚¤‚É
-		playerColor_->SetRGBA(OffColor);
-		filterColor_->SetRGBA(OnColor);
-	}
 }
 
 #pragma endregion
