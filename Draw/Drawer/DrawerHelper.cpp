@@ -39,8 +39,8 @@ using namespace DrawerConfig;
 
 unique_ptr<Material> DrawerHelper::sDefMate_;
 
-bool DrawerHelper::sIsGoal_ = false;
-bool DrawerHelper::sIsElderGoal_ = false;
+bool DrawerHelper::sIsClear_ = false;
+bool DrawerHelper::sIsElderClear_ = false;
 
 #pragma endregion
 
@@ -94,11 +94,11 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 
 void DrawerHelper::StaticReset()
 {
-	// ゴールフラグ
-	sIsGoal_ = false;
+	// クリアフラグ
+	sIsClear_ = false;
 
-	// 前回ゴールフラグ
-	sIsElderGoal_ = false;
+	// 前回クリアフラグ
+	sIsElderClear_ = false;
 
 	// 核色リセット
 	CoreColor::StaticReset();
@@ -110,10 +110,10 @@ void DrawerHelper::StaticReset()
 void DrawerHelper::StaticUpdate()
 {
 	// ゴールした瞬間
-	if (sIsGoal_ && sIsElderGoal_ == false)
+	if (sIsClear_ && sIsElderClear_ == false)
 	{
 		// 色統一
-		CoreColor::StaticUnify(CoreColor::ColorType::Blue);
+		CoreColor::StaticClearAnimation(CoreColor::ColorType::Blue);
 
 		// 背景のマテリアル統一
 		BackgroundDrawerCommon::StaticUnify();
@@ -126,5 +126,5 @@ void DrawerHelper::StaticUpdate()
 	BackgroundDrawerCommon::StaticUpdate();
 
 	// 前回ゴールフラグ保存
-	sIsElderGoal_ = sIsGoal_;
+	sIsElderClear_ = sIsClear_;
 }

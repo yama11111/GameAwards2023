@@ -4,45 +4,6 @@
 // 描画用クラス
 namespace DrawerConfig
 {
-	// 核
-	namespace CoreColorConfig
-	{
-		// 通常
-		const YMath::Vector3 Normal  = { 0.40f, 0.40f, 0.40f};
-
-		// 可動
-		const YMath::Vector3 Movable = { 1.00f, 0.00f, 0.00f};
-
-		// クリア
-		const YMath::Vector3 Clear	 = { 0.05f, 0.20f, 0.90f };
-
-		// 明滅
-		namespace Flickering
-		{
-			// フレーム
-			const unsigned int Frame = 120;
-
-			// 初期値
-			const float Start = 1.0f;
-
-			// 最終値
-			const float End = 0.5f;
-
-			// 指数
-			const float Exponent = 3.0f;
-		}
-
-		// 統一
-		namespace Unify
-		{
-			// フレーム
-			const unsigned int Frame = 60;
-
-			// 指数
-			const float Exponent = 3.0f;
-		}
-	}
-
 	// プレイヤー
 	namespace Player 
 	{
@@ -269,6 +230,116 @@ namespace DrawerConfig
 		}
 	}
 
+	// ゴール
+	namespace Goal
+	{
+		// 大きさ
+		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+
+		// 立ちモーション
+		namespace Idle
+		{
+			// 間隔
+			const unsigned int IntervalTime = 20;
+		}
+		
+		// 縛る回転モーション
+		namespace BindRota 
+		{
+			// フレーム
+			const unsigned int Frame = 120;
+
+			// 量 (内)
+			namespace Inside
+			{
+				// 初期値
+				const YMath::Vector3 Start = { -PI / 3.0f, 0.0f, -PI / 3.0f };
+				
+				// 最終値
+				const YMath::Vector3 End   = { -PI / 3.0f, 0.0f, -PI / 3.0f - PI * 2.0f };
+			}
+
+			// 量 (外)
+			namespace Outside
+			{
+				// 初期値
+				const YMath::Vector3 Start = { +PI / 3.0f, 0.0f, +PI / 2.0f };
+				
+				// 最終値
+				const YMath::Vector3 End   = { +PI / 3.0f, 0.0f, +PI / 2.0f + PI * 2.0f };
+			}
+			
+			// 指数
+			const float Exponent = 3.0f;
+		}
+
+		// ログインモーション
+		namespace Login
+		{
+			// フレーム
+			const unsigned int Frame = 10;
+			
+			// リレー虫
+			namespace RelayBug
+			{
+				// 数
+				const unsigned int Num = 10;
+
+				// フレーム (初期位置 → 中継地点)
+				const unsigned int StartToRelayFrame = 10;
+
+				// フレーム (中継地点 → 終了地点)
+				const unsigned int RelayToEndFrame = 20;
+
+				// リレー範囲
+				const YMath::Vector3 RelayRange = {};
+
+
+				// 最小回転
+				const YMath::Vector3 MinRota = {};
+
+				// 最大回転
+				const YMath::Vector3 MaxRota = {};
+
+
+				// 最小スケール
+				const float MinScale = {};
+
+				// 最大スケール
+				const float MaxScale = {};
+
+				// 色
+				const YMath::Vector3 Color = {};
+
+				// 位
+				const float Place = 0.0f;
+			}
+		}
+
+		// ハッキング回転モーション
+		namespace HackRota
+		{
+			// フレーム
+			const unsigned int Frame = 60;
+
+			// 加速度 (内)
+			const YMath::Vector3 InAcceleration  = { -PI / 1200.0f, 0.0f, -PI / 360.0f };
+
+			// 加速度 (外)
+			const YMath::Vector3 OutAcceleration = { +PI / 1200.0f, 0.0f, +PI / 360.0f };
+		}
+
+		// クリア回転モーション
+		namespace ClearRota
+		{
+			// フレーム
+			const unsigned int Frame = 30;
+
+			// 指数
+			const float Exponent = 3.0f;
+		}
+	}
+
 	// ゲート
 	namespace Gate
 	{
@@ -286,53 +357,48 @@ namespace DrawerConfig
 		}
 	}
 
-	// ゴール
-	namespace Goal
+	// タワー
+	namespace Tower
 	{
-		// 大きさ
-		const YMath::Vector3 DefScale = { 1.0f,1.0f,1.0f };
+	}
 
-		// 立ちモーション
-		namespace Idle
-		{
-			// 間隔
-			const unsigned int IntervalTime = 20;
-		}
-		
-		// 回転モーション
-		namespace Rota 
+	// 核
+	namespace CoreColorConfig
+	{
+		// 通常
+		const YMath::Vector3 Normal  = { 0.40f, 0.40f, 0.40f};
+
+		// 可動
+		const YMath::Vector3 Movable = { 1.00f, 0.00f, 0.00f};
+
+		// クリア
+		const YMath::Vector3 Clear	 = { 0.05f, 0.20f, 0.90f };
+
+		// 明滅
+		namespace Flickering
 		{
 			// フレーム
 			const unsigned int Frame = 120;
 
-			// 量 (内)
-			namespace Inside
-			{
-				// 初期値
-				const YMath::Vector3 Start = { -PI / 3.0f,0.0f,-PI / 3.0f };
-				
-				// 最終値
-				const YMath::Vector3 End   = { -PI / 3.0f,0.0f,-PI / 3.0f - PI * 2.0f };
-			}
+			// 初期値
+			const float Start = 1.0f;
 
-			// 量 (外)
-			namespace Outside
-			{
-				// 初期値
-				const YMath::Vector3 Start = { +PI / 3.0f,0.0f,+PI / 2.0f };
-				
-				// 最終値
-				const YMath::Vector3 End   = { +PI / 3.0f,0.0f,+PI / 2.0f + +PI * 2.0f };
-			}
-			
+			// 最終値
+			const float End = 0.5f;
+
 			// 指数
 			const float Exponent = 3.0f;
 		}
-	}
 
-	// タワー
-	namespace Tower
-	{
+		// 統一
+		namespace Unify
+		{
+			// フレーム
+			const unsigned int Frame = 30;
+
+			// 指数
+			const float Exponent = 3.0f;
+		}
 	}
 
 	// 背景
@@ -348,7 +414,7 @@ namespace DrawerConfig
 		namespace Unify
 		{
 			// フレーム
-			const unsigned int Frame = 60;
+			const unsigned int Frame = 30;
 
 			// 指数
 			const float Exponent = 3.0f;
@@ -413,7 +479,7 @@ namespace DrawerConfig
 		const float SkydomeSize = 800.0f;
 
 		// 泡グリッド
-		namespace Emit
+		namespace BubbleGrid
 		{
 			// 間隔
 			const unsigned int IntervalFrame = 240;
@@ -449,17 +515,17 @@ namespace DrawerConfig
 
 
 			// 最小移動スピード
-			const float MinMoveSpeed = +0.1f;
+			const YMath::Vector3 MinMoveSpeed = { +0.0f, +0.1f, +0.0f };
 
 			// 最大移動スピード
-			const float MaxMoveSpeed = +0.3f;
+			const YMath::Vector3 MaxMoveSpeed = { +0.0f, +0.3f, +0.0f };
 
 
 			// 最小回転スピード
-			const float MinRotaSpeed = -0.01f;
+			const YMath::Vector3 MinRotaSpeed = { -0.01f, -0.01f, -0.01f };
 
 			// 最大回転スピード
-			const float MaxRotaSpeed = +0.01f;
+			const YMath::Vector3 MaxRotaSpeed = { +0.01f, +0.01f, +0.01f };
 
 
 			// 色

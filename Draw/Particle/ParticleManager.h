@@ -32,19 +32,51 @@ namespace YGame
 	public:
 		
 		/// <summary>
+		/// リレー虫発生
+		/// </summary>
+		/// <param name="emitNum"> : 数</param>
+		/// <param name="startToRelayFrame"> : 開始地点 から 中継地点 までの時間</param>
+		/// <param name="relayToEndFrame"> : 中継地点 から 終了地点 までの時間</param>
+		/// <param name="start"> : 開始地点</param>
+		/// <param name="end"> : 終了地点</param>
+		/// <param name="relayRange"> : 中継地点範囲</param>
+		/// <param name="rota"> : 回転</param>
+		/// <param name="scale"> : 大きさ</param>
+		/// <param name="color"> : 色</param>
+		void EmitRelayBug(
+			const uint32_t emitNum,
+			const uint32_t startToRelayFrame, const uint32_t relayToEndFrame,
+			const YMath::Vector3& start, const YMath::Vector3& end,
+			const YMath::Vector3& relayRange,
+			const YMath::Vector3& minRota, const YMath::Vector3& maxRota,
+			const float& minScale, const float& maxScale,
+			const YMath::Vector3& color,
+			const float& place);
+		
+		/// <summary>
 		/// 泡グリッド発生
 		/// </summary>
-		/// <param name="frame"> : </param>
-		/// <param name="status"> : トランスフォーム設定ステータス</param>
-		/// <param name="moveSpeed"> : 移動スピード</param>
-		/// <param name="rotaSpeed"> : 回転スピード</param>
+		/// <param name="emitNum"> : 発生数</param>
+		/// <param name="aliveFrame"> : 生存時間</param>
+		/// <param name="center"> : 中心</param>
+		/// <param name="range"> : 範囲</param>
+		/// <param name="minScale"> : 最小スケール</param>
+		/// <param name="maxScale"> : 最大スケール</param>
+		/// <param name="minMoveSpeed"> : 最小移動スピード</param>
+		/// <param name="maxMoveSpeed"> : 最大移動スピード</param>
+		/// <param name="minRotaSpeed"> : 最小回転スピード</param>
+		/// <param name="maxRotaSpeed"> : 最大回転スピード</param>
+		/// <param name="place"> : 小数点をどの位まで扱うか</param>
 		/// <param name="color"> : 色</param>
 		void EmitBubbleGrid(
-			const uint32_t frame,
-			const YGame::Transform::Status status,
-			const YMath::Vector3& moveSpeed,
-			const YMath::Vector3& rotaSpeed,
-			const YMath::Vector3& color);
+			const uint32_t& emitNum,
+			const uint32_t& aliveFrame,
+			const YMath::Vector3& center, const YMath::Vector3& range,
+			const float& minScale, const float& maxScale,
+			const YMath::Vector3& minMoveSpeed, const YMath::Vector3& maxMoveSpeed,
+			const YMath::Vector3& minRotaSpeed, const YMath::Vector3& maxRotaSpeed,
+			const YMath::Vector3& color,
+			const float& place);
 
 	public:
 

@@ -70,10 +70,10 @@ public:
 public:
 
 	/// <summary>
-	/// 全ての色を統一する
+	/// クリア演出 (全ての色を統一する)
 	/// </summary>
 	/// <param name="colorType"> : 色のタイプ</param>
-	static void StaticUnify(const ColorType& colorType);
+	static void StaticClearAnimation(const ColorType& colorType);
 
 public:
 

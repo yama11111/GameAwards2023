@@ -52,14 +52,52 @@ private:
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
 
-	// 回転 (内)
-	YMath::Ease<YMath::Vector3> inRotaEas;
 	
-	// 回転 (外)
-	YMath::Ease<YMath::Vector3> outRotaEas;
+	// 縛る回転タイマー
+	YMath::Timer bindRotaTim_;
+
+	// 縛る回転 (内) イージング
+	YMath::Ease<YMath::Vector3> inBindRotaEas_;
 	
-	// 回転タイマー
-	YMath::Timer rotaTim_;
+	// 縛る回転 (外) イージング
+	YMath::Ease<YMath::Vector3> outBindRotaEas_;
+
+
+	// クリア演出
+	bool isClear_ = false;
+
+
+	// ログインフラグ
+	bool isActLogin_ = false;
+
+	// ログインタイマー
+	YMath::Timer loginTim_;
+
+
+	// ハッキング回転フラグ
+	bool isActHackRota_ = false;
+
+	// ハッキング回転タイマー
+	YMath::Timer hackRotaTim_;
+
+	// ハッキング回転 (内) スピード
+	YMath::Vector3 inHackRotaSpeed_;
+	
+	// ハッキング回転 (外) スピード
+	YMath::Vector3 outHackRotaSpeed_;
+
+
+	// クリア回転フラグ
+	bool isActClearRota_ = false;
+
+	// クリア回転タイマー
+	YMath::Timer clearRotaTim_;
+
+	// クリア回転 (内) イージング
+	YMath::Ease<YMath::Vector3> inClearRotaEas_;
+
+	// クリア回転 (外) イージング
+	YMath::Ease<YMath::Vector3> outClearRotaEas_;
 
 public:
 	
@@ -84,13 +122,35 @@ public:
 	/// </summary>
 	void Draw();
 
+public:
+
+	/// <summary>
+	/// クリア演出
+	/// </summary>
+	/// <param name="playerPos"> : プレイヤーの位置</param>
+	void ActivateClearAnimation(const YMath::Vector3& playerPos);
+
 private:
+
+	// ログイン開始
+	void StartLogin(const Vector3& emitStartPos);
 	
+	// ハッキング回転開始
+	void StartHackRota();
+
+	// クリア回転開始
+	void StartClearRota();
+	
+	// 縛る回転アニメーション
+	void BindRotaAnimation();
+
+	// クリア回転アニメーション
+	void ClearAnimation();
+
+private:
+
 	// 立ちモーション
 	void IdleAnimation() override;
-	
-	// 回転アニメーション
-	void RotaAnimation();
 
 };
 

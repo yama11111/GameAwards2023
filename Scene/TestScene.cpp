@@ -249,6 +249,22 @@ void TestScene::Update()
 
 	
 	// ゴール
+	if (isDrawGoal_)
+	{
+		ImGui::Begin("Goal");
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			goalDra_.Reset();
+		}
+		if (ImGui::Button("Clear"))
+		{
+			// クリア
+			goalDra_.ActivateClearAnimation(Vector3(+20.0f, 0.0f, 0.0f));
+		}
+		ImGui::End();
+	}
+
 	goalDra_.Update();
 
 	
@@ -264,8 +280,8 @@ void TestScene::Update()
 	}
 	if(ImGui::Button("Clear"))
 	{
-		// ゴール
-		DrawerHelper::StaticGoal();
+		// クリア
+		DrawerHelper::StaticClear();
 	}
 	ImGui::End();
 

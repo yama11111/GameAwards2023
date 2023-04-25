@@ -149,7 +149,7 @@ void CoreColor::StaticUpdate()
 	}
 }
 
-void CoreColor::StaticUnify(const ColorType& colorType)
+void CoreColor::StaticClearAnimation(const ColorType& colorType)
 {
 	// ìùàÍäJén
 	sIsUnify_ = true;

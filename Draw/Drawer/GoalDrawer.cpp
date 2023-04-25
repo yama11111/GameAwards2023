@@ -2,6 +2,7 @@
 #include "CalcTransform.h"
 #include "DrawerConfig.h"
 #include "CoreColor.h"
+#include "DrawerHelper.h"
 #include <cassert>
 
 #pragma region 名前空間
@@ -71,13 +72,33 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
-	// 回転 (内)
-	inRotaEas.Initialize(Rota::Inside::Start, Rota::Inside::End, Rota::Exponent);
-	// 回転 (外)
-	outRotaEas.Initialize(Rota::Outside::Start, Rota::Outside::End, Rota::Exponent);
+	// 縛る回転タイマー
+	bindRotaTim_.Initialize(BindRota::Frame);
 
-	// 回転タイマー
-	rotaTim_.Initialize(Rota::Frame);
+	// 縛る回転 (内)
+	inBindRotaEas_.Initialize(BindRota::Inside::Start, BindRota::Inside::End, BindRota::Exponent);
+	
+	// 縛る回転 (外)
+	outBindRotaEas_.Initialize(BindRota::Outside::Start, BindRota::Outside::End, BindRota::Exponent);
+
+
+	// ログインタイマー
+	loginTim_.Initialize(Login::Frame);
+
+
+	// ハッキング回転タイマー
+	hackRotaTim_.Initialize(HackRota::Frame);
+
+
+	// クリア回転タイマー
+	clearRotaTim_.Initialize(ClearRota::Frame);
+
+	// クリア回転 (内) イージング
+	inClearRotaEas_.Initialize({}, {}, 0.0f);
+
+	// クリア回転 (外) イージング
+	outClearRotaEas_.Initialize({}, {}, 0.0f);
+
 
 	// リセット
 	Reset();
@@ -88,7 +109,7 @@ void GoalDrawer::Reset()
 	// リセット
 	IDrawer::Reset();
 
-	// ----- モデル用オブジェクト初期化 ----- //
+	// ----- オブジェクト初期化 ----- //
 
 	// 親トランスフォーム初期化
 	core_->Initialize({ {0.0f,0.0f,0.0f}, {0.0f,+PI / 6.0f,0.0f}, {1.0f,1.0f,1.0f} });
@@ -104,33 +125,188 @@ void GoalDrawer::Reset()
 	modelObjs_[InsideCoreIdx] ->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
 	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
 
-	// ----- タイマー初期化 ----- //
+	// ----- アニメーション初期化 ----- //
 	
-	// 回転タイマー
-	rotaTim_.Reset(true);
+	// クリアフラグ
+	isClear_ = false;
+
+	// 縛る回転タイマー
+	bindRotaTim_.Reset(true);
+	
+
+	// ログインフラグ
+	isActLogin_ = false;
+
+	// ログインタイマー
+	loginTim_.Reset(false);
+
+
+	// ハッキング回転フラグ
+	isActHackRota_ = false;
+
+	// ハッキング回転タイマー
+	hackRotaTim_.Reset(false);
+
+	// ハッキング回転スピード
+	inHackRotaSpeed_ = outHackRotaSpeed_ = {};
+
+
+	// クリア回転フラグ
+	isActClearRota_ = false;
+
+	// クリア回転タイマー
+	clearRotaTim_.Reset(false);
 }
 
-void GoalDrawer::IdleAnimation()
+void GoalDrawer::ActivateClearAnimation(const Vector3& playerPos)
 {
+	// クリア
+	isClear_ = true;
+
+	// ログイン開始
+	StartLogin();
 }
 
-void GoalDrawer::RotaAnimation()
+void GoalDrawer::StartLogin(const Vector3& emitStartPos)
 {
-	// 回転タイマー更新
-	rotaTim_.Update();
+	// ログイン開始
+	isActLogin_ = true;
+
+	// タイマーリセット + 開始
+	loginTim_.Reset(true);
+
+	// リレー虫発生
+	spParticleMan_->EmitRelayBug(
+		Login::RelayBug::Num,
+		Login::RelayBug::StartToRelayFrame, Login::RelayBug::RelayToEndFrame,
+		emitStartPos, pParent_->pos_,
+		Login::RelayBug::RelayRange, 
+		Login::RelayBug::MinRota, Login::RelayBug::MaxRota, 
+		Login::RelayBug::MinScale, Login::RelayBug::MaxScale, 
+		Login::RelayBug::Color, 
+		Login::RelayBug::Place
+	);
+}
+
+void GoalDrawer::StartHackRota()
+{
+	// 回転開始
+	isActHackRota_ = true;
+
+	// ハッキング回転スピード初期化
+	inHackRotaSpeed_ = outHackRotaSpeed_ = {};
+
+	// タイマーリセット + 開始
+	hackRotaTim_.Reset(true);
+}
+
+void GoalDrawer::StartClearRota()
+{
+	// 回転開始
+	isActClearRota_ = true;
+
+	// クリア回転 (内) イージング
+	inClearRotaEas_.Initialize(modelObjs_[InsideCoreIdx]->rota_, {}, ClearRota::Exponent);
+
+	// クリア回転 (外) イージング
+	outClearRotaEas_.Initialize(modelObjs_[OutsideCoreIdx]->rota_, {}, ClearRota::Exponent);
+
+	// タイマーリセット + 開始
+	clearRotaTim_.Reset(true);
+}
+
+void GoalDrawer::BindRotaAnimation()
+{
+	// クリアしたなら弾く
+	if (isClear_) { return; }
+
+	// 縛る回転タイマー更新
+	bindRotaTim_.Update();
 	// タイマー終了したら
-	if (rotaTim_.IsEnd())
+	if (bindRotaTim_.IsEnd())
 	{
 		// タイマーリセット
-		rotaTim_.Reset(true);
+		bindRotaTim_.Reset(true);
 	}
 
-	// 回転 (内)
-	modelObjs_[InsideCoreIdx]->rota_ = inRotaEas.In(rotaTim_.Ratio());
-	modelObjs_[InsideIdx]->rota_ = inRotaEas.In(rotaTim_.Ratio());
-	// 回転 (外)
-	modelObjs_[OutsideCoreIdx]->rota_ = outRotaEas.In(rotaTim_.Ratio());
-	modelObjs_[OutsideIdx]->rota_ = outRotaEas.In(rotaTim_.Ratio());
+	// 縛る回転 (内)
+	modelObjs_[InsideCoreIdx]->rota_ = inBindRotaEas_.In(bindRotaTim_.Ratio());
+	modelObjs_[InsideIdx]->rota_ = inBindRotaEas_.In(bindRotaTim_.Ratio());
+	// 縛る回転 (外)
+	modelObjs_[OutsideCoreIdx]->rota_ = outBindRotaEas_.In(bindRotaTim_.Ratio());
+	modelObjs_[OutsideIdx]->rota_ = outBindRotaEas_.In(bindRotaTim_.Ratio());
+}
+
+void GoalDrawer::ClearAnimation()
+{
+	// クリアしていないなら弾く
+	if (isClear_ == false) { return; }
+	
+	// ログイン中なら
+	if (isActLogin_)
+	{
+		// タイマー更新
+		loginTim_.Update();
+		// タイマー終了したら
+		if (loginTim_.IsEnd())
+		{
+			// ハッキング回転開始
+			StartHackRota();
+
+			// フラグをfalseに
+			isActLogin_ = false;
+		}
+	}
+
+	// ハッキング回転中なら
+	else if (isActHackRota_)
+	{
+		// ハッキング回転タイマー更新
+		hackRotaTim_.Update();
+		// タイマー終了したら
+		if (hackRotaTim_.IsEnd())
+		{
+			// クリア回転開始
+			StartClearRota();
+
+			// フラグをfalseに
+			isActHackRota_ = false;
+		}
+
+		// スピード加速
+		inHackRotaSpeed_ += HackRota::InAcceleration;
+		outHackRotaSpeed_ += HackRota::OutAcceleration;
+
+		// ハッキング回転 (内)
+		modelObjs_[InsideCoreIdx]->rota_ += inHackRotaSpeed_;
+		modelObjs_[InsideIdx]->rota_ += inHackRotaSpeed_;
+		// ハッキング回転 (外)
+		modelObjs_[OutsideCoreIdx]->rota_ += outHackRotaSpeed_;
+		modelObjs_[OutsideIdx]->rota_ += outHackRotaSpeed_;
+	}
+
+	// クリア回転中なら
+	else if (isActClearRota_)
+	{
+		// クリア回転タイマー更新
+		clearRotaTim_.Update();
+		// タイマー終了したら
+		if (clearRotaTim_.IsEnd())
+		{
+			// 描画クラスクリア演出
+			DrawerHelper::StaticClear();
+
+			// フラグをfalseに
+			isActClearRota_ = false;
+		}
+
+		// クリア回転 (内)
+		modelObjs_[InsideCoreIdx]->rota_ = inClearRotaEas_.Out(clearRotaTim_.Ratio());
+		modelObjs_[InsideIdx]->rota_ = inClearRotaEas_.Out(clearRotaTim_.Ratio());
+		// クリア回転 (外)
+		modelObjs_[OutsideCoreIdx]->rota_ = outClearRotaEas_.Out(clearRotaTim_.Ratio());
+		modelObjs_[OutsideIdx]->rota_ = outClearRotaEas_.Out(clearRotaTim_.Ratio());
+	}
 }
 
 void GoalDrawer::Update()
@@ -138,14 +314,21 @@ void GoalDrawer::Update()
 	// 基底クラス更新 
 	IDrawer::Update({});
 
-	// 回転アニメーション
-	RotaAnimation();
+	// 縛る回転アニメーション
+	BindRotaAnimation();
+
+	// クリアアニメーション
+	ClearAnimation();
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		modelObjs_[i]->UpdateMatrix();
 	}
+}
+
+void GoalDrawer::IdleAnimation()
+{
 }
 
 void GoalDrawer::Draw()

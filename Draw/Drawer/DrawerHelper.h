@@ -11,11 +11,11 @@ private:
 	static std::unique_ptr<YGame::Material> sDefMate_;
 
 
-	// ゴールフラグ
-	static bool sIsGoal_;
+	// クリアフラグ
+	static bool sIsClear_;
 
-	// 前回ゴールフラグ
-	static bool sIsElderGoal_;
+	// 前回クリアフラグ
+	static bool sIsElderClear_;
 
 public:
 	
@@ -40,9 +40,9 @@ public:
 public:
 
 	/// <summary>
-	/// ゴール
+	/// クリア
 	/// </summary>
-	static void StaticGoal() { sIsGoal_ = true; }
+	static void StaticClear() { sIsClear_ = true; }
 
 };
 

@@ -104,7 +104,7 @@ void BackgroundDrawer::Initialize()
 
 
 	// 泡グリッド発生用タイマー
-	emitBubbleGridTim_.Initialize(Emit::IntervalFrame);
+	emitBubbleGridTim_.Initialize(BubbleGrid::IntervalFrame);
 
 
 	// リセット
@@ -215,58 +215,17 @@ void BackgroundDrawer::UpdateEmitter()
 
 void BackgroundDrawer::EmitBubbleGrid()
 {
-	// 発生数
-	size_t emitNum = 0;
-
 	// ランダムな数発生
-	emitNum = GetRand(Emit::MinNum, Emit::MaxNum);
+	size_t emitNum = GetRand(BubbleGrid::MinNum, BubbleGrid::MaxNum);
 
-	// 発生の数だけ
-	for (size_t i = 0; i < emitNum; i++)
-	{
+	// パーティクル発生
+	spParticleMan_->EmitBubbleGrid(
+		emitNum,
+		BubbleGrid::AliveFrame,
+		BubbleGrid::Center, BubbleGrid::Range,
+		BubbleGrid::MinScaleSize, BubbleGrid::MaxScaleSize,
+		BubbleGrid::MinMoveSpeed, BubbleGrid::MaxMoveSpeed,
+		BubbleGrid::MinRotaSpeed, BubbleGrid::MaxRotaSpeed,
+		BubbleGrid::Color, BubbleGrid::Place);
 
-		// 設定用ステータス
-		Transform::Status status;
-
-		// 範囲にランダムな位置
-		Vector3 range(
-			GetRand(-Emit::Range.x_, Emit::Range.x_, Emit::Place),
-			GetRand(-Emit::Range.y_, Emit::Range.y_, Emit::Place),
-			GetRand(-Emit::Range.z_, Emit::Range.z_, Emit::Place)
-		);
-
-		// 中心 + ランダム範囲の位置に
-		status.pos_ = Emit::Center + range;
-
-		// ランダムなサイズ取得
-		float scaleSize =
-			GetRand(Emit::MinScaleSize, Emit::MaxScaleSize, Emit::Place);
-
-		// ランダムなサイズ適応
-		status.scale_ = Vector3(scaleSize, scaleSize, scaleSize);
-
-
-		// 上方向にランダムな移動スピード
-		Vector3 moveSpeed(
-			0.0f,
-			GetRand(Emit::MinMoveSpeed, Emit::MaxMoveSpeed, Emit::Place),
-			0.0f
-		);
-
-
-		// 全方向にランダムな回転スピード
-		Vector3 rotaSpeed(
-			GetRand(Emit::MinRotaSpeed, Emit::MaxRotaSpeed, Emit::Place),
-			GetRand(Emit::MinRotaSpeed, Emit::MaxRotaSpeed, Emit::Place),
-			GetRand(Emit::MinRotaSpeed, Emit::MaxRotaSpeed, Emit::Place)
-		);
-
-
-		// パーティクル発生
-		spParticleMan_->EmitBubbleGrid(
-			Emit::AliveFrame,
-			status, moveSpeed, rotaSpeed,
-			Emit::Color);
-
-	}
 }
