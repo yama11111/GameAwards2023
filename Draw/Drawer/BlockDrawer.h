@@ -1,5 +1,6 @@
 #pragma once
 #include "IDrawer.h"
+#include "IMode.h"
 #include <array>
 
 // ブロック描画用コモンクラス
@@ -17,9 +18,6 @@ public:
 
 protected:
 
-	// 状態の数
-	static const size_t ModeNum_ = 2;
-
 	// パーツの総数
 	static const size_t PartsNum_ = 2;
 
@@ -28,23 +26,10 @@ protected:
 	// ----- ブロック ----- //
 
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, PartsNum_>, ModeNum_> spModels_;
+	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
 
-	// 核色
-	static std::array<std::unique_ptr<YGame::Color>, ModeNum_> sCoreColor_;
-
-	// 核マテリアル
-	static std::unique_ptr<YGame::Material> sCoreMate_;
-
-
-	// 核色用パワー
-	static YMath::Power coreColorPow_;
-
-	// 核色パワースイッチ
-	static bool isSwitchCoreColorPower_;
-
-	// 核色イージング
-	static std::array<YMath::Ease<YMath::Vector4>, ModeNum_> coreColorEas_;
+	// 殻失敗色
+	static std::unique_ptr<YGame::Color> sFailShellColor_;
 
 
 	// ----- グリッド ----- //
@@ -54,39 +39,34 @@ protected:
 
 	// グリッド色
 	static std::unique_ptr<YGame::Color> sGridColor_;
+	
+	// グリッド失敗色
+	static std::unique_ptr<YGame::Color> sFailGridColor_;
 
 	// グリッドマテリアル
 	static std::unique_ptr<YGame::Material> sGridMate_;
 
 
 	// 取得時大きさイージング
-	static YMath::Ease<float> catchGridScaleValueEas_;
+	static YMath::Ease<float> sCatchGridScaleValueEas_;
 
 	// 取得失敗時大きさイージング
-	static YMath::Ease<float> failToCatchGridScaleValueEas_;
+	static YMath::Ease<float> sFailToCatchGridScaleValueEas_;
 
 	// 設置時大きさイージング
-	static YMath::Ease<float> placeGridScaleValueEas_;
+	static YMath::Ease<float> sPlaceGridScaleValueEas_;
 
 	// 設置失敗時大きさイージング
-	static YMath::Ease<float> failToPlaceGridScaleValueEas_;
+	static YMath::Ease<float> sFailToPlaceGridScaleValueEas_;
 
 public:
 
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
+	/// <param name="pCoreColors"> : 核色ポインタ配列</param>
+	/// <param name="pCoreMate"> : 核マテリアルポインタ</param>
 	static void StaticInitialize();
-
-	/// <summary>
-	/// 静的リセット
-	/// </summary>
-	static void StaticReset();
-
-	/// <summary>
-	/// 静的更新
-	/// </summary>
-	static void StaticUpdate();
 
 public:
 
@@ -96,6 +76,7 @@ public:
 // ブロック描画用クラス
 class BlockDrawer :
 	private IDrawer,
+	private IMode,
 	private BlockDrawerCommon
 {
 
@@ -164,20 +145,20 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
-	/// <param name="mode"> : 状態</param>
+	/// <param name="modeType"> : 状態</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="Mode::Noraml"> : 通常状態</param>
-	/// <param name="Mode::Red"> : 赤色状態</param>
-	void Initialize(YGame::Transform* pParent, const Mode& mode);
+	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
+	/// <param name="IMode::Type::Movable"> : 可動状態</param>
+	void Initialize(YGame::Transform* pParent, const IMode::Type& modeType);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
-	/// <param name="mode"> : 状態</param>
+	/// <param name="modeType"> : 状態</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="Mode::Noraml"> : 通常状態</param>
-	/// <param name="Mode::Red"> : 赤色状態</param>
-	void Reset(const Mode& mode);
+	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
+	/// <param name="IMode::Type::Movable"> : 可動状態</param>
+	void Reset(const IMode::Type& modeType);
 
 	/// <summary>
 	/// 更新

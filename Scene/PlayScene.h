@@ -48,8 +48,8 @@ namespace YScene
 		// プレイヤー
 		std::unique_ptr<Player> player;
 
-		// フィルター
-		std::unique_ptr<Filter> filter;
+		//// フィルター
+		//std::unique_ptr<Filter> filter;
 
 		// ステージ設定
 		StageConfig* stageConfig_;

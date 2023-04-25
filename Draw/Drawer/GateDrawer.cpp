@@ -51,7 +51,7 @@ void GateDrawerCommon::StaticInitialize()
 void GateDrawer::Initialize(YGame::Transform* pParent)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
+	IDrawer::Initialze(pParent, Idle::IntervalTime);
 
 	// 色生成
 	color_.reset(Color::Create());
@@ -73,7 +73,7 @@ void GateDrawer::Initialize(YGame::Transform* pParent)
 void GateDrawer::Reset()
 {
 	// リセット
-	IDrawer::Reset(Mode::Normal);
+	IDrawer::Reset();
 
 	// ----- モデル用オブジェクト初期化 ----- //
 

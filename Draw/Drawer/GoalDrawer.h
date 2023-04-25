@@ -1,5 +1,6 @@
 #pragma once
 #include "IDrawer.h"
+#include "IMode.h"
 #include <array>
 
 // ゴール描画用コモンクラス
@@ -12,14 +13,16 @@ public:
 	enum class Parts
 	{
 		Core, // 核
+		InsideCore, // 内枠核
 		Inside, // 内枠
+		OutsideCore, // 外枠核
 		Outside, // 外枠
 	};
 
 protected:
 	
 	// パーツの総数
-	static const size_t PartsNum_ = 3;
+	static const size_t PartsNum_ = 5;
 
 protected:
 	
@@ -66,13 +69,19 @@ public:
 	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
 	void Initialize(YGame::Transform* pParent);
 	
-	// リセット (中身だけ初期化)
+	/// <summary>
+	/// リセット (中身だけ初期化)
+	/// </summary>
 	void Reset();
-	
-	// 更新
+
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
-	
-	// 描画
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 private:

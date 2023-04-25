@@ -71,14 +71,9 @@ void TestScene::Initialize()
 	direction_ = { +1.0f,0.0f,0.0f };
 	// プレイヤー描画するか
 	isDrawPlayer_ = false;
-
-	// フィルター描画用クラス初期化
-	filterDra_.Initialize(&core_);
-	// フィルター描画するか
-	isDrawFilter_ = false;
 	
 	// ブロック描画用クラス初期化
-	blockDra_.Initialize(&core_, IDrawer::Mode::Normal);
+	blockDra_.Initialize(&core_, IMode::Type::Normal);
 	// ブロック描画するか
 	isDrawBlock_ = false;
 
@@ -95,7 +90,7 @@ void TestScene::Initialize()
 	// ゴール描画用クラス初期化
 	goalDra_.Initialize(&core_);
 	// ゴール描画するか
-	isDrawGoal_ = false;
+	isDrawGoal_ = true;
 
 
 	// 背景初期化
@@ -137,7 +132,6 @@ void TestScene::Update()
 	// 描画するか
 	ImGui::Begin("isDraw");
 	ImGui::Checkbox("Player", &isDrawPlayer_);
-	ImGui::Checkbox("Filter", &isDrawFilter_);
 	ImGui::Checkbox("Block", &isDrawBlock_);
 	ImGui::Checkbox("Grid", &isDrawGrid_);
 	ImGui::Checkbox("Gate", &isDrawGate_);
@@ -192,10 +186,6 @@ void TestScene::Update()
 
 	playerDra_.Update();
 
-
-	// フィルター
-	filterDra_.Update();
-
 	
 	// ブロック
 	if (isDrawBlock_)
@@ -206,11 +196,11 @@ void TestScene::Update()
 		
 		if (ImGui::Button("Reset (Normal)"))
 		{
-			blockDra_.Reset(IDrawer::Mode::Normal);
+			blockDra_.Reset(IMode::Type::Normal);
 		}
-		if (ImGui::Button("Reset (Red)"))
+		if (ImGui::Button("Reset (Movable)"))
 		{
-			blockDra_.Reset(IDrawer::Mode::Red);
+			blockDra_.Reset(IMode::Type::Movable);
 		}
 
 		ImGui::Text("---------------");
@@ -391,9 +381,6 @@ void TestScene::DrawModels()
 
 	// エフェクト
 	if (isDrawEffect_) { effectMan_.Draw(); }
-	
-	// フィルター描画
-	if (isDrawFilter_) { filterDra_.Draw(); }
 }
 
 void TestScene::DrawSprite3Ds()

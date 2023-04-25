@@ -117,10 +117,11 @@
     <ClCompile Include="Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Draw\Drawer\BackgroundDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\CoreColor.cpp" />
+    <ClCompile Include="Draw\Drawer\IMode.cpp" />
     <ClCompile Include="Draw\Drawer\TowerDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\CardDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\DrawerHelper.cpp" />
-    <ClCompile Include="Draw\Drawer\FilterDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GoalDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\GridDrawer.cpp" />
@@ -224,11 +225,12 @@
     <ClInclude Include="Draw\Actor\SlimeActor.h" />
     <ClInclude Include="Draw\Drawer\BackgroundDrawer.h" />
     <ClInclude Include="Draw\Drawer\BlockDrawer.h" />
+    <ClInclude Include="Draw\Drawer\CoreColor.h" />
+    <ClInclude Include="Draw\Drawer\IMode.h" />
     <ClInclude Include="Draw\Drawer\TowerDrawer.h" />
     <ClInclude Include="Draw\Drawer\CardDrawer.h" />
     <ClInclude Include="Draw\Drawer\DrawerConfig.h" />
     <ClInclude Include="Draw\Drawer\DrawerHelper.h" />
-    <ClInclude Include="Draw\Drawer\FilterDrawer.h" />
     <ClInclude Include="Draw\Drawer\GateDrawer.h" />
     <ClInclude Include="Draw\Drawer\GoalDrawer.h" />
     <ClInclude Include="Draw\Drawer\GridDrawer.h" />

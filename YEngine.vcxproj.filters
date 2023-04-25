@@ -330,9 +330,6 @@
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp">
       <Filter>Draw\Drawer\Obj</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\Drawer\FilterDrawer.cpp">
-      <Filter>Draw\Drawer\Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Drawer\GateDrawer.cpp">
       <Filter>Draw\Drawer\Obj</Filter>
     </ClCompile>
@@ -434,6 +431,12 @@
     </ClCompile>
     <ClCompile Include="Draw\Drawer\SelectDrawer.cpp">
       <Filter>Draw\Drawer\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\IMode.cpp">
+      <Filter>Draw\Drawer\Obj\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\CoreColor.cpp">
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -653,9 +656,6 @@
     <ClInclude Include="Draw\Drawer\BlockDrawer.h">
       <Filter>Draw\Drawer\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\Drawer\FilterDrawer.h">
-      <Filter>Draw\Drawer\Obj</Filter>
-    </ClInclude>
     <ClInclude Include="Draw\Drawer\GateDrawer.h">
       <Filter>Draw\Drawer\Obj</Filter>
     </ClInclude>
@@ -766,6 +766,12 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\SelectDrawer.h">
       <Filter>Draw\Drawer\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\IMode.h">
+      <Filter>Draw\Drawer\Obj\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Drawer\CoreColor.h">
+      <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

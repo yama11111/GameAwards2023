@@ -1,19 +1,46 @@
 #include "DrawerHelper.h"
-#include <cassert>
 
+#include "DrawerConfig.h"
+
+#include "CoreColor.h"
 #include "PlayerDrawer.h"
-#include "FilterDrawer.h"
 #include "BlockDrawer.h"
 #include "GridDrawer.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
 #include "BackgroundDrawer.h"
-#include "hUDDrawer.h"
+#include "HUDDrawer.h"
 
+#include <cassert>
+
+#pragma region 名前空間
+
+using std::array;
+using std::unique_ptr;
+
+using YGame::Transform;
+using YGame::ModelObject;
 using YGame::Model;
+using YGame::Color;
+using YGame::Material;
 
-std::unique_ptr<YGame::Material> DrawerHelper::sDefMate_;
-std::unique_ptr<YGame::Material> DrawerHelper::sBackMate_;
+using YGame::SlimeActor;
+
+using YMath::Ease;
+using YMath::Power;
+using YMath::Vector3;
+using YMath::Vector4;
+
+using namespace DrawerConfig;
+
+#pragma endregion
+
+#pragma region Static
+
+unique_ptr<Material> DrawerHelper::sDefMate_;
+unique_ptr<Material> DrawerHelper::sBackMate_;
+
+#pragma endregion
 
 void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* pCamera, YGame::ParticleManager* pParticleMan)
 {
@@ -26,59 +53,60 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	sDefMate_.reset(YGame::Material::Create());
 
 	// 生成
-	sBackMate_.reset(YGame::Material::Create({ 0.4f,0.3f,0.3f }));
+	sBackMate_.reset(YGame::Material::Create(Background::Ambient));
+
 
 	// ----- 静的初期化 ----- // 
-	
-	// 基底クラス
-	IDrawer::StaticInitialize(pVP, sDefMate_.get(), pCamera, pParticleMan);
+	{
+		// 基底クラス
+		IDrawer::StaticInitialize(pVP, sDefMate_.get(), pCamera, pParticleMan);
 
-	// プレイヤー
-	PlayerDrawerCommon::StaticInitialize();
-	
-	// フィルター
-	FilterDrawerCommon::StaticInitialize();
-	
-	// ブロック
-	BlockDrawerCommon::StaticInitialize();
-	
-	// ゲート
-	GateDrawerCommon::StaticInitialize();
-	
-	// ゴール
-	GoalDrawerCommon::StaticInitialize();
+		// 核色
+		CoreColor::StaticInitialize();
+
+		// プレイヤー
+		PlayerDrawerCommon::StaticInitialize();
+
+		// ブロック
+		BlockDrawerCommon::StaticInitialize();
+
+		// ゲート
+		GateDrawerCommon::StaticInitialize();
+
+		// ゴール
+		GoalDrawerCommon::StaticInitialize();
 
 
-	// グリッド
-	GridDrawerCommon::StaticInitialize(pVP);
-	
-	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
-	
-	// 天球
-	SkydomeDrawerCommon::StaticInitialize();
+		// タワー
+		TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
 
-	// 背景
-	BackgroundDrawerCommon::StaticInitialize(pParticleMan);
+		// 天球
+		SkydomeDrawerCommon::StaticInitialize();
 
-	// HUD
-	HUDDrawerCommon::StaticInitialize();
+		// 背景
+		BackgroundDrawerCommon::StaticInitialize(pParticleMan);
+
+
+		// グリッド
+		GridDrawerCommon::StaticInitialize(pVP);
+
+
+		// HUD
+		HUDDrawerCommon::StaticInitialize();
+	}
+
+	// リセット
+	StaticReset();
 }
 
 void DrawerHelper::StaticReset()
 {
-	// ブロック
-	BlockDrawerCommon::StaticReset();
-
-	// タワー
-	TowerDrawerCommon::StaticReset();
+	// 核色リセット
+	CoreColor::StaticReset();
 }
 
 void DrawerHelper::StaticUpdate()
 {
-	// ブロック
-	BlockDrawerCommon::StaticUpdate();
-
-	// タワー
-	TowerDrawerCommon::StaticUpdate();
+	// 核色更新
+	CoreColor::StaticUpdate();
 }

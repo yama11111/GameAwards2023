@@ -13,6 +13,10 @@ private:
 	// 背景マテリアル
 	static std::unique_ptr<YGame::Material> sBackMate_;
 
+
+	// ゴールフラグ
+	static bool sIsGoal_;
+
 public:
 	
 	/// <summary>
@@ -32,6 +36,13 @@ public:
 	/// 静的更新
 	/// </summary>
 	static void StaticUpdate();
+
+public:
+
+	/// <summary>
+	/// ゴール
+	/// </summary>
+	static void StaticGoal() { sIsGoal_ = true; }
 
 };
 

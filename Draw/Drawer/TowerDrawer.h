@@ -1,23 +1,12 @@
 #pragma once
+#include "IMode.h"
 #include "Model.h"
-#include "Lerp.h"
-#include "Timer.h"
-#include "Power.h"
-#include <array>
-#include <memory>
 
 // タワー描画用コモンクラス
 class TowerDrawerCommon
 {
 
 public:
-	
-	// 状態
-	enum class Mode
-	{
-		Normal, // 通常
-		Red, // 赤
-	};
 	
 	// パーツの名前
 	enum class Parts
@@ -27,9 +16,6 @@ public:
 	};
 
 protected:
-
-	// モードの数
-	static const size_t ModeNum_ = 2;
 	
 	// パーツの総数
 	static const size_t PartsNum_ = 2;
@@ -37,30 +23,13 @@ protected:
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, PartsNum_>, ModeNum_> spModels_;
+	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 
 	// マテリアルポインタ
 	static YGame::Material* spMate_;
-
-
-	// 核色
-	static std::array<std::unique_ptr<YGame::Color>, ModeNum_> sCoreColor_;
-
-	// 核マテリアル
-	static std::unique_ptr<YGame::Material> sCoreMate_;
-
-
-	// 核色用パワー
-	static YMath::Power coreColorPow_;
-
-	// 核色パワースイッチ
-	static bool isSwitchCoreColorPower_;
-
-	// 核色イージング
-	static std::array<YMath::Ease<YMath::Vector4>, ModeNum_> coreColorEas_;
 
 public:
 
@@ -69,17 +38,9 @@ public:
 	/// </summary>
 	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pMate"> : マテリアルポインタ</param>
+	/// <param name="pCoreColors"> : 核色ポインタ配列</param>
+	/// <param name="pCoreMate"> : 核マテリアルポインタ</param>
 	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::Material* pMate);
-
-	/// <summary>
-	/// 静的リセット
-	/// </summary>
-	static void StaticReset();
-
-	/// <summary>
-	/// 静的更新
-	/// </summary>
-	static void StaticUpdate();
 
 public:
 	
@@ -89,8 +50,10 @@ public:
 
 // タワー描画用クラス
 class TowerDrawer :
+	private IMode,
 	private TowerDrawerCommon
 {
+
 private:
 	
 	// 核
@@ -98,28 +61,26 @@ private:
 	
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
-	
-
-	// 状態
-	Mode mode_ = Mode::Normal;
-
-	// 状態番号
-	size_t modeIdx_ = 0;
-
 public:
 	
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="pParent"> : 親行列ポインタ (この行列に追従する)</param>
-	/// <param name="mode"> : 状態</param>
-	void Initialize(YMath::Matrix4* pParent, const Mode& mode);
-	
+	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
+	/// <param name="modeType"> : 状態</param>
+	/// <param name="---------------------------------------------"></param>
+	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
+	/// <param name="IMode::Type::Movable"> : 可動状態</param>
+	void Initialize(YMath::Matrix4* pParent, const IMode::Type& modeType);
+
 	/// <summary>
-	/// リセット
+	/// リセット (中身だけ初期化)
 	/// </summary>
-	/// <param name="mode"> : 状態</param>
-	void Reset(const Mode& mode);
+	/// <param name="modeType"> : 状態</param>
+	/// <param name="---------------------------------------------"></param>
+	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
+	/// <param name="IMode::Type::Movable"> : 可動状態</param>
+	void Reset(const IMode::Type& modeType);
 
 	/// <summary>
 	/// 更新

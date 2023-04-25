@@ -402,15 +402,15 @@ void PlayScene::Initialize()
 		break;
 	}
 
-	// ----- フィルター ----- //
+	//// ----- フィルター ----- //
 
-	// 生成
-	filter.reset(new Filter());
+	//// 生成
+	//filter.reset(new Filter());
 
-	// トランスフォーム (位置、回転、大きさ)
-	filter->Initialize({ -10.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
+	//// トランスフォーム (位置、回転、大きさ)
+	//filter->Initialize({ -10.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
 
-	filter->Reset();
+	//filter->Reset();
 
 	// ----- ゴール ----- //
 
@@ -532,10 +532,10 @@ void PlayScene::Initialize()
 		block[i]->SetMode();
 	}
 
-	//フィルターの位置をプレイヤーの上に
-	YMath::Vector3 Ppos = player->GetPos();
-	Ppos.y_ += 10.0f;
-	filter->SetPos(Ppos);
+	////フィルターの位置をプレイヤーの上に
+	//YMath::Vector3 Ppos = player->GetPos();
+	//Ppos.y_ += 10.0f;
+	//filter->SetPos(Ppos);
 
 
 	// 背景初期化
@@ -578,21 +578,21 @@ void PlayScene::Update()
 	// 操作切り替え
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		//プレイヤーとフィルターが当たってないなら
-		if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
-		{
-			//操作フラグを反転
-			player->ChengePlayFlag();
+		////プレイヤーとフィルターが当たってないなら
+		//if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
+		//{
+		//	//操作フラグを反転
+		//	player->ChengePlayFlag();
 
-			//操作してるobjを表示するスプライトの変更
-			if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-			else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
-		}
-		else
-		{
-			// カメラ揺れる
-			camera_.Shaking(1.0f, 0.2f, 10.0f);
-		}
+		//	//操作してるobjを表示するスプライトの変更
+		//	if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
+		//	else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
+		//}
+		//else
+		//{
+		//	// カメラ揺れる
+		//	camera_.Shaking(1.0f, 0.2f, 10.0f);
+		//}
 	}
 
 	////デバッグ用のリセットボタン
@@ -607,7 +607,7 @@ void PlayScene::Update()
 
 	//値を0に
 	player->SetMovePos(result);
-	filter->SetMovePos(result);
+	//filter->SetMovePos(result);
 
 	//入力状態を入手
 	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD);
@@ -635,55 +635,57 @@ void PlayScene::Update()
 		//移動量
 		result.x_ *= filterA;
 
-		//フィルターの移動量格納
-		filter->SetMovePos(result);
+		////フィルターの移動量格納
+		//filter->SetMovePos(result);
 	}
 
 	//PlayerのUpdate
-	player->Update(filter->GetTransform());
+	//player->Update(filter->GetTransform());
+	player->Update({});
 
-	//filterのUpdate
-	filter->Update();
+	////filterのUpdate
+	//filter->Update();
 
 	// ブロック
 	for (int i = 0; i < block.size(); i++)
 	{
 		//更新
-		block[i]->Update(filter->GetTransform());
+		//block[i]->Update(filter->GetTransform());
+		block[i]->Update({});
 
-		//赤い色なら
-		if (block[i]->GetKind() == ColorB)
-		{
-			//playerと当たってたら延長
-			if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
-			{
-				//タイマーを設定
-				block[i]->SetTimer(10);
-			}
+		////赤い色なら
+		//if (block[i]->GetKind() == ColorB)
+		//{
+		//	//playerと当たってたら延長
+		//	if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
+		//	{
+		//		//タイマーを設定
+		//		block[i]->SetTimer(10);
+		//	}
 
-			//フィルターと当たってたら
-			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-			{
-				//透けるフラグをonに
-				block[i]->SetClearFlag(true);
+		//	//フィルターと当たってたら
+		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+		//	{
+		//		//透けるフラグをonに
+		//		block[i]->SetClearFlag(true);
 
-				//タイマーを設定
-				block[i]->SetTimer(50);
-			}
-		}
+		//		//タイマーを設定
+		//		block[i]->SetTimer(50);
+		//	}
+		//}
 
-		//通常ブロック処理
-		if (block[i]->GetKind() == Normal)
-		{
-			//透けるフラグをonに
-			block[i]->SetClearFlag(false);
+		////通常ブロック処理
+		//if (block[i]->GetKind() == Normal)
+		//{
+		//	//透けるフラグをonに
+		//	block[i]->SetClearFlag(false);
 
-			if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-			{
-				//透けるフラグをonに
-				block[i]->SetClearFlag(true);
-			}
-		}
+		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
+		//	{
+		//		//透けるフラグをonに
+		//		block[i]->SetClearFlag(true);
+		//	}
+		//}
 
 		//ブロック上げ下げ処置
 		if (player->GetPlayFlag())
@@ -987,20 +989,6 @@ void PlayScene::Update()
 	// パーティクル更新
 	particleMan_.Update();
 
-
-	// プレイヤー操縦なら
-	if (player->GetPlayFlag())
-	{
-		// プレイヤー追従
-		followPoint_ = player->GetPos();
-	}
-	// それ以外なら
-	else
-	{
-		// プレイヤー追従
-		followPoint_ = filter->GetTransform().pos_;
-	}
-
 	// カメラ更新
 	camera_.Update();
 
@@ -1028,7 +1016,7 @@ void PlayScene::Update()
 	{
 		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
 		player->Reset();
-		filter->Reset();
+		//filter->Reset();
 	}
 }
 #pragma endregion
@@ -1064,8 +1052,8 @@ void PlayScene::DrawModels()
 	// エフェクト
 	effectMan_.Draw();
 
-	// フィルター描画
-	filter->Draw();
+	//// フィルター描画
+	//filter->Draw();
 }
 
 void PlayScene::DrawSprite3Ds()

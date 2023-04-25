@@ -129,10 +129,10 @@ void BackgroundDrawer::InitializeTowers()
 			});
 
 		// èÛë‘
-		TowerDrawerCommon::Mode mode = static_cast<TowerDrawerCommon::Mode>(Towers::ModeIdx[i]);
+		IMode::Type type = static_cast<IMode::Type>(Towers::ModeIdx[i]);
 
 		// ï`âÊÉNÉâÉXèâä˙âª
-		newTower->drawer_.Initialize(&newTower->transform_.m_, mode);
+		newTower->drawer_.Initialize(&newTower->transform_.m_, type);
 
 		// ë}ì¸
 		towers_.push_back(std::move(newTower));

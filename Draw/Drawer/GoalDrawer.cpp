@@ -1,7 +1,7 @@
 #include "GoalDrawer.h"
 #include "CalcTransform.h"
 #include "DrawerConfig.h"
-#include "Def.h"
+#include "CoreColor.h"
 #include <cassert>
 
 #pragma region 名前空間
@@ -27,30 +27,42 @@ using namespace DrawerConfig::Goal;
 
 array<Model*, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::spModels_ =
 {
-	nullptr, nullptr, nullptr, 
+	nullptr, nullptr, nullptr, nullptr, nullptr,
 };
 
 #pragma endregion
 
-// インデックス
+#pragma region インデックス
+
 static const size_t CoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Core); // 核
-static const size_t InsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Inside); // 内枠
-static const size_t OutsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Outside); // 外枠
+static const size_t InsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::InsideCore); // 内枠核
+static const size_t InsideCoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Inside); // 内枠
+static const size_t OutsideIdx = static_cast<size_t>(GoalDrawerCommon::Parts::OutsideCore); // 外枠核
+static const size_t OutsideCoreIdx = static_cast<size_t>(GoalDrawerCommon::Parts::Outside); // 外枠
+
+#pragma endregion
+
+#pragma region Common
 
 void GoalDrawerCommon::StaticInitialize()
 {
 	// ----- モデル読み込み ----- //
 
 	spModels_[CoreIdx] = Model::Load("goal/core", true); // 核
-	spModels_[InsideIdx] = Model::Load("goal/inside", true); // 内枠
-	spModels_[OutsideIdx] = Model::Load("goal/outside", true); // 外枠
+	spModels_[InsideIdx] = Model::Load("goal/inside", true); // 内枠核
+	spModels_[InsideCoreIdx] = Model::Load("goal/insideCore", true); // 内枠
+	spModels_[OutsideIdx] = Model::Load("goal/outside", true); // 外枠核
+	spModels_[OutsideCoreIdx] = Model::Load("goal/outsideCore", true); // 外枠
 }
 
+#pragma endregion
+
+#pragma region Drawer
 
 void GoalDrawer::Initialize(YGame::Transform* pParent)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
+	IDrawer::Initialze(pParent, Idle::IntervalTime);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -74,15 +86,23 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 void GoalDrawer::Reset()
 {
 	// リセット
-	IDrawer::Reset(Mode::Red);
+	IDrawer::Reset();
 
 	// ----- モデル用オブジェクト初期化 ----- //
 
+	// 親トランスフォーム初期化
 	core_->Initialize({ {0.0f,0.0f,0.0f}, {0.0f,+PI / 6.0f,0.0f}, {1.0f,1.0f,1.0f} });
 
-	modelObjs_[CoreIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 核
-	modelObjs_[InsideIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 内枠
-	modelObjs_[OutsideIdx]->Initialize({ {0.0f,+2.0f,0.0f } }); // 外枠
+	// モデルごとに初期化
+	for (size_t i = 0; i < modelObjs_.size(); i++)
+	{
+		modelObjs_[i]->Initialize({});
+	}
+
+	// 核の色設定
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
+	modelObjs_[InsideCoreIdx] ->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
+	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
 
 	// ----- タイマー初期化 ----- //
 	
@@ -106,8 +126,10 @@ void GoalDrawer::RotaAnimation()
 	}
 
 	// 回転 (内)
+	modelObjs_[InsideCoreIdx]->rota_ = inRotaEas.In(rotaTim_.Ratio());
 	modelObjs_[InsideIdx]->rota_ = inRotaEas.In(rotaTim_.Ratio());
 	// 回転 (外)
+	modelObjs_[OutsideCoreIdx]->rota_ = outRotaEas.In(rotaTim_.Ratio());
 	modelObjs_[OutsideIdx]->rota_ = outRotaEas.In(rotaTim_.Ratio());
 }
 
@@ -134,3 +156,5 @@ void GoalDrawer::Draw()
 		spModels_[i]->Draw(modelObjs_[i].get());
 	}
 }
+
+#pragma endregion

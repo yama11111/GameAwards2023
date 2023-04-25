@@ -6,7 +6,7 @@ using namespace std;
 Block::Block()
 {
 	block_.Initialize({ {}, {}, {1.0f,1.0f,1.0f} });
-	blockDra_.Initialize(&block_, IDrawer::Mode::Normal);
+	blockDra_.Initialize(&block_, IMode::Type::Normal);
 }
 
 //デクリメント
@@ -18,7 +18,7 @@ Block::~Block()
 void Block::Initialize()
 {
 	block_.Initialize({ {}, {}, {1.0f,1.0f,1.0f} });
-	blockDra_.Initialize(&block_, IDrawer::Mode::Normal);
+	blockDra_.Initialize(&block_, IMode::Type::Normal);
 }
 
 //更新
@@ -56,7 +56,7 @@ void Block::Draw()
 void Block::Reset()
 {
 	block_.Initialize({ {}, {}, {1.0f,1.0f,1.0f} });
-	blockDra_.Initialize(&block_, IDrawer::Mode::Normal);
+	blockDra_.Initialize(&block_, IMode::Type::Normal);
 }
 
 //全ブロックの位置代入
@@ -129,7 +129,7 @@ void Block::SetMode()
 	//色付きブロック
 	if (nowKind == ColorB)
 	{
-		blockDra_.Initialize(&block_, IDrawer::Mode::Red);
+		blockDra_.Initialize(&block_, IMode::Type::Movable);
 		return;
 	}
 
@@ -143,7 +143,7 @@ void Block::SetMode()
 	//普通のブロック
 	if (nowKind == Normal)
 	{
-		blockDra_.Initialize(&block_, IDrawer::Mode::Normal);
+		blockDra_.Initialize(&block_, IMode::Type::Normal);
 		return;
 	}
 }

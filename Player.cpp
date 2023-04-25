@@ -15,7 +15,6 @@ Player::Player()
 	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_);
-	filterDra_.Initialize(&player_);
 
 	player_.scale_.x_ = 4.0f;
 	player_.scale_.y_ = 8.0f;
@@ -42,7 +41,6 @@ void Player::Initialize()
 	player_.Initialize({ {}, {}, {0.5f,0.5f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_);
-	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
 	SetClearFlag(false);
@@ -62,7 +60,6 @@ void Player::Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3
 	player_.Initialize({ pos_, rot_, scale_ });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Initialize(&player_, &direction_);
-	filterDra_.Initialize(&player_);
 
 	//プレイヤーがすり抜けるか
 	SetClearFlag(false);
@@ -101,8 +98,6 @@ void Player::Update()
 	//更新
 	player_.UpdateMatrix();
 	playerDra_.Update();
-
-	filterDra_.Update();
 }
 
 void Player::Update(Transform filterPos)
@@ -543,8 +538,6 @@ void Player::Update(Transform filterPos)
 	//更新
 	player_.UpdateMatrix();
 	playerDra_.Update();
-
-	filterDra_.Update();
 }
 
 
@@ -553,7 +546,6 @@ void Player::Reset()
 	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.49f,0.9f,1.0f} });
 	direction_ = { +1.0f,0.0f,0.0f };
 	playerDra_.Reset();
-	filterDra_.Reset();
 
 	//位置
 	player_.pos_.x_ = startPos.x_;
@@ -626,6 +618,4 @@ void Player::PlayerMove(YMath::Vector3 pos)
 	//更新処理
 	player_.UpdateMatrix();
 	playerDra_.Update();
-
-	filterDra_.Update();
 }

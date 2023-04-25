@@ -2,7 +2,6 @@
 #include "BaseScene.h"
 
 #include "PlayerDrawer.h"
-#include "FilterDrawer.h"
 #include "BlockDrawer.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
@@ -50,11 +49,6 @@ namespace YScene
 		YMath::Vector3 direction_;
 		// プレイヤー描画するか
 		bool isDrawPlayer_ = false;
-
-		// フィルター描画クラス
-		FilterDrawer filterDra_;
-		// フィルター描画するか
-		bool isDrawFilter_ = false;
 
 		// ブロック描画クラス
 		BlockDrawer blockDra_;

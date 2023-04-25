@@ -1,6 +1,5 @@
 #pragma once
 #include "PlayerDrawer.h"
-#include "FilterDrawer.h"
 
 class Player
 {
@@ -14,7 +13,6 @@ private:
 
 	// プレイヤー描画クラス
 	PlayerDrawer playerDra_;
-	FilterDrawer filterDra_;
 
 	//スタート時のPos格納
 	YMath::Vector3 startPos = { 0.0f,0.0f,0.0f };

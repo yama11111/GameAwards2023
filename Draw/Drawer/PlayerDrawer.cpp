@@ -49,7 +49,7 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 	assert(pDirection);
 
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Mode::Normal, Idle::IntervalTime);
+	IDrawer::Initialze(pParent, Idle::IntervalTime);
 
 	// 色生成
 	color_.reset(Color::Create());
@@ -74,7 +74,7 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 void PlayerDrawer::Reset()
 {
 	// リセット
-	IDrawer::Reset(Mode::Normal);
+	IDrawer::Reset();
 
 	// モデル用オブジェクト初期化
 	for (size_t i = 0; i < modelObjs_.size(); i++)

@@ -34,7 +34,7 @@ void IDrawer::StaticInitialize(
 	spParticleMan_ = pParticleMan;
 }
 
-void IDrawer::Initialze(YGame::Transform* pParent, const Mode& mode, const UINT intervalTime)
+void IDrawer::Initialze(YGame::Transform* pParent, const UINT intervalTime)
 {
 	// nullチェック
 	assert(pParent);
@@ -50,19 +50,16 @@ void IDrawer::Initialze(YGame::Transform* pParent, const Mode& mode, const UINT 
 	idleTim_.Initialize(intervalTime);
 
 	// リセット
-	Reset(mode);
+	Reset();
 }
 
-void IDrawer::Reset(const Mode& mode)
+void IDrawer::Reset()
 {
 	// 初期化
 	SlimeActor::Initialize();
 
 	// オブジェクト初期化
 	core_->Initialize({});
-
-	// 状態変更
-	ChangeMode(mode);
 
 	// 立ちモーションタイマーリセット
 	idleTim_.Reset(true);
@@ -93,13 +90,4 @@ void IDrawer::Update(const YGame::Transform::Status& status)
 			SlimeActor::JiggleValue() + status.scale_
 		}
 	);
-}
-
-void IDrawer::ChangeMode(const Mode& mode)
-{
-	// 現在の状態
-	current_ = mode;
-
-	// 現在の状態番号
-	currentIdx_ = static_cast<size_t>(current_);
 }
