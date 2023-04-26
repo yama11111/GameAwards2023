@@ -16,6 +16,7 @@ YInput::Keys* PauseDrawerCommon::sKeys_ = nullptr;
 Sprite2D* PauseDrawerCommon::spPauseSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spResumeSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spTitleSpr_ = nullptr;
+Sprite2D* PauseDrawerCommon::spStageSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spCurtenSpr_ = nullptr;
 
 void PauseDrawerCommon::StaticInitialize()
@@ -29,6 +30,8 @@ void PauseDrawerCommon::StaticInitialize()
 	spResumeSpr_	= Sprite2D::Create({}, { Texture::Load("UI/resume.png") });
 	// title
 	spTitleSpr_		= Sprite2D::Create({}, { Texture::Load("UI/title.png") });
+	// stage
+	spStageSpr_		= Sprite2D::Create({}, { Texture::Load("UI/select.png") });
 
 	// curten
 	spCurtenSpr_	= Sprite2D::Create({}, { Texture::Load("white1x1.png") });
@@ -39,7 +42,7 @@ void PauseDrawerCommon::StaticInitialize()
 
 #pragma region PauseDrawer
 
-void PauseDrawer::Initialize()
+void PauseDrawer::Initialize(const SceneType& sceneType)
 {
 	// ----- 生成 ----- //
 
@@ -52,9 +55,9 @@ void PauseDrawer::Initialize()
 	resumeObj_.	reset(Sprite2DObject::Create({}, resumeColor_.get()));
 	
 	// titleColor
-	titleColor_.reset(Color::Create());
+	changeColor_.reset(Color::Create());
 	// title
-	titleObj_.	reset(Sprite2DObject::Create({}, titleColor_.get()));
+	changeObj_.	reset(Sprite2DObject::Create({}, changeColor_.get()));
 	
 	// curtenColor
 	curtenColor_.reset(Color::Create());
@@ -62,10 +65,10 @@ void PauseDrawer::Initialize()
 	curtenObj_.reset(Sprite2DObject::Create({}, curtenColor_.get()));
 
 	// リセット
-	Reset();
+	Reset(sceneType);
 }
 
-void PauseDrawer::Reset()
+void PauseDrawer::Reset(const SceneType& sceneType)
 {
 	// ----- Object初期化 ----- //
 
@@ -74,7 +77,7 @@ void PauseDrawer::Reset()
 	// resume
 	resumeObj_->Initialize({Font::Resume, {}, Font::Scale });
 	// title
-	titleObj_->Initialize({ Font::Title, {}, Font::Scale });
+	changeObj_->Initialize({ Font::Title, {}, Font::Scale });
 
 	// curten
 	curtenObj_->Initialize({ Curten::Pos, {}, Curten::Scale });
@@ -86,7 +89,7 @@ void PauseDrawer::Reset()
 	resumeColor_->SetRGB(Font::OnColor);
 
 	// titleColor
-	titleColor_->SetRGB(Font::OffColor);
+	changeColor_->SetRGB(Font::OffColor);
 
 
 	// curtenColor
@@ -95,13 +98,39 @@ void PauseDrawer::Reset()
 
 	// ポーズ中か
 	isPause_ = false;
+
+	// ポーズ中だったか
+	isElderPause_ = false;
 	
+	// 選択
+	current_ = Select::Resume;
+
+	// 現在のシーン
+	sceneType_ = sceneType;
+}
+
+void PauseDrawer::ResumeReset()
+{
+	// resumeColor
+	resumeColor_->SetRGB(Font::OnColor);
+
+	// titleColor
+	changeColor_->SetRGB(Font::OffColor);
+
+
+	// curtenColor
+	curtenColor_->SetRGBA(Curten::Color);
+	// ポーズ中か
+	isPause_ = false;
 	// 選択
 	current_ = Select::Resume;
 }
 
 void PauseDrawer::Update()
 {
+	// ポーズ保存
+	isElderPause_ = isPause_;
+
 	// TAB → ポーズ切り替え
 	if (sKeys_->IsTrigger(DIK_ESCAPE))
 	{
@@ -115,7 +144,7 @@ void PauseDrawer::Update()
 		else
 		{
 			// リセット
-			Reset();
+			ResumeReset();
 		}
 	}
 
@@ -128,19 +157,26 @@ void PauseDrawer::Update()
 		// 逆になるように
 		if (current_ == Select::Resume)
 		{
-			current_ = Select::Title;
+			if (sceneType_ == SceneType::Select)
+			{
+				current_ = Select::Title;
+			}
+			else if (sceneType_ == SceneType::Play)
+			{
+				current_ = Select::Stage;
+			}
 			
 			// 選択しているか分かるように
 			resumeColor_->SetRGB(Font::OffColor); // resume
-			titleColor_->SetRGB(Font::OnColor); // title
+			changeColor_->SetRGB(Font::OnColor); // change
 		}
-		else if (current_ == Select::Title)
+		else if (current_ == Select::Title || current_ == Select::Stage)
 		{
 			current_ = Select::Resume;
 
 			// 選択しているか分かるように
 			resumeColor_->SetRGB(Font::OnColor); // resume
-			titleColor_->SetRGB(Font::OffColor); // title
+			changeColor_->SetRGB(Font::OffColor); // change
 		}
 	}
 
@@ -151,7 +187,7 @@ void PauseDrawer::Update()
 		if (current_ == Select::Resume)
 		{
 			// リセット
-			Reset();
+			ResumeReset();
 		}
 		// タイトルなら
 		else if (current_ == Select::Title)
@@ -159,14 +195,20 @@ void PauseDrawer::Update()
 			// シーン遷移
 			SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
 		}
+		// ステージセレクトなら
+		else if (current_ == Select::Stage)
+		{
+			// シーン遷移
+			SceneManager::GetInstance()->Change("SELECT", "BLACKOUT");
+		}
 	}
 
 	// pause
 	pauseObj_->UpdateMatrix();
 	// resume
 	resumeObj_->UpdateMatrix();
-	// title
-	titleObj_->UpdateMatrix();
+	// change
+	changeObj_->UpdateMatrix();
 }
 
 void PauseDrawer::Draw()
@@ -182,7 +224,15 @@ void PauseDrawer::Draw()
 	// resume
 	spResumeSpr_->Draw(resumeObj_.get());
 	// title
-	spTitleSpr_->Draw(titleObj_.get());
+	if (sceneType_ == SceneType::Select)
+	{
+		spTitleSpr_->Draw(changeObj_.get());
+	}
+	// stage
+	else if (sceneType_ == SceneType::Play)
+	{
+		spStageSpr_->Draw(changeObj_.get());
+	}
 }
 
 #pragma endregion

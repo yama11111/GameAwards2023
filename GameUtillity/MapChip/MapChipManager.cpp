@@ -3,7 +3,7 @@
 
 using YGame::MapChipManager;
 
-void MapChipManager::Load(const LoadStatus& status)
+void MapChipManager::Load()
 {
 	if (mapDatas_.empty() == false)
 	{
@@ -13,8 +13,8 @@ void MapChipManager::Load(const LoadStatus& status)
 		}
 	}
 
-	mapDatas_.resize(1);
-	mapDatas_[0].Load("demo.csv", status.pModels_, status.pSprites_);
+	mapDatas_.resize(10);
+	mapDatas_[0].Load("demo.csv");
 }
 
 void MapChipManager::Initialize(const InitStatus& status)

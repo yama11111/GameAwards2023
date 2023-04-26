@@ -15,12 +15,6 @@ namespace YGame
 		// マップ表示
 		MapChip2DDisplayer mapDisp_;
 	public:
-		// ロードステータス
-		struct LoadStatus
-		{
-			std::vector<Model*> pModels_; // モデルポインタ
-			std::vector<Sprite2D*> pSprites_; // スプライトポインタ
-		};
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -30,7 +24,7 @@ namespace YGame
 		};
 	public:
 		// ロード
-		void Load(const LoadStatus& status);
+		void Load();
 		// 初期化
 		void Initialize(const InitStatus& status);
 		// リセット

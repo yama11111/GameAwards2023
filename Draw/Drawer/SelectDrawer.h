@@ -127,7 +127,10 @@ public:
 	void Update();
 	
 	// 描画 (モデル)
-	void DrawModel();
+	void DrawBackModel();
+	
+	// 描画 (モデル)
+	void DrawFrontModel();
 	
 	// 描画 (スプライト2D)
 	void DrawSprite3D();

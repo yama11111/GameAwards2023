@@ -6,6 +6,7 @@
 
 #include "EditScene.h"
 #include "TestScene.h"
+#include "DemoScene.h"
 
 using YScene::YGameSceneFactory;
 using YScene::BaseScene;
@@ -22,6 +23,7 @@ BaseScene* YGameSceneFactory::CreateScene(const std::string& sceneName)
 
 	if (sceneName == Edit_)		{ newScene = new EditScene(); }
 	if (sceneName == Test_)		{ newScene = new TestScene(); }
+	if (sceneName == Demo_)		{ newScene = new DemoScene(); }
 
 	return newScene;
 }

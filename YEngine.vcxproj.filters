@@ -438,6 +438,15 @@
     <ClCompile Include="Draw\Drawer\CoreColor.cpp">
       <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\DemoScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoPlayer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoGoal.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -772,6 +781,15 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\CoreColor.h">
       <Filter>Draw\Drawer\Ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\DemoScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoPlayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoGoal.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

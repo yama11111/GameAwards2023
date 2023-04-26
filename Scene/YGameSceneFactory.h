@@ -21,6 +21,9 @@ namespace YScene
 		// テスト
 		const std::string Test_	 = "TEST";
 
+		// デモ
+		const std::string Demo_	 = "DEMO";
+
 	public:
 		// シーン生成
 		BaseScene* CreateScene(const std::string& sceneName) override;

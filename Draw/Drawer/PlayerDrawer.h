@@ -87,8 +87,7 @@ public:
 	/// XV
 	/// </summary>
 	void Update();
-	
-	
+
 	/// <summary>
 	/// •`‰æ
 	/// </summary>

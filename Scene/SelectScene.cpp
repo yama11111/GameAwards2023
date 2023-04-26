@@ -54,7 +54,7 @@ void SelectScene::Initialize()
 	inputDra_.Initialize(InputDrawer::SceneType::Select);
 	
 	// pause
-	pauseDra_.Initialize();
+	pauseDra_.Initialize(PauseDrawer::SceneType::Select);
 
 	// ステージ設定
 	stageConfig_ = StageConfig::GetInstance();
@@ -82,15 +82,15 @@ void SelectScene::Finalize()
 #pragma region 更新
 void SelectScene::Update()
 {
-	// input更新
-	inputDra_.Update();
-	
+
 	// pause更新
 	pauseDra_.Update();
 
-
 	// ポーズ中なら弾く
-	if (pauseDra_.IsPause()) { return; }
+	if (pauseDra_.IsElderPause()) { return; }
+
+	// input更新
+	inputDra_.Update();
 
 	// ステージ番号取得
 	int stageIdx = stageConfig_->GetCurrentStageIndex();
@@ -109,7 +109,8 @@ void SelectScene::Update()
 		// 次のシーンへ (SPACE)
 		if (sKeys_->IsTrigger(DIK_SPACE))
 		{
-			SceneManager::GetInstance()->Change("PLAY", "INFECTION");
+			//SceneManager::GetInstance()->Change("PLAY", "INFECTION");
+			SceneManager::GetInstance()->Change("DEMO", "INFECTION");
 		}
 	}
 
@@ -140,19 +141,30 @@ void SelectScene::DrawBackSprite2Ds()
 
 }
 
-void SelectScene::DrawModels()
+void SelectScene::DrawBackModels()
 {
 	// 描画用クラス更新
-	dra_.DrawModel();
+	dra_.DrawBackModel();
+}
+
+void SelectScene::DrawBackSprite3Ds()
+{
+	// 描画用クラス更新
+	dra_.DrawSprite3D();
+}
+
+void SelectScene::DrawFrontModels()
+{
+	// 描画用クラス更新
+	dra_.DrawFrontModel();
 
 	// パーティクル描画
 	particleMan_.Draw();
 }
 
-void SelectScene::DrawSprite3Ds()
-{
-	// 描画用クラス更新
-	dra_.DrawSprite3D();
+void SelectScene::DrawFrontSprite3Ds()
+{	
+
 }
 
 void SelectScene::DrawFrontSprite2Ds()
@@ -175,18 +187,30 @@ void SelectScene::Draw()
 	// ----- 背景スプライト ----- //
 
 	DrawBackSprite2Ds();
-
+	
 	// -------------------------- //
 	Model::Pipeline::StaticSetDrawCommond();
 	// --------- モデル --------- //
 
-	DrawModels();
+	DrawBackModels();
 
 	// -------------------------- //
 	Sprite3D::Pipeline::StaticSetDrawCommond();
 	// ------- ビルボード ------- //
 
-	DrawSprite3Ds();
+	DrawBackSprite3Ds();
+
+	// -------------------------- //
+	Model::Pipeline::StaticSetDrawCommond();
+	// --------- モデル --------- //
+
+	DrawFrontModels();
+
+	// -------------------------- //
+	Sprite3D::Pipeline::StaticSetDrawCommond();
+	// ------- ビルボード ------- //
+
+	DrawFrontSprite3Ds();
 
 	// -------------------------- //
 	Sprite2D::Pipeline::StaticSetDrawCommond();

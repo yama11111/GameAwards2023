@@ -11,7 +11,8 @@ namespace YScene
 	// セレクトシーン
 	class SelectScene : public BaseScene
 	{
-	public:
+
+	private:
 
 #pragma region リソース
 
@@ -90,14 +91,24 @@ namespace YScene
 		void DrawBackSprite2Ds();
 
 		/// <summary>
-		/// モデル描画
+		/// 背景モデル描画
 		/// </summary>
-		void DrawModels();
+		void DrawBackModels();
 
 		/// <summary>
-		/// スプライト3D描画
+		/// 背景スプライト3D描画
 		/// </summary>
-		void DrawSprite3Ds();
+		void DrawBackSprite3Ds();
+
+		/// <summary>
+		/// 前景モデル描画
+		/// </summary>
+		void DrawFrontModels();
+
+		/// <summary>
+		/// 前景スプライト3D描画
+		/// </summary>
+		void DrawFrontSprite3Ds();
 
 		/// <summary>
 		/// 前景スプライト2D描画

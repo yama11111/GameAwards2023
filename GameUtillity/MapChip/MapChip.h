@@ -1,5 +1,6 @@
 #pragma once
-#include "Model.h"
+#include "BlockDrawer.h"
+//#include "Model.h"
 #include "Sprite2D.h"
 #include "MapChipCollider.h"
 #include <list>
@@ -15,17 +16,12 @@ namespace YGame
 		std::vector<std::vector<int>> chipNums_;
 		// マップチップアタリ判定
 		std::vector<std::vector<bool>> chipColls_;
-		
-		// モデルポインタ
-		std::vector<Model*> pModels_;
-		// スプライトポインタ
-		std::vector<Sprite2D*> pSprites_;
 
 		// ロード済みか
 		bool isLoaded_ = false;
 	public:
 		// csv読み込み
-		void Load(const std::string fileName, const std::vector<Model*>& pModels, const std::vector<Sprite2D*>& pSprites);
+		void Load(const std::string fileName);
 		// 消去
 		void Clear();
 		// コリジョンリセット
@@ -39,9 +35,8 @@ namespace YGame
 		// チップ1つの情報
 		struct Chip
 		{
-			std::unique_ptr<ModelObject> obj_; // オブジェクト
-			std::unique_ptr<Color> color_; // 色
-			size_t number_ = UINT32_MAX; // 番号
+			std::unique_ptr<Transform> transform_; // トランスフォーム
+			std::unique_ptr<BlockDrawer> dra_; // 描画クラス
 		};
 	private:
 		// マップチップ

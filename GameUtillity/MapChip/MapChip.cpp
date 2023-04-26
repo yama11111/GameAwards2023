@@ -13,11 +13,8 @@ using YGame::ModelObject;
 
 #pragma region MapData
 
-void MapData::Load(const std::string fileName, const std::vector<Model*>& pModels, const std::vector<Sprite2D*>& pSprites)
+void MapData::Load(const std::string fileName)
 {
-	assert(pModels.size() > 0);
-	assert(pSprites.size() > 0);
-
 	// クリア
 	Clear();
 
@@ -74,21 +71,14 @@ void MapData::Load(const std::string fileName, const std::vector<Model*>& pModel
 		chipColls_[i].resize(chipNums_[i].size());
 	}
 
-	// モデル
-	pModels_ = pModels;
-	// スプライト
-	pSprites_ = pSprites;
-
 	// 読み込み完了
 	isLoaded_ = true;
 }
 
 void MapData::Clear()
 {
-	chipNums_.clear();
-	chipColls_.clear();
-	pModels_.clear();
-	pSprites_.clear();
+	if (chipNums_.empty() == false) { chipNums_.clear(); }
+	if (chipColls_.empty() == false) { chipColls_.clear(); }
 }
 
 void MapData::CollReset()
@@ -152,14 +142,24 @@ void MapChip::Reset()
 				float posX = +(chipScale_.x_ * 2.0f) * x + chipScale_.x_;
 				float posY = -(chipScale_.y_ * 2.0f) * y - chipScale_.y_;
 				
-				chip->obj_.reset(ModelObject::Create({ {posX,posY,0.0f},{},chipScale_ }));
-				chip->obj_->pos_ += leftTop_;
+				chip->transform_.reset(ModelObject::Create({ {posX,posY,0.0f},{},chipScale_ }));
+				chip->transform_->pos_ += leftTop_;
 				
-				// 色
-				chip->color_.reset(Color::Create());
-				
-				// 番号
-				chip->number_ = nums[y][x];
+				// モードタイプ
+				IMode::Type type = IMode::Type::Normal;
+
+				if (nums[y][x] == 1)
+				{
+					type = IMode::Type::Normal;
+				}
+				else if (nums[y][x] == 2)
+				{
+					type = IMode::Type::Movable;
+				}
+
+				// 描画クラス
+				chip->dra_.reset(new BlockDrawer());
+				chip->dra_->Initialize(chip->transform_.get(), type);
 
 				// 1番後ろに挿入
 				chips_.push_back(std::move(chip));
@@ -179,7 +179,7 @@ void MapChip::Update()
 	// 更新
 	for (size_t i = 0; i < chips_.size(); i++)
 	{
-		chips_[i]->obj_->UpdateMatrix();
+		chips_[i]->transform_->UpdateMatrix();
 	}
 }
 
@@ -291,9 +291,7 @@ void MapChip::Draw()
 	// 描画
 	for (size_t i = 0; i < chips_.size(); i++)
 	{
-		// マップ番号に対応するモデルで描画
-		size_t idx = chips_[i]->number_ - 1;
-		pMapData_->pModels_[idx]->Draw(chips_[i]->obj_.get());
+		chips_[i]->dra_->Draw();
 	}
 }
 
@@ -334,8 +332,8 @@ void MapChip2DDisplayer::Initialize(MapData* pMapData)
 			chip.reset(new Chip());
 
 			// オブジェクト
-			posX = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().x_) * x;
-			posY = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().y_) * y;
+			//posX = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().x_) * x;
+			//posY = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().y_) * y;
 
 			chip->obj_.reset(Sprite2DObject::Create({ {posX,posY,0.0f},{},{scale,scale,1.0f} }));
 
@@ -381,7 +379,7 @@ void MapChip2DDisplayer::Draw()
 		{
 			// マップ番号に対応するスプライトで描画
 			int idx = pMapData_->chipNums_[y][x] - 1;
-			pMapData_->pSprites_[idx]->Draw(chips_[y][x]->obj_.get());
+			//pMapData_->pSprites_[idx]->Draw(chips_[y][x]->obj_.get());
 		}
 	}
 }

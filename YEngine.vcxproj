@@ -113,6 +113,8 @@
     <ClCompile Include="Base\YFramework.cpp" />
     <ClCompile Include="Base\YWindowsApp.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="DemoGoal.cpp" />
+    <ClCompile Include="DemoPlayer.cpp" />
     <ClCompile Include="Draw\Actor\DeadActor.cpp" />
     <ClCompile Include="Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Draw\Drawer\BackgroundDrawer.cpp" />
@@ -178,6 +180,7 @@
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene\BaseScene.cpp" />
+    <ClCompile Include="Scene\DemoScene.cpp" />
     <ClCompile Include="Scene\EditScene.cpp" />
     <ClCompile Include="Scene\PlayScene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
@@ -221,6 +224,8 @@
     <ClInclude Include="Base\YWindowsApp.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Def.h" />
+    <ClInclude Include="DemoGoal.h" />
+    <ClInclude Include="DemoPlayer.h" />
     <ClInclude Include="Draw\Actor\DeadActor.h" />
     <ClInclude Include="Draw\Actor\SlimeActor.h" />
     <ClInclude Include="Draw\Drawer\BackgroundDrawer.h" />
@@ -287,6 +292,7 @@
     <ClInclude Include="GameUtillity\WorldRuler.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scene\DemoScene.h" />
     <ClInclude Include="Scene\EditScene.h" />
     <ClInclude Include="Scene\ISceneFactory.h" />
     <ClInclude Include="Scene\BaseScene.h" />

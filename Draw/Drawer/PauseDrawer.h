@@ -13,6 +13,7 @@ public:
 	{
 		Resume, // 戻る
 		Title, // タイトル
+		Stage, // ステージセレクト
 	};
 protected:
 	// キー
@@ -24,6 +25,8 @@ protected:
 	static YGame::Sprite2D* spResumeSpr_;
 	// title
 	static YGame::Sprite2D* spTitleSpr_;
+	// stage
+	static YGame::Sprite2D* spStageSpr_;
 	
 	// curten
 	static YGame::Sprite2D* spCurtenSpr_;
@@ -36,6 +39,14 @@ public:
 
 class PauseDrawer : private PauseDrawerCommon
 {
+public:
+	// 初期化用シーン
+	enum class SceneType
+	{
+		Select, // ステージセレクト
+		Play, // ゲーム
+	};
+
 private:
 	// ----- Object ----- //
 
@@ -43,8 +54,8 @@ private:
 	std::unique_ptr<YGame::Sprite2DObject> pauseObj_;
 	// resume
 	std::unique_ptr<YGame::Sprite2DObject> resumeObj_;
-	// title
-	std::unique_ptr<YGame::Sprite2DObject> titleObj_;
+	// change
+	std::unique_ptr<YGame::Sprite2DObject> changeObj_;
 
 	// curten
 	std::unique_ptr<YGame::Sprite2DObject> curtenObj_;
@@ -53,8 +64,8 @@ private:
 
 	// resumeColor
 	std::unique_ptr<YGame::Color> resumeColor_;
-	// titleColor
-	std::unique_ptr<YGame::Color> titleColor_;
+	// changeColor
+	std::unique_ptr<YGame::Color> changeColor_;
 
 	// curtenColor
 	std::unique_ptr<YGame::Color> curtenColor_;
@@ -63,20 +74,30 @@ private:
 	// ポーズ中か
 	bool isPause_ = false;
 
+	// ポーズ中だったか
+	bool isElderPause_ = false;
+
 	// 現在の選択
 	Select current_ = Select::Resume;
 
+	// 現在のシーン
+	SceneType sceneType_ = SceneType::Select;
+
 public:
 	// 初期化
-	void Initialize();
+	void Initialize(const SceneType& sceneType);
 	// リセット
-	void Reset();
+	void Reset(const SceneType& sceneType);
 	// 更新
 	void Update();
 	// 描画
 	void Draw();
+private:
+	void ResumeReset();
 public:
 	// ポーズ中か
 	bool IsPause() const { return isPause_; }
+	// ポーズ中だったか
+	bool IsElderPause() const { return isElderPause_; }
 };
 

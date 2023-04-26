@@ -417,19 +417,21 @@ void SelectDrawer::EmitBubbleGrid()
 }
 
 
-void SelectDrawer::DrawModel()
+void SelectDrawer::DrawBackModel()
 {
 	// 天球
 	skydomeDra_.Draw();
-
-	// 地球
-	spEarthModel_->Draw(earthObj_.get());
 
 	// ステージ描画
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
 		stageDras_[i]->DrawModel();
 	}
+}
+void SelectDrawer::DrawFrontModel()
+{
+	// 地球
+	spEarthModel_->Draw(earthObj_.get());
 }
 void SelectDrawer::DrawSprite3D()
 {

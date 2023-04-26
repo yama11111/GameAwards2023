@@ -564,7 +564,7 @@ void PlayScene::Update()
 	hud_.Update();
 
 	// ƒ|[ƒY’†‚È‚ç’e‚­
-	if (hud_.IsPause()) { return; }
+	if (hud_.IsElderPause()) { return; }
 
 
 	// ‘€ìØ‚è‘Ö‚¦

@@ -45,5 +45,8 @@ public:
 	// ポーズ中か
 	bool IsPause() const { return pauseDra_.IsPause(); }
 
+	// ポーズ中だったか
+	bool IsElderPause() const { return pauseDra_.IsElderPause(); }
+
 };
 

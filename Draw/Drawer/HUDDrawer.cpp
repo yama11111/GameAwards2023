@@ -29,7 +29,7 @@ void HUDDrawer::Initialize()
 	inputDra_.Initialize(InputDrawer::SceneType::Play);
 
 	// pause
-	pauseDra_.Initialize();
+	pauseDra_.Initialize(PauseDrawer::SceneType::Play);
 }
 
 void HUDDrawer::Reset()
@@ -38,7 +38,7 @@ void HUDDrawer::Reset()
 	inputDra_.Reset(InputDrawer::SceneType::Play);
 
 	// pause
-	pauseDra_.Reset();
+	pauseDra_.Reset(PauseDrawer::SceneType::Play);
 }
 
 void HUDDrawer::Update()
@@ -47,7 +47,7 @@ void HUDDrawer::Update()
 	pauseDra_.Update();
 
 	// É|Å[ÉYíÜÇ»ÇÁíeÇ≠
-	if (pauseDra_.IsPause()) { return; }
+	if (pauseDra_.IsElderPause()) { return; }
 
 
 	// input

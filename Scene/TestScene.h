@@ -19,7 +19,8 @@ namespace YScene
 	// テストシーン
 	class TestScene : public BaseScene
 	{
-	public:
+
+	private:
 
 #pragma region リソース
 
