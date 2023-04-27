@@ -21,11 +21,11 @@ private:
 	// ブロック描画クラス
 	BlockDrawer blockDra_;
 
-	//総ブロック数
-	BlockDrawer blocksDra_[81];
+	////総ブロック数
+	//BlockDrawer blocksDra_[81];
 
-	const int blockX = 9;
-	const int blockY = 9;
+	//const int blockX = 9;
+	//const int blockY = 9;
 
 	//ブロックの種類
 	int nowKind = None;

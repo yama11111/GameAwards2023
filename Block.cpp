@@ -24,7 +24,6 @@ void Block::Initialize()
 //更新
 void Block::Update()
 {
-
 	// ブロック
 	block_.UpdateMatrix();
 	blockDra_.Update();
@@ -33,6 +32,7 @@ void Block::Update()
 //描画
 void Block::Draw()
 {
+	//描画しないモードでないなら
 	if (nowKind != None)
 	{
 		blockDra_.Draw();
@@ -49,18 +49,7 @@ void Block::Reset()
 //全ブロックの位置代入
 void Block::SetBlocksPos(YMath::Vector3 pos)
 {
-	for (int i = 0; i < blockX * blockY; i++)
-	{
-		blocksDra_[i];
-	}
-}
-
-void Block::MovePos(int block)
-{
-	float spd = 0.1f * block;
-
-	block_.pos_.y_ += spd * 2;
-	block_.scale_.y_ += spd;
+	block_.pos_ = pos;
 }
 
 //ブロックを生成後に描画する種類を変える
@@ -73,10 +62,10 @@ void Block::SetMode()
 	//	return;
 	//}
 
-	//普通のブロック
-	if (nowKind == Normal)
-	{
-		blockDra_.Initialize(&block_, IMode::Type::Normal);
-		return;
-	}
+	////普通のブロック
+	//if (nowKind == Normal)
+	//{
+	//	blockDra_.Initialize(&block_, IMode::Type::Normal);
+	//	return;
+	//}
 }

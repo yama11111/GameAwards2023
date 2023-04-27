@@ -522,7 +522,7 @@ void PlayScene::Update()
 	for (int i = 0; i < block.size(); i++)
 	{
 		//更新
-		block[i]->Update({});
+		block[i]->Update();
 	}
 
 	//格納
@@ -534,12 +534,6 @@ void PlayScene::Update()
 	//プレイヤー操作モードがnの時
 	if (player->GetPlayFlag())
 	{
-		//プレイヤーを操作しているときカウントを進める
-		for (int i = 0; i < block.size(); i++)
-		{
-			block[i]->CountDown();
-		}
-
 		//Wを押してジャンプ処理
 		if (sKeys_->IsTrigger(DIK_W))
 		{
@@ -636,15 +630,6 @@ void PlayScene::Update()
 
 						//下に埋まった瞬間ジャンプフラグをfalseに
 						player->SetJumpFlag(false);
-
-						if (sKeys_->IsTrigger(DIK_C))
-						{
-							if (block[i]->GetUpFlag() == false)
-							{
-								block[i]->SetUpFlag(true);
-								block[i]->SetUpTimer(50);
-							}
-						}
 					}
 				}
 			}
@@ -722,7 +707,6 @@ void PlayScene::Update()
 	// ゴール
 	goal_.UpdateMatrix();
 	goalDra_.Update();
-
 
 	// 背景更新
 	background_.Update();
