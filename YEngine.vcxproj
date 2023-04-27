@@ -179,6 +179,7 @@
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Pises.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PuzzleMat.cpp" />
     <ClCompile Include="Scene\BaseScene.cpp" />
     <ClCompile Include="Scene\DemoScene.cpp" />
     <ClCompile Include="Scene\EditScene.cpp" />
@@ -292,6 +293,7 @@
     <ClInclude Include="GameUtillity\WorldRuler.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PuzzleMat.h" />
     <ClInclude Include="Scene\DemoScene.h" />
     <ClInclude Include="Scene\EditScene.h" />
     <ClInclude Include="Scene\ISceneFactory.h" />
