@@ -22,17 +22,8 @@ void Block::Initialize()
 }
 
 //更新
-void Block::Update(YGame::Transform filter)
+void Block::Update()
 {
-	/*if (ClearFlag)
-	{
-		timer_--;
-	}*/
-
-	if (timer_ < 1)
-	{
-		ClearFlag = false;
-	}
 
 	// ブロック
 	block_.UpdateMatrix();
@@ -44,11 +35,7 @@ void Block::Draw()
 {
 	if (nowKind != None)
 	{
-		//右の条件消すとブロック消えるよ
-		if (ClearFlag == false || nowKind != ColorB)
-		{
-			blockDra_.Draw();
-		}
+		blockDra_.Draw();
 	}
 }
 
@@ -62,12 +49,9 @@ void Block::Reset()
 //全ブロックの位置代入
 void Block::SetBlocksPos(YMath::Vector3 pos)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < blockX * blockY; i++)
 	{
-		for (int j = 0; j < 4; j++)
-		{
-			blocksDra_[i + j];
-		}
+		blocksDra_[i];
 	}
 }
 
@@ -76,63 +60,12 @@ void Block::MovePos(int block)
 	float spd = 0.1f * block;
 
 	block_.pos_.y_ += spd * 2;
-	block_.scale_.y_ += spd ;
-
-}
-
-void Block::MovePosYUp(int block)
-{
-	float size = block + 0.55;
-
-	if (block_.scale_.y_ >= block)
-	{
-		upFlag = false;
-		return;
-	}
-
-	float spd = 0.1f;
-
-	block_.pos_.y_ += spd * 2;
 	block_.scale_.y_ += spd;
-
-	// ブロック
-	block_.UpdateMatrix();
-	blockDra_.Update();
-}
-
-void Block::MovePosYDown()
-{
-	if (upTimer > 0)
-	{
-		upTimer--;
-		return;
-	}
-
-	if (block_.scale_.y_ < 0.55f)
-	{
-		return;
-	}
-
-	float spd = 0.1f;
-
-	block_.pos_.y_ -= spd * 2;
-	block_.scale_.y_ -= spd;
-
-	// ブロック
-	block_.UpdateMatrix();
-	blockDra_.Update();
 }
 
 //ブロックを生成後に描画する種類を変える
 void Block::SetMode()
 {
-	//色付きブロック
-	if (nowKind == ColorB)
-	{
-		blockDra_.Initialize(&block_, IMode::Type::Movable);
-		return;
-	}
-
 	////何も描画しない
 	//if (nowKind == None)
 	//{

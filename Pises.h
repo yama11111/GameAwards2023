@@ -10,7 +10,7 @@ private:
 	YGame::Transform pises_;
 
 	//ブロック格納用変数
-	std::vector<std::unique_ptr<Block>> block;
+	std::unique_ptr<Block> block;
 
 public:
 	//インクリメント
