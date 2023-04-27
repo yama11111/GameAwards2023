@@ -305,10 +305,24 @@ void PlayScene::Initialize()
 	//---ピース---
 
 	// 生成
-	piseses.reset(new Pises());
+	pises.reset(new Pises());
 
 	//初期化
-	piseses->Initialize();
+	pises->Initialize();
+
+	//複数のピース生成
+	for (int i = 0; i < 2; i++)
+	{
+		//生成
+		std::unique_ptr<Pises> newPises;
+		newPises.reset(new Pises());
+
+		//初期化
+		newPises->Initialize({ i * 20.0f,5.0f,0.0f }, {},{});
+
+		//格納
+		piseses.push_back(std::move(newPises));
+	}
 
 	// 背景初期化
 	background_.Initialize();
@@ -358,7 +372,12 @@ void PlayScene::Update()
 	player->Update();
 
 	//PisesのUpdate
-	piseses->Update();
+	for (int i = 0; i < piseses.size(); i++)
+	{
+		piseses[i]->Update();
+	}
+
+	pises->Update();
 
 	// ゴール
 	goal_.UpdateMatrix();
@@ -383,7 +402,7 @@ void PlayScene::Update()
 	transferVP_.UpdateMatrix();
 
 	//---- other ----------
-	
+
 	//ゴール判定
 	if (BoxCollision(player->GetTransform(), goal_, false))
 	{
@@ -428,11 +447,21 @@ void PlayScene::DrawModels()
 	//ブロックかピースを描画
 	if (nowMode)
 	{
-		piseses->DrawPiese();
+		//pises->DrawPiese();
+
+		for (int i = 0; i < piseses.size(); i++)
+		{
+			piseses[i]->DrawPiese();
+		}
 	}
 	else
 	{
-		piseses->DrawBlock();
+	//	pises->DrawBlock();
+
+		for (int i = 0; i < piseses.size(); i++)
+		{
+			piseses[i]->DrawBlock();
+		}
 	}
 }
 

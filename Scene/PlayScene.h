@@ -42,7 +42,8 @@ namespace YScene
 
 		//// フィルター
 		//std::unique_ptr<Filter> filter;
-		std::unique_ptr<Pises> piseses;
+		std::unique_ptr<Pises> pises;
+		std::vector<std::unique_ptr<Pises>> piseses;
 
 		// ステージ設定
 		StageConfig* stageConfig_;

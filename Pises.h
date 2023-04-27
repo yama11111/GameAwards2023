@@ -53,5 +53,10 @@ public:
 
 	//‚±‚ê‚ğfor•¶‚ÅŒÄ‚Ño‚µ‚Ä‚à‚ç‚Á‚Ämap•ªŒJ‚è•Ô‚·
 	void CreateBlock(int mode, YGame::Transform pises, int number);
+
+	//Vector3‚É‘ã“ü
+	void SetPos(YMath::Vector3 pos) { pises_.pos_ = pos; };
+	void SetScale(YMath::Vector3 scale) { pises_.scale_ = scale; };
+	void SetRot(YMath::Vector3 rot) { pises_.rota_ = rot; };
 };
 
