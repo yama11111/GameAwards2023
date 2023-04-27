@@ -284,105 +284,6 @@ void PlayScene::Initialize()
 
 		break;
 
-	case 2:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map2[i][j];
-			}
-		}
-		break;
-
-	case 3:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map3[i][j];
-			}
-		}
-		break;
-
-	case 4:
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map4[i][j];
-			}
-		}
-
-		break;
-
-	case 5:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map5[i][j];
-			}
-		}
-		break;
-
-	case 6:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map6[i][j];
-			}
-		}
-		break;
-
-	case 7:
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map7[i][j];
-			}
-		}
-
-		break;
-
-	case 8:
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map8[i][j];
-			}
-		}
-
-		break;
-
-	case 9:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map9[i][j];
-			}
-		}
-		break;
-
-	case 10:
-
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map10[i][j];
-			}
-		}
-		break;
-
 	default:
 		for (int i = 0; i < blockCountY; i++)
 		{
@@ -587,19 +488,11 @@ void PlayScene::Update()
 		//}
 	}
 
-	////デバッグ用のリセットボタン
-	//if (sKeys_->IsTrigger(DIK_R))
-	//{
-	//	player->Reset();
-	//	filter->Reset();
-	//}
-
 	//格納用Vector
 	YMath::Vector3 result(0.0f, 0.0f, 0.0f);
 
 	//値を0に
 	player->SetMovePos(result);
-	//filter->SetMovePos(result);
 
 	//入力状態を入手
 	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD);
@@ -608,7 +501,6 @@ void PlayScene::Update()
 
 	//移動量
 	float playerA = 0.3f;
-	float filterA = 0.3f;
 
 	//今のアクティブ状態
 	if (player->GetPlayFlag())
@@ -622,108 +514,16 @@ void PlayScene::Update()
 		//プレイヤーの移動量格納
 		player->SetMovePos(result);
 	}
-	else
-	{
-		//移動量
-		result.x_ *= filterA;
-
-		////フィルターの移動量格納
-		//filter->SetMovePos(result);
-	}
 
 	//PlayerのUpdate
-	//player->Update(filter->GetTransform());
-	player->Update({});
-
-	////filterのUpdate
-	//filter->Update();
+	player->Update();
 
 	// ブロック
 	for (int i = 0; i < block.size(); i++)
 	{
 		//更新
-		//block[i]->Update(filter->GetTransform());
 		block[i]->Update({});
-
-		////赤い色なら
-		//if (block[i]->GetKind() == ColorB)
-		//{
-		//	//playerと当たってたら延長
-		//	if (BoxCollision(block[i]->GetTransform(), player->GetTransform(), true))
-		//	{
-		//		//タイマーを設定
-		//		block[i]->SetTimer(10);
-		//	}
-
-		//	//フィルターと当たってたら
-		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-		//	{
-		//		//透けるフラグをonに
-		//		block[i]->SetClearFlag(true);
-
-		//		//タイマーを設定
-		//		block[i]->SetTimer(50);
-		//	}
-		//}
-
-		////通常ブロック処理
-		//if (block[i]->GetKind() == Normal)
-		//{
-		//	//透けるフラグをonに
-		//	block[i]->SetClearFlag(false);
-
-		//	if (BoxCollision(block[i]->GetTransform(), filter->GetTransform(), true))
-		//	{
-		//		//透けるフラグをonに
-		//		block[i]->SetClearFlag(true);
-		//	}
-		//}
-
-		//ブロック上げ下げ処置
-		if (player->GetPlayFlag())
-		{
-			//上がるフラグがonなら
-			if (block[i]->GetUpFlag())
-			{
-				//ブロックのpos,scaleを拡大
-				block[i]->MovePosYUp(blockcount);
-			}
-			else
-			{
-				//ブロックのpos,scaleを縮小
-				block[i]->MovePosYDown();
-
-				if (sKeys_->IsTrigger(DIK_7))
-				{
-					blockcount = 1;
-				}
-
-				if (sKeys_->IsTrigger(DIK_8))
-				{
-					blockcount = 2;
-				}
-
-				if (sKeys_->IsTrigger(DIK_9))
-				{
-					blockcount = 3;
-				}
-			}
-		}
-		/*if (i == 32)
-		{
-			if (sKeys_->IsDown(DIK_Q))
-			{
-				block[i]->MovePosYUp();
-			}
-			if (sKeys_->IsDown(DIK_E))
-			{
-				block[i]->MovePosYDown();
-			}
-		}*/
 	}
-
-	//block[32]->MovePos(sKeys_->IsDown(DIK_2) - sKeys_->IsDown(DIK_1));
-
 
 	//格納
 	YGame::Transform CheckTrans1;
@@ -756,9 +556,6 @@ void PlayScene::Update()
 		//重力、浮力を加算
 		player->AddGravity();
 
-		//フィルターと重なっているか
-		//player->SetClearFlag(BoxCollision(player->GetTransform(), filter->GetTransform(), true));
-
 		//ジャンプフラグがONなら
 		if (player->GetJumpFlag())
 		{
@@ -779,38 +576,30 @@ void PlayScene::Update()
 				AW.y_ = 0.0f;
 			}
 
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
+			//ブロック分繰り返す
+			for (int i = 0; i < block.size(); i++)
 			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
+				//ブロックの種類が空白か
+				if (block[i]->GetKind() != None)
 				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
+					//プレイヤーのTransformを代入
+					CheckTrans1 = player->GetTransform();
+
+					//ブロックのTransformを代入
+					CheckTrans2 = block[i]->GetTransform();
+
+					if (BoxCollision(CheckTrans1, CheckTrans2, true))
 					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
+						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
+						//下に埋まった瞬間ジャンプフラグをfalseに
+						player->SetJumpFlag(false);
 
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+						//重力関係リセット
+						player->JumpReset();
 
-								//下に埋まった瞬間ジャンプフラグをfalseに
-								player->SetJumpFlag(false);
-
-								//重力関係リセット
-								player->JumpReset();
-
-								//フラグをOFFに
-								player->SetJumpFlag(false);
-							}
-						}
+						//フラグをOFFに
+						player->SetJumpFlag(false);
 					}
 				}
 			}
@@ -829,41 +618,31 @@ void PlayScene::Update()
 			AW.x_ = 0;
 			AW.y_ = 1.0f;
 
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
+			//ブロック分繰り返す
+			for (int i = 0; i < block.size(); i++)
 			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
+				//ブロックの種類が空白か
+				if (block[i]->GetKind() != None)
 				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
+					//プレイヤーのTransformを代入
+					CheckTrans1 = player->GetTransform();
+
+					//ブロックのTransformを代入
+					CheckTrans2 = block[i]->GetTransform();
+
+					if (BoxCollision(CheckTrans1, CheckTrans2, true))
 					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
+						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
+
+						//下に埋まった瞬間ジャンプフラグをfalseに
+						player->SetJumpFlag(false);
+
+						if (sKeys_->IsTrigger(DIK_C))
 						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
+							if (block[i]->GetUpFlag() == false)
 							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-
-								//下に埋まった瞬間ジャンプフラグをfalseに
-								player->SetJumpFlag(false);
-								//player->Landing();
-
-
-								if (sKeys_->IsTrigger(DIK_C))
-								{
-									if (block[i]->GetUpFlag() == false)
-									{
-										block[i]->SetUpFlag(true);
-										block[i]->SetUpTimer(50);
-									}
-								}
+								block[i]->SetUpFlag(true);
+								block[i]->SetUpTimer(50);
 							}
 						}
 					}
@@ -883,30 +662,22 @@ void PlayScene::Update()
 			//横移動
 			player->PlayerMove(player->GetMovePos());
 
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
+			//ブロック分繰り返す
+			for (int i = 0; i < block.size(); i++)
 			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
+				//ブロックの種類が空白か
+				if (block[i]->GetKind() != None)
 				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
+					//プレイヤーのTransformを代入
+					CheckTrans1 = player->GetTransform();
+
+					//ブロックのTransformを代入
+					CheckTrans2 = block[i]->GetTransform();
+
+					if (BoxCollision(CheckTrans1, CheckTrans2, true))
 					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								//ちょっと戻す
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-							}
-						}
+						//ちょっと戻す
+						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 					}
 				}
 			}
@@ -924,38 +695,21 @@ void PlayScene::Update()
 			//横移動
 			player->PlayerMove(player->GetMovePos());
 
-			//フィルターの中にいるか
-			if (player->GetClearFlag() == false)
+			//ブロック分繰り返す
+			for (int i = 0; i < block.size(); i++)
 			{
-				//ブロック分繰り返す
-				for (int i = 0; i < block.size(); i++)
+				//ブロックの種類が空白か
+				if (block[i]->GetKind() != None)
 				{
-					//ブロックの種類が空白か
-					if (block[i]->GetKind() != None)
+					//プレイヤーのTransformを代入
+					CheckTrans1 = player->GetTransform();
+
+					//ブロックのTransformを代入
+					CheckTrans2 = block[i]->GetTransform();
+
+					if (BoxCollision(CheckTrans1, CheckTrans2, true))
 					{
-						//ブロックがフィルターの中にいるか
-						if (block[i]->GetClearFlag() == false)
-						{
-							//プレイヤーのTransformを代入
-							CheckTrans1 = player->GetTransform();
-
-							//ブロックのTransformを代入
-							CheckTrans2 = block[i]->GetTransform();
-
-							//判定外に出るまで繰り返す
-							//while (BoxCollision(CheckTrans1, CheckTrans2, true))
-							//{
-								//ちょっと戻す
-							//player->PlayerMove(Vector3((AW.x_ - DS.x_), (AW.y_ - DS.y_), 0.0f));
-
-							if (BoxCollision(CheckTrans1, CheckTrans2, true))
-							{
-								player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-							}
-							//再代入
-						//	CheckTrans1 = player->GetTransform();
-						//}
-						}
+						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
 					}
 				}
 			}
@@ -975,8 +729,6 @@ void PlayScene::Update()
 
 	// DrawerHelper更新
 	DrawerHelper::StaticUpdate();
-
-
 
 	// パーティクル更新
 	particleMan_.Update();
@@ -1001,7 +753,6 @@ void PlayScene::Update()
 	{
 		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
 		player->Reset();
-		//filter->Reset();
 	}
 }
 #pragma endregion
@@ -1017,7 +768,7 @@ void PlayScene::DrawModels()
 {
 	// 背景描画
 	background_.Draw();
-	
+
 	// プレイヤー描画
 	player->Draw();
 

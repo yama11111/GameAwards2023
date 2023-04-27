@@ -50,15 +50,7 @@ public:
 	void Initialize(YMath::Vector3 pos_, YMath::Vector3 rot_, YMath::Vector3 scale_);
 
 	//更新
-	//void Update(YGame::Transform filterPos, YMath::Vector2 filterSizeLR, YMath::Vector2 filterSizeUD);
-	void Update(YGame::Transform filterPos);
 	void Update();
-
-	////Pre描画(フィルターの前)
-	//void PreDraw();
-
-	////Post描画(フィルターの後)
-	//void PostDraw();
 
 	// 描画
 	void Draw();
