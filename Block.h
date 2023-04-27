@@ -64,7 +64,7 @@ public:
 	void SetBlocksPos(YMath::Vector3 pos);
 
 	//ˆÚ“®
-	void MovePos(int block);
+	//void MovePos(int block);
 
 	//Vector3‚ð“üŽè
 	YMath::Vector3 GetPos() { return block_.pos_; };

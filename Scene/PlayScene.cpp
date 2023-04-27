@@ -260,16 +260,16 @@ void PlayScene::Initialize()
 	//ディレクション(向き)
 	player->SetDirection(YMath::Vector3{ +1.0f, 0.0f, 0.0f });
 
+	//一回リセット
 	player->Reset();
 
 	//config
 	stageConfig_ = StageConfig::GetInstance();
-	//StageConfig::GetCurrentStageIndex();
-	//
-	//player_->SetClearFlag(true);
 
+	//数値を代入
 	int Idx = stageConfig_->GetCurrentStageIndex();
 
+	//map入れ替え
 	switch (Idx)
 	{
 	case 1:
@@ -295,16 +295,6 @@ void PlayScene::Initialize()
 		break;
 	}
 
-	//// ----- フィルター ----- //
-
-	//// 生成
-	//filter.reset(new Filter());
-
-	//// トランスフォーム (位置、回転、大きさ)
-	//filter->Initialize({ -10.0f, 0.0f, 3.0f }, {}, { 1.5f,1.5f,1.5f });
-
-	//filter->Reset();
-
 	// ----- ゴール ----- //
 
 	// トランスフォーム (位置、回転、大きさ)
@@ -312,124 +302,13 @@ void PlayScene::Initialize()
 	// 描画用クラス初期化 (親トランスフォーム)
 	goalDra_.Initialize(&goal_);
 
-	// ----- ブロック ----- //
+	//---ピース---
 
-	//ブロック
-	for (int i = 0; i < blockCountY; i++)
-	{
-		for (int j = 0; j < blockCountX; j++)
-		{
-			//Noneだったらのぞく(return)
-			if (map[i][j] == None)
-			{
-				continue;
-			}
+	// 生成
+	piseses.reset(new Pises());
 
-			//サイズ
-			float size = harfScale * 2;
-
-			//格納用Vector
-			YMath::Vector3 result;
-
-			//種類によって
-			//初期地点
-			if (map[i][j] == Start)
-			{
-				//posXY
-				result.x_ = (j - (blockCountX / 3)) * size;
-				result.y_ = ((blockCountY / 2) - i) * size;
-
-				//pos格納
-				player->SetPos(result);
-
-				//StartPos格納
-				player->SetStartPos(result);
-
-				////種類を空白に
-				//newBlock->SetKind(None);
-
-				//次へ
-				continue;
-			}
-
-			//ゴール地点
-			if (map[i][j] == Gorl)
-			{
-				//pos格納
-				goal_.pos_.x_ = (j - (blockCountX / 3)) * size - 8;
-				goal_.pos_.y_ = ((blockCountY / 2) - i) * size;
-
-				//scale格納
-				goal_.scale_.x_ = size / 4.0f;
-				goal_.scale_.y_ = size / 4.0f;
-
-				////種類を空白に
-				//newBlock->SetKind(None);
-
-				//次へ
-				continue;
-			}
-
-			//コレクトアイテム
-			if (map[i][j] == Collect)
-			{
-
-				////種類を空白に
-				//newBlock->SetKind(None);
-
-				//次へ
-				continue;
-			}
-
-			//生成
-			std::unique_ptr<Block> newBlock;
-			newBlock.reset(new Block());
-
-			//初期化
-			newBlock->Initialize();
-
-			//種類を格納
-			newBlock->SetKind(map[i][j]);
-
-			////サイズ
-			//float size = harfScale * 2;
-
-			////格納用Vector
-			//YMath::Vector3 result;
-
-			//zは特にいじらない
-			result.z_ = size / 4;
-
-			//posXY
-			result.x_ = (j - (blockCountX / 3)) * size - 8;
-			result.y_ = ((blockCountY / 2) - i) * size;
-
-			//pos格納
-			newBlock->SetPos(result);
-
-			//scaleXY
-			result.x_ = size / 4;
-			result.y_ = size / 4;
-
-			//scale格納
-			newBlock->SetScale(result);
-
-			//格納
-			block.push_back(std::move(newBlock));
-		}
-	}
-
-	//種類によってブロックを変更
-	for (int i = 0; i < block.size(); i++)
-	{
-		block[i]->SetMode();
-	}
-
-	////フィルターの位置をプレイヤーの上に
-	//YMath::Vector3 Ppos = player->GetPos();
-	//Ppos.y_ += 10.0f;
-	//filter->SetPos(Ppos);
-
+	//初期化
+	piseses->Initialize();
 
 	// 背景初期化
 	background_.Initialize();
@@ -467,242 +346,19 @@ void PlayScene::Update()
 	// ポーズ中なら弾く
 	if (hud_.IsElderPause()) { return; }
 
-
-	// 操作切り替え
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		////プレイヤーとフィルターが当たってないなら
-		//if (!BoxCollision(player->GetTransform(), filter->GetTransform(), true))
-		//{
-		//	//操作フラグを反転
-		//	player->ChengePlayFlag();
-
-		//	//操作してるobjを表示するスプライトの変更
-		//	if (player->GetPlayFlag()) { hud_.SetPilot(HUDDrawerCommon::Pilot::Player); }
-		//	else { hud_.SetPilot(HUDDrawerCommon::Pilot::Filter); }
-		//}
-		//else
-		//{
-		//	// カメラ揺れる
-		//	camera_.Shaking(1.0f, 0.2f, 10.0f);
-		//}
+		nowMode = !nowMode;
 	}
 
-	//格納用Vector
-	YMath::Vector3 result(0.0f, 0.0f, 0.0f);
 
-	//値を0に
-	player->SetMovePos(result);
-
-	//入力状態を入手
-	result.x_ = sKeys_->Horizontal(Keys::MoveStandard::WASD);
-	result.y_ = sKeys_->Vertical(Keys::MoveStandard::WASD);
-	result.z_ = 0.0f;
-
-	//移動量
-	float playerA = 0.3f;
-
-	//今のアクティブ状態
-	if (player->GetPlayFlag())
-	{
-		//移動量
-		result.x_ *= playerA;
-
-		//プレイヤーはy軸はジャンプのみ
-		result.y_ = 0.0f;
-
-		//プレイヤーの移動量格納
-		player->SetMovePos(result);
-	}
+	//----- Update ---------
 
 	//PlayerのUpdate
 	player->Update();
 
-	// ブロック
-	for (int i = 0; i < block.size(); i++)
-	{
-		//更新
-		block[i]->Update();
-	}
-
-	//格納
-	YGame::Transform CheckTrans1;
-
-	//格納
-	YGame::Transform CheckTrans2;
-
-	//プレイヤー操作モードがnの時
-	if (player->GetPlayFlag())
-	{
-		//Wを押してジャンプ処理
-		if (sKeys_->IsTrigger(DIK_W))
-		{
-			//ジャンプフラグがoffの時
-			if (!player->GetJumpFlag())
-			{
-				//重力関係リセット
-				player->JumpReset();
-			}
-		}
-
-		//プレイヤージャンプ処理
-
-		//重力、浮力を加算
-		player->AddGravity();
-
-		//ジャンプフラグがONなら
-		if (player->GetJumpFlag())
-		{
-			if (player->GetJump() < 0.0f)
-			{
-				//入力方向手動代入
-				DS.x_ = 0;
-				DS.y_ = 0.0f;
-				AW.x_ = 0;
-				AW.y_ = 1.0f;
-			}
-			else
-			{
-				//入力方向手動代入
-				DS.x_ = 0;
-				DS.y_ = 1.0f;
-				AW.x_ = 0;
-				AW.y_ = 0.0f;
-			}
-
-			//ブロック分繰り返す
-			for (int i = 0; i < block.size(); i++)
-			{
-				//ブロックの種類が空白か
-				if (block[i]->GetKind() != None)
-				{
-					//プレイヤーのTransformを代入
-					CheckTrans1 = player->GetTransform();
-
-					//ブロックのTransformを代入
-					CheckTrans2 = block[i]->GetTransform();
-
-					if (BoxCollision(CheckTrans1, CheckTrans2, true))
-					{
-						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-
-						//下に埋まった瞬間ジャンプフラグをfalseに
-						player->SetJumpFlag(false);
-
-						//重力関係リセット
-						player->JumpReset();
-
-						//フラグをOFFに
-						player->SetJumpFlag(false);
-					}
-				}
-			}
-		}
-		//ジャンプがfalseなら上に修正
-		//ジャンプがtrueなら下に修正
-		//if (true)//player->GetJumpFlag())
-		else
-		{
-			//重力加算
-			player->SetGravity(0.3f);
-
-			//入力方向手動代入
-			DS.x_ = 0;
-			DS.y_ = 0.0f;
-			AW.x_ = 0;
-			AW.y_ = 1.0f;
-
-			//ブロック分繰り返す
-			for (int i = 0; i < block.size(); i++)
-			{
-				//ブロックの種類が空白か
-				if (block[i]->GetKind() != None)
-				{
-					//プレイヤーのTransformを代入
-					CheckTrans1 = player->GetTransform();
-
-					//ブロックのTransformを代入
-					CheckTrans2 = block[i]->GetTransform();
-
-					if (BoxCollision(CheckTrans1, CheckTrans2, true))
-					{
-						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-
-						//下に埋まった瞬間ジャンプフラグをfalseに
-						player->SetJumpFlag(false);
-					}
-				}
-			}
-		}
-
-		//右を押してるとき左に修正
-		if (sKeys_->IsDown(DIK_D))
-		{
-			//入力方向手動代入
-			DS.x_ = 1.0f;
-			DS.y_ = 0;
-			AW.x_ = 0;
-			AW.y_ = 0;
-
-			//横移動
-			player->PlayerMove(player->GetMovePos());
-
-			//ブロック分繰り返す
-			for (int i = 0; i < block.size(); i++)
-			{
-				//ブロックの種類が空白か
-				if (block[i]->GetKind() != None)
-				{
-					//プレイヤーのTransformを代入
-					CheckTrans1 = player->GetTransform();
-
-					//ブロックのTransformを代入
-					CheckTrans2 = block[i]->GetTransform();
-
-					if (BoxCollision(CheckTrans1, CheckTrans2, true))
-					{
-						//ちょっと戻す
-						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-					}
-				}
-			}
-		}
-
-		//左を押してるとき右に修正
-		if (sKeys_->IsDown(DIK_A))
-		{
-			//入力方向手動代入
-			DS.x_ = 0;
-			DS.y_ = 0;
-			AW.x_ = 1.0f;
-			AW.y_ = 0;
-
-			//横移動
-			player->PlayerMove(player->GetMovePos());
-
-			//ブロック分繰り返す
-			for (int i = 0; i < block.size(); i++)
-			{
-				//ブロックの種類が空白か
-				if (block[i]->GetKind() != None)
-				{
-					//プレイヤーのTransformを代入
-					CheckTrans1 = player->GetTransform();
-
-					//ブロックのTransformを代入
-					CheckTrans2 = block[i]->GetTransform();
-
-					if (BoxCollision(CheckTrans1, CheckTrans2, true))
-					{
-						player->SetPos(BoxCollision(CheckTrans1, CheckTrans2, DS, AW));
-					}
-				}
-			}
-		}
-	}
-
-	//位置更新
-	player->Update();
+	//PisesのUpdate
+	piseses->Update();
 
 	// ゴール
 	goal_.UpdateMatrix();
@@ -726,6 +382,8 @@ void PlayScene::Update()
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
 
+	//---- other ----------
+	
 	//ゴール判定
 	if (BoxCollision(player->GetTransform(), goal_, false))
 	{
@@ -756,15 +414,8 @@ void PlayScene::DrawModels()
 	// プレイヤー描画
 	player->Draw();
 
-	// ブロック前描画
-	for (size_t i = 0; i < block.size(); i++)
-	{
-		block[i]->Draw();
-	}
-
 	// ゴール描画
 	goalDra_.Draw();
-
 
 	// パーティクル
 	particleMan_.Draw();
@@ -773,7 +424,16 @@ void PlayScene::DrawModels()
 	effectMan_.Draw();
 
 	//// フィルター描画
-	//filter->Draw();
+
+	//ブロックかピースを描画
+	if (nowMode)
+	{
+		piseses->DrawPiese();
+	}
+	else
+	{
+		piseses->DrawBlock();
+	}
 }
 
 void PlayScene::DrawSprite3Ds()
