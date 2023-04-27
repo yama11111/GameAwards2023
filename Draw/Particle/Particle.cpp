@@ -2,17 +2,22 @@
 #include <cassert>
 
 using YGame::IParticle;
-using YGame::Bubble;
+using YGame::Smoke;
 using YGame::RelayBug;
+using YGame::Bubble;
 using YGame::ModelObject;
 using YGame::ViewProjection;
 using YGame::Model;
 using YGame::Color;
+using YMath::Ease;
+using YMath::Timer;
+using YMath::Power;
 using YMath::Vector3;
 using YMath::Vector4;
 using YMath::Matrix4;
 
 ViewProjection* IParticle::spVP_ = nullptr;
+Model* Smoke::spModel_ = nullptr;
 Model* Bubble::spModel_ = nullptr;
 Model* RelayBug::spModel_ = nullptr;
 
@@ -57,13 +62,13 @@ bool IParticle::UpdateLife()
 
 #pragma endregion
 
-#pragma region Bubble
+#pragma region Smoke
 
-void Bubble::Emit(
-	const uint32_t aliveTime,
-	const YGame::Transform::Status status,
-	const Vector3& moveSpeed,
-	const Vector3& rotaSpeed,
+void Smoke::Emit(
+	const uint32_t aliveTime, 
+	const Transform::Status status, 
+	const Vector3& moveSpeed, 
+	const Vector3& rotaSpeed, 
 	const Vector3& color)
 {
 	// ---------- Object ---------- //
@@ -85,70 +90,35 @@ void Bubble::Emit(
 	// 回転スピード
 	rotaSpeed_ = rotaSpeed;
 
-
-	// 発生時は動かす
-	isScalePowerSwitch_ = true;
-
-	// スケールパワー
-	scalePow_.Initialize(10);
-
-	// スケールイージング
-	scaleEas_.Initialize(0.0f, status.scale_.x_, 3.0f);
+	// アルファ値イージング
+	alphaEas_.Initialize(1.0f, 0.0f, 3.0f);
 }
 
-void Bubble::Update()
+void Smoke::Update()
 {
 	// 生命更新
 	if (IParticle::UpdateLife() == false) { return; }
 
 	// 移動
 	obj_->pos_ += moveSpeed_;
-	
+
 	// 回転
 	obj_->rota_ += rotaSpeed_;
 
-
-	// 生存時間がパワー最大値より少ななら
-	if (aliveTim_.End() - aliveTim_.Current() <= scalePow_.Max())
-	{
-		// スイッチオフ
-		isScalePowerSwitch_ = false;
-	}
-
-	// パワー更新
-	scalePow_.Update(isScalePowerSwitch_);
-
-	// 保存用スケール
-	float sca = 0.0f;
-	
-	// スイッチオンなら
-	if (isScalePowerSwitch_)
-	{
-		// イーズイン
-		sca = scaleEas_.In(scalePow_.Ratio());
-
-	}
-	// それ以外なら
-	else
-	{
-		// イーズアウト
-		sca = scaleEas_.Out(scalePow_.Ratio());
-	}
-
-	// スケールに適用
-	obj_->scale_ = Vector3(sca, sca, sca);
-
 	// Object更新
 	obj_->UpdateMatrix();
+
+	// アルファ値イージング
+	color_->SetAlpha(alphaEas_.In(aliveTim_.Ratio()));
 }
 
-void Bubble::Draw()
+void Smoke::Draw()
 {
 	// 描画
 	spModel_->Draw(obj_.get());
 }
 
-void Bubble::StaticInitialize(Model* pModel)
+void Smoke::StaticInitialize(YGame::Model* pModel)
 {
 	// nullチェック
 	assert(pModel);
@@ -267,6 +237,107 @@ void RelayBug::Draw()
 }
 
 void RelayBug::StaticInitialize(YGame::Model* pModel)
+{
+	// nullチェック
+	assert(pModel);
+	// 初期化
+	spModel_ = pModel;
+}
+
+#pragma endregion
+
+#pragma region Bubble
+
+void Bubble::Emit(
+	const uint32_t aliveTime,
+	const YGame::Transform::Status status,
+	const Vector3& moveSpeed,
+	const Vector3& rotaSpeed,
+	const Vector3& color)
+{
+	// ---------- Object ---------- //
+
+	// 基底クラス初期化
+	IParticle::Initialize(aliveTime);
+
+	// オブジェクト初期化
+	obj_->Initialize(status);
+
+	// 色初期化
+	color_->SetRGB(color);
+
+	// ---------- Animation ---------- //
+
+	// 移動スピード
+	moveSpeed_ = moveSpeed;
+
+	// 回転スピード
+	rotaSpeed_ = rotaSpeed;
+
+
+	// 発生時は動かす
+	isScalePowerSwitch_ = true;
+
+	// スケールパワー
+	scalePow_.Initialize(10);
+
+	// スケールイージング
+	scaleEas_.Initialize(0.0f, status.scale_.x_, 3.0f);
+}
+
+void Bubble::Update()
+{
+	// 生命更新
+	if (IParticle::UpdateLife() == false) { return; }
+
+	// 移動
+	obj_->pos_ += moveSpeed_;
+	
+	// 回転
+	obj_->rota_ += rotaSpeed_;
+
+
+	// 生存時間がパワー最大値より少ななら
+	if (aliveTim_.End() - aliveTim_.Current() <= scalePow_.Max())
+	{
+		// スイッチオフ
+		isScalePowerSwitch_ = false;
+	}
+
+	// パワー更新
+	scalePow_.Update(isScalePowerSwitch_);
+
+	// 保存用スケール
+	float sca = 0.0f;
+	
+	// スイッチオンなら
+	if (isScalePowerSwitch_)
+	{
+		// イーズイン
+		sca = scaleEas_.In(scalePow_.Ratio());
+
+	}
+	// それ以外なら
+	else
+	{
+		// イーズアウト
+		sca = scaleEas_.Out(scalePow_.Ratio());
+	}
+
+	// スケールに適用
+	obj_->scale_ = Vector3(sca, sca, sca);
+
+	// Object更新
+	obj_->UpdateMatrix();
+}
+
+void Bubble::Draw()
+{
+	// 描画
+	spModel_->Draw(obj_.get());
+}
+
+void Bubble::StaticInitialize(Model* pModel)
 {
 	// nullチェック
 	assert(pModel);

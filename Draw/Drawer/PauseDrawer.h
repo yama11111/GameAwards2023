@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite2D.h"
+#include "Lerp.h"
+#include "Power.h"
 #include <array>
 
 // 多重定義回避用
@@ -82,6 +84,14 @@ private:
 
 	// 現在のシーン
 	SceneType sceneType_ = SceneType::Select;
+
+	// 選択Resumeパワー
+	YMath::Power selectResumePow_;
+	// 選択Changeパワー
+	YMath::Power selectChangePow_;
+
+	// 選択スケールイージング
+	YMath::Ease<float> selectScaleEas_;
 
 public:
 	// 初期化

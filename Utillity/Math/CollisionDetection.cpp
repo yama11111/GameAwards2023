@@ -383,5 +383,5 @@ bool YMath::CollisionSphereSphere(const Vector3& sphereCenter1, const float sphe
 
 	if (dist.Length() > sphereRad1 + sphereRad2) { return false; }
 
-	return false;
+	return true;
 }

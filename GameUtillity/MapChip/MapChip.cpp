@@ -274,6 +274,11 @@ bool MapChip::CollisionChip(const int x, const int y)
 		pMapData_->chipColls_[y][x] = true;
 		return true; 
 	}
+	if (pMapData_->chipNums_[y][x] == 2)
+	{
+		pMapData_->chipColls_[y][x] = true;
+		return true;
+	}
 
 	// ƒnƒYƒŒ
 	pMapData_->chipColls_[y][x] = false;

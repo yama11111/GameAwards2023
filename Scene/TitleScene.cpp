@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "SceneManager.h"
+#include "CoreColor.h"
 #include "Def.h"
 #include <cassert>
 
@@ -22,11 +23,18 @@ void TitleScene::Load()
 
 	// ----- スプライト (2D) ----- //
 	
+	syazaiSpr_ = Sprite2D::Create({}, { Texture::Load("syazai.png") });
+
 	// ----- スプライト (3D) ----- //
 
 	// ------- モデル ------- //
 
 	// ----- 静的初期化 ----- //
+
+	ParticleManager::StaticInitialize(&transferVP_);
+
+	CoreColor::StaticInitialize();
+	BackgroundDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
 
 	TitleDrawerCommon::StaticInitialize();
 	InputDrawerCommon::StaticInitialize();
@@ -37,8 +45,20 @@ void TitleScene::Load()
 #pragma region 初期化
 void TitleScene::Initialize()
 {
+	particleMan_.Initialize();
+
+	background_.Initialize();
+
 	inputDra_.Initialize(InputDrawer::SceneType::Title);
 	
+	syazaiObj_.reset(
+		Sprite2DObject::Create(
+			{
+				Vector3(64.0f,302.0f,0.0f) + Vector3(800.0f,240.0f,0.0f) * 0.5f,
+				{},
+				Vector3(0.9f,0.9f,0.9f)
+			}));
+
 	dra_.Initialize();
 }
 #pragma endregion
@@ -62,6 +82,14 @@ void TitleScene::Update()
 
 	dra_.Update();
 
+	background_.Update();
+
+	CoreColor::StaticUpdate();
+	BackgroundDrawerCommon::StaticUpdate();
+
+	particleMan_.Update();
+
+	syazaiObj_->UpdateMatrix();
 
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_SPACE))
@@ -87,8 +115,11 @@ void TitleScene::DrawBackSprite2Ds()
 
 void TitleScene::DrawModels()
 {
+	background_.Draw();
+
 	dra_.DrawModel();
 	
+	particleMan_.Draw();
 }
 
 void TitleScene::DrawSprite3Ds()
@@ -101,6 +132,8 @@ void TitleScene::DrawFrontSprite2Ds()
 	dra_.DrawSprite2D();
 
 	inputDra_.Draw();
+
+	syazaiSpr_->Draw(syazaiObj_.get());
 }
 
 void TitleScene::Draw()

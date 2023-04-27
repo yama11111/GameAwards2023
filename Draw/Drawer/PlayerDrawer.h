@@ -57,6 +57,22 @@ private:
 	
 	// ----- アニメーション ----- //
 
+	// 移動中か
+	bool isMove_ = false;
+	
+	// 移動していたか
+	bool isElderMove_ = false;
+
+	// 移動用回転パワー
+	YMath::Power moveRotaPow_;
+
+	// 移動用回転イージング
+	YMath::Ease<float> moveRotaEas_;
+
+	// 移動用エミットタイマー
+	YMath::Timer moveEmitTimer_;
+
+
 	// リスポーン中か
 	bool isRespawn_ = false;
 	
@@ -68,6 +84,19 @@ private:
 	
 	// リスポーン用アルファ値イージング
 	YMath::Ease<float> respAlphaEas_;
+
+
+	// ゴールしたか
+	bool isGoal_ = false;
+
+	// ゴール用タイマー
+	YMath::Timer goalTim_;
+
+	// ゴール用スケールイージング
+	YMath::Ease<float> goalScaleEas_;
+
+	// ゴール用アルファ値イージング
+	YMath::Ease<float> goalAlphaEas_;
 
 public:
 	
@@ -95,19 +124,29 @@ public:
 
 public:
 	
+	// 移動モーション
+	void SetActMoveAnimation(const bool isMove) { isMove_ = isMove; }
+	
 	// ジャンプモーション
 	void JumpAnimation();
 	
 	// 着地モーション
 	void LandingAnimation();
+
 	
 	// リスポーンアニメーション
 	void RespawnAnimation();
+
+	// ゴールアニメーション
+	void GoalAnimation();
 
 private:
 	
 	// アニメーションリセット
 	void ResetAnimation();
+
+	// 煙発生更新
+	void UpdateSmokeEmitter();
 	
 	// 立ちモーション
 	void IdleAnimation() override;

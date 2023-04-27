@@ -1,7 +1,9 @@
 #pragma once
 #include "GoalDrawer.h"
+#include "CollisionPrimitive.h"
 
-class DemoGoal
+class DemoGoal :
+	public YGame::Sphere
 {
 
 private:

@@ -51,7 +51,7 @@ namespace HUDConfig
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
 				// TAB
-				const YMath::Vector3 Esc = { -100.0f, -100.0f, 0.0f };
+				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
 
 			// パッド
@@ -71,16 +71,16 @@ namespace HUDConfig
 			namespace Key
 			{
 				// 大きさ
-				const YMath::Vector3 Scale = { 1.5f,1.5f,0.0f };
+				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
 
 				// ----- 位置 ----- //
 
 				// WASD
-				const YMath::Vector3 WASD = { +96.0f, WinSize.y_ - 160.0f, 0.0f };
+				const YMath::Vector3 WASD = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
 				// SPACE
-				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 64.0f, 0.0f };
+				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
 				// TAB
-				const YMath::Vector3 Esc = { WinSize.x_ - 96.0f, +64.0f, 0.0f };
+				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
 
 			// パッド

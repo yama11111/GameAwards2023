@@ -1,6 +1,8 @@
 #pragma once
 #include "Sprite2D.h"
 #include "Model.h"
+#include "Lerp.h"
+#include "Power.h"
 
 class TitleDrawerCommon
 {
@@ -82,6 +84,13 @@ private:
 
 	// ‘I‘ð
 	Selection current_ = Selection::Start;
+
+
+	YMath::Power selectStartPow_;
+	YMath::Power selectExitPow_;
+
+	YMath::Ease<float> selectMoveXEas_;
+	YMath::Ease<float> selectScaleEas_;
 
 public:
 

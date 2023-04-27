@@ -12,10 +12,13 @@ using namespace HUDConfig::Operation;
 
 YInput::Keys* InputDrawerCommon::sKeys_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeyWASDSpr_  = nullptr;
+Sprite2D* InputDrawerCommon::spKeyADSpr_  = nullptr;
 Sprite2D* InputDrawerCommon::spKeyWPushSpr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeyAPushSpr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeySPushSpr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeyDPushSpr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeyAPush2Spr_ = nullptr;
+Sprite2D* InputDrawerCommon::spKeyDPush2Spr_ = nullptr;
 Sprite2D* InputDrawerCommon::spKeySDeadSpr_ = nullptr;
 std::array<Sprite2D*, 2> InputDrawerCommon::spKeySpaceSpr_ = { nullptr, nullptr };
 std::array<Sprite2D*, 2> InputDrawerCommon::spKeyEscSpr_ = { nullptr, nullptr };
@@ -26,15 +29,16 @@ void InputDrawerCommon::StaticInitialize()
 	sKeys_ = YInput::Keys::GetInstance();
 
 	// WASD
-	//spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
-	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_AD.png") });
+	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
+	spKeyADSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_AD.png") });
 	// WASD_PUSH
 	spKeyWPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_W_PUSH.png") });
-	//spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
-	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH_2.png") });
+	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
 	spKeySPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_PUSH.png") });
-	//spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
-	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH_2.png") });
+	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
+	// AD_PUSH
+	spKeyAPush2Spr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH_2.png") });
+	spKeyDPush2Spr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH_2.png") });
 	// S_DEAD
 	spKeySDeadSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_DEAD.png") });
 	// SPACE
@@ -73,6 +77,9 @@ void InputDrawer::Initialize(const SceneType& sceneType)
 
 void InputDrawer::Reset(const SceneType& sceneType)
 {
+	// ‘ã“ü
+	sceneType_ = sceneType;
+
 	// ----- Object‰Šú‰» ----- //
 
 	// WASD (ƒV[ƒ“‚ÌŽí—Þ‚É‚æ‚Á‚Ä•Ï‚¦‚é)
@@ -181,13 +188,24 @@ void InputDrawer::Update()
 
 void InputDrawer::Draw()
 {
-	// WASD
-	spKeyWASDSpr_->Draw(keyWASDObj_.get());
-	// WASD_PUSH
-	//if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
-	if (isPushA_) { spKeyAPushSpr_->Draw(keyAObj_.get()); }
-	//if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
-	if (isPushD_) { spKeyDPushSpr_->Draw(keyDObj_.get()); }
+	if (sceneType_ == SceneType::Play)
+	{
+		// AD
+		spKeyADSpr_->Draw(keyWASDObj_.get());
+		// AD_PUSH
+		if (isPushA_) { spKeyAPush2Spr_->Draw(keyAObj_.get()); }
+		if (isPushD_) { spKeyDPush2Spr_->Draw(keyDObj_.get()); }
+	}
+	else
+	{
+		// WASD
+		spKeyWASDSpr_->Draw(keyWASDObj_.get());
+		// WASD_PUSH
+		if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
+		if (isPushA_) { spKeyAPushSpr_->Draw(keyAObj_.get()); }
+		if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
+		if (isPushD_) { spKeyDPushSpr_->Draw(keyDObj_.get()); }
+	}
 	// S_DEAD
 	//if (false) { spKeySDeadSpr_->Draw(keySObj_.get()); }
 	// SPACE

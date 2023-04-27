@@ -24,6 +24,27 @@ namespace YScene
 		// マップチップマネージャー
 		YGame::MapChipManager mapChipMan_;
 
+		
+		// ゴールフラグ
+		bool isGoal_ = false;
+
+		bool isAfterglow_ = false;
+
+		YMath::Timer goalTim_;
+
+		YMath::Timer fontScaleTim_;
+
+		YMath::Timer afterglowTim_;
+		
+		YMath::Ease<YMath::Vector3> fontScaleEas_;
+
+		YMath::Ease<float> fontAlphaEas_;
+
+		std::unique_ptr<YGame::Sprite2DObject> fontObj_;
+		std::unique_ptr<YGame::Color> fontColor_;
+
+		YGame::Sprite2D* fontSpr_ = nullptr;
+
 
 		// 背景
 		BackgroundDrawer background_;

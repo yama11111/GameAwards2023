@@ -64,6 +64,9 @@ void PauseDrawer::Initialize(const SceneType& sceneType)
 	// curten
 	curtenObj_.reset(Sprite2DObject::Create({}, curtenColor_.get()));
 
+	// 選択スケールイージング
+	selectScaleEas_.Initialize(-0.25f, 0.0f, 3.0f);
+
 	// リセット
 	Reset(sceneType);
 }
@@ -107,6 +110,11 @@ void PauseDrawer::Reset(const SceneType& sceneType)
 
 	// 現在のシーン
 	sceneType_ = sceneType;
+
+	// 選択Resumeパワー
+	selectResumePow_.Initialize(20);
+	// 選択Changeパワー
+	selectChangePow_.Initialize(20);
 }
 
 void PauseDrawer::ResumeReset()
@@ -124,6 +132,10 @@ void PauseDrawer::ResumeReset()
 	isPause_ = false;
 	// 選択
 	current_ = Select::Resume;
+
+	// パワーリセット
+	selectResumePow_.Reset();
+	selectChangePow_.Reset();
 }
 
 void PauseDrawer::Update()
@@ -135,10 +147,10 @@ void PauseDrawer::Update()
 	if (sKeys_->IsTrigger(DIK_ESCAPE))
 	{
 		// ポーズ中じゃないなら
-		if (isPause_ == false) 
+		if (isPause_ == false)
 		{
 			// ポーズに
-			isPause_ = true; 
+			isPause_ = true;
 		}
 		// 違うなら
 		else
@@ -165,7 +177,7 @@ void PauseDrawer::Update()
 			{
 				current_ = Select::Stage;
 			}
-			
+
 			// 選択しているか分かるように
 			resumeColor_->SetRGB(Font::OffColor); // resume
 			changeColor_->SetRGB(Font::OnColor); // change
@@ -179,6 +191,59 @@ void PauseDrawer::Update()
 			changeColor_->SetRGB(Font::OffColor); // change
 		}
 	}
+
+
+	// Resumeなら
+	bool isResume = current_ == Select::Resume;
+
+	// パワー更新
+	selectResumePow_.Update(isResume);
+
+	// 保存用
+	float resumeSca = 0.0f;
+
+	// 選択中なら
+	if (isResume)
+	{
+		// イーズアウト
+		resumeSca = selectScaleEas_.Out(selectResumePow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズイン
+		resumeSca = selectScaleEas_.In(selectResumePow_.Ratio());
+	}
+
+
+	// Changeなら
+	bool isChange = !isResume;
+
+	// パワー更新
+	selectChangePow_.Update(isChange);
+
+	// 保存用
+	float changeSca = 0.0f;
+
+	// 選択中なら
+	if (isChange)
+	{
+		// イーズアウト
+		changeSca = selectScaleEas_.Out(selectChangePow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズイン
+		changeSca = selectScaleEas_.In(selectChangePow_.Ratio());
+	}
+
+	// pause
+	pauseObj_->UpdateMatrix();
+	// resume
+	resumeObj_->UpdateMatrix({ {}, {}, Vector3(resumeSca, resumeSca, resumeSca) });
+	// change
+	changeObj_->UpdateMatrix({ {}, {}, Vector3(changeSca, changeSca, changeSca) });
 
 	// 実行 (SPACE)
 	if (sKeys_->IsTrigger(DIK_SPACE))
@@ -202,13 +267,6 @@ void PauseDrawer::Update()
 			SceneManager::GetInstance()->Change("SELECT", "BLACKOUT");
 		}
 	}
-
-	// pause
-	pauseObj_->UpdateMatrix();
-	// resume
-	resumeObj_->UpdateMatrix();
-	// change
-	changeObj_->UpdateMatrix();
 }
 
 void PauseDrawer::Draw()

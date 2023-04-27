@@ -2,7 +2,7 @@
 #include "BaseScene.h"
 #include "TitleDrawer.h"
 #include "InputDrawer.h"
-#include "PauseDrawer.h"
+#include "BackgroundDrawer.h"
 
 namespace YScene
 {
@@ -26,6 +26,21 @@ namespace YScene
 #pragma endregion
 
 #pragma region ゲームオブジェクト
+
+		// 背景
+		BackgroundDrawer background_;
+		
+		// パーティクルマネージャー
+		YGame::ParticleManager particleMan_;
+
+		// 転送用ビュープロジェクション
+		YGame::ViewProjection transferVP_;
+
+
+		std::unique_ptr<YGame::Sprite2DObject> syazaiObj_;
+
+		YGame::Sprite2D* syazaiSpr_ = nullptr;
+		
 
 		// input
 		InputDrawer inputDra_;

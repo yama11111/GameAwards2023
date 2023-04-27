@@ -38,7 +38,7 @@ namespace YScene
 
 
 		// ステージ設定
-		StageConfig* stageConfig_;
+		StageConfig* stageConfig_ = nullptr;
 
 
 		// ステージセレクト描画クラス

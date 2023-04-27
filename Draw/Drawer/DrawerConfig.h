@@ -36,6 +36,74 @@ namespace DrawerConfig
 			}
 		}
 
+		// 移動モーション
+		namespace Move
+		{
+			// 回転
+			namespace Rota
+			{
+				// 時間 (F)
+				const unsigned int Frame = 10;
+
+				// 回転量
+				const float Value = PI * 0.1f;
+
+				// 指数
+				const float Exponent = 3.0f;
+			}
+
+			// 発生
+			namespace Smoke
+			{
+				// 時間 (F)
+				const unsigned int IntervalFrame = 5;
+
+
+				// 生存時間
+				const unsigned int AliveFrame = 20;
+
+
+				// 最小発生数
+				const unsigned int MinNum = 1;
+
+				// 最大発生数
+				const unsigned int MaxNum = 2;
+
+
+				// 範囲
+				const YMath::Vector3 Range = { 0.0f, 1.5f, 1.0f };
+
+
+				// 最小スケールサイズ
+				const float MinScaleSize = 0.2f;
+
+				// 最大スケールサイズ
+				const float MaxScaleSize = 0.3f;
+
+
+				// 最小移動スピード
+				const YMath::Vector3 MinMoveSpeed = { +0.1f, +0.025f, +0.0f };
+
+				// 最大移動スピード
+				const YMath::Vector3 MaxMoveSpeed = { +0.3f, +0.05f, +0.0f };
+
+
+				// 最小回転スピード
+				const YMath::Vector3 MinRotaSpeed = { -0.1f, -0.1f, -0.1f };
+
+				// 最大回転スピード
+				const YMath::Vector3 MaxRotaSpeed = { +0.1f, +0.1f, +0.1f };
+
+
+				// 色
+				const YMath::Vector3 Color = { 0.1f,0.9f,0.8f };
+
+				// 位
+				const float Place = 100.0f;
+				
+			}
+		}
+
 		// ジャンプモーション
 		namespace Jump
 		{
@@ -292,7 +360,7 @@ namespace DrawerConfig
 				const unsigned int RelayToEndFrame = 20;
 
 				// リレー範囲
-				const YMath::Vector3 RelayRange = { 20.0f,20.0f,20.0f };
+				const YMath::Vector3 RelayRange = { 6.0f,6.0f,6.0f };
 
 
 				// 最小回転
@@ -303,10 +371,10 @@ namespace DrawerConfig
 
 
 				// 最小スケール
-				const float MinScale = 0.5f;
+				const float MinScale = 0.3f;
 
 				// 最大スケール
-				const float MaxScale = 1.5f;
+				const float MaxScale = 0.5f;
 
 				// 色
 				const YMath::Vector3 Color = { 0.1f,0.9f,0.8f };
@@ -485,10 +553,6 @@ namespace DrawerConfig
 			const unsigned int IntervalFrame = 240;
 			
 
-			// 位
-			const float Place = 100.0f;
-			
-
 			// 生存時間
 			const unsigned int AliveFrame = 720;
 			
@@ -530,6 +594,9 @@ namespace DrawerConfig
 
 			// 色
 			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
+
+			// 位
+			const float Place = 100.0f;
 		}
 	}
 
@@ -563,7 +630,7 @@ namespace DrawerConfig
 			const YMath::Vector3 Start = { WinSize.x_ - 240.0f,WinSize.y_ - 240.0f,0.0f };
 			
 			// 終了位置
-			const YMath::Vector3 Exit  = { WinSize.x_ - 240.0f,WinSize.y_ - 120.0f,0.0f };
+			const YMath::Vector3 Exit  = { WinSize.x_ - 200.0f,WinSize.y_ - 120.0f,0.0f };
 
 			// 選択中色
 			const YMath::Vector4 OnColor  = { 1.0f,1.0f,1.0f,1.0f };
@@ -601,10 +668,10 @@ namespace DrawerConfig
 			const float DefPosX = WinSize.x_ - 96.0f;
 			
 			// 中心の高さ
-			const float CenterHeight = WinSize.y_ / 2.0f;
+			const float CenterHeight = WinSize.y_ / 2.0f + 8.0f;
 			
 			// 全体の高さ
-			const float TotalHeight = 512.0f;
+			const float TotalHeight = 448.0f;
 		}
 
 		// レターボックス

@@ -13,11 +13,15 @@ protected:
 
 	// WASD
 	static YGame::Sprite2D* spKeyWASDSpr_;
+	static YGame::Sprite2D* spKeyADSpr_;
 	// WASD_PUSH
 	static YGame::Sprite2D* spKeyWPushSpr_;
 	static YGame::Sprite2D* spKeyAPushSpr_;
 	static YGame::Sprite2D* spKeySPushSpr_;
 	static YGame::Sprite2D* spKeyDPushSpr_;
+	// AD_PUSH
+	static YGame::Sprite2D* spKeyAPush2Spr_;
+	static YGame::Sprite2D* spKeyDPush2Spr_;
 	// S_DEAD
 	static YGame::Sprite2D* spKeySDeadSpr_;
 	// SPACE
@@ -33,6 +37,14 @@ public:
 
 class InputDrawer : private InputDrawerCommon
 {
+public:
+	// 初期化用シーン
+	enum class SceneType
+	{
+		Title, // タイトル
+		Select, // ステージセレクト
+		Play, // ゲーム
+	};
 private:
 	// ----- Object ----- //
 
@@ -59,14 +71,9 @@ private:
 	bool isPushSpace_ = false;
 	// ESC
 	bool isPushEsc_ = false;
-public:
-	// 初期化用シーン
-	enum class SceneType
-	{
-		Title, // タイトル
-		Select, // ステージセレクト
-		Play, // ゲーム
-	};
+
+
+	SceneType sceneType_ = SceneType::Title;
 public:
 	// 初期化
 	void Initialize(const SceneType& sceneType);

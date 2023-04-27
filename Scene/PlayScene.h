@@ -44,7 +44,7 @@ namespace YScene
 		//std::unique_ptr<Filter> filter;
 
 		// ステージ設定
-		StageConfig* stageConfig_;
+		StageConfig* stageConfig_ = nullptr;
 
 		int map[14][40] =
 		{

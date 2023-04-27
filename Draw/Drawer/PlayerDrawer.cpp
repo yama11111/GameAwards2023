@@ -1,5 +1,6 @@
 #include "PlayerDrawer.h"
 #include "CalcTransform.h"
+#include "MathUtillity.h"
 #include "DrawerConfig.h"
 #include <cassert>
 
@@ -17,6 +18,7 @@ using YGame::SlimeActor;
 
 using YMath::Vector3;
 using YMath::Vector4;
+using YMath::GetRand;
 
 using namespace DrawerConfig::Player;
 
@@ -88,14 +90,34 @@ void PlayerDrawer::Reset()
 
 	// ----- アニメーション ----- //
 	
+	// 移動中か
+	isMove_ = false;
+	// 移動していたか
+	isElderMove_ = false;
+	// 移動用回転パワー
+	moveRotaPow_.Initialize(Move::Rota::Frame);
+	// 移動用回転イージング
+	moveRotaEas_.Initialize(0.0f, Move::Rota::Value, Move::Rota::Exponent);
+	// 移動用エミットタイマー
+	moveEmitTimer_.Initialize(Move::Smoke::IntervalFrame);
+
 	// リスポーンフラグ
 	isRespawn_ = false;
 	// リスポーン用タイマー
 	respawnTim_.Initialize(Respawn::Frame);
 	// リスポーン用スケールイージング
-	respScaleEas_.Initialize(-1.0f,0.0f,Respawn::Exponent);
+	respScaleEas_.Initialize(-1.0f, 0.0f, Respawn::Exponent);
 	// リスポーン用アルファ値イージング
-	respAlphaEas_.Initialize(0.0f,1.0f,Respawn::Exponent);
+	respAlphaEas_.Initialize(0.0f, 1.0f, Respawn::Exponent);
+
+	// ゴールフラグ
+	isGoal_ = false;
+	// ゴール用タイマー
+	goalTim_.Initialize(Respawn::Frame);
+	// ゴール用スケールイージング
+	goalScaleEas_.Initialize(0.0f, -1.0f, Respawn::Exponent);
+	// ゴール用アルファ値イージング
+	goalAlphaEas_.Initialize(1.0f, 0.0f, Respawn::Exponent);;
 }
 
 void PlayerDrawer::ResetAnimation()
@@ -106,8 +128,14 @@ void PlayerDrawer::ResetAnimation()
 	// 立ちモーションタイマーリセット
 	idleTim_.Reset(true);
 
+	// 移動タイマーリセット
+	moveEmitTimer_.Reset(false);
+
 	// リスポーン用タイマーリセット
 	respawnTim_.Reset(false);
+
+	// ゴール用タイマーリセット
+	goalTim_.Reset(false);
 }
 
 void PlayerDrawer::Update()
@@ -117,6 +145,35 @@ void PlayerDrawer::Update()
 
 	// 向き合わせ
 	rota = YMath::AdjustAngle(*pDirection_);
+
+	// 煙発生
+	UpdateSmokeEmitter();
+
+	// 回転パワー更新
+	moveRotaPow_.Update(isMove_);
+
+	// 回転保存用
+	float moveRota = 0.0f;
+
+	// 移動中なら
+	if (isMove_)
+	{
+		// イーズイン
+		moveRota += moveRotaEas_.In(moveRotaPow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズアウト
+		moveRota += moveRotaEas_.Out(moveRotaPow_.Ratio());
+	}
+	
+	// 回転
+	rota.x_ = moveRota;
+	
+	// 移動フラグ保存
+	isElderMove_ = isMove_;
+
 
 	// リスポーン中なら
 	if (isRespawn_)
@@ -134,6 +191,23 @@ void PlayerDrawer::Update()
 
 		// 代入
 		color_->SetAlpha(respAlpha);
+	}
+	// ゴール中なら
+	if (isGoal_)
+	{
+		// リスポーン用タイマー更新
+		goalTim_.Update();
+		// リスポーン用のスケール計算
+		float goalSca = goalScaleEas_.In(goalTim_.Ratio());
+
+		// 代入
+		scale = Vector3(goalSca, goalSca, goalSca);
+
+		// リスポーン用のアルファ値計算
+		float goalAlpha = goalAlphaEas_.In(goalTim_.Ratio());
+
+		// 代入
+		color_->SetAlpha(goalAlpha);
 	}
 
 	// 基底クラス更新 
@@ -154,6 +228,78 @@ void PlayerDrawer::Draw()
 	//	spModels_[i]->Draw(modelObjs_[i].get());
 	//}
 	spModels_[BodyIdx]->Draw(modelObjs_[BodyIdx].get());
+}
+
+void PlayerDrawer::UpdateSmokeEmitter()
+{
+	// 移動中なら
+	if (isMove_)
+	{
+		// 前回移動していなかったら
+		if (isElderMove_ == false)
+		{
+			// エミットタイマーリセット
+			moveEmitTimer_.Reset(true);
+		}
+
+		// エミットタイマー更新
+		moveEmitTimer_.Update();
+
+		// タイマー終了したら
+		if (moveEmitTimer_.IsEnd())
+		{
+			// エミットタイマーリセット
+			moveEmitTimer_.Reset(true);
+
+			// 向き
+			float dire = 0.0f;
+
+			// 右向きなら
+			if (pDirection_->x_ > 0)
+			{
+				// マイナス
+				dire = -1.0f;
+			}
+			// 左向きなら
+			else if (pDirection_->x_ < 0)
+			{
+				// プラス
+				dire = +1.0f;
+			}
+
+			// 発生数
+			size_t emitNum = GetRand(Move::Smoke::MinNum, Move::Smoke::MaxNum);
+			
+			
+			// 最小移動スピード
+			Vector3 minMoveSpeed = Move::Smoke::MinMoveSpeed;
+			minMoveSpeed.x_ *= dire;
+			
+			// 最大移動スピード
+			Vector3 maxMoveSpeed = Move::Smoke::MaxMoveSpeed;
+			maxMoveSpeed.x_ *= dire;
+
+			// 最小値が最大値を超えたら
+			if (maxMoveSpeed.x_ < minMoveSpeed.x_)
+			{
+				// 入れ替える
+				float sp = maxMoveSpeed.x_;
+				maxMoveSpeed.x_ = minMoveSpeed.x_;
+				minMoveSpeed.x_ = sp;
+			}
+
+			// 煙発生
+			spParticleMan_->EmitSmoke(
+				emitNum,
+				Move::Smoke::AliveFrame,
+				pParent_->pos_, Move::Smoke::Range,
+				Move::Smoke::MinScaleSize, Move::Smoke::MaxScaleSize,
+				minMoveSpeed, maxMoveSpeed,
+				Move::Smoke::MinRotaSpeed, Move::Smoke::MaxRotaSpeed,
+				Move::Smoke::Color,
+				Move::Smoke::Place);
+		}
+	}
 }
 
 void PlayerDrawer::JumpAnimation()
@@ -230,6 +376,18 @@ void PlayerDrawer::RespawnAnimation()
 
 	// リスポーンアニメーション開始
 	isRespawn_ = true;
+}
+
+void PlayerDrawer::GoalAnimation()
+{
+	// アニメーションリセット
+	ResetAnimation();
+
+	// ゴールタイマー開始
+	goalTim_.SetActive(true);
+
+	// ゴールアニメーション開始
+	isGoal_ = true;
 }
 
 void PlayerDrawer::IdleAnimation()

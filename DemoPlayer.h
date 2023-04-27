@@ -1,9 +1,12 @@
 #pragma once
 #include "PlayerDrawer.h"
 #include "MapChip.h"
+#include "CollisionPrimitive.h"
 #include "Keys.h"
 
-class DemoPlayer : public YGame::MapChipCollider
+class DemoPlayer : 
+	public YGame::MapChipCollider,
+	public YGame::Sphere
 {
 
 private:
@@ -17,11 +20,14 @@ private:
 	// 向き
 	YMath::Vector3 direction_;
 
-	// 描画クラス
-	PlayerDrawer drawer_;
-
 	// ジャンプ回数
 	int jumpCount_ = 0;
+
+	// ゴールフラグ
+	bool isGoal_ = false;
+
+	// 描画クラス
+	PlayerDrawer drawer_;
 
 public:
 
@@ -47,6 +53,13 @@ public:
 	/// </summary>
 	void Draw();
 
+public:
+
+	/// <summary>
+	/// ゴール
+	/// </summary>
+	void Goal();
+
 private:
 
 	/// <summary>
@@ -58,6 +71,11 @@ private:
 	/// ジャンプ
 	/// </summary>
 	void Jump();
+
+	/// <summary>
+	/// 物理挙動更新
+	/// </summary>
+	void UpdatePhysics();
 
 public:
 

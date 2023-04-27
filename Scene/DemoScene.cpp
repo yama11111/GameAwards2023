@@ -1,6 +1,8 @@
 #include "DemoScene.h"
+#include "SceneManager.h"
 #include "DrawerHelper.h"
 #include "StageConfig.h"
+#include "Def.h"
 
 #pragma region 名前空間宣言
 
@@ -32,6 +34,8 @@ void DemoScene::Load()
 
 	// マップチップ
 	mapChipMan_.Load();
+
+	fontSpr_ = Sprite2D::Create({}, { Texture::Load("Goal/stageClear.png") });
 }
 
 #pragma endregion
@@ -60,7 +64,22 @@ void DemoScene::Initialize()
 
 
 	// ゴール
-	goal_.Initialize({ +25.0f,-15.0f,0.0f });
+	goal_.Initialize({ +25.0f,-7.0f,0.0f });
+
+
+	goalTim_.Initialize(160);
+
+	fontScaleTim_.Initialize(30);
+
+	afterglowTim_.Initialize(60);
+
+	fontScaleEas_.Initialize(Vector3(4.0f, 0.0f, 0.0f), Vector3(2.0f, 2.0f, 0.0f), 3.0f);
+
+	fontAlphaEas_.Initialize(0.0f, 1.0f, 3.0f);
+
+	fontColor_.reset(Color::Create());
+
+	fontObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} }, fontColor_.get()));
 
 
 	// 背景初期化
@@ -106,6 +125,54 @@ void DemoScene::Update()
 	// ゴール
 	goal_.Update();
 	
+	// ゴールしてないなら
+	if (isGoal_ == false)
+	{
+		// プレイヤーとゴールでアタリ判定
+		if (CollisionSphereSphere(player_, goal_))
+		{
+			// プレイヤー
+			player_.Goal();
+
+			// ゴール
+			goal_.Goal(player_.center_);
+
+			// ゴールフラグをtrueに
+			isGoal_ = true;
+
+			goalTim_.Reset(true);
+		}
+	}
+
+	goalTim_.Update();
+	if (goalTim_.IsEnd())
+	{
+		fontScaleTim_.SetActive(true);
+	}
+
+	fontScaleTim_.Update();
+	if (fontScaleTim_.IsEnd())
+	{
+		afterglowTim_.SetActive(true);
+		if(isAfterglow_ == false)
+		{
+			isAfterglow_ = true;
+			particleMan_.EmitBubbleGrid(
+				24, afterglowTim_.End(),
+				camera_.pos_ + Vector3(0.0f, 0.0f, +20.0f), Vector3(1.0f, 1.0f, 1.0f),
+				0.3f, 0.6f,
+				Vector3(-0.5f, -0.25f, -0.1f), Vector3(0.5f, 0.25f, 0.1f),
+				Vector3(-0.5f, -0.5f, -0.5f), Vector3(+0.5f, +0.5f, +0.5f),
+				Vector3(1.0f, 0.9f, 0.1f), 100.0f);
+		}
+	}
+
+	fontObj_->scale_ = fontScaleEas_.In(fontScaleTim_.Ratio());
+	fontObj_->UpdateMatrix();
+
+	fontColor_->SetAlpha(fontAlphaEas_.In(fontScaleTim_.Ratio()));
+
+	afterglowTim_.Update();
 
 	// マップチップ更新
 	mapChipMan_.Update();
@@ -132,11 +199,11 @@ void DemoScene::Update()
 	transferVP_.UpdateMatrix();
 
 
-	////ゴール判定
-	//if (BoxCollision(player->GetTransform(), goal_, false))
-	//{
-	//	SceneManager::GetInstance()->Change("SELECT", "INFECTION");
-	//}
+	//ゴール判定
+	if (afterglowTim_.IsEnd())
+	{
+		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
+	}
 
 	////死亡判定
 	//if (player->GetPos().y_ < -15)
@@ -185,6 +252,8 @@ void DemoScene::DrawFrontSprite2Ds()
 {
 	// HUD描画
 	hud_.Draw();
+
+	if (isGoal_) { fontSpr_->Draw(fontObj_.get()); }
 }
 
 void DemoScene::Draw()

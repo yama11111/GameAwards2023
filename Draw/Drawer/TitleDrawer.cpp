@@ -82,6 +82,11 @@ void TitleDrawer::Initialize()
 	exitObj_.reset(Sprite2DObject::Create({}, exitColor_.get()));
 	exitObj_->parent_ = &core_->m_;
 
+
+	// イージング
+	selectMoveXEas_.Initialize(+64.0f, 0.0f, 3.0f);
+	selectScaleEas_.Initialize(-0.25f, 0.0f, 3.0f);
+
 	// リセット
 	Reset();
 }
@@ -113,6 +118,10 @@ void TitleDrawer::Reset()
 
 	// 選択
 	current_ = Selection::Start;
+
+	// パワー
+	selectStartPow_.Initialize(20);
+	selectExitPow_.Initialize(20);
 }
 
 void TitleDrawer::Select(const bool isUp, const bool isUnder)
@@ -139,6 +148,58 @@ void TitleDrawer::Select(const bool isUp, const bool isUnder)
 
 void TitleDrawer::Update()
 {
+	// ----- アニメーション ----- //
+
+	// スタートを選んでいるか
+	bool isStart = current_ == Selection::Start;
+
+	// パワー更新
+	selectStartPow_.Update(isStart);
+
+	// 保存用
+	float startMoveX = 0.0f, startSca = 0.0f;
+
+	// スタートなら
+	if (isStart)
+	{
+		// イーズアウト
+		startMoveX = selectMoveXEas_.Out(selectStartPow_.Ratio());
+		startSca = selectScaleEas_.Out(selectStartPow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズイン
+		startMoveX = selectMoveXEas_.In(selectStartPow_.Ratio());
+		startSca = selectScaleEas_.In(selectStartPow_.Ratio());
+	}
+
+
+	// 終了を選んでいるか
+	bool isExit = current_ == Selection::Exit;
+
+	// パワー更新
+	selectExitPow_.Update(isExit);
+
+	// 保存用
+	float exitMoveX = 0.0f, exitSca = 0.0f;
+
+	// 終了なら
+	if (isExit)
+	{
+		// イーズアウト
+		exitMoveX = selectMoveXEas_.Out(selectExitPow_.Ratio());
+		exitSca = selectScaleEas_.Out(selectExitPow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズイン
+		exitMoveX = selectMoveXEas_.In(selectExitPow_.Ratio());
+		exitSca = selectScaleEas_.In(selectExitPow_.Ratio());
+	}
+
+
 	// 色変更
 	if (current_ == Selection::Start)
 	{
@@ -162,16 +223,16 @@ void TitleDrawer::Update()
 	backObj_->UpdateMatrix();
 
 	// スタート
-	startObj_->UpdateMatrix();
+	startObj_->UpdateMatrix({ Vector3(startMoveX, 0.0f,0.0f),{}, Vector3(startSca, startSca, startSca) });
 
 	// 終了
-	exitObj_->UpdateMatrix();
+	exitObj_->UpdateMatrix({ Vector3(exitMoveX, 0.0f,0.0f),{}, Vector3(exitSca, exitSca, exitSca) });
 }
 
 void TitleDrawer::DrawSprite2D()
 {
 	// 背景
-	spBackSpr_->Draw(backObj_.get());
+	//spBackSpr_->Draw(backObj_.get());
 	
 	// 影
 	spShadowSpr_->Draw(shadowObj_.get());
