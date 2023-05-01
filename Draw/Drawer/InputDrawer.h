@@ -1,92 +1,87 @@
 #pragma once
-#include "Sprite2D.h"
-#include <array>
+#include "UIButtonDrawer.h"
 
 // 多重定義回避用
 namespace YInput { class Keys; }
 
 class InputDrawerCommon
 {
+
 protected:
+	
 	// キー
 	static YInput::Keys* sKeys_;
+	
+	// ----- Button ----- //
 
 	// WASD
-	static YGame::Sprite2D* spKeyWASDSpr_;
-	static YGame::Sprite2D* spKeyADSpr_;
-	// WASD_PUSH
-	static YGame::Sprite2D* spKeyWPushSpr_;
-	static YGame::Sprite2D* spKeyAPushSpr_;
-	static YGame::Sprite2D* spKeySPushSpr_;
-	static YGame::Sprite2D* spKeyDPushSpr_;
-	// AD_PUSH
-	static YGame::Sprite2D* spKeyAPush2Spr_;
-	static YGame::Sprite2D* spKeyDPush2Spr_;
-	// S_DEAD
-	static YGame::Sprite2D* spKeySDeadSpr_;
+	static YGame::UIButtonDrawer spKeyW_;
+	static YGame::UIButtonDrawer spKeyA_;
+	static YGame::UIButtonDrawer spKeyS_;
+	static YGame::UIButtonDrawer spKeyD_;
+	
 	// SPACE
-	static std::array<YGame::Sprite2D*, 2> spKeySpaceSpr_;
+	static YGame::UIButtonDrawer spKeySpace_;
+	
 	// ESC
-	static std::array<YGame::Sprite2D*, 2> spKeyEscSpr_;
-public:
-	// 静的初期化
+	static YGame::UIButtonDrawer spKeyEsc_;
+
+public: 
+	
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
 	static void StaticInitialize();
+
+	/// <summary>
+	/// 静的更新
+	/// </summary>
+	static void StaticUpdate();
+
 public:
+	
 	virtual ~InputDrawerCommon() = default;
+
 };
 
 class InputDrawer : private InputDrawerCommon
 {
-public:
-	// 初期化用シーン
-	enum class SceneType
-	{
-		Title, // タイトル
-		Select, // ステージセレクト
-		Play, // ゲーム
-	};
+
 private:
-	// ----- Object ----- //
 
 	// WASD
-	std::unique_ptr<YGame::Sprite2DObject> keyWASDObj_;
-	// WASD_PUSH
 	std::unique_ptr<YGame::Sprite2DObject> keyWObj_;
 	std::unique_ptr<YGame::Sprite2DObject> keyAObj_;
 	std::unique_ptr<YGame::Sprite2DObject> keySObj_;
 	std::unique_ptr<YGame::Sprite2DObject> keyDObj_;
+	
 	// SPACE
 	std::unique_ptr<YGame::Sprite2DObject> keySpaceObj_;
+	
 	// ESC
 	std::unique_ptr<YGame::Sprite2DObject> keyEscObj_;
 
-	// ----- フラグ ----- //
-
-	// WASD
-	bool isPushW_ = false;
-	bool isPushA_ = false;
-	bool isPushS_ = false;
-	bool isPushD_ = false;
-	// SPACE
-	bool isPushSpace_ = false;
-	// ESC
-	bool isPushEsc_ = false;
-
-
-	SceneType sceneType_ = SceneType::Title;
 public:
-	// 初期化
-	void Initialize(const SceneType& sceneType);
-	// リセット
-	void Reset(const SceneType& sceneType);
-	// 更新
+	
+	/// <summary> 
+	/// 初期化
+	/// </summary>
+	void Initialize();
+
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset();
+	
+	/// <summary> 
+	/// 更新
+	/// </summary>
 	void Update();
-	// 描画
+	
+	/// <summary> 
+	/// 描画
+	/// </summary>
 	void Draw();
-private:
-	// フラグ更新
-	void UpdatePushFlags();
-	// Object更新
-	void UpdateObjects();
+
 };
 

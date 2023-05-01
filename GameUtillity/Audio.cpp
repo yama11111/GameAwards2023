@@ -28,13 +28,22 @@ void Audio::Base::StaticInitialize()
 	Result(xAudio2_->CreateMasteringVoice(&masterVoice_));
 }
 
-Audio* Audio::Load(const std::string& fileName)
+Audio* Audio::Load(const std::string& audioFileName)
+{
+	// ディレクトリパスを設定
+	const std::string& directoryPath = "Resources/Audios/";
+
+	// テクスチャ読み込み
+	return Load(directoryPath, audioFileName);
+}
+
+Audio* Audio::Load(const std::string& directoryPath, const std::string& audioFileName)
 {
 	// 読み込んだことがあるかチェック
 	for (size_t i = 0; i < audios_.size(); i++)
 	{
 		// ファイルパス が同じなら
-		if (fileName == audios_[i]->fileName_)
+		if (audioFileName == audios_[i]->fileName_)
 		{
 			// そのテクスチャポインタを返す
 			return audios_[i].get();
@@ -44,10 +53,13 @@ Audio* Audio::Load(const std::string& fileName)
 	// テクスチャ生成
 	unique_ptr<Audio> newAudio = std::make_unique<Audio>();
 
+	// ファイル名
+	std::string filePath = directoryPath + audioFileName;
+
 	// ファイル入力ストリームのインスタンス
 	std::ifstream file;
 	// .wavファイルをバイナリモードで開く
-	file.open(fileName, std::ios_base::binary);
+	file.open(filePath, std::ios_base::binary);
 	// ファイルオープン失敗を検出
 	assert(file.is_open());
 
@@ -96,6 +108,10 @@ Audio* Audio::Load(const std::string& fileName)
 	// 代入
 	newAudio->sound_ = sound;
 
+	// 波形フォーマットを元にSourceVoice生成
+	Result(common_.xAudio2_->CreateSourceVoice(&newAudio->pSourceVoice_, &newAudio->sound_.wfex_));
+
+
 
 	// ポインタを取得
 	Audio* newAudioPtr = newAudio.get();
@@ -107,21 +123,28 @@ Audio* Audio::Load(const std::string& fileName)
 	return newAudioPtr;
 }
 
-void Audio::Play()
+void Audio::Play(const bool isLoop)
 {
-	// 波形フォーマットを元にSourceVoice生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	Result(common_.xAudio2_->CreateSourceVoice(&pSourceVoice, &sound_.wfex_));
+	// ループなら現在の再生をストップ
+	if (isLoop) { Stop(); }
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buff{};
 	buff.pAudioData = sound_.pBuff_;
 	buff.AudioBytes = sound_.buffSize_;
 	buff.Flags = XAUDIO2_END_OF_STREAM;
+	if (isLoop) { buff.LoopCount = XAUDIO2_LOOP_INFINITE; }
 
 	// 波形データの再生
-	Result(pSourceVoice->SubmitSourceBuffer(&buff));
-	Result(pSourceVoice->Start());
+	Result(pSourceVoice_->SubmitSourceBuffer(&buff));
+	Result(pSourceVoice_->Start());
+}
+
+void Audio::Stop()
+{
+	// 波形データの停止
+	Result(pSourceVoice_->Stop());
+	Result(pSourceVoice_->FlushSourceBuffers());
 }
 
 void Audio::AllClear()
@@ -129,8 +152,8 @@ void Audio::AllClear()
 	// オーディオ全消去
 	for (size_t i = 0; i < audios_.size(); i++)
 	{
-		delete[] audios_[i]->sound_.pBuff_;
-		audios_[i].reset(nullptr);
+		//delete[] audios_[i]->sound_.pBuff_;
+		//audios_[i].reset(nullptr);
 	}
 	audios_.clear();
 }

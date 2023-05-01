@@ -6,11 +6,11 @@ namespace HUDConfig
 	// 操作
 	namespace Operation
 	{
-		// ステージセレクト
-		namespace Title
+		// キー
+		namespace Key
 		{
-			// キー
-			namespace Key
+			// タイトル
+			namespace Title
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -18,28 +18,20 @@ namespace HUDConfig
 				// ----- 位置 ----- //
 
 				// WASD
-				const YMath::Vector3 WASD = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 W = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 A = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 S = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 D = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
+				
 				// TAB
 				const YMath::Vector3 Esc = { -100.0f, -100.0f, 0.0f };
+
 			}
-
-			// パッド
-			namespace Pad
-			{
-				// 大きさ
-				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
-
-				// ----- 位置 ----- //
-			}
-		}
-
-		// ステージセレクト
-		namespace Select
-		{
-			// キー
-			namespace Key
+			// ステージセレクト
+			namespace Select
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -47,28 +39,19 @@ namespace HUDConfig
 				// ----- 位置 ----- //
 
 				// WASD
-				const YMath::Vector3 WASD = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 W = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 A = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 S = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 D = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
+				
 				// TAB
 				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
-
-			// パッド
-			namespace Pad
-			{
-				// 大きさ
-				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
-
-				// ----- 位置 ----- //
-			}
-		}
-
-		// ゲーム
-		namespace Play
-		{
-			// キー
-			namespace Key
+			// ゲーム
+			namespace Play
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -76,15 +59,40 @@ namespace HUDConfig
 				// ----- 位置 ----- //
 
 				// WASD
-				const YMath::Vector3 WASD = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 W = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 A = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 S = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 D = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
+				
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
+				
 				// TAB
 				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
+		}
 
-			// パッド
-			namespace Pad
+		// パッド
+		namespace Pad
+		{
+			// タイトル
+			namespace Title
+			{
+				// 大きさ
+				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
+
+				// ----- 位置 ----- //
+			}
+			// ステージセレクト
+			namespace Select
+			{
+				// 大きさ
+				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
+
+				// ----- 位置 ----- //
+			}
+			// ゲーム
+			namespace Play
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
@@ -92,27 +100,6 @@ namespace HUDConfig
 				// ----- 位置 ----- //
 			}
 		}
-	}
-
-	// 操縦
-	namespace Pilot
-	{
-		// 大きさ
-		const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
-
-		// ----- 位置 ----- //
-
-		// player
-		const YMath::Vector3 Player = { +384.0f, WinSize.y_ - 80.0f, 0.0f };
-		// filter
-		const YMath::Vector3 Filter = { +384.0f, WinSize.y_ - 48.0f, 0.0f };
-		
-		// ----- 色 ----- //
-
-		// 操縦中
-		const YMath::Vector4 OnColor  = { 0.8f,0.8f,0.8f,1.0f };
-		// 操縦していない
-		const YMath::Vector4 OffColor = { 0.3f,0.3f,0.3f,0.5f };
 	}
 
 	// ポーズ

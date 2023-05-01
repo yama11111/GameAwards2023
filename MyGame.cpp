@@ -22,12 +22,10 @@ bool MyGame::Initialize()
 	StageConfig::GetInstance()->Initialize();
 
 	// シーンファクトリー設定
-	sceneMan_->SetSceneFactory(new YGameSceneFactory());
-	// 遷移ファクトリー設定
-	sceneMan_->SetTransitionFactory(new YGameTransitionFactory());
+	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
-	// シーンマネージャー初期化
-	sceneMan_->Initialize("TITLE");
+	// シーンエグゼクティブ初期化
+	sceneExe_->Initialize("TITLE", "BLACKOUT");
 
 	return true;
 }
@@ -59,10 +57,7 @@ void MyGame::Draw()
 	descHeap_.SetDrawCommand();
 
 	// シーン描画
-	sceneMan_->Draw();
-
-	// シーン遷移描画
-	transitionMan_->Draw();
+	sceneExe_->Draw();
 
 #ifdef _DEBUG
 

@@ -9,15 +9,18 @@ namespace YInput { class Keys; }
 
 class PauseDrawerCommon
 {
+
 public:
+	
 	// 選択
-	enum class Select
+	enum class Selection
 	{
 		Resume, // 戻る
-		Title, // タイトル
-		Stage, // ステージセレクト
+		Change, // 遷移
 	};
+
 protected:
+	
 	// キー
 	static YInput::Keys* sKeys_;
 
@@ -32,24 +35,25 @@ protected:
 	
 	// curten
 	static YGame::Sprite2D* spCurtenSpr_;
+
 public:
-	// 静的初期化
+	
+	/// <summary> 
+	/// 静的初期化
+	/// </summary>
 	static void StaticInitialize();
+
 public:
+	
 	virtual ~PauseDrawerCommon() = default;
+
 };
 
 class PauseDrawer : private PauseDrawerCommon
 {
-public:
-	// 初期化用シーン
-	enum class SceneType
-	{
-		Select, // ステージセレクト
-		Play, // ゲーム
-	};
 
 private:
+	
 	// ----- Object ----- //
 
 	// pause
@@ -80,13 +84,11 @@ private:
 	bool isElderPause_ = false;
 
 	// 現在の選択
-	Select current_ = Select::Resume;
-
-	// 現在のシーン
-	SceneType sceneType_ = SceneType::Select;
+	Selection current_ = Selection::Resume;
 
 	// 選択Resumeパワー
 	YMath::Power selectResumePow_;
+	
 	// 選択Changeパワー
 	YMath::Power selectChangePow_;
 
@@ -95,9 +97,9 @@ private:
 
 public:
 	// 初期化
-	void Initialize(const SceneType& sceneType);
+	void Initialize();
 	// リセット
-	void Reset(const SceneType& sceneType);
+	void Reset();
 	// 更新
 	void Update();
 	// 描画

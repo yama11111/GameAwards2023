@@ -993,13 +993,13 @@ void PlayScene::Update()
 	//ƒS[ƒ‹”»’è
 	if (BoxCollision(player->GetTransform(), goal_, false))
 	{
-		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
+		//SceneManager::GetInstance()->Change("SELECT", "INFECTION");
 	}
 
 	//Ž€–S”»’è
 	if (player->GetPos().y_ < -15)
 	{
-		SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
+		//SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
 		player->Reset();
 		//filter->Reset();
 	}

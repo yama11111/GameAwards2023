@@ -37,9 +37,6 @@
     <Filter Include="GameUtil\Coll">
       <UniqueIdentifier>{1ae737d4-21ca-4d56-b945-6c0b5710617f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Draw\SceneChange">
-      <UniqueIdentifier>{47285198-de5e-4f87-a5a7-3414dbf214fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Draw\Drawer">
       <UniqueIdentifier>{b4d5dfe1-b159-4153-a64e-6394fce54446}</UniqueIdentifier>
     </Filter>
@@ -67,29 +64,11 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{56f1def0-416e-47a5-b6db-c489d6b9ec09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Base">
-      <UniqueIdentifier>{5e1ce30b-2fbd-48f9-a4ab-432cacaf9e33}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util\Math\Lerp">
       <UniqueIdentifier>{f0d15b5d-48fe-4c37-a5f1-f26e36225ba6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{d74e1238-5f57-4c80-9919-fe324f5700dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\Sprite3D">
-      <UniqueIdentifier>{d1facb02-afc7-4b91-8343-caed95c30ca0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\Sprite2D">
-      <UniqueIdentifier>{25218c47-c4bd-44d2-8b4e-61ff426268da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\Model">
-      <UniqueIdentifier>{2948526d-2d37-441e-a520-769e91dc00ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Draw\Stuff">
       <UniqueIdentifier>{7faaa0fc-33e9-48ee-a06d-9f2c68a6445f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Factory">
-      <UniqueIdentifier>{240ab8c4-0938-43ad-89f4-2b5403078b24}</UniqueIdentifier>
     </Filter>
     <Filter Include="Draw\Drawer\Obj">
       <UniqueIdentifier>{64150aae-31e8-4a6c-b465-e330b15e3fbc}</UniqueIdentifier>
@@ -120,6 +99,30 @@
     </Filter>
     <Filter Include="Draw\Drawer\Ex">
       <UniqueIdentifier>{380b8772-2e64-4451-bb3e-6a8bb4fb65c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Shader">
+      <UniqueIdentifier>{d74e1238-5f57-4c80-9919-fe324f5700dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Shader\Sprite3D">
+      <UniqueIdentifier>{d1facb02-afc7-4b91-8343-caed95c30ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Shader\Sprite2D">
+      <UniqueIdentifier>{25218c47-c4bd-44d2-8b4e-61ff426268da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameUtil\Shader\Model">
+      <UniqueIdentifier>{2948526d-2d37-441e-a520-769e91dc00ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transition">
+      <UniqueIdentifier>{0c2cfd96-bab2-4c1d-9711-4e70706ef3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Scene">
+      <UniqueIdentifier>{02e53534-aff6-40d9-afb7-e0c7fbe2b6dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Scene\Scene">
+      <UniqueIdentifier>{169d0d67-856e-4805-b382-f887e2a019cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Scene\Transition">
+      <UniqueIdentifier>{766ced8c-91a2-411f-8162-71e882cddebd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,9 +183,6 @@
     <ClCompile Include="Draw\Particle\ParticleManager.cpp">
       <Filter>Draw\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="Draw\SceneChange\Blackout.cpp">
-      <Filter>Draw\SceneChange</Filter>
-    </ClCompile>
     <ClCompile Include="Utillity\Input\InputManager.cpp">
       <Filter>Util\Input</Filter>
     </ClCompile>
@@ -234,24 +234,6 @@
     <ClCompile Include="Base\YFramework.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\PlayScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\TitleScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\ResultScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SelectScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\BaseScene.cpp">
-      <Filter>Scene\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneManager.cpp">
-      <Filter>Scene\Base</Filter>
-    </ClCompile>
     <ClCompile Include="GameUtillity\Light\SpotLight.cpp">
       <Filter>GameUtil\Light</Filter>
     </ClCompile>
@@ -281,15 +263,6 @@
     </ClCompile>
     <ClCompile Include="Utillity\Math\Speed.cpp">
       <Filter>Util\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\SceneChange\InfectionBlocks.cpp">
-      <Filter>Draw\SceneChange</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\SceneChange\TransitionManager.cpp">
-      <Filter>Draw\SceneChange</Filter>
-    </ClCompile>
-    <ClCompile Include="Draw\SceneChange\ITransition.cpp">
-      <Filter>Draw\SceneChange</Filter>
     </ClCompile>
     <ClCompile Include="GameUtillity\Camera\ViewProjection.cpp">
       <Filter>GameUtil\Camera</Filter>
@@ -321,12 +294,6 @@
     <ClCompile Include="Draw\Drawer\TowerDrawer.cpp">
       <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\YGameSceneFactory.cpp">
-      <Filter>Scene\Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\YGameTransitionFactory.cpp">
-      <Filter>Scene\Factory</Filter>
-    </ClCompile>
     <ClCompile Include="Draw\Drawer\BlockDrawer.cpp">
       <Filter>Draw\Drawer\Obj</Filter>
     </ClCompile>
@@ -356,12 +323,6 @@
     </ClCompile>
     <ClCompile Include="Draw\Drawer\CardDrawer.cpp">
       <Filter>Draw\Drawer\Ex</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\EditScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\TestScene.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="StageConfig.cpp">
       <Filter>ソース ファイル</Filter>
@@ -438,14 +399,56 @@
     <ClCompile Include="Draw\Drawer\CoreColor.cpp">
       <Filter>Draw\Drawer\Ex</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\DemoScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="DemoPlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DemoGoal.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Drawer\UIButtonDrawer.cpp">
+      <Filter>Draw\Drawer\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\DemoScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\PlayScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SelectScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TestScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\YGameSceneFactory.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Scene\BaseScene.cpp">
+      <Filter>Base\Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Scene\SceneManager.cpp">
+      <Filter>Base\Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Scene\TransitionManager.cpp">
+      <Filter>Base\Scene\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Scene\BaseTransition.cpp">
+      <Filter>Base\Scene\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Scene\SceneExecutive.cpp">
+      <Filter>Base\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\Blackout.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\InfectionBlocks.cpp">
+      <Filter>Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition\YGameTransitionFactory.cpp">
+      <Filter>Transition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,9 +512,6 @@
     <ClInclude Include="Draw\Particle\ParticleManager.h">
       <Filter>Draw\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\SceneChange\Blackout.h">
-      <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
     <ClInclude Include="Utillity\Input\InputManager.h">
       <Filter>Util\Input</Filter>
     </ClInclude>
@@ -560,27 +560,6 @@
     <ClInclude Include="Base\YFramework.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\PlayScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\TitleScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\ResultScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\SelectScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\BaseScene.h">
-      <Filter>Scene\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\ISceneFactory.h">
-      <Filter>Scene\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\SceneManager.h">
-      <Filter>Scene\Base</Filter>
-    </ClInclude>
     <ClInclude Include="GameUtillity\Light\SpotLight.h">
       <Filter>GameUtil\Light</Filter>
     </ClInclude>
@@ -614,18 +593,6 @@
     <ClInclude Include="Utillity\imgui\ImGuiManager.h">
       <Filter>Util\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Draw\SceneChange\InfectionBlocks.h">
-      <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\SceneChange\TransitionManager.h">
-      <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\TransitionConfig.h">
-      <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
-    <ClInclude Include="Draw\SceneChange\ITransition.h">
-      <Filter>Draw\SceneChange</Filter>
-    </ClInclude>
     <ClInclude Include="GameUtillity\Camera\ViewProjection.h">
       <Filter>GameUtil\Camera</Filter>
     </ClInclude>
@@ -652,15 +619,6 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\TowerDrawer.h">
       <Filter>Draw\Drawer\Ex</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\ITransitionFactory.h">
-      <Filter>Scene\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\YGameSceneFactory.h">
-      <Filter>Scene\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\YGameTransitionFactory.h">
-      <Filter>Scene\Factory</Filter>
     </ClInclude>
     <ClInclude Include="Draw\Drawer\BlockDrawer.h">
       <Filter>Draw\Drawer\Obj</Filter>
@@ -700,12 +658,6 @@
     </ClInclude>
     <ClInclude Include="Draw\Drawer\CardDrawer.h">
       <Filter>Draw\Drawer\Ex</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\EditScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\TestScene.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="GameUtillity\Camera\ScrollCamera.h">
       <Filter>GameUtil\Camera</Filter>
@@ -782,51 +734,99 @@
     <ClInclude Include="Draw\Drawer\CoreColor.h">
       <Filter>Draw\Drawer\Ex</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\DemoScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="DemoPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DemoGoal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Draw\Drawer\UIButtonDrawer.h">
+      <Filter>Draw\Drawer\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\DemoScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\PlayScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SelectScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TestScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\YGameSceneFactory.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\BaseScene.h">
+      <Filter>Base\Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\ISceneFactory.h">
+      <Filter>Base\Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\SceneManager.h">
+      <Filter>Base\Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\TransitionManager.h">
+      <Filter>Base\Scene\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\ITransitionFactory.h">
+      <Filter>Base\Scene\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\BaseTransition.h">
+      <Filter>Base\Scene\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Scene\SceneExecutive.h">
+      <Filter>Base\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition\Blackout.h">
+      <Filter>Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition\InfectionBlocks.h">
+      <Filter>Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition\YGameTransitionFactory.h">
+      <Filter>Transition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite3D.hlsli">
-      <Filter>Shader\Sprite3D</Filter>
+      <Filter>GameUtil\Shader\Sprite3D</Filter>
     </None>
     <None Include="Resources\Shaders\Model.hlsli">
-      <Filter>Shader\Model</Filter>
+      <Filter>GameUtil\Shader\Model</Filter>
     </None>
     <None Include="Resources\Shaders\Sprite2D.hlsli">
-      <Filter>Shader\Sprite2D</Filter>
+      <Filter>GameUtil\Shader\Sprite2D</Filter>
     </None>
     <None Include="Resources\Shaders\Light.hlsli">
-      <Filter>Shader\Model</Filter>
+      <Filter>GameUtil\Shader\Model</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Sprite3DGS.hlsl">
-      <Filter>Shader\Sprite3D</Filter>
+      <Filter>GameUtil\Shader\Sprite3D</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite3DPS.hlsl">
-      <Filter>Shader\Sprite3D</Filter>
+      <Filter>GameUtil\Shader\Sprite3D</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite3DVS.hlsl">
-      <Filter>Shader\Sprite3D</Filter>
+      <Filter>GameUtil\Shader\Sprite3D</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ModelPS.hlsl">
-      <Filter>Shader\Model</Filter>
+      <Filter>GameUtil\Shader\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ModelVS.hlsl">
-      <Filter>Shader\Model</Filter>
+      <Filter>GameUtil\Shader\Model</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite2DPS.hlsl">
-      <Filter>Shader\Sprite2D</Filter>
+      <Filter>GameUtil\Shader\Sprite2D</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite2DVS.hlsl">
-      <Filter>Shader\Sprite2D</Filter>
+      <Filter>GameUtil\Shader\Sprite2D</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

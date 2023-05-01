@@ -1,5 +1,5 @@
 #include "DemoScene.h"
-#include "SceneManager.h"
+#include "SceneExecutive.h"
 #include "DrawerHelper.h"
 #include "StageConfig.h"
 #include "Def.h"
@@ -23,6 +23,13 @@ using namespace YGame;
 
 void DemoScene::Load()
 {
+	// ----- オーディオ ----- //
+
+	// プレイBGM
+	pPlayBGM_ = Audio::Load("vigilante.wav");
+	
+	// ----- 静的初期化 ----- //
+
 	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
@@ -94,6 +101,9 @@ void DemoScene::Initialize()
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
+
+	// プレイBGM開始
+	pPlayBGM_->Play(true);
 }
 
 #pragma endregion
@@ -103,7 +113,8 @@ void DemoScene::Initialize()
 
 void DemoScene::Finalize()
 {
-
+	// プレイBGM停止
+	pPlayBGM_->Stop();
 }
 
 #pragma endregion
@@ -202,14 +213,8 @@ void DemoScene::Update()
 	//ゴール判定
 	if (afterglowTim_.IsEnd())
 	{
-		SceneManager::GetInstance()->Change("SELECT", "INFECTION");
+		SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	}
-
-	////死亡判定
-	//if (player->GetPos().y_ < -15)
-	//{
-	//	SceneManager::GetInstance()->Change("PLAY", "BLACKOUT");
-	//}
 }
 
 #pragma endregion

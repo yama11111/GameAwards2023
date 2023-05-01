@@ -51,6 +51,9 @@ namespace YGame
 		// テクスチャファイル名
 		std::string fileName_;
 
+		// SourceVoice
+		IXAudio2SourceVoice* pSourceVoice_ = nullptr;
+
 	private:
 		
 		// 静的オーディオ格納用vector配列
@@ -61,9 +64,17 @@ namespace YGame
 		/// <summary>
 		/// オーディオ読み込み(.wavのみ)
 		/// </summary>
-		/// <param name="fileName"> : ファイル名</param>
+		/// <param name="audioFileName"> : 音声ファイル名</param>
 		/// <returns>オーディオポインタ</returns>
-		static Audio* Load(const std::string& fileName);
+		static Audio* Load(const std::string& audioFileName);
+
+		/// <summary>
+		/// オーディオ読み込み(.wavのみ)
+		/// </summary>		
+		/// <param name="directoryPath"> : ディレクトリパス名</param>
+		/// <param name="audioFileName"> : 音声ファイル名</param>
+		/// <returns></returns>
+		static Audio* Load(const std::string& directoryPath, const std::string& audioFileName);
 
 		/// <summary>
 		/// 全削除
@@ -71,11 +82,17 @@ namespace YGame
 		static void AllClear();
 
 	public:
-		
+
 		/// <summary>
 		/// オーディオ再生
 		/// </summary>
-		void Play();
+		/// <param name="isLoop"> : ループするか</param>
+		void Play(const bool isLoop);
+
+		/// <summary>
+		/// オーディオ停止
+		/// </summary>
+		void Stop();
 
 	public:
 

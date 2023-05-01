@@ -2,15 +2,23 @@
 #include "HUDConfig.h"
 #include "SceneManager.h"
 
+#include "SceneManager.h"
+#include "YGameSceneFactory.h"
+
+#pragma region 名前空間
+
 using YGame::Sprite2D;
 using YGame::Sprite2DObject;
 using YGame::Color;
 using YGame::Texture;
 using YMath::Vector3;
 using YScene::SceneManager;
+using YScene::YGameSceneFactory;
 using namespace HUDConfig::Pause;
 
-#pragma region PauseDrawerCommon
+#pragma endregion
+
+#pragma region Static
 
 YInput::Keys* PauseDrawerCommon::sKeys_ = nullptr;
 Sprite2D* PauseDrawerCommon::spPauseSpr_ = nullptr;
@@ -18,6 +26,10 @@ Sprite2D* PauseDrawerCommon::spResumeSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spTitleSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spStageSpr_ = nullptr;
 Sprite2D* PauseDrawerCommon::spCurtenSpr_ = nullptr;
+
+#pragma endregion
+
+#pragma region PauseDrawerCommon
 
 void PauseDrawerCommon::StaticInitialize()
 {
@@ -42,7 +54,7 @@ void PauseDrawerCommon::StaticInitialize()
 
 #pragma region PauseDrawer
 
-void PauseDrawer::Initialize(const SceneType& sceneType)
+void PauseDrawer::Initialize()
 {
 	// ----- 生成 ----- //
 
@@ -68,10 +80,10 @@ void PauseDrawer::Initialize(const SceneType& sceneType)
 	selectScaleEas_.Initialize(-0.25f, 0.0f, 3.0f);
 
 	// リセット
-	Reset(sceneType);
+	Reset();
 }
 
-void PauseDrawer::Reset(const SceneType& sceneType)
+void PauseDrawer::Reset()
 {
 	// ----- Object初期化 ----- //
 
@@ -106,10 +118,7 @@ void PauseDrawer::Reset(const SceneType& sceneType)
 	isElderPause_ = false;
 	
 	// 選択
-	current_ = Select::Resume;
-
-	// 現在のシーン
-	sceneType_ = sceneType;
+	current_ = Selection::Resume;
 
 	// 選択Resumeパワー
 	selectResumePow_.Initialize(20);
@@ -131,7 +140,7 @@ void PauseDrawer::ResumeReset()
 	// ポーズ中か
 	isPause_ = false;
 	// 選択
-	current_ = Select::Resume;
+	current_ = Selection::Resume;
 
 	// パワーリセット
 	selectResumePow_.Reset();
@@ -167,24 +176,17 @@ void PauseDrawer::Update()
 	if (sKeys_->IsTrigger(DIK_W) || sKeys_->IsTrigger(DIK_S))
 	{
 		// 逆になるように
-		if (current_ == Select::Resume)
+		if (current_ == Selection::Resume)
 		{
-			if (sceneType_ == SceneType::Select)
-			{
-				current_ = Select::Title;
-			}
-			else if (sceneType_ == SceneType::Play)
-			{
-				current_ = Select::Stage;
-			}
+			current_ = Selection::Change;
 
 			// 選択しているか分かるように
 			resumeColor_->SetRGB(Font::OffColor); // resume
 			changeColor_->SetRGB(Font::OnColor); // change
 		}
-		else if (current_ == Select::Title || current_ == Select::Stage)
+		else if (current_ == Selection::Change)
 		{
-			current_ = Select::Resume;
+			current_ = Selection::Resume;
 
 			// 選択しているか分かるように
 			resumeColor_->SetRGB(Font::OnColor); // resume
@@ -194,7 +196,7 @@ void PauseDrawer::Update()
 
 
 	// Resumeなら
-	bool isResume = current_ == Select::Resume;
+	bool isResume = current_ == Selection::Resume;
 
 	// パワー更新
 	selectResumePow_.Update(isResume);
@@ -249,22 +251,26 @@ void PauseDrawer::Update()
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
 		// Resumeなら
-		if (current_ == Select::Resume)
+		if (current_ == Selection::Resume)
 		{
 			// リセット
 			ResumeReset();
 		}
-		// タイトルなら
-		else if (current_ == Select::Title)
+		// 遷移なら
+		else if (current_ == Selection::Change)
 		{
-			// シーン遷移
-			SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
-		}
-		// ステージセレクトなら
-		else if (current_ == Select::Stage)
-		{
-			// シーン遷移
-			SceneManager::GetInstance()->Change("SELECT", "BLACKOUT");
+			// ステージセレクトなら
+			if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
+			{
+				// シーン遷移
+				//SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
+			}
+			// プレイなら
+			else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
+			{
+				// シーン遷移
+				//SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
+			}
 		}
 	}
 }
@@ -281,14 +287,17 @@ void PauseDrawer::Draw()
 	spPauseSpr_->Draw(pauseObj_.get());
 	// resume
 	spResumeSpr_->Draw(resumeObj_.get());
-	// title
-	if (sceneType_ == SceneType::Select)
+	
+	// ステージセレクトなら
+	if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
 	{
+		// title
 		spTitleSpr_->Draw(changeObj_.get());
 	}
-	// stage
-	else if (sceneType_ == SceneType::Play)
+	// プレイなら
+	else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
 	{
+		// stage
 		spStageSpr_->Draw(changeObj_.get());
 	}
 }

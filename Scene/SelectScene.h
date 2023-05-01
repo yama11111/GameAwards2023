@@ -16,20 +16,16 @@ namespace YScene
 
 #pragma region リソース
 
-		// ----- テクスチャ ----- //
-
-		// ----- オーディオ ----- //
-
-		// ----- スプライト (2D) ----- //
-
-		// ----- スプライト (3D) ----- //
-
-		// ----- モデル ----- //
+		// セレクトシーンBGM
+		YGame::Audio* pSelectBGM_ = nullptr;
 
 #pragma endregion
 
 #pragma region ゲームオブジェクト
 
+		// ステージセレクト描画クラス
+		SelectDrawer dra_;
+		
 		// input
 		InputDrawer inputDra_;
 		
@@ -39,10 +35,6 @@ namespace YScene
 
 		// ステージ設定
 		StageConfig* stageConfig_ = nullptr;
-
-
-		// ステージセレクト描画クラス
-		SelectDrawer dra_;
 
 
 		// パーティクルマネージャー

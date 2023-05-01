@@ -15,6 +15,15 @@ namespace YScene
 
 	private:
 
+#pragma region リソース
+
+		// プレイBGM
+		YGame::Audio* pPlayBGM_ = nullptr;
+
+#pragma endregion
+
+#pragma region ゲームオブジェクト
+
 		// プレイヤー
 		DemoPlayer player_;
 
@@ -61,6 +70,8 @@ namespace YScene
 		
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
+
+#pragma endregion
 
 	public:
 

@@ -5,27 +5,32 @@ namespace YScene
 {
 	class YGameSceneFactory : public ISceneFactory
 	{
-	private:
-		// タイトル
-		const std::string Title_	 = "TITLE";
-		// ステージセレクト
-		const std::string Select_	 = "SELECT";
-		// プレイ
-		const std::string Play_		 = "PLAY";
-		// リザルト
-		const std::string Result_	 = "RESULT";
-
-		// エディター
-		const std::string Edit_	 = "EDIT";
-
-		// テスト
-		const std::string Test_	 = "TEST";
-
-		// デモ
-		const std::string Demo_	 = "DEMO";
 
 	public:
-		// シーン生成
+		
+		// タイトル
+		static const std::string Title_;
+		
+		// ステージセレクト
+		static const std::string Select_;
+		
+		// プレイ
+		static const std::string Play_;
+
+		// テスト
+		static const std::string Test_;
+
+		// デモ
+		static const std::string Demo_;
+
+	public:
+		
+		/// <summary> 
+		/// シーン生成
+		/// </summary>
+		/// <param name="sceneName"> : シーン名</param>
+		/// <returns>シーン</returns>
 		BaseScene* CreateScene(const std::string& sceneName) override;
+	
 	};
 }

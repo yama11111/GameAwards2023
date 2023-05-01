@@ -5,7 +5,6 @@ using YGame::Sprite2D;
 using YGame::Sprite2DObject;
 using YGame::Color;
 using YGame::Texture;
-using namespace HUDConfig::Pilot;
 
 #pragma region HUDDrawerCommon
 
@@ -26,19 +25,19 @@ void HUDDrawerCommon::StaticInitialize()
 void HUDDrawer::Initialize()
 {
 	// input
-	inputDra_.Initialize(InputDrawer::SceneType::Play);
+	inputDra_.Initialize();
 
 	// pause
-	pauseDra_.Initialize(PauseDrawer::SceneType::Play);
+	pauseDra_.Initialize();
 }
 
 void HUDDrawer::Reset()
 {
 	// input
-	inputDra_.Reset(InputDrawer::SceneType::Play);
+	inputDra_.Reset();
 
 	// pause
-	pauseDra_.Reset(PauseDrawer::SceneType::Play);
+	pauseDra_.Reset();
 }
 
 void HUDDrawer::Update()

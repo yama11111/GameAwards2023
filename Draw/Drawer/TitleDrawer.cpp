@@ -20,13 +20,17 @@ using namespace DrawerConfig::Title;
 
 #pragma endregion
 
+#pragma region Static
+
+YInput::Keys* TitleDrawerCommon::sKeys_ = nullptr;
 Sprite2D* TitleDrawerCommon::spLogoSpr_ = nullptr;
 Sprite2D* TitleDrawerCommon::spShadowSpr_ = nullptr;
-Sprite2D* TitleDrawerCommon::spBackSpr_ = nullptr;
 Sprite2D* TitleDrawerCommon::spStartSpr_ = nullptr;
 Sprite2D* TitleDrawerCommon::spExitSpr_ = nullptr;
 
-Model* TitleDrawerCommon::spBuildingMod_ = nullptr;
+#pragma endregion
+
+#pragma region TitleDrawerCommon
 
 void TitleDrawerCommon::StaticInitialize()
 {
@@ -35,9 +39,6 @@ void TitleDrawerCommon::StaticInitialize()
 
 	// âe
 	spShadowSpr_ = Sprite2D::Create({}, { Texture::Load("Title/shadow.png") });
-	
-	// îwåi
-	spBackSpr_	 = Sprite2D::Create({}, { Texture::Load("Title/back.png") });
 
 	// ÉXÉ^Å[Ég
 	spStartSpr_	 = Sprite2D::Create({}, { Texture::Load("Title/start.png") });
@@ -45,6 +46,10 @@ void TitleDrawerCommon::StaticInitialize()
 	// èIóπ
 	spExitSpr_	 = Sprite2D::Create({}, { Texture::Load("Title/exit.png") });
 }
+
+#pragma endregion
+
+#pragma region TitleDrawer
 
 void TitleDrawer::Initialize()
 {
@@ -251,3 +256,5 @@ void TitleDrawer::DrawModel()
 {
 
 }
+
+#pragma endregion

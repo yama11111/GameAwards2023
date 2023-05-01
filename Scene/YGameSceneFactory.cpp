@@ -2,14 +2,18 @@
 #include "TitleScene.h"
 #include "SelectScene.h"
 #include "PlayScene.h"
-#include "ResultScene.h"
 
-#include "EditScene.h"
 #include "TestScene.h"
 #include "DemoScene.h"
 
 using YScene::YGameSceneFactory;
 using YScene::BaseScene;
+
+const std::string YGameSceneFactory::Title_		 = "TITLE";
+const std::string YGameSceneFactory::Select_	 = "SELECT";
+const std::string YGameSceneFactory::Play_		 = "PLAY";
+const std::string YGameSceneFactory::Test_		 = "TEST";
+const std::string YGameSceneFactory::Demo_		 = "DEMO";
 
 BaseScene* YGameSceneFactory::CreateScene(const std::string& sceneName)
 {
@@ -19,9 +23,7 @@ BaseScene* YGameSceneFactory::CreateScene(const std::string& sceneName)
 	if (sceneName == Title_)	{ newScene = new TitleScene(); }
 	if (sceneName == Select_)	{ newScene = new SelectScene(); }
 	if (sceneName == Play_)		{ newScene = new PlayScene(); }
-	if (sceneName == Result_)	{ newScene = new ResultScene(); }
 
-	if (sceneName == Edit_)		{ newScene = new EditScene(); }
 	if (sceneName == Test_)		{ newScene = new TestScene(); }
 	if (sceneName == Demo_)		{ newScene = new DemoScene(); }
 

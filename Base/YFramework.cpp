@@ -92,14 +92,13 @@ bool YFramework::Initialize()
 
 	// シーン遷移初期化
 	TransitionManager::StaticInitialize();
-	transitionMan_ = TransitionManager::GetInstance();
-	transitionMan_->Initialize();
 
 	// シーン初期化
 	BaseScene::StaticInitialize(&worldRuler_);
+	SceneManager::GetInstance()->SetDescriptorHeapPointer(&descHeap_);
 	
-	sceneMan_ = SceneManager::GetInstance();
-	sceneMan_->SetDescriptorHeapPointer(&descHeap_);
+	// シーンエグゼクティブ
+	sceneExe_ = SceneExecutive::GetInstance();
 
 #pragma endregion
 
@@ -117,7 +116,10 @@ void YFramework::Finalize()
 	window_.FinalProcess();
 
 	// シーン終了処理
-	sceneMan_->Finalize();
+	SceneManager::GetInstance()->Finalize();
+	
+	// シーン遷移終了処理
+	TransitionManager::GetInstance()->Finalize();
 
 	// リソース全クリア
 	Model::AllClear();
@@ -138,11 +140,8 @@ void YFramework::Update()
 	// ゲームルール更新処理
 	worldRuler_.Update();
 
-	// シーン遷移更新
-	transitionMan_->Update();
-
 	// シーン更新処理
-	sceneMan_->Update();
+	sceneExe_->Update();
 
 	// デスクリプタカウント表示
 	descHeap_.ShowCount();
@@ -156,7 +155,7 @@ void YFramework::Update()
 	if (window_.CheckMessage()) { isEnd_ = true; }
 
 	// シーンマネージャー終了フラグ
-	if (sceneMan_->IsEnd()) { isEnd_ = true; }
+	if (SceneManager::GetInstance()->IsEnd()) { isEnd_ = true; }
 
 	// ------------------------------------------------ //
 }

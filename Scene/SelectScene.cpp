@@ -1,5 +1,5 @@
 #include "SelectScene.h"
-#include "SceneManager.h"
+#include "SceneExecutive.h"
 #include "TransitionManager.h"
 #include "CoreColor.h"
 #include "Def.h"
@@ -7,8 +7,10 @@
 #include <imgui.h>
 
 #pragma region 名前空間宣言
+
 using YScene::SelectScene;
 using namespace YGame;
+
 #pragma endregion 
 
 #pragma region Static関連
@@ -17,16 +19,11 @@ using namespace YGame;
 #pragma region 読み込み
 void SelectScene::Load()
 {
-	// ----- テクスチャ ----- //
-
 	// ----- オーディオ ----- //
 
-	// ----- スプライト (2D) ----- //
-
-	// ----- スプライト (3D) ----- //
-
-	// ------- モデル ------- //
-
+	// セレクトシーンBGM
+	pSelectBGM_ = Audio::Load("vigilante.wav");
+	
 	// ----- 静的初期化 ----- //
 
 	// パーティクル
@@ -51,10 +48,10 @@ void SelectScene::Initialize()
 	particleMan_.Initialize();
 
 	// input
-	inputDra_.Initialize(InputDrawer::SceneType::Select);
+	inputDra_.Initialize();
 	
 	// pause
-	pauseDra_.Initialize(PauseDrawer::SceneType::Select);
+	pauseDra_.Initialize();
 
 	// ステージ設定
 	stageConfig_ = StageConfig::GetInstance();
@@ -69,20 +66,23 @@ void SelectScene::Initialize()
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
+
+	// セレクトシーンBGM開始
+	pSelectBGM_->Play(true);
 }
 #pragma endregion
 
 #pragma region 終了処理
 void SelectScene::Finalize()
 {
-
+	// セレクトシーンBGM停止
+	pSelectBGM_->Stop();
 }
 #pragma endregion
 
 #pragma region 更新
 void SelectScene::Update()
 {
-
 	// pause更新
 	pauseDra_.Update();
 
@@ -95,23 +95,18 @@ void SelectScene::Update()
 	// ステージ番号取得
 	int stageIdx = stageConfig_->GetCurrentStageIndex();
 
-	// 遷移中じゃないなら
-	if (TransitionManager::GetInstance()->IsPreChange() == false)
+	// ステージ選択 (A or D)
+	stageIdx +=
+		+(sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
+		- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
+
+	// ステージ番号設定
+	stageConfig_->SetCurrentStageIndex(stageIdx);
+
+	// 次のシーンへ (SPACE)
+	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		// ステージ選択 (A or D)
-		stageIdx +=
-			+(sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
-			- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
-
-		// ステージ番号設定
-		stageConfig_->SetCurrentStageIndex(stageIdx);
-
-		// 次のシーンへ (SPACE)
-		if (sKeys_->IsTrigger(DIK_SPACE))
-		{
-			//SceneManager::GetInstance()->Change("PLAY", "INFECTION");
-			SceneManager::GetInstance()->Change("DEMO", "INFECTION");
-		}
+		SceneExecutive::GetInstance()->Change("DEMO", "INFECTION", 5, 10);
 	}
 
 	ImGui::Begin("StageIdx");

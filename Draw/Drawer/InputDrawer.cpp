@@ -1,217 +1,192 @@
 #include "InputDrawer.h"
 #include "HUDConfig.h"
-#include "Keys.h"
+//#include "Keys.h"
 
+#include "SceneManager.h"
+#include "YGameSceneFactory.h"
+
+#pragma region 名前空間
+
+using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Sprite2DObject;
 using YGame::Texture;
+using YGame::UIButtonDrawer;
+using YScene::SceneManager;
+using YScene::YGameSceneFactory;
 using YMath::Vector3;
 using namespace HUDConfig::Operation;
 
-#pragma region InputDrawerCommon
+#pragma endregion
+
+#pragma region Static
 
 YInput::Keys* InputDrawerCommon::sKeys_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeyWASDSpr_  = nullptr;
-Sprite2D* InputDrawerCommon::spKeyADSpr_  = nullptr;
-Sprite2D* InputDrawerCommon::spKeyWPushSpr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeyAPushSpr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeySPushSpr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeyDPushSpr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeyAPush2Spr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeyDPush2Spr_ = nullptr;
-Sprite2D* InputDrawerCommon::spKeySDeadSpr_ = nullptr;
-std::array<Sprite2D*, 2> InputDrawerCommon::spKeySpaceSpr_ = { nullptr, nullptr };
-std::array<Sprite2D*, 2> InputDrawerCommon::spKeyEscSpr_ = { nullptr, nullptr };
+
+UIButtonDrawer InputDrawerCommon::spKeyW_;
+UIButtonDrawer InputDrawerCommon::spKeyA_;
+UIButtonDrawer InputDrawerCommon::spKeyS_;
+UIButtonDrawer InputDrawerCommon::spKeyD_;
+
+UIButtonDrawer InputDrawerCommon::spKeySpace_;
+
+UIButtonDrawer InputDrawerCommon::spKeyEsc_;
+
+#pragma endregion
+
+#pragma region InputDrawerCommon
 
 void InputDrawerCommon::StaticInitialize()
 {
 	// キー
 	sKeys_ = YInput::Keys::GetInstance();
-
+	
 	// WASD
-	spKeyWASDSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_WASD.png") });
-	spKeyADSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_AD.png") });
-	// WASD_PUSH
-	spKeyWPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_W_PUSH.png") });
-	spKeyAPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH.png") });
-	spKeySPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_PUSH.png") });
-	spKeyDPushSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH.png") });
-	// AD_PUSH
-	spKeyAPush2Spr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_A_PUSH_2.png") });
-	spKeyDPush2Spr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_D_PUSH_2.png") });
-	// S_DEAD
-	spKeySDeadSpr_	  = Sprite2D::Create({}, { Texture::Load("UI/key_S_DEAD.png") });
+	spKeyW_.Initialize(Texture::Load("UI/key_W.png"), Texture::Load("UI/key_W_PUSH.png"));
+	spKeyA_.Initialize(Texture::Load("UI/key_A.png"), Texture::Load("UI/key_A_PUSH.png"));
+	spKeyS_.Initialize(Texture::Load("UI/key_S.png"), Texture::Load("UI/key_S_PUSH.png"));
+	spKeyD_.Initialize(Texture::Load("UI/key_D.png"), Texture::Load("UI/key_D_PUSH.png"));
+	
 	// SPACE
-	spKeySpaceSpr_[0] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE.png") });
-	spKeySpaceSpr_[1] = Sprite2D::Create({}, { Texture::Load("UI/key_SPACE_PUSH.png") });
+	spKeySpace_.Initialize(Texture::Load("UI/key_SPACE.png"), Texture::Load("UI/key_SPACE_PUSH.png"));
+	
 	// ESC
-	spKeyEscSpr_[0]	  = Sprite2D::Create({}, { Texture::Load("UI/key_ESC.png") });
-	spKeyEscSpr_[1]	  = Sprite2D::Create({}, { Texture::Load("UI/key_ESC_PUSH.png") });
+	spKeyEsc_.Initialize(Texture::Load("UI/key_ESC.png"), Texture::Load("UI/key_ESC_PUSH.png"));
+}
+
+void InputDrawerCommon::StaticUpdate()
+{
+	// WASD 押したか更新
+	spKeyW_.Update(sKeys_->IsDown(DIK_W));
+	spKeyA_.Update(sKeys_->IsDown(DIK_A));
+	spKeyS_.Update(sKeys_->IsDown(DIK_S));
+	spKeyD_.Update(sKeys_->IsDown(DIK_D));
+
+	// SPACE 押したか更新
+	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));
+
+	// ESCAPE 押したか更新
+	spKeyEsc_.Update(sKeys_->IsDown(DIK_ESCAPE));
 }
 
 #pragma endregion
 
-
 #pragma region InputDrawer
 
-void InputDrawer::Initialize(const SceneType& sceneType)
+void InputDrawer::Initialize()
 {
 	// ----- 生成 ----- //
 
 	// WASD
-	keyWASDObj_.reset(Sprite2DObject::Create({}));
-	// WASD_PUSH
 	keyWObj_.reset(Sprite2DObject::Create({}));
 	keyAObj_.reset(Sprite2DObject::Create({}));
 	keySObj_.reset(Sprite2DObject::Create({}));
 	keyDObj_.reset(Sprite2DObject::Create({}));
+	
 	// SPACE
 	keySpaceObj_.reset(Sprite2DObject::Create({}));
-	// TAB
+	
+	// ESC
 	keyEscObj_.reset(Sprite2DObject::Create({}));
 
 
 	// リセット
-	Reset(sceneType);
+	Reset();
 }
 
-void InputDrawer::Reset(const SceneType& sceneType)
+void InputDrawer::Reset()
 {
-	// 代入
-	sceneType_ = sceneType;
-
 	// ----- Object初期化 ----- //
 
-	// WASD (シーンの種類によって変える)
-	if (sceneType == SceneType::Title)
-	{
-		keyWASDObj_->Initialize({ Title::Key::WASD, {}, Title::Key::Scale });
-	}
-	if (sceneType == SceneType::Select)
-	{
-		keyWASDObj_->Initialize({ Select::Key::WASD, {}, Select::Key::Scale });
-	}
-	else if (sceneType == SceneType::Play)
-	{
-		keyWASDObj_->Initialize({ Play::Key::WASD, {}, Play::Key::Scale });
-	}
+	// 位置保存用
+	Vector3 w, a, s, d, space, esc;
 
-	// WASD_PUSH
-	keyWObj_->Initialize({ {} });
-	keyAObj_->Initialize({ {} });
-	keySObj_->Initialize({ {} });
-	keyDObj_->Initialize({ {} });
-	// parent
-	keyWObj_->parent_ = &keyWASDObj_->m_;
-	keyAObj_->parent_ = &keyWASDObj_->m_;
-	keySObj_->parent_ = &keyWASDObj_->m_;
-	keyDObj_->parent_ = &keyWASDObj_->m_;
+	// 大きさ
+	Vector3 scale;
 
-	// SPACE (シーンの種類によって変える)
-	if (sceneType == SceneType::Title)
+	// シーンの種類によって変える
+	if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Title_)
 	{
-		keySpaceObj_->Initialize({ Title::Key::Space, {}, Title::Key::Scale });
-	}
-	if (sceneType == SceneType::Select)
-	{
-		keySpaceObj_->Initialize({ Select::Key::Space, {}, Select::Key::Scale });
-	}
-	else if (sceneType == SceneType::Play)
-	{
-		keySpaceObj_->Initialize({ Play::Key::Space, {}, Play::Key::Scale });
-	}
+		w = Key::Title::W;
+		a = Key::Title::A;
+		s = Key::Title::S;
+		d = Key::Title::D;
 
-	// TAB (シーンの種類によって変える)
-	if (sceneType == SceneType::Title)
-	{
-		keyEscObj_->Initialize({ Title::Key::Esc, {}, Title::Key::Scale });
-	}
-	if (sceneType == SceneType::Select)
-	{
-		keyEscObj_->Initialize({ Select::Key::Esc, {}, Select::Key::Scale });
-	}
-	else if (sceneType == SceneType::Play)
-	{
-		keyEscObj_->Initialize({ Play::Key::Esc, {}, Play::Key::Scale });
-	}
+		space = Key::Title::Space;
 
+		esc = Key::Title::Esc;
 
-	// ----- フラグ初期化 ----- //
+		scale = Key::Title::Scale;
+	}
+	else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
+	{
+		w = Key::Select::W;
+		a = Key::Select::A;
+		s = Key::Select::S;
+		d = Key::Select::D;
+
+		space = Key::Select::Space;
+
+		esc = Key::Select::Esc;
+
+		scale = Key::Select::Scale;
+	}
+	else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
+	{
+		w = Key::Play::W;
+		a = Key::Play::A;
+		s = Key::Play::S;
+		d = Key::Play::D;
+
+		space = Key::Play::Space;
+
+		esc = Key::Play::Esc;
+
+		scale = Key::Play::Scale;
+	}
 
 	// WASD
-	isPushW_ = false;
-	isPushA_ = false;
-	isPushS_ = false;
-	isPushD_ = false;
-	// SPACE
-	isPushSpace_ = false;
-	// TAB
-	isPushEsc_ = false;
-}
+	keyWObj_->Initialize({ w, {}, scale });
+	keyAObj_->Initialize({ a, {}, scale });
+	keySObj_->Initialize({ s, {}, scale });
+	keyDObj_->Initialize({ d, {}, scale });
 
-void InputDrawer::UpdatePushFlags()
-{
-	// WASD
-	isPushW_ = sKeys_->IsDown(DIK_W) || sKeys_->IsDown(DIK_UP);
-	isPushA_ = sKeys_->IsDown(DIK_A) || sKeys_->IsDown(DIK_LEFT);
-	isPushS_ = sKeys_->IsDown(DIK_S) || sKeys_->IsDown(DIK_DOWN);
-	isPushD_ = sKeys_->IsDown(DIK_D) || sKeys_->IsDown(DIK_RIGHT);
 	// SPACE
-	isPushSpace_ = sKeys_->IsDown(DIK_SPACE);
-	// ESC
-	isPushEsc_ = sKeys_->IsDown(DIK_ESCAPE);
-}
+	keySpaceObj_->Initialize({ space, {}, scale });
 
-void InputDrawer::UpdateObjects()
-{
-	// WASD
-	keyWASDObj_->UpdateMatrix();
-	// WASD_PUSH
-	keyWObj_->UpdateMatrix();
-	keyAObj_->UpdateMatrix();
-	keySObj_->UpdateMatrix();
-	keyDObj_->UpdateMatrix();
-	// SPACE
-	keySpaceObj_->UpdateMatrix();
-	// TAB
-	keyEscObj_->UpdateMatrix();
+	//ESC
+	keyEscObj_->Initialize({ esc, {}, scale });
+
 }
 
 void InputDrawer::Update()
 {
-	// フラグ更新
-	UpdatePushFlags();
+	// WASD
+	keyWObj_->UpdateMatrix();
+	keyAObj_->UpdateMatrix();
+	keySObj_->UpdateMatrix();
+	keyDObj_->UpdateMatrix();
 
-	// object更新
-	UpdateObjects();
+	// SPACE
+	keySpaceObj_->UpdateMatrix();
+
+	// TAB
+	keyEscObj_->UpdateMatrix();
 }
 
 void InputDrawer::Draw()
 {
-	if (sceneType_ == SceneType::Play)
-	{
-		// AD
-		spKeyADSpr_->Draw(keyWASDObj_.get());
-		// AD_PUSH
-		if (isPushA_) { spKeyAPush2Spr_->Draw(keyAObj_.get()); }
-		if (isPushD_) { spKeyDPush2Spr_->Draw(keyDObj_.get()); }
-	}
-	else
-	{
-		// WASD
-		spKeyWASDSpr_->Draw(keyWASDObj_.get());
-		// WASD_PUSH
-		if (isPushW_) { spKeyWPushSpr_->Draw(keyWObj_.get()); }
-		if (isPushA_) { spKeyAPushSpr_->Draw(keyAObj_.get()); }
-		if (isPushS_) { spKeySPushSpr_->Draw(keySObj_.get()); }
-		if (isPushD_) { spKeyDPushSpr_->Draw(keyDObj_.get()); }
-	}
-	// S_DEAD
-	//if (false) { spKeySDeadSpr_->Draw(keySObj_.get()); }
+	// WASD
+	spKeyW_.Draw(keyWObj_.get());
+	spKeyA_.Draw(keyAObj_.get());
+	spKeyS_.Draw(keySObj_.get());
+	spKeyD_.Draw(keyDObj_.get());
+	
 	// SPACE
-	spKeySpaceSpr_[isPushSpace_]->Draw(keySpaceObj_.get());
-	// ESC
-	spKeyEscSpr_[isPushEsc_]->Draw(keyEscObj_.get());
+	spKeySpace_.Draw(keySpaceObj_.get());
+	
+	// TAB
+	spKeyEsc_.Draw(keyEscObj_.get());
 }
 
 #pragma endregion

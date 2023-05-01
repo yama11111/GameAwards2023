@@ -9,44 +9,33 @@ namespace YScene
 	// タイトルシーン
 	class TitleScene : public BaseScene
 	{
-	public:
+
+	private:
 
 #pragma region リソース
 
-		// ----- テクスチャ ----- //
-
-		// ----- オーディオ ----- //
-
-		// ----- スプライト (2D) ----- //
-
-		// ----- スプライト (3D) ----- //
-
-		// ----- モデル ----- //
+		// タイトルBGM
+		YGame::Audio* pTitleBGM_ = nullptr;
 
 #pragma endregion
 
 #pragma region ゲームオブジェクト
 
+		// タイトル描画クラス
+		TitleDrawer titleDra_;
+
 		// 背景
 		BackgroundDrawer background_;
 		
+		// input
+		InputDrawer inputDra_;
+		
+
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
 
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
-
-
-		std::unique_ptr<YGame::Sprite2DObject> syazaiObj_;
-
-		YGame::Sprite2D* syazaiSpr_ = nullptr;
-		
-
-		// input
-		InputDrawer inputDra_;
-
-		// タイトル描画クラス
-		TitleDrawer dra_;
 
 #pragma endregion
 

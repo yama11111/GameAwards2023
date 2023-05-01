@@ -1,14 +1,16 @@
 #include "TitleScene.h"
-#include "SceneManager.h"
+#include "SceneExecutive.h"
 #include "CoreColor.h"
 #include "Def.h"
 #include <cassert>
 
 #pragma region 名前空間宣言
+
 using YScene::TitleScene;
 using namespace YInput;
 using namespace YGame;
 using namespace YMath;
+
 #pragma endregion 
 
 #pragma region Static関連
@@ -17,27 +19,27 @@ using namespace YMath;
 #pragma region 読み込み
 void TitleScene::Load()
 {
-	// ----- テクスチャ ----- //
-
 	// ----- オーディオ ----- //
 
-	// ----- スプライト (2D) ----- //
-	
-	syazaiSpr_ = Sprite2D::Create({}, { Texture::Load("syazai.png") });
-
-	// ----- スプライト (3D) ----- //
-
-	// ------- モデル ------- //
+	// タイトルBGM
+	pTitleBGM_ = Audio::Load("vigilante.wav");
+	//pTitleBGM_ = Audio::Load("fanfare.wav");
 
 	// ----- 静的初期化 ----- //
 
+	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
+	// 核色
 	CoreColor::StaticInitialize();
+	// 背景
 	BackgroundDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
 
-	TitleDrawerCommon::StaticInitialize();
+	// 入力
 	InputDrawerCommon::StaticInitialize();
+	
+	// タイトル
+	TitleDrawerCommon::StaticInitialize();
 }
 #pragma endregion
 
@@ -45,60 +47,67 @@ void TitleScene::Load()
 #pragma region 初期化
 void TitleScene::Initialize()
 {
+	// パーティクル初期化
 	particleMan_.Initialize();
 
+	// 背景初期化
 	background_.Initialize();
 
-	inputDra_.Initialize(InputDrawer::SceneType::Title);
-	
-	syazaiObj_.reset(
-		Sprite2DObject::Create(
-			{
-				Vector3(64.0f,302.0f,0.0f) + Vector3(800.0f,240.0f,0.0f) * 0.5f,
-				{},
-				Vector3(0.9f,0.9f,0.9f)
-			}));
+	// 入力描画初期化
+	inputDra_.Initialize();
 
-	dra_.Initialize();
+	// タイトル描画初期化
+	titleDra_.Initialize();
+
+	// タイトルBGM開始
+	pTitleBGM_->Play(true);
 }
 #pragma endregion
 
 #pragma region 終了処理
 void TitleScene::Finalize()
 {
-
+	// タイトルBGM停止
+	pTitleBGM_->Stop();
 }
 #pragma endregion
 
 #pragma region 更新
 void TitleScene::Update()
 {
+	// 入力描画静的更新
+	InputDrawerCommon::StaticUpdate();
+
+	// 入力描画更新
 	inputDra_.Update();
 
 	// 選択変更
-	dra_.Select(
+	titleDra_.Select(
 		sKeys_->IsTrigger(DIK_W) || sKeys_->IsTrigger(DIK_D),
 		sKeys_->IsTrigger(DIK_S) || sKeys_->IsTrigger(DIK_A));
 
-	dra_.Update();
+	// 選択更新
+	titleDra_.Update();
 
+	// 背景更新
 	background_.Update();
 
+	// 核色静的更新
 	CoreColor::StaticUpdate();
+	// 背景静的更新
 	BackgroundDrawerCommon::StaticUpdate();
 
+	// パーティクル更新
 	particleMan_.Update();
-
-	syazaiObj_->UpdateMatrix();
 
 	// 次のシーンへ
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		if (dra_.GetSelection() == TitleDrawer::Selection::Start)
+		if (titleDra_.GetSelection() == TitleDrawerCommon::Selection::Start)
 		{
-			SceneManager::GetInstance()->Change("SELECT", "INFECTION");
+			SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 		}
-		else if (dra_.GetSelection() == TitleDrawer::Selection::Exit)
+		else if (titleDra_.GetSelection() == TitleDrawerCommon::Selection::Exit)
 		{
 			SceneManager::GetInstance()->SetEnd(true);
 		}
@@ -117,7 +126,7 @@ void TitleScene::DrawModels()
 {
 	background_.Draw();
 
-	dra_.DrawModel();
+	titleDra_.DrawModel();
 	
 	particleMan_.Draw();
 }
@@ -129,11 +138,9 @@ void TitleScene::DrawSprite3Ds()
 
 void TitleScene::DrawFrontSprite2Ds()
 {
-	dra_.DrawSprite2D();
+	titleDra_.DrawSprite2D();
 
 	inputDra_.Draw();
-
-	syazaiSpr_->Draw(syazaiObj_.get());
 }
 
 void TitleScene::Draw()

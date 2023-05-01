@@ -354,7 +354,7 @@ void TestScene::Update()
 	// ŽŸ‚ÌƒV[ƒ“‚Ö
 	if (sKeys_->IsTrigger(DIK_0))
 	{
-		SceneManager::GetInstance()->Change("RESULT", "INFECTION");
+		//SceneManager::GetInstance()->Change("RESULT", "INFECTION");
 	}
 
 #pragma endregion

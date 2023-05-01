@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Base\Scene;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)Transition;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Base;$(ProjectDir)Base\DX;$(ProjectDir)Base\Scene;$(ProjectDir)Utillity;$(ProjectDir)Utillity\Math;$(ProjectDir)Utillity\Input;$(ProjectDir)Utillity\imgui;$(ProjectDir)Scene;$(ProjectDir)Transition;$(ProjectDir)GameUtillity;$(ProjectDir)GameUtillity\Object;$(ProjectDir)GameUtillity\Light;$(ProjectDir)GameUtillity\Camera;$(ProjectDir)GameUtillity\Collision;$(ProjectDir)GameUtillity\Scene;$(ProjectDir)GameUtillity\MapChip;$(ProjectDir)GameUtillity\Stuff;$(ProjectDir)Draw\Actor;$(ProjectDir)Draw\Drawer;$(ProjectDir)Draw\Particle;$(ProjectDir)Draw\SceneChange;$(ProjectDir)Draw\UI;$(ProjectDir)Draw\Stuff;$(ProjectDir)Chara;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -110,6 +110,11 @@
     <ClCompile Include="Base\DX\Vertices.cpp" />
     <ClCompile Include="Base\DX\YAssert.cpp" />
     <ClCompile Include="Base\DX\YDirectX.cpp" />
+    <ClCompile Include="Base\Scene\BaseScene.cpp" />
+    <ClCompile Include="Base\Scene\BaseTransition.cpp" />
+    <ClCompile Include="Base\Scene\SceneExecutive.cpp" />
+    <ClCompile Include="Base\Scene\SceneManager.cpp" />
+    <ClCompile Include="Base\Scene\TransitionManager.cpp" />
     <ClCompile Include="Base\YFramework.cpp" />
     <ClCompile Include="Base\YWindowsApp.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -137,14 +142,11 @@
     <ClCompile Include="Draw\Drawer\SkydomeDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\StageDrawer.cpp" />
     <ClCompile Include="Draw\Drawer\TitleDrawer.cpp" />
+    <ClCompile Include="Draw\Drawer\UIButtonDrawer.cpp" />
     <ClCompile Include="Draw\Particle\Effect.cpp" />
     <ClCompile Include="Draw\Particle\EffectManager.cpp" />
     <ClCompile Include="Draw\Particle\Particle.cpp" />
     <ClCompile Include="Draw\Particle\ParticleManager.cpp" />
-    <ClCompile Include="Draw\SceneChange\Blackout.cpp" />
-    <ClCompile Include="Draw\SceneChange\InfectionBlocks.cpp" />
-    <ClCompile Include="Draw\SceneChange\ITransition.cpp" />
-    <ClCompile Include="Draw\SceneChange\TransitionManager.cpp" />
     <ClCompile Include="Draw\Stuff\Buildings.cpp" />
     <ClCompile Include="Draw\Stuff\Floor.cpp" />
     <ClCompile Include="Draw\Stuff\Skydome.cpp" />
@@ -179,18 +181,16 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Scene\BaseScene.cpp" />
     <ClCompile Include="Scene\DemoScene.cpp" />
-    <ClCompile Include="Scene\EditScene.cpp" />
     <ClCompile Include="Scene\PlayScene.cpp" />
-    <ClCompile Include="Scene\ResultScene.cpp" />
-    <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SelectScene.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Scene\YGameSceneFactory.cpp" />
-    <ClCompile Include="Scene\YGameTransitionFactory.cpp" />
     <ClCompile Include="StageConfig.cpp" />
+    <ClCompile Include="Transition\Blackout.cpp" />
+    <ClCompile Include="Transition\InfectionBlocks.cpp" />
+    <ClCompile Include="Transition\YGameTransitionFactory.cpp" />
     <ClCompile Include="Utillity\FileUtillity.cpp" />
     <ClCompile Include="Utillity\imgui\ImGuiManager.cpp" />
     <ClCompile Include="Utillity\Input\InputManager.cpp" />
@@ -220,6 +220,13 @@
     <ClInclude Include="Base\DX\Vertices.h" />
     <ClInclude Include="Base\DX\YAssert.h" />
     <ClInclude Include="Base\DX\YDirectX.h" />
+    <ClInclude Include="Base\Scene\BaseScene.h" />
+    <ClInclude Include="Base\Scene\BaseTransition.h" />
+    <ClInclude Include="Base\Scene\ISceneFactory.h" />
+    <ClInclude Include="Base\Scene\ITransitionFactory.h" />
+    <ClInclude Include="Base\Scene\SceneExecutive.h" />
+    <ClInclude Include="Base\Scene\SceneManager.h" />
+    <ClInclude Include="Base\Scene\TransitionManager.h" />
     <ClInclude Include="Base\YFramework.h" />
     <ClInclude Include="Base\YWindowsApp.h" />
     <ClInclude Include="Block.h" />
@@ -250,14 +257,11 @@
     <ClInclude Include="Draw\Drawer\SkydomeDrawer.h" />
     <ClInclude Include="Draw\Drawer\StageDrawer.h" />
     <ClInclude Include="Draw\Drawer\TitleDrawer.h" />
+    <ClInclude Include="Draw\Drawer\UIButtonDrawer.h" />
     <ClInclude Include="Draw\Particle\Effect.h" />
     <ClInclude Include="Draw\Particle\EffectManager.h" />
     <ClInclude Include="Draw\Particle\Particle.h" />
     <ClInclude Include="Draw\Particle\ParticleManager.h" />
-    <ClInclude Include="Draw\SceneChange\Blackout.h" />
-    <ClInclude Include="Draw\SceneChange\InfectionBlocks.h" />
-    <ClInclude Include="Draw\SceneChange\ITransition.h" />
-    <ClInclude Include="Draw\SceneChange\TransitionManager.h" />
     <ClInclude Include="Draw\Stuff\Buildings.h" />
     <ClInclude Include="Draw\Stuff\Floor.h" />
     <ClInclude Include="Draw\Stuff\Skydome.h" />
@@ -293,20 +297,15 @@
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene\DemoScene.h" />
-    <ClInclude Include="Scene\EditScene.h" />
-    <ClInclude Include="Scene\ISceneFactory.h" />
-    <ClInclude Include="Scene\BaseScene.h" />
-    <ClInclude Include="Scene\ITransitionFactory.h" />
     <ClInclude Include="Scene\PlayScene.h" />
-    <ClInclude Include="Scene\ResultScene.h" />
-    <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SelectScene.h" />
     <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Scene\YGameSceneFactory.h" />
-    <ClInclude Include="Scene\TransitionConfig.h" />
-    <ClInclude Include="Scene\YGameTransitionFactory.h" />
     <ClInclude Include="StageConfig.h" />
+    <ClInclude Include="Transition\Blackout.h" />
+    <ClInclude Include="Transition\InfectionBlocks.h" />
+    <ClInclude Include="Transition\YGameTransitionFactory.h" />
     <ClInclude Include="Utillity\FileUtillity.h" />
     <ClInclude Include="Utillity\imgui\ImGuiManager.h" />
     <ClInclude Include="Utillity\Input\InputManager.h" />

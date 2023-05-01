@@ -4,11 +4,26 @@
 #include "Lerp.h"
 #include "Power.h"
 
+// 多重定義回避用
+namespace YInput { class Keys; }
+
 class TitleDrawerCommon
 {
+
+public:
+
+	// 選択
+	enum class Selection
+	{
+		Start, // 開始
+		Exit,  // 終了
+	};
+
 protected:
 
-	// ----- Sprite2D ----- //
+	// キー
+	static YInput::Keys* sKeys_;
+
 
 	// 静的ロゴスプライト
 	static YGame::Sprite2D* spLogoSpr_;
@@ -16,20 +31,12 @@ protected:
 	// 静的影スプライト
 	static YGame::Sprite2D* spShadowSpr_;
 
-	// 静的背景スプライト
-	static YGame::Sprite2D* spBackSpr_;
-
 
 	// 静的スタートスプライト
 	static YGame::Sprite2D* spStartSpr_;
 
 	// 静的終了スプライト
 	static YGame::Sprite2D* spExitSpr_;
-
-	// ----- Model ----- //
-
-	// 静的ビルモデル
-	static YGame::Model* spBuildingMod_;
 
 public:
 
@@ -41,16 +48,9 @@ public:
 class TitleDrawer :
 	private TitleDrawerCommon
 {
-public:
-
-	// 選択
-	enum class Selection
-	{
-		Start, // 開始
-		Exit,  // 終了
-	};
 
 private:
+	
 	// ----- オブジェクト ----- //
 
 	// 核
@@ -87,9 +87,9 @@ private:
 
 
 	YMath::Power selectStartPow_;
-	YMath::Power selectExitPow_;
-
 	YMath::Ease<float> selectMoveXEas_;
+
+	YMath::Power selectExitPow_;
 	YMath::Ease<float> selectScaleEas_;
 
 public:
