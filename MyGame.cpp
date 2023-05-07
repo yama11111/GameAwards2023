@@ -59,6 +59,33 @@ void MyGame::Draw()
 	// シーン描画
 	sceneExe_->Draw();
 
+	// 描画場所の数だけ
+	for (size_t i = 0; i < DrawLocationNum; i++)
+	{
+		// 変換
+		DrawLocation location = static_cast<DrawLocation>(i);
+
+
+		// スプライト2D後描画
+		Sprite2D::Pipeline::StaticDraw(location);
+
+		// モデル後描画
+		Model::Pipeline::StaticDraw(location);
+
+		// スプライト3D後描画
+		Sprite3D::Pipeline::StaticDraw(location);
+
+
+		// スプライト2D描画セットクリア
+		Sprite2D::Pipeline::StaticClearDrawSet(location);
+	
+		// モデル描画セットクリア
+		Model::Pipeline::StaticClearDrawSet(location);
+	
+		// スプライト3D描画セットクリア
+		Sprite3D::Pipeline::StaticClearDrawSet(location);
+	}
+
 #ifdef _DEBUG
 
 	// imgui描画
