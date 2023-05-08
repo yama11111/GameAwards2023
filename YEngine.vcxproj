@@ -45,11 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -63,7 +65,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -90,7 +92,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -148,6 +150,7 @@
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
+    <ClCompile Include="Engine\GameUtillity\FbxLoader.cpp" />
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
     <ClCompile Include="Engine\GameUtillity\Camera\Camera.cpp" />
@@ -259,6 +262,7 @@
     <ClInclude Include="Application\Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
+    <ClInclude Include="Engine\GameUtillity\FbxLoader.h" />
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
     <ClInclude Include="Engine\GameUtillity\Audio.h" />
     <ClInclude Include="Engine\GameUtillity\Camera\Camera.h" />

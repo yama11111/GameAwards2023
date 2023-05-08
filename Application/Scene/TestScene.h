@@ -23,20 +23,11 @@ namespace YScene
 
 #pragma region リソース
 
-		// ----- テクスチャ ----- //
-
-		// ----- オーディオ ----- //
-
-		// ----- スプライト (2D) ----- //
-
-		// ----- スプライト (3D) ----- //
-
-		// ----- モデル ----- //
-
 #pragma endregion
 
-#pragma region ゲームオブジェクト
-		
+
+#pragma region ゲームオブジェクト		
+
 		// 核
 		YGame::Transform core_;
 

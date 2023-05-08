@@ -3,6 +3,8 @@
 #include "Def.h"
 #include <cassert>
 
+#include "FbxLoader.h"
+
 #pragma region 名前空間宣言
 
 using YBase::YFramework;
@@ -16,8 +18,6 @@ using namespace YGame;
 
 bool YFramework::Initialize()
 {
-#pragma region Base
-
 	// Windows 初期化
 	window_.Create(WindowTitle, WinSize.x_, WinSize.y_);
 
@@ -36,9 +36,6 @@ bool YFramework::Initialize()
 	worldRuler_.Initailze();
 	WorldRuleAdopter::StaticInitialize(&worldRuler_);
 
-#pragma endregion
-
-#pragma region Pipeline
 
 	// デバイスポインタ
 	ID3D12Device* pDev = dx_.Device();
@@ -79,9 +76,10 @@ bool YFramework::Initialize()
 	Sprite3DObject::Default::StaticInitialize();
 	ModelObject::Default::StaticInitialize();
 
-#pragma endregion
 
-#pragma region Game
+	// FBXLoader読み込み
+	FbxLoader::GetInstance()->Initialize(pDev);
+
 
 	// imgui初期化
 	imguiMan_.Initialize({ window_.HandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });
@@ -100,7 +98,6 @@ bool YFramework::Initialize()
 	// シーンエグゼクティブ
 	sceneExe_ = SceneExecutive::GetInstance();
 
-#pragma endregion
 
 	isEnd_ = false;
 
@@ -109,6 +106,9 @@ bool YFramework::Initialize()
 
 void YFramework::Finalize()
 {
+	// FBXLoader開放
+	FbxLoader::GetInstance()->Finalize();
+
 	// imguiをクリーン
 	imguiMan_.Finalize();
 

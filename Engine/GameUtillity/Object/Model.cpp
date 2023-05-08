@@ -113,11 +113,14 @@ Model* Model::Load(const std::string& modelFileName, const bool isSmoothing)
 
 	// メッシュ生成
 	std::unique_ptr<Mesh> newMesh;
-
-	// ファイル名
+	
+	// ディレクトリパス (モデルのファイル名と同じフォルダから)
+	std::string directoryPath = "Resources/Models/" + modelFileName + "/";
+	
+	// FBXファイル名
 	std::string objFileName = modelFileName + ".obj";
 	objFileName = YUtil::FilePath(objFileName);
-	std::string directoryPath = "Resources/Models/" + modelFileName + "/";
+	
 
 	// メッシュロード
 	newMesh.reset(Mesh::Load(directoryPath, objFileName, isSmoothing));
