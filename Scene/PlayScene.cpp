@@ -263,37 +263,40 @@ void PlayScene::Initialize()
 	//一回リセット
 	player->Reset();
 
-	//config
-	stageConfig_ = StageConfig::GetInstance();
+	//パズルマット
+	//puzzleMat.reset(new PuzzleMat(3,2));
 
-	//数値を代入
-	int Idx = stageConfig_->GetCurrentStageIndex();
+	////config
+	//stageConfig_ = StageConfig::GetInstance();
 
-	//map入れ替え
-	switch (Idx)
-	{
-	case 1:
+	////数値を代入
+	//int Idx = stageConfig_->GetCurrentStageIndex();
 
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map1[i][j];
-			}
-		}
+	////map入れ替え
+	//switch (Idx)
+	//{
+	//case 1:
 
-		break;
+	//	for (int i = 0; i < blockCountY; i++)
+	//	{
+	//		for (int j = 0; j < blockCountX; j++)
+	//		{
+	//			map[i][j] = map1[i][j];
+	//		}
+	//	}
 
-	default:
-		for (int i = 0; i < blockCountY; i++)
-		{
-			for (int j = 0; j < blockCountX; j++)
-			{
-				map[i][j] = map1[i][j];
-			}
-		}
-		break;
-	}
+	//	break;
+
+	//default:
+	//	for (int i = 0; i < blockCountY; i++)
+	//	{
+	//		for (int j = 0; j < blockCountX; j++)
+	//		{
+	//			map[i][j] = map1[i][j];
+	//		}
+	//	}
+	//	break;
+	//}
 
 	// ----- ゴール ----- //
 
@@ -360,9 +363,19 @@ void PlayScene::Update()
 	// ポーズ中なら弾く
 	if (hud_.IsElderPause()) { return; }
 
+	//spaceでモード切替
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
 		nowMode = !nowMode;
+	}
+
+	//右で右回転
+	if (sKeys_->IsTrigger(DIK_RIGHT))
+	{
+		for (int i = 0; i < piseses.size(); i++)
+		{
+			piseses[i]->SerRotRight(true);
+		}
 	}
 
 
@@ -378,6 +391,9 @@ void PlayScene::Update()
 	}
 
 	pises->Update();
+
+	//ピース更新
+	//puzzleMat->Update();
 
 	// ゴール
 	goal_.UpdateMatrix();
@@ -442,8 +458,6 @@ void PlayScene::DrawModels()
 	// エフェクト
 	effectMan_.Draw();
 
-	//// フィルター描画
-
 	//ブロックかピースを描画
 	if (nowMode)
 	{
@@ -463,6 +477,9 @@ void PlayScene::DrawModels()
 			piseses[i]->DrawBlock();
 		}
 	}
+
+	//ピース表示
+	//puzzleMat->Draw();
 }
 
 void PlayScene::DrawSprite3Ds()

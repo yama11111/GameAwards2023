@@ -29,6 +29,10 @@ private:
 
 	//ブロックの種類
 	int nowKind = None;
+
+	int rotCount = 0;
+
+	bool rotRight = false;
 public:
 
 	//インクリメント
@@ -76,4 +80,7 @@ public:
 
 	//ブロックを生成後に描画する種類を変える
 	void SetMode();
+
+	//右回転
+	void RotRight(int number);
 };

@@ -9,7 +9,7 @@
 //        for (int x = 0; x < pieceX; x++)
 //        {
 //            puzMat_[y].emplace_back(Pises{});
-//            puzMat_[y][x].Initialize();
+//            puzMat_[y][x].Initialize(x,y);
 //        }
 //    }
 //}

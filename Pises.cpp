@@ -11,6 +11,22 @@ Pises::~Pises()
 
 }
 
+void Pises::Initialize(int x, int y)
+{
+	//transform初期化
+	pises_.Initialize({ {(x * 5.0f),(y * 10.0f),0.0f}, {}, {4.5f,4.5f,0.5f} });
+	blockDra_.Initialize(&pises_, IMode::Type::Normal);
+
+	//総ブロック数
+	int count = blockX * blockY;
+
+	//ブロックを作る
+	for (int i = 0; i < count; i++)
+	{
+		CreateBlock(map[i], pises_, i);
+	}
+}
+
 void Pises::Initialize()
 {
 	//transform初期化
@@ -45,6 +61,17 @@ void Pises::Initialize(YMath::Vector3 pos, YMath::Vector3 rot, YMath::Vector3 sc
 
 void Pises::Update()
 {
+	for (int i = 0; i < blocks.size(); i++)
+	{
+		//カウントをこっちに移動する
+
+		if (RotR)
+		{
+			blocks[i]->RotRight(i);
+		}
+	}
+
+	RotR = false;
 
 	// ピースの更新
 	pises_.UpdateMatrix();

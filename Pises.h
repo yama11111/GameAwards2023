@@ -32,6 +32,9 @@ private:
 		1,1,1,1,1,1,1,1,1,
 	};
 
+	//右回転中
+	bool RotR = false;
+
 public:
 	//インクリメント
 	Pises();
@@ -41,6 +44,7 @@ public:
 
 	//初期化
 	void Initialize();
+	void Initialize(int x, int y);
 	void Initialize(YMath::Vector3 pos, YMath::Vector3 rot, YMath::Vector3 scale);
 
 	//更新
@@ -58,5 +62,8 @@ public:
 	void SetPos(YMath::Vector3 pos) { pises_.pos_ = pos; };
 	void SetScale(YMath::Vector3 scale) { pises_.scale_ = scale; };
 	void SetRot(YMath::Vector3 rot) { pises_.rota_ = rot; };
+
+	//右回転
+	void SerRotRight(bool flag) { RotR = flag; };
 };
 
