@@ -45,7 +45,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Application\DirectXTex;$(SolutionDir)Application\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\imgui;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\imgui;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -149,6 +149,7 @@
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
+    <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
     <ClCompile Include="Engine\GameUtillity\Camera\Camera.cpp" />
@@ -191,7 +192,6 @@
     <ClCompile Include="Application\Transition\InfectionBlocks.cpp" />
     <ClCompile Include="Application\Transition\YGameTransitionFactory.cpp" />
     <ClCompile Include="Engine\Utillity\FileUtillity.cpp" />
-    <ClCompile Include="Engine\Utillity\imgui\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Utillity\Input\InputManager.cpp" />
     <ClCompile Include="Engine\Utillity\Input\Keys.cpp" />
     <ClCompile Include="Engine\Utillity\Input\Mouse.cpp" />
@@ -263,6 +263,7 @@
     <ClInclude Include="Application\Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
+    <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="Engine\GameUtillity\Audio.h" />
     <ClInclude Include="Engine\GameUtillity\Camera\Camera.h" />
@@ -306,7 +307,6 @@
     <ClInclude Include="Application\Transition\InfectionBlocks.h" />
     <ClInclude Include="Application\Transition\YGameTransitionFactory.h" />
     <ClInclude Include="Engine\Utillity\FileUtillity.h" />
-    <ClInclude Include="Engine\Utillity\imgui\ImGuiManager.h" />
     <ClInclude Include="Engine\Utillity\Input\InputManager.h" />
     <ClInclude Include="Engine\Utillity\Input\Keys.h" />
     <ClInclude Include="Engine\Utillity\Input\Mouse.h" />

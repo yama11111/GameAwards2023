@@ -88,9 +88,6 @@
     <Filter Include="Engine\Util\Input">
       <UniqueIdentifier>{0bbdaf41-ecc7-489c-9bbc-501104d2c980}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Util\imgui">
-      <UniqueIdentifier>{d17d5504-a51c-4494-83e9-8e8fbb6621aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{92c9eee6-dd9e-4330-85f9-5f7abf191983}</UniqueIdentifier>
     </Filter>
@@ -132,6 +129,9 @@
     </Filter>
     <Filter Include="Application\Draw\Drawer\Util">
       <UniqueIdentifier>{380b8772-2e64-4451-bb3e-6a8bb4fb65c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Util\DebugText">
+      <UniqueIdentifier>{d17d5504-a51c-4494-83e9-8e8fbb6621aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Light\PointLight.cpp">
       <Filter>Engine\GameUtil\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Utillity\imgui\ImGuiManager.cpp">
-      <Filter>Engine\Util\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\YFramework.cpp">
       <Filter>Engine\Base</Filter>
@@ -456,6 +453,9 @@
     <ClCompile Include="Application\Draw\Drawer\BlockDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp">
+      <Filter>Engine\Util\DebugText</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -589,9 +589,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Utillity\Math\Speed.h">
       <Filter>Engine\Util\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Utillity\imgui\ImGuiManager.h">
-      <Filter>Engine\Util\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Camera\ViewProjection.h">
       <Filter>Engine\GameUtil\Camera</Filter>
@@ -796,6 +793,9 @@
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\BlockDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h">
+      <Filter>Engine\Util\DebugText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
