@@ -117,7 +117,6 @@
     <ClCompile Include="Engine\Base\Scene\TransitionManager.cpp" />
     <ClCompile Include="Engine\Base\YFramework.cpp" />
     <ClCompile Include="Engine\Base\YWindowsApp.cpp" />
-    <ClCompile Include="Block.cpp" />
     <ClCompile Include="DemoGoal.cpp" />
     <ClCompile Include="DemoPlayer.cpp" />
     <ClCompile Include="Application\Draw\Actor\DeadActor.cpp" />
@@ -150,7 +149,6 @@
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
-    <ClCompile Include="Filter.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
     <ClCompile Include="Engine\GameUtillity\Camera\Camera.cpp" />
     <ClCompile Include="Engine\GameUtillity\Camera\ScrollCamera.cpp" />
@@ -180,7 +178,6 @@
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGame.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Application\Scene\DemoScene.cpp" />
     <ClCompile Include="Application\Scene\PlayScene.cpp" />
     <ClCompile Include="Application\Scene\SelectScene.cpp" />
@@ -228,7 +225,6 @@
     <ClInclude Include="Engine\Base\Scene\TransitionManager.h" />
     <ClInclude Include="Engine\Base\YFramework.h" />
     <ClInclude Include="Engine\Base\YWindowsApp.h" />
-    <ClInclude Include="Block.h" />
     <ClInclude Include="Def.h" />
     <ClInclude Include="DemoGoal.h" />
     <ClInclude Include="DemoPlayer.h" />
@@ -264,7 +260,6 @@
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
-    <ClInclude Include="Filter.h" />
     <ClInclude Include="Engine\GameUtillity\Audio.h" />
     <ClInclude Include="Engine\GameUtillity\Camera\Camera.h" />
     <ClInclude Include="Engine\GameUtillity\Camera\ScrollCamera.h" />
@@ -295,7 +290,6 @@
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
     <ClInclude Include="MyGame.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />
     <ClInclude Include="Application\Scene\PlayScene.h" />
     <ClInclude Include="Application\Scene\SelectScene.h" />
