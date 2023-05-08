@@ -106,7 +106,7 @@ void PlayScene::Update()
 	//if (リセットするなら)
 	//{
 	//	// シーンまるごとリセット
-	//	SceneExecutive::GetInstance()->Change("Play", "INFECTION", 5, 10);
+	//	SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
 	//}
 
 	//ゴール判定
