@@ -10,7 +10,6 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 using YGame::Material;
@@ -83,7 +82,7 @@ void TowerDrawer::Initialize(YMath::Matrix4* pParent, const IMode::Type& modeTyp
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// ¶¬
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_));
 
 		// es—ñ‘}“ü
 		modelObjs_[i]->parent_ = &core_->m_;

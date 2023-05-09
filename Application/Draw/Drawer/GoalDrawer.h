@@ -50,7 +50,7 @@ class GoalDrawer :
 private:
 	
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
 
 	
 	// 縛る回転タイマー

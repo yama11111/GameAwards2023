@@ -13,9 +13,7 @@ using std::array;
 using std::vector;
 using std::unique_ptr;
 using YGame::Transform;
-using YGame::Sprite2DObject;
 using YGame::Sprite2D;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Texture;
 using YGame::Color;
@@ -93,7 +91,7 @@ void SelectDrawer::Initialize()
 	color_.reset(Color::Create());
 
 	// 地球
-	earthObj_.reset(YGame::ModelObject::Create({}, spVP_, color_.get(), nullptr, sMate_.get()));
+	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), nullptr, sMate_.get()));
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)
@@ -148,7 +146,7 @@ void SelectDrawer::Initialize()
 
 
 	// ロゴ初期化
-	logoObj_.reset(Sprite2DObject::Create({}));
+	logoObj_.reset(Sprite2D::Object::Create({}));
 
 
 	// 天球

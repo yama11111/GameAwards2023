@@ -1,4 +1,5 @@
 #include "Sprite2D.h"
+#include "CalcTransform.h"
 #include <cassert>
 
 #pragma region 名前空間
@@ -11,7 +12,6 @@ using YGame::Sprite2D;
 using YDX::PipelineSet;
 using YMath::Vector2;
 using YMath::Matrix4;
-using YGame::Sprite2DObject;
 using YGame::DrawLocation;
 using YGame::DrawLocationNum;
 
@@ -27,7 +27,7 @@ static const UINT TexIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameter
 
 #pragma region Static
 
-vector<unique_ptr<Sprite2D>> Sprite2D::sprites_{};
+vector<unique_ptr<Sprite2D>> Sprite2D::sSprites_{};
 array<PipelineSet, DrawLocationNum> Sprite2D::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Sprite2D::Pipeline::DrawSet>>, DrawLocationNum> Sprite2D::Pipeline::sDrawSets_;
 
@@ -97,7 +97,7 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 	Sprite2D* newSpritePtr = newSprite.get();
 
 	// スプライトを保存
-	sprites_.push_back(std::move(newSprite));
+	sSprites_.push_back(std::move(newSprite));
 
 	// スプライトポインタを返す
 	return newSpritePtr;
@@ -106,24 +106,17 @@ Sprite2D* Sprite2D::Create(const Status& status, const TexStatus& texStatus)
 void Sprite2D::AllClear()
 {
 	// スプライト2D全消去
-	for (size_t i = 0; i < sprites_.size(); i++)
+	for (size_t i = 0; i < sSprites_.size(); i++)
 	{
-		sprites_[i].reset(nullptr);
+		sSprites_[i].reset(nullptr);
 	}
-	sprites_.clear();
+	sSprites_.clear();
 }
 
-void Sprite2D::SetDrawCommand(Sprite2DObject* pObj, const DrawLocation& location)
+void Sprite2D::SetDrawCommand(Object* pObj, const DrawLocation& location)
 {
-	// 描画セット生成
-	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
-
-	// 初期化
-	newDrawSet->pSprite2D_ = this;
-	newDrawSet->pObj_ = pObj;
-
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(newDrawSet, location);
+	Pipeline::StaticPushBackDrawSet(this, pObj, location);
 }
 
 void Sprite2D::SetSize(const Vector2& size)
@@ -215,25 +208,78 @@ void Sprite2D::SetAllStatus(const Status& status, const TexStatus& texStatus)
 	texSize_ = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 }
 
-#pragma endregion
-
-#pragma region Pipeline
-
-void Sprite2D::Pipeline::DrawSet::Draw()
+void Sprite2D::SetIsVisible(const bool isVisible)
 {
-	// 描画しないなら弾く
-	if (pSprite2D_->isInvisible_) { return; }
-
-	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex);
-
-	// テクスチャ
-	pSprite2D_->pTex_->SetDrawCommand(TexIndex);
-
-	// 頂点バッファを送る + 描画コマンド
-	pSprite2D_->vt_.Draw();
+	isVisible_ = isVisible;
 }
 
+#pragma endregion
+
+
+#pragma region Object
+
+Sprite2D::Object* Sprite2D::Object::Create(const Status& status, const bool isMutable)
+{
+	// インスタンスを返す
+	return Create(status, nullptr, isMutable);
+}
+
+Sprite2D::Object* Sprite2D::Object::Create(const Status& status, Color* pColor, const bool isMutable)
+{
+	// インスタンス生成 (動的)
+	Object* instance = new Object();
+
+	// 定数バッファ生成
+	instance->cBuff_.Create(isMutable);
+
+	// 初期化(デフォルト)
+	instance->Initialize(status);
+	instance->SetColor(pColor);
+
+	// インスタンスを返す
+	return instance;
+}
+
+void Sprite2D::Object::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
+{
+	// 行列
+	cBuff_.map_->matWorld_ = m_ * Default::sProjection_;
+	cBuff_.SetDrawCommand(transformRPIndex);
+
+	// 色
+	pColor_->SetDrawCommand(colorRPIndex);
+}
+
+void Sprite2D::Object::SetColor(Color* pColor)
+{
+	// nullなら
+	if (pColor == nullptr)
+	{
+		// デフォルト代入
+		pColor_ = Default::sColor_.get();
+		return;
+	}
+
+	// 代入
+	pColor_ = pColor;
+}
+
+YMath::Matrix4 Sprite2D::Object::Default::sProjection_ = YMath::Matrix4::Identity();
+std::unique_ptr<YGame::Color> Sprite2D::Object::Default::sColor_ = nullptr;
+
+void Sprite2D::Object::Default::StaticInitialize()
+{
+	// プロジェクション行列を設定
+	sProjection_ = YMath::MatOrthoGraphic();
+
+	// 生成 + 初期化
+	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+}
+
+#pragma endregion
+
+
+#pragma region Pipeline
 
 void Sprite2D::Pipeline::ShaderSet::Load()
 {
@@ -254,17 +300,6 @@ void Sprite2D::Pipeline::ShaderSet::Load()
 
 void Sprite2D::Pipeline::StaticInitialize()
 {
-	// 描画場所の数だけ
-	for (size_t i = 0; i < sDrawSets_.size(); i++)
-	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-
-		// クリア
-		StaticClearDrawSet(location);
-	}
-
-
 	// パイプライン初期化用設定
 	PipelineSet::InitStatus initStatus;
 
@@ -381,6 +416,15 @@ void Sprite2D::Pipeline::StaticInitialize()
 		sPipelineSets_[i].Initialize(initStatus);
 	}
 
+	// 描画場所の数だけ
+	for (size_t i = 0; i < sDrawSets_.size(); i++)
+	{
+		// 変換
+		DrawLocation location = static_cast<DrawLocation>(i);
+
+		// クリア
+		StaticClearDrawSet(location);
+	}
 }
 
 void Sprite2D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
@@ -396,13 +440,20 @@ void Sprite2D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	}
 }
 
-void Sprite2D::Pipeline::StaticPushBackDrawSet(unique_ptr<DrawSet>& drawSet, const DrawLocation& location)
+void Sprite2D::Pipeline::StaticPushBackDrawSet(Sprite2D* pSprite2D, Sprite2D::Object* pObj, const DrawLocation& location)
 {
+	// 描画セット生成
+	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
+
+	// 初期化
+	newDrawSet->pSprite2D_ = pSprite2D;
+	newDrawSet->pObj_ = pObj;
+
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(drawSet));
+	sDrawSets_[index].push_back(std::move(newDrawSet));
 }
 
 void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
@@ -418,6 +469,21 @@ void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
 	{
 		drawSet->Draw();
 	}
+}
+
+void Sprite2D::Pipeline::DrawSet::Draw()
+{
+	// 描画しないなら弾く
+	if (pSprite2D_->isVisible_ == false) { return; }
+
+	// 定数バッファをシェーダーに送る
+	pObj_->SetDrawCommand(TraIndex, ColIndex);
+
+	// テクスチャ
+	pSprite2D_->pTex_->SetDrawCommand(TexIndex);
+
+	// 頂点バッファを送る + 描画コマンド
+	pSprite2D_->vt_.Draw();
 }
 
 #pragma endregion

@@ -36,7 +36,7 @@ private:
 	std::unique_ptr<YGame::Transform> core_;
 	
 	// 数字用オブジェクト
-	std::array<std::unique_ptr<YGame::Sprite3DObject>, 3> numObjs_;
+	std::array<std::unique_ptr<YGame::Sprite3D::Object>, 3> numObjs_;
 	
 	// タワー描画クラス
 	TowerDrawer towerDra_;

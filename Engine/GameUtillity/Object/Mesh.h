@@ -37,7 +37,7 @@ namespace YGame
 		Node node_;
 
 		// テクスチャ
-		Texture* pTex_;
+		Texture* pTex_ = nullptr;
 
 	public:
 
@@ -138,6 +138,15 @@ namespace YGame
 			/// <param name="refPtrTex"> : 参照テクスチャポインタ</param>
 			/// <param name="fbxNode"> : 解析するノード</param>
 			static void ParseMaterial(const std::string& folderPath, Texture*& refPtrTex, FbxNode* fbxNode);
+
+		public:
+
+			/// <summary>
+			/// Fbx用の行列から行列に変換
+			/// </summary>
+			/// <param name="fbxMat"> : Fbx用行列</param>
+			/// <returns>行列</returns>
+			static YMath::Matrix4 ConvertFromFbxAMatrixToMatrix4(const FbxAMatrix& fbxMat);
 
 		};
 

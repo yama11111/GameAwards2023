@@ -11,7 +11,6 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 
@@ -68,7 +67,7 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 

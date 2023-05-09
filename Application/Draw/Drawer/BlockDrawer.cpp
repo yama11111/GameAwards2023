@@ -10,7 +10,6 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 using YGame::Material;
@@ -113,14 +112,14 @@ void BlockDrawer::Initialize(Transform* pParent, const IMode::Type& modeType)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, nullptr, nullptr, nullptr));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// グリッド生成
-	gridObj_.reset(ModelObject::Create({}, spVP_, sGridColor_.get(), nullptr, sGridMate_.get()));
+	gridObj_.reset(Model::Object::Create({}, spVP_, sGridColor_.get(), nullptr, sGridMate_.get()));
 
 	// 親行列挿入
 	gridObj_->parent_ = &core_->m_;

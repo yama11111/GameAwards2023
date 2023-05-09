@@ -85,10 +85,10 @@ private:
 	// ------ オブジェクト ------ // 
 
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
 
 	// グリッドモデル用オブジェクト
-	std::unique_ptr<YGame::ModelObject> gridObj_;
+	std::unique_ptr<YGame::Model::Object> gridObj_;
 
 	// ----- アニメーション ----- //
 

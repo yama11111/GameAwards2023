@@ -28,7 +28,7 @@ namespace YGame
 	private:
 		
 		// 静的テクスチャ格納用vector配列
-		static std::vector<std::unique_ptr<Texture>> texs_;
+		static std::vector<std::unique_ptr<Texture>> sTexs_;
 
 	public:
 		

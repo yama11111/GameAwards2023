@@ -11,6 +11,7 @@ using YGame::Texture;
 using YMath::Vector2;
 using YMath::Vector3;
 using YMath::Vector4;
+using YMath::Matrix4;
 
 #pragma endregion
 
@@ -674,6 +675,21 @@ void Mesh::FbxLoader::ParseMaterial(const std::string& folderPath, Texture*& ref
 			refPtrTex = Texture::Load("white1x1.png");
 		}
 	}
+}
+
+Matrix4 Mesh::FbxLoader::ConvertFromFbxAMatrixToMatrix4(const FbxAMatrix& fbxMat)
+{
+	Matrix4 result{};
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			result.m_[i][j] = static_cast<float>(fbxMat.Get(i, j));
+		}
+	}
+
+	return result;
 }
 
 #pragma endregion

@@ -1,7 +1,7 @@
 #include "ConstBuffer.h"
-#include "Sprite2DObject.h"
-#include "Sprite3DObject.h"
-#include "ModelObject.h"
+#include "Sprite2D.h"
+#include "Sprite3D.h"
+#include "Model.h"
 #include "LightGroup.h"
 #include "Color.h"
 #include "Material.h"
@@ -57,9 +57,9 @@ void ConstBuffer<T>::SetDrawCommand(const UINT rootParamIndex)
 	spCmdList_->SetGraphicsRootConstantBufferView(rootParamIndex, viewDesc_.BufferLocation);
 }
 
-template class ConstBuffer<YGame::Sprite2DObject::CBData>;
-template class ConstBuffer<YGame::Sprite3DObject::CBData>;
-template class ConstBuffer<YGame::ModelObject::CBData>;
+template class ConstBuffer<YGame::Sprite2D::Object::CBData>;
+template class ConstBuffer<YGame::Sprite3D::Object::CBData>;
+template class ConstBuffer<YGame::Model::Object::CBData>;
 template class ConstBuffer<YGame::Color::CBData>;
 template class ConstBuffer<YGame::LightGroup::CBData>;
 template class ConstBuffer<YGame::Material::CBData>;

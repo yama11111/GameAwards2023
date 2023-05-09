@@ -5,6 +5,7 @@ namespace YBase
 {
 	class MyGame : public YFramework
 	{
+	
 	public:
 
 		/// <summary>
@@ -27,5 +28,13 @@ namespace YBase
 		/// •`‰æ
 		/// </summary>
 		void Draw() override;
+
+	public:
+
+		/// <summary>
+		/// ƒQ[ƒ€ƒV[ƒ“•`‰æ
+		/// </summary>
+		void DrawGameScene();
+
 	};
 }

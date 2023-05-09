@@ -49,7 +49,7 @@ namespace YScene
 
 		YMath::Ease<float> fontAlphaEas_;
 
-		std::unique_ptr<YGame::Sprite2DObject> fontObj_;
+		std::unique_ptr<YGame::Sprite2D::Object> fontObj_;
 		std::unique_ptr<YGame::Color> fontColor_;
 
 		YGame::Sprite2D* fontSpr_ = nullptr;

@@ -64,22 +64,18 @@ bool YFramework::Initialize()
 	// 頂点
 	VertexCommon::StaticInitialize(pCmdList);
 
-	// コモンクラス静的初期化
+	// オブジェクトデフォルト値静的初期化
+	Sprite2D::Object::Default::StaticInitialize();
+	Sprite3D::Object::Default::StaticInitialize();
+	Model::Object::Default::StaticInitialize();
+
+	// パイプライン静的初期化
 	Sprite2D::Pipeline::StaticInitialize();
 	Sprite3D::Pipeline::StaticInitialize();
 	Model::Pipeline::StaticInitialize();
 
-	// オブジェクトデフォルト値静的初期化
-	Sprite2DObject::Default::StaticInitialize();
-	Sprite3DObject::Default::StaticInitialize();
-	ModelObject::Default::StaticInitialize();
-
 	// FBXLoader読み込み
 	Model::FbxLoader::StaticInitialize();
-
-	//// FBXLoader読み込み
-	//FbxLoader::GetInstance()->Initialize(pDev);
-
 
 	// imgui初期化
 	imguiMan_.Initialize({ window_.HandleWindow(), pDev, pCmdList, &descHeap_, dx_.BackBufferCount() });

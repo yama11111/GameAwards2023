@@ -2,10 +2,11 @@
 #include "Vertices.h"
 #include "IShaderSet.h"
 #include "PipelineSet.h"
-#include "Sprite2DObject.h"
 #include "Texture.h"
-#include "Vector2.h"
 #include "ObjectConfig.h"
+#include "Transform.h"
+#include "Color.h"
+#include "Vector2.h"
 #include <list>
 #include <array>
 
@@ -17,48 +18,11 @@ namespace YGame
 
 	public:
 
-		// 頂点データ構造体
-		struct VData
-		{
-			YMath::Vector3 pos_; // xyz座標
-			YMath::Vector2 uv_;  // uv座標
-		};
+		// オブジェクトクラス前方宣言
+		class Object;
 
-	private:
-
-		// 頂点データ
-		YDX::Vertices<VData> vt_;
-
-
-		// サイズ
-		YMath::Vector2 size_;
-
-		// アンカーポイント
-		YMath::Vector2 anchor_;
-
-		// 左右反転
-		bool isFlipX_ = false;
-
-		// 上下反転
-		bool isFlipY_ = false;
-
-
-		// テクスチャ
-		Texture* pTex_ = nullptr;
-
-		// テクスチャ左上
-		YMath::Vector2 texLeftTop_;
-
-		// テクスチャサイズ
-		YMath::Vector2 texSize_;
-
-		// 非表示
-		bool isInvisible_ = false;
-
-	private:
-
-		// 静的スプライト2D格納用vector配列
-		static std::vector<std::unique_ptr<Sprite2D>> sprites_;
+		// パイプラインクラス前方宣言
+		class Pipeline;
 
 	public:
 
@@ -114,8 +78,7 @@ namespace YGame
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
-		void SetDrawCommand(Sprite2DObject* pObj, const DrawLocation& location);
-
+		void SetDrawCommand(Object* pObj, const DrawLocation& location);
 
 		/// <summary>
 		/// スプライトサイズ設定
@@ -175,10 +138,10 @@ namespace YGame
 		void SetAllStatus(const Status& status, const TexStatus& texStatus);
 
 		/// <summary>
-		/// 非表示設定
+		/// 表示するか設定
 		/// </summary>
-		/// <param name="isInvisible"> : 非表示か</param>
-		void SetInvisible(const bool isInvisible) { isInvisible_ = isInvisible; }
+		/// <param name="isVisible"> : 表示するか</param>
+		void SetIsVisible(const bool isVisible);
 
 	public:
 
@@ -194,79 +157,139 @@ namespace YGame
 		/// <returns>アンカーポイント</returns>
 		YMath::Vector2 AnchorPoint() const { return anchor_; }
 
+	public:
 
-#pragma region Pipeline
+		Sprite2D() = default;
+
+		~Sprite2D() = default;
 
 	public:
 
-		// パイプラインクラス
-		class Pipeline
+		// 頂点データ構造体
+		struct VData
 		{
+			YMath::Vector3 pos_; // xyz座標
+			YMath::Vector2 uv_;  // uv座標
+		};
+
+	private:
+
+		// 頂点データ
+		YDX::Vertices<VData> vt_;
+
+
+		// サイズ
+		YMath::Vector2 size_;
+
+		// アンカーポイント
+		YMath::Vector2 anchor_;
+
+		// 左右反転
+		bool isFlipX_ = false;
+
+		// 上下反転
+		bool isFlipY_ = false;
+
+
+		// テクスチャ
+		Texture* pTex_ = nullptr;
+
+		// テクスチャ左上
+		YMath::Vector2 texLeftTop_;
+
+		// テクスチャサイズ
+		YMath::Vector2 texSize_;
+
+		// 表示するか
+		bool isVisible_ = true;
+
+	private:
+
+		// 静的スプライト2D格納用vector配列
+		static std::vector<std::unique_ptr<Sprite2D>> sSprites_;
+
+	};
+
+
+
+#pragma region Object
+
+	// スプライト2D用オブジェクトクラス
+	class Sprite2D::Object : public Transform
+	{
+
+	public:
+
+		/// <summary>
+		/// 生成 + 初期化 (デフォルト初期化)
+		/// </summary>
+		/// <param name="status"> : 位置, 回転, 大きさ</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
+		/// <returns>動的インスタンス (newされたもの)</returns>
+		static Object* Create(const Status& status, const bool isMutable = true);
+
+		/// <summary>
+		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
+		/// </summary>
+		/// <param name="status"> : 位置, 回転, 大きさ</param>
+		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
+		/// <returns>動的インスタンス (newされたもの)</returns>
+		static Object* Create(const Status& status, Color* pColor, const bool isMutable = true);
+
+	public:
+
+		/// <summary>
+		/// 描画前コマンド
+		/// </summary>
+		/// <param name="transformRPIndex"></param>
+		/// <param name="colorRPIndex"></param>
+		void SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex);
+
+
+		/// <summary>
+		/// 色設定 (null = Default)
+		/// </summary>
+		/// <param name="pColor"> : 色ポインタ</param>
+		void SetColor(Color* pColor);
+
+	private:
+
+		Object() = default;
+
+	public:
+
+		~Object() = default;
+
+	private:
+
+		// 定数バッファデータ構造体
+		struct CBData
+		{
+			YMath::Matrix4 matWorld_; // 3D変換行列
+		};
+
+	private:
+
+		// 定数バッファ (行列)
+		YDX::ConstBuffer<CBData> cBuff_;
+
+		// 色ポインタ
+		Color* pColor_ = nullptr;
+
+	public:
+
+		// 既定値クラス
+		class Default
+		{
+
 		public:
 
-			// ルートパラメータ番号
-			enum class RootParameterIndex
-			{
-				TransformCB = 0, // 行列
-				ColorCB = 1, // 色
-				TexDT = 2, // テクスチャ
-			};
+			// 静的射影変換行列(平行投影)
+			static YMath::Matrix4 sProjection_;
 
-		private:
-
-			// シェーダーセット
-			class ShaderSet : public YDX::IShaderSet
-			{
-			public:
-
-				// 頂点シェーダオブジェクト
-				Microsoft::WRL::ComPtr<ID3DBlob> vsBlob_ = nullptr;
-
-				// ピクセルシェーダオブジェクト
-				Microsoft::WRL::ComPtr<ID3DBlob> psBlob_ = nullptr;
-
-			public:
-
-				/// <summary>
-				/// シェーダーファイル読み込み
-				/// </summary>
-				void Load() override;
-
-			};
-
-
-		private:
-
-			// パイプライン設定
-			static std::array<YDX::PipelineSet, DrawLocationNum> sPipelineSets_;
-
-		public:
-
-			// 描画セット
-			struct DrawSet
-			{
-
-			public:
-
-				// スプライト2Dポインタ
-				Sprite2D* pSprite2D_;
-
-				// スプライト2D用オブジェクト
-				Sprite2DObject* pObj_;
-
-			public:
-
-				/// <summary> 
-				/// 描画
-				/// </summary>
-				void Draw();
-
-			};
-
-		private:
-
-			// 描画用リスト配列
-			static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+			// 色 (デフォルト)
+			static std::unique_ptr<Color> sColor_;
 
 		public:
 
@@ -275,34 +298,111 @@ namespace YGame
 			/// </summary>
 			static void StaticInitialize();
 
-			/// <summary>
-			/// 静的描画リストクリア
-			/// </summary>
-			/// <param name="locaiton"> : 描画場所</param>
-			static void StaticClearDrawSet(const DrawLocation& location);
-
-			/// <summary>
-			/// 静的描画セット挿入
-			/// </summary>
-			/// <param name="drawSet"> : 描画セット</param>
-			/// <param name="locaiton"> : 描画場所</param>
-			static void StaticPushBackDrawSet(std::unique_ptr<DrawSet>& drawSet, const DrawLocation& location);
-
-			/// <summary>
-			/// 静的描画
-			/// </summary>
-			/// <param name="locaiton"> : 描画場所</param>
-			static void StaticDraw(const DrawLocation& location);
-		
 		};
+
+	};
 
 #pragma endregion
 
+
+#pragma region Pipeline
+
+	// パイプラインクラス
+	class Sprite2D::Pipeline
+	{
+	
 	public:
 
-		Sprite2D() = default;
+		/// <summary>
+		/// 静的初期化
+		/// </summary>
+		static void StaticInitialize();
 
-		~Sprite2D() = default;
+		/// <summary>
+		/// 静的描画リストクリア
+		/// </summary>
+		/// <param name="locaiton"> : 描画場所</param>
+		static void StaticClearDrawSet(const DrawLocation& location);
+
+		/// <summary>
+		/// 静的描画セット挿入
+		/// </summary>
+		/// <param name="pSprite2D"> : スプライトポインタ</param>
+		/// <param name="pObj"> : オブジェクトポインタ</param>
+		/// <param name="locaiton"> : 描画場所</param>
+		static void StaticPushBackDrawSet(Sprite2D* pSprite3D, Sprite2D::Object* pObj, const DrawLocation& location);
+
+		/// <summary>
+		/// 静的描画
+		/// </summary>
+		/// <param name="locaiton"> : 描画場所</param>
+		static void StaticDraw(const DrawLocation& location);
+
+	public:
+
+		// ルートパラメータ番号
+		enum class RootParameterIndex
+		{
+			TransformCB = 0, // 行列
+			ColorCB = 1, // 色
+			TexDT = 2, // テクスチャ
+		};
+
+	private:
+
+		// シェーダーセット
+		class ShaderSet : public YDX::IShaderSet
+		{
+		public:
+
+			// 頂点シェーダオブジェクト
+			Microsoft::WRL::ComPtr<ID3DBlob> vsBlob_ = nullptr;
+
+			// ピクセルシェーダオブジェクト
+			Microsoft::WRL::ComPtr<ID3DBlob> psBlob_ = nullptr;
+
+		public:
+
+			/// <summary>
+			/// シェーダーファイル読み込み
+			/// </summary>
+			void Load() override;
+
+		};
+
+	public:
+
+		// 描画セット
+		struct DrawSet
+		{
+
+		public:
+
+			// スプライト2Dポインタ
+			Sprite2D* pSprite2D_;
+
+			// スプライト2D用オブジェクト
+			Sprite2D::Object* pObj_;
+
+		public:
+
+			/// <summary> 
+			/// 描画
+			/// </summary>
+			void Draw();
+
+		};
+
+	private:
+
+		// パイプライン設定
+		static std::array<YDX::PipelineSet, DrawLocationNum> sPipelineSets_;
+
+		// 描画用リスト配列
+		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
 
 	};
+
+#pragma endregion
+
 }

@@ -12,9 +12,6 @@ using YGame::Audio;
 using YGame::WorldRuler;
 using YGame::ViewProjection;
 using YGame::LightGroup;
-using YGame::Sprite2DObject;
-using YGame::Sprite3DObject;
-using YGame::ModelObject;
 
 #pragma endregion 
 

@@ -32,7 +32,7 @@ namespace YGame
 	private:
 		
 		// スプライトオブジェクト
-		std::array<std::unique_ptr<Sprite2DObject>, 2> sprObjs_;
+		std::array<std::unique_ptr<Sprite2D::Object>, 2> sprObjs_;
 		
 		// 色
 		std::unique_ptr<Color> color_;

@@ -2,7 +2,6 @@
 
 using YGame::IParticleModel;
 using YGame::RelayBug;
-using YGame::ModelObject;
 using YGame::ViewProjection;
 using YGame::Model;
 using YGame::Color;

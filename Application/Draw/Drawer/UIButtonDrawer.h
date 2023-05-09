@@ -34,7 +34,7 @@ namespace YGame
 		/// 描画
 		/// </summary>
 		/// <param name="pObject"> : オブジェクトポインタ</param>
-		void Draw(Sprite2DObject* pObject);
+		void Draw(Sprite2D::Object* pObject);
 	};
 }
 

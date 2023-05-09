@@ -9,9 +9,7 @@ using std::array;
 using std::vector;
 using std::unique_ptr;
 using YGame::Transform;
-using YGame::Sprite2DObject;
 using YGame::Sprite2D;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Texture;
 using YGame::Color;
@@ -58,17 +56,17 @@ void TitleDrawer::Initialize()
 
 
 	// ƒƒS
-	logoObj_.reset(Sprite2DObject::Create({}));
+	logoObj_.reset(Sprite2D::Object::Create({}));
 	logoObj_->parent_ = &core_->m_;
 
 
 	// ‰e
-	shadowObj_.reset(Sprite2DObject::Create({}));
+	shadowObj_.reset(Sprite2D::Object::Create({}));
 	shadowObj_->parent_ = &core_->m_;
 	
 
 	// ”wŒi
-	backObj_.reset(Sprite2DObject::Create({}));
+	backObj_.reset(Sprite2D::Object::Create({}));
 	backObj_->parent_ = &core_->m_;
 
 
@@ -76,7 +74,7 @@ void TitleDrawer::Initialize()
 	startColor_.reset(Color::Create());
 	
 	// ƒXƒ^[ƒg
-	startObj_.reset(Sprite2DObject::Create({}, startColor_.get()));
+	startObj_.reset(Sprite2D::Object::Create({}, startColor_.get()));
 	startObj_->parent_ = &core_->m_;
 
 
@@ -84,7 +82,7 @@ void TitleDrawer::Initialize()
 	exitColor_.reset(Color::Create());
 	
 	// I—¹
-	exitObj_.reset(Sprite2DObject::Create({}, exitColor_.get()));
+	exitObj_.reset(Sprite2D::Object::Create({}, exitColor_.get()));
 	exitObj_->parent_ = &core_->m_;
 
 

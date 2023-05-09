@@ -57,23 +57,23 @@ private:
 	std::unique_ptr<YGame::Transform> core_;
 
 	// ロゴ
-	std::unique_ptr<YGame::Sprite2DObject> logoObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> logoObj_;
 
 
 	// 影
-	std::unique_ptr<YGame::Sprite2DObject> shadowObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> shadowObj_;
 
 	// 背景
-	std::unique_ptr<YGame::Sprite2DObject> backObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> backObj_;
 
 
 	// スタート
-	std::unique_ptr<YGame::Sprite2DObject> startObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> startObj_;
 	// スタート色
 	std::unique_ptr<YGame::Color> startColor_;
 
 	// 終了
-	std::unique_ptr<YGame::Sprite2DObject> exitObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> exitObj_;
 	// 終了色
 	std::unique_ptr<YGame::Color> exitColor_;
 

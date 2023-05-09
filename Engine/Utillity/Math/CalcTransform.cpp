@@ -25,10 +25,10 @@ static Matrix4 ConvertMatrix(const DirectX::XMMATRIX mat)
 static DirectX::XMMATRIX ConvertMat4(const Matrix4& mat)
 {
 	DirectX::XMMATRIX r = DirectX::XMMATRIX(
-		mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[0][3],
-		mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[1][3],
-		mat.m[2][0], mat.m[2][1], mat.m[2][2], mat.m[2][3],
-		mat.m[3][0], mat.m[3][1], mat.m[3][2], mat.m[3][3]
+		mat.m_[0][0], mat.m_[0][1], mat.m_[0][2], mat.m_[0][3],
+		mat.m_[1][0], mat.m_[1][1], mat.m_[1][2], mat.m_[1][3],
+		mat.m_[2][0], mat.m_[2][1], mat.m_[2][2], mat.m_[2][3],
+		mat.m_[3][0], mat.m_[3][1], mat.m_[3][2], mat.m_[3][3]
 	);
 	return r;
 }
@@ -129,10 +129,10 @@ Matrix4 YMath::MatViewPort()
 {
 	Matrix4 result = Matrix4::Identity();
 
-	result.m[0][0] = +WinSize.x_ / 2.0f;
-	result.m[3][0] = +WinSize.x_ / 2.0f;
-	result.m[1][1] = -WinSize.y_ / 2.0f;
-	result.m[3][1] = +WinSize.y_ / 2.0f;
+	result.m_[0][0] = +WinSize.x_ / 2.0f;
+	result.m_[3][0] = +WinSize.x_ / 2.0f;
+	result.m_[1][1] = -WinSize.y_ / 2.0f;
+	result.m_[3][1] = +WinSize.y_ / 2.0f;
 	return result;
 }
 Matrix4 YMath::MatLookAtLH(const Vector3& eye, const Vector3& target, const Vector3& up)
@@ -148,12 +148,12 @@ Matrix4 YMath::MatLookAtLH(const Vector3& eye, const Vector3& target, const Vect
 
 Vector3 YMath::MatTransform(const Vector3& v, const Matrix4& m)
 {
-	float w = v.x_ * m.m[0][3] + v.y_ * m.m[1][3] + v.z_ * m.m[2][3] + m.m[3][3];
+	float w = v.x_ * m.m_[0][3] + v.y_ * m.m_[1][3] + v.z_ * m.m_[2][3] + m.m_[3][3];
 	Vector3 result
 	{
-		(v.x_ * m.m[0][0] + v.y_ * m.m[1][0] + v.z_ * m.m[2][0] + m.m[3][0]) / w,
-		(v.x_ * m.m[0][1] + v.y_ * m.m[1][1] + v.z_ * m.m[2][1] + m.m[3][1]) / w,
-		(v.x_ * m.m[0][2] + v.y_ * m.m[1][2] + v.z_ * m.m[2][2] + m.m[3][2]) / w
+		(v.x_ * m.m_[0][0] + v.y_ * m.m_[1][0] + v.z_ * m.m_[2][0] + m.m_[3][0]) / w,
+		(v.x_ * m.m_[0][1] + v.y_ * m.m_[1][1] + v.z_ * m.m_[2][1] + m.m_[3][1]) / w,
+		(v.x_ * m.m_[0][2] + v.y_ * m.m_[1][2] + v.z_ * m.m_[2][2] + m.m_[3][2]) / w
 	};
 	return result;
 }
@@ -166,9 +166,9 @@ Vector3 YMath::MultVec3Mat4(const Vector3& v, const Matrix4& m)
 {
 	Vector3 result
 	{
-		v.x_ * m.m[0][0] + v.y_ * m.m[1][0] + v.z_ * m.m[2][0],
-		v.x_ * m.m[0][1] + v.y_ * m.m[1][1] + v.z_ * m.m[2][1],
-		v.x_ * m.m[0][2] + v.y_ * m.m[1][2] + v.z_ * m.m[2][2]
+		v.x_ * m.m_[0][0] + v.y_ * m.m_[1][0] + v.z_ * m.m_[2][0],
+		v.x_ * m.m_[0][1] + v.y_ * m.m_[1][1] + v.z_ * m.m_[2][1],
+		v.x_ * m.m_[0][2] + v.y_ * m.m_[1][2] + v.z_ * m.m_[2][2]
 	};
 	return result;
 }
@@ -177,10 +177,10 @@ Vector4 YMath::MultVec4Mat4(const Vector4& v, const Matrix4& m)
 {
 	Vector4 result
 	{
-		v.r_ * m.m[0][0] + v.g_ * m.m[1][0] + v.b_ * m.m[2][0] + v.a_ * m.m[3][0],
-		v.r_ * m.m[0][1] + v.g_ * m.m[1][1] + v.b_ * m.m[2][1] + v.a_ * m.m[3][1],
-		v.r_ * m.m[0][2] + v.g_ * m.m[1][2] + v.b_ * m.m[2][2] + v.a_ * m.m[3][2],
-		v.r_ * m.m[0][3] + v.g_ * m.m[1][3] + v.b_ * m.m[2][3] + v.a_ * m.m[3][3]
+		v.r_ * m.m_[0][0] + v.g_ * m.m_[1][0] + v.b_ * m.m_[2][0] + v.a_ * m.m_[3][0],
+		v.r_ * m.m_[0][1] + v.g_ * m.m_[1][1] + v.b_ * m.m_[2][1] + v.a_ * m.m_[3][1],
+		v.r_ * m.m_[0][2] + v.g_ * m.m_[1][2] + v.b_ * m.m_[2][2] + v.a_ * m.m_[3][2],
+		v.r_ * m.m_[0][3] + v.g_ * m.m_[1][3] + v.b_ * m.m_[2][3] + v.a_ * m.m_[3][3]
 	};
 	return result;
 }
@@ -210,4 +210,38 @@ Vector3 YMath::AdjustAngle(const Vector3& velocity)
 	float xz = v.Length();
 	result.x_ = std::atan2(-velocity.y_, xz);
 	return result;
+}
+
+Matrix4 YMath::BillboardMatrix(const bool isXAxisBillboard, const bool isYAxisBillboard, 
+	const Vector3& eye, const Vector3& target, const Vector3& up)
+{
+	// どちらも false なら
+	if (isXAxisBillboard == false && isYAxisBillboard == false)
+	{
+		// 単位行列を返す
+		return Matrix4::Identity();
+	}
+
+	// ビルボード行列の計算
+	Vector3 axisZ = (target - eye).Normalized();
+	Vector3 axisX = (up.Cross(axisZ)).Normalized();
+	Vector3 axisY = axisZ.Cross(axisX);
+
+	// Y軸周りビルボードなら
+	if (isYAxisBillboard)
+	{
+		axisY = { 0,1,0 };
+		axisZ = axisX.Cross(axisY);
+	}
+
+	// ビルボード行列
+	Matrix4 matBillboard(
+		axisX.x_, axisX.y_, axisX.z_, 0.0f,
+		axisY.x_, axisY.y_, axisY.z_, 0.0f,
+		axisZ.x_, axisZ.y_, axisZ.z_, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+
+	// ビルボード行列を返す
+	return matBillboard;
 }

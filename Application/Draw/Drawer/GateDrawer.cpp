@@ -9,7 +9,6 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 
@@ -60,7 +59,7 @@ void GateDrawer::Initialize(YGame::Transform* pParent)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// ¶¬
-		modelObjs_[i].reset(ModelObject::Create({}, spVP_, color_.get(), nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, spMate_));
 
 		// es—ñ‘}“ü
 		modelObjs_[i]->parent_ = &core_->m_;

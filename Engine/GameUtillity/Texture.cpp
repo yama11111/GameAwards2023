@@ -16,7 +16,7 @@ using YDX::Result;
 
 #pragma region Static
 
-std::vector<unique_ptr<Texture>> Texture::texs_{};
+std::vector<unique_ptr<Texture>> Texture::sTexs_{};
 ID3D12Device* Texture::Common::spDevice_ = nullptr;
 ID3D12GraphicsCommandList* Texture::Common::spCmdList_ = nullptr;
 YDX::DescriptorHeap* Texture::Common::spDescHeap_ = nullptr;
@@ -98,7 +98,7 @@ Texture* Texture::Create(const Vector4& color)
 	Texture* newTexPtr = newTex.get();
 
 	// テクスチャを保存
-	texs_.push_back(std::move(newTex));
+	sTexs_.push_back(std::move(newTex));
 
 	// テクスチャポインタを返す
 	return newTexPtr;
@@ -116,13 +116,13 @@ Texture* Texture::Load(const std::string& texFileName, const bool mipMap)
 Texture* Texture::Load(const std::string& directoryPath, const std::string texFileName, const bool mipMap)
 {
 	// 読み込んだことがあるかチェック
-	for (size_t i = 0; i < texs_.size(); i++)
+	for (size_t i = 0; i < sTexs_.size(); i++)
 	{
 		// ファイルパス が同じなら
-		if( directoryPath + texFileName == texs_[i]->fileName_)
+		if( directoryPath + texFileName == sTexs_[i]->fileName_)
 		{
 			// そのテクスチャポインタを返す
-			return texs_[i].get();
+			return sTexs_[i].get();
 		}
 	}
 
@@ -227,7 +227,7 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 	Texture* newTexPtr = newTex.get();
 
 	// テクスチャを保存
-	texs_.push_back(std::move(newTex));
+	sTexs_.push_back(std::move(newTex));
 
 	// テクスチャポインタを返す
 	return newTexPtr;
@@ -236,11 +236,11 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 void Texture::AllClear()
 {
 	// テクスチャ全消去
-	for (size_t i = 0; i < texs_.size(); i++)
+	for (size_t i = 0; i < sTexs_.size(); i++)
 	{
-		texs_[i].reset(nullptr);
+		sTexs_[i].reset(nullptr);
 	}
-	texs_.clear();
+	sTexs_.clear();
 }
 
 void Texture::SetDrawCommand(const UINT rootParamIndex)

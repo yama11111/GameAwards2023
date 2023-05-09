@@ -24,7 +24,7 @@ void UIButtonDrawer::Update(const bool isPush)
 	isPush_ = isPush;
 }
 
-void UIButtonDrawer::Draw(Sprite2DObject* pObject)
+void UIButtonDrawer::Draw(Sprite2D::Object* pObject)
 {
 	// ƒ{ƒ^ƒ“•`‰æ
 	pButtonSpr_[isPush_]->SetDrawCommand(pObject, DrawLocation::Front);

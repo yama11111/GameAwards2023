@@ -10,9 +10,7 @@
 using std::unique_ptr;
 using YGame::ParticleManager;
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
-using YGame::Sprite3DObject;
 using YGame::Sprite3D;
 using YMath::Ease;
 using YMath::Vector3;

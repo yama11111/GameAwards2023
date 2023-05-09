@@ -21,7 +21,7 @@ namespace YScene
 	private:
 		
 		// オブジェクト
-		std::unique_ptr<YGame::Sprite2DObject> obj_;
+		std::unique_ptr<YGame::Sprite2D::Object> obj_;
 		
 		// 色
 		std::unique_ptr<YGame::Color> color_;

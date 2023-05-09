@@ -62,7 +62,7 @@ namespace YGame
 	protected:
 		
 		// オブジェクト
-		std::unique_ptr<ModelObject> obj_;
+		std::unique_ptr<Model::Object> obj_;
 
 		// 色
 		std::unique_ptr<Color> color_;
@@ -119,7 +119,7 @@ namespace YGame
 	protected:
 
 		// オブジェクト
-		std::unique_ptr<Sprite3DObject> obj_;
+		std::unique_ptr<Sprite3D::Object> obj_;
 
 		// 色
 		std::unique_ptr<Color> color_;

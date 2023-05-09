@@ -1,6 +1,5 @@
 #include "SkydomeDrawer.h"
 
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 
@@ -19,7 +18,7 @@ void SkydomeDrawerCommon::StaticInitialize(YGame::Color* pColor)
 void SkydomeDrawer::Initialize(YMath::Matrix4* pParent, const float scaleSize)
 {
 	// オブジェクト生成
-	obj_.reset(ModelObject::Create({}, nullptr, spColor_, nullptr, nullptr));
+	obj_.reset(Model::Object::Create({}, nullptr, spColor_, nullptr, nullptr));
 	
 	// 親行列代入
 	obj_->parent_ = pParent;

@@ -9,9 +9,7 @@ using std::array;
 using std::vector;
 using std::unique_ptr;
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
-using YGame::Sprite3DObject;
 using YGame::Sprite3D;
 using YGame::Texture;
 using YGame::Color;
@@ -70,7 +68,7 @@ void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
 		// ビルボード化
-		numObjs_[i].reset(Sprite3DObject::Create({}, true, true, spVP_, color_.get()));
+		numObjs_[i].reset(Sprite3D::Object::Create({}, true, true, spVP_, color_.get()));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 

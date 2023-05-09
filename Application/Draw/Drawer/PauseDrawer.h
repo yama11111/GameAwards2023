@@ -57,14 +57,14 @@ private:
 	// ----- Object ----- //
 
 	// pause
-	std::unique_ptr<YGame::Sprite2DObject> pauseObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> pauseObj_;
 	// resume
-	std::unique_ptr<YGame::Sprite2DObject> resumeObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> resumeObj_;
 	// change
-	std::unique_ptr<YGame::Sprite2DObject> changeObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> changeObj_;
 
 	// curten
-	std::unique_ptr<YGame::Sprite2DObject> curtenObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> curtenObj_;
 	
 	// ----- Color ----- //
 

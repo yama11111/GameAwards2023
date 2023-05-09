@@ -33,7 +33,7 @@ class SkydomeDrawer :
 private:
 	
 	// オブジェクト
-	std::unique_ptr<YGame::ModelObject> obj_;
+	std::unique_ptr<YGame::Model::Object> obj_;
 
 public:
 

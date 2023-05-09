@@ -1,4 +1,5 @@
 #include "Sprite3D.h"
+#include "CalcTransform.h"
 #include <cassert>
 
 #pragma region 名前空間
@@ -7,7 +8,6 @@ using std::array;
 using std::vector;
 using std::list;
 using std::unique_ptr;
-using YGame::Sprite3DObject;
 using YGame::Sprite3D;
 using YDX::PipelineSet;
 using YMath::Vector3;
@@ -27,7 +27,7 @@ static const UINT TexIndex = static_cast<UINT>(Sprite3D::Pipeline::RootParameter
 
 #pragma region Static
 
-std::vector<std::unique_ptr<Sprite3D>> Sprite3D::sprites_{};
+std::vector<std::unique_ptr<Sprite3D>> Sprite3D::sSprites_{};
 array<PipelineSet, DrawLocationNum> Sprite3D::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Sprite3D::Pipeline::DrawSet>>, DrawLocationNum> Sprite3D::Pipeline::sDrawSets_;
 
@@ -48,14 +48,14 @@ Sprite3D* Sprite3D::Create(Texture* pTex)
 	newSprite->pTex_ = pTex;
 
 	// 描画する
-	newSprite->isInvisible_ = false;
+	newSprite->isVisible_ = true;
 
 
 	// ポインタを獲得
 	Sprite3D* newSpritePtr = newSprite.get();
 
 	// スプライトを保存
-	sprites_.push_back(std::move(newSprite));
+	sSprites_.push_back(std::move(newSprite));
 
 	// スプライトポインタを返す
 	return newSpritePtr;
@@ -64,44 +64,122 @@ Sprite3D* Sprite3D::Create(Texture* pTex)
 void Sprite3D::AllClear()
 {
 	// スプライト3D全消去
-	for (size_t i = 0; i < sprites_.size(); i++)
+	for (size_t i = 0; i < sSprites_.size(); i++)
 	{
-		sprites_[i].reset(nullptr);
+		sSprites_[i].reset(nullptr);
 	}
-	sprites_.clear();
+	sSprites_.clear();
 }
 
-void Sprite3D::SetDrawCommand(Sprite3DObject* pObj, const DrawLocation& location)
+void Sprite3D::SetDrawCommand(Sprite3D::Object* pObj, const DrawLocation& location)
 {
-	// 描画セット生成
-	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
-
-	// 初期化
-	newDrawSet->pSprite3D_ = this;
-	newDrawSet->pObj_ = pObj;
-
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(newDrawSet, location);
+	Pipeline::StaticPushBackDrawSet(this, pObj, location);
+}
+
+void Sprite3D::SetIsVisible(const bool isVisible)
+{
+	isVisible_ = isVisible;
 }
 
 #pragma endregion
 
-#pragma region Pipeline
 
-void Sprite3D::Pipeline::DrawSet::Draw()
+#pragma region Object
+
+Sprite3D::Object* Sprite3D::Object::Create(
+	const Status& status, 
+	bool isXAxisBillboard, bool isYAxisBillboard, 
+	const bool isMutable)
 {
-	// 描画しないなら弾く
-	if (pSprite3D_->isInvisible_) { return; }
-
-	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex);
-
-	// テクスチャ
-	pSprite3D_->pTex_->SetDrawCommand(TexIndex);
-
-	// 頂点バッファを送る + 描画コマンド
-	pSprite3D_->vt_.Draw();
+	// インスタンスを返す
+	return Create(status, isXAxisBillboard, isYAxisBillboard, nullptr, nullptr, isMutable);
 }
+
+Sprite3D::Object* Sprite3D::Object::Create(
+	const Status& status, 
+	bool isXAxisBillboard, bool isYAxisBillboard,
+	ViewProjection* pVP, Color* pColor, 
+	const bool isMutable)
+{
+	// インスタンス生成 (動的)
+	Object* instance = new Object();
+
+	// 定数バッファ生成
+	instance->cBuff_.Create(isMutable);
+
+	// 初期化(デフォルト)
+	instance->Initialize(status);
+	instance->SetViewProjection(pVP);
+	instance->SetColor(pColor);
+
+	// インスタンスを返す
+	return instance;
+}
+
+void Sprite3D::Object::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
+{
+	// シェーダーに定数バッファ(行列)を送る
+	cBuff_.map_->matWorld_ = m_ * pVP_->view_ * pVP_->pro_;
+	cBuff_.map_->matBill_ = 
+		YMath::BillboardMatrix(isXAxisBillboard_, isYAxisBillboard_, pVP_->eye_, pVP_->target_, pVP_->eye_);
+	cBuff_.SetDrawCommand(transformRPIndex);
+
+	// シェーダーに定数バッファ(色)を送る
+	pColor_->SetDrawCommand(colorRPIndex);
+}
+
+void Sprite3D::Object::SetViewProjection(ViewProjection* pVP)
+{
+	// nullなら
+	if (pVP == nullptr)
+	{
+		// デフォルト代入
+		pVP_ = Default::sVP_.get();
+		return;
+	}
+
+	// 代入
+	pVP_ = pVP;
+}
+
+void Sprite3D::Object::SetColor(Color* pColor)
+{
+	// nullなら
+	if (pColor == nullptr)
+	{
+		// デフォルト代入
+		pColor_ = Default::sColor_.get();
+		return;
+	}
+
+	// 代入
+	pColor_ = pColor;
+}
+
+void Sprite3D::Object::SetIsBillboard(bool isXAxisBillboard, bool isYAxisBillboard)
+{
+	isXAxisBillboard_ = isXAxisBillboard;
+	isYAxisBillboard_ = isYAxisBillboard;
+}
+
+std::unique_ptr<YGame::ViewProjection> Sprite3D::Object::Default::sVP_ = nullptr;
+std::unique_ptr<YGame::Color> Sprite3D::Object::Default::sColor_ = nullptr;
+
+void Sprite3D::Object::Default::StaticInitialize()
+{
+	// 生成
+	sVP_.reset(new YGame::ViewProjection());
+	sVP_->Initialize({});
+
+	// 生成 + 初期化
+	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+}
+
+#pragma endregion
+
+
+#pragma region Pipeline
 
 void Sprite3D::Pipeline::ShaderSet::Load()
 {
@@ -126,17 +204,6 @@ void Sprite3D::Pipeline::ShaderSet::Load()
 
 void Sprite3D::Pipeline::StaticInitialize()
 {
-	// 描画場所の数だけ
-	for (size_t i = 0; i < sDrawSets_.size(); i++)
-	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-
-		// クリア
-		StaticClearDrawSet(location);
-	}
-
-
 	// パイプライン初期化用設定
 	PipelineSet::InitStatus initStatus;
 
@@ -253,6 +320,16 @@ void Sprite3D::Pipeline::StaticInitialize()
 		// パイプライン初期化
 		sPipelineSets_[i].Initialize(initStatus);
 	}
+
+	// 描画場所の数だけ
+	for (size_t i = 0; i < sDrawSets_.size(); i++)
+	{
+		// 変換
+		DrawLocation location = static_cast<DrawLocation>(i);
+
+		// クリア
+		StaticClearDrawSet(location);
+	}
 }
 
 void Sprite3D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
@@ -268,13 +345,20 @@ void Sprite3D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	}
 }
 
-void Sprite3D::Pipeline::StaticPushBackDrawSet(unique_ptr<DrawSet>& drawSet, const DrawLocation& location)
+void Sprite3D::Pipeline::StaticPushBackDrawSet(Sprite3D* pSprite3D, Sprite3D::Object* pObj, const DrawLocation& location)
 {
+	// 描画セット生成
+	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
+
+	// 初期化
+	newDrawSet->pSprite3D_ = pSprite3D;
+	newDrawSet->pObj_ = pObj;
+	
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(drawSet));
+	sDrawSets_[index].push_back(std::move(newDrawSet));
 }
 
 void Sprite3D::Pipeline::StaticDraw(const DrawLocation& location)
@@ -290,6 +374,21 @@ void Sprite3D::Pipeline::StaticDraw(const DrawLocation& location)
 	{
 		drawSet->Draw();
 	}
+}
+
+void Sprite3D::Pipeline::DrawSet::Draw()
+{
+	// 描画しないなら弾く
+	if (pSprite3D_->isVisible_ == false) { return; }
+
+	// 定数バッファをシェーダーに送る
+	pObj_->SetDrawCommand(TraIndex, ColIndex);
+
+	// テクスチャ
+	pSprite3D_->pTex_->SetDrawCommand(TexIndex);
+
+	// 頂点バッファを送る + 描画コマンド
+	pSprite3D_->vt_.Draw();
 }
 
 #pragma endregion

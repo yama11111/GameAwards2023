@@ -4,7 +4,6 @@
 using YScene::Blackout;
 using YMath::Vector2;
 using YGame::Sprite2D;
-using YGame::Sprite2DObject;
 using YGame::Texture;
 using YGame::Color;
 
@@ -27,7 +26,7 @@ void Blackout::Initialize()
 {
 	// èâä˙âª
 	color_.reset(Color::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
-	obj_.reset(Sprite2DObject::Create({}, color_.get(), false));
+	obj_.reset(Sprite2D::Object::Create({}, color_.get(), false));
 
 	Reset();
 }

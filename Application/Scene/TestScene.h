@@ -23,9 +23,6 @@ namespace YScene
 
 #pragma region ÉäÉ\Å[ÉX
 
-		YGame::Model* pMod = nullptr;
-		std::unique_ptr<YGame::ModelObject> mod;
-
 #pragma endregion
 
 

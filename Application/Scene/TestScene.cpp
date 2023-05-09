@@ -18,9 +18,11 @@ using namespace YGame;
 
 #pragma endregion 
 
+
 #pragma region Static関連
 
 #pragma endregion 
+
 
 #pragma region 読み込み
 
@@ -40,6 +42,7 @@ void TestScene::Load()
 
 
 #pragma region 初期化
+
 void TestScene::Initialize()
 {
 	// パーティクル初期化
@@ -105,16 +108,22 @@ void TestScene::Initialize()
 	transferVP_.Initialize({});
 
 }
+
 #pragma endregion
 
+
 #pragma region 終了処理
+
 void TestScene::Finalize()
 {
 
 }
+
 #pragma endregion
 
+
 #pragma region 更新
+
 void TestScene::Update()
 {
 	// 描画するか
@@ -341,6 +350,7 @@ void TestScene::Update()
 
 
 }
+
 #pragma endregion
 
 

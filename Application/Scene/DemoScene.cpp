@@ -87,7 +87,7 @@ void DemoScene::Initialize()
 
 	fontColor_.reset(Color::Create());
 
-	fontObj_.reset(Sprite2DObject::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} }, fontColor_.get()));
+	fontObj_.reset(Sprite2D::Object::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} }, fontColor_.get()));
 
 
 	// îwåièâä˙âª

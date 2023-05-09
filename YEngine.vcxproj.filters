@@ -133,6 +133,9 @@
     <Filter Include="Engine\Util\DebugText">
       <UniqueIdentifier>{d17d5504-a51c-4494-83e9-8e8fbb6621aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameUtil\Object\PostEffect">
+      <UniqueIdentifier>{75758752-3e56-4f67-ab35-0c4a6cacdaeb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -315,19 +318,10 @@
     <ClCompile Include="Engine\GameUtillity\Object\Model.cpp">
       <Filter>Engine\GameUtil\Object\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Object\ModelObject.cpp">
-      <Filter>Engine\GameUtil\Object\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\Sprite2D.cpp">
       <Filter>Engine\GameUtil\Object\Sprite2D</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Object\Sprite2DObject.cpp">
-      <Filter>Engine\GameUtil\Object\Sprite2D</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\Sprite3D.cpp">
-      <Filter>Engine\GameUtil\Object\Sprite3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Object\Sprite3DObject.cpp">
       <Filter>Engine\GameUtil\Object\Sprite3D</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Camera\ScrollCamera.cpp">
@@ -446,6 +440,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp">
       <Filter>Engine\Util\DebugText</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp">
+      <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -641,19 +638,10 @@
     <ClInclude Include="Engine\GameUtillity\Object\Model.h">
       <Filter>Engine\GameUtil\Object\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\ModelObject.h">
-      <Filter>Engine\GameUtil\Object\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Sprite2D.h">
       <Filter>Engine\GameUtil\Object\Sprite2D</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\Sprite2DObject.h">
-      <Filter>Engine\GameUtil\Object\Sprite2D</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Sprite3D.h">
-      <Filter>Engine\GameUtil\Object\Sprite3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\Sprite3DObject.h">
       <Filter>Engine\GameUtil\Object\Sprite3D</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Material.h">
@@ -781,6 +769,9 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Node.h">
       <Filter>Engine\GameUtil\Object\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h">
+      <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

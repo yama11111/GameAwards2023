@@ -2,7 +2,6 @@
 
 using YGame::IParticleSprite3D;
 using YGame::Smoke;
-using YGame::ModelObject;
 using YGame::ViewProjection;
 using YGame::Model;
 using YGame::Color;

@@ -11,7 +11,6 @@ using std::array;
 using std::vector;
 using std::unique_ptr;
 using YGame::Transform;
-using YGame::Sprite2DObject;
 using YGame::Sprite2D;
 using YGame::Texture;
 using YGame::Color;
@@ -63,13 +62,13 @@ void CardDrawer::Initialize(YGame::Transform* pParent, const int number)
 	color_.reset(Color::Create());
 
 	// ステージカードオブジェクト
-	cardObjs_.reset(Sprite2DObject::Create({}, color_.get()));
+	cardObjs_.reset(Sprite2D::Object::Create({}, color_.get()));
 	cardObjs_->parent_ = &core_->m_;
 
 	// 数字用オブジェクト
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
-		numObjs_[i].reset(Sprite2DObject::Create({}, color_.get()));
+		numObjs_[i].reset(Sprite2D::Object::Create({}, color_.get()));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 

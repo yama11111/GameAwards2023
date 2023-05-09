@@ -12,7 +12,6 @@ using std::array;
 using std::vector;
 using std::list;
 using std::unique_ptr;
-using YGame::ModelObject;
 using YGame::Model;
 using YDX::PipelineSet;
 using YMath::Vector2;
@@ -35,13 +34,14 @@ static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 
 #pragma region Static
 
-vector<unique_ptr<Model>> Model::models_{};
+vector<unique_ptr<Model>> Model::sModels_{};
 array<PipelineSet, DrawLocationNum> Model::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
 FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
 FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
 
 #pragma endregion
+
 
 #pragma region Model
 
@@ -65,7 +65,7 @@ Model* Model::CreateCube()
 	Model* newModelPtr = newModel.get();
 
 	// モデルを保存
-	models_.push_back(std::move(newModel));
+	sModels_.push_back(std::move(newModel));
 
 	// モデルポインタを返す
 	return newModelPtr;
@@ -91,7 +91,7 @@ Model* Model::CreateCube(const std::string& texFileName)
 	Model* newModelPtr = newModel.get();
 
 	// モデルを保存
-	models_.push_back(std::move(newModel));
+	sModels_.push_back(std::move(newModel));
 
 	// モデルポインタを返す
 	return newModelPtr;
@@ -100,13 +100,13 @@ Model* Model::CreateCube(const std::string& texFileName)
 Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 {
 	// 読み込んだことがあるかチェック
-	for (size_t i = 0; i < models_.size(); i++)
+	for (size_t i = 0; i < sModels_.size(); i++)
 	{
 		// ファイルパス が同じなら
-		if (modelFileName == models_[i]->fileName_)
+		if (modelFileName == sModels_[i]->fileName_)
 		{
 			// そのテクスチャポインタを返す
-			return models_[i].get();
+			return sModels_[i].get();
 		}
 	}
 
@@ -139,7 +139,7 @@ Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 	Model* newModelPtr = newModel.get();
 
 	// モデルを保存
-	models_.push_back(std::move(newModel));
+	sModels_.push_back(std::move(newModel));
 
 	// モデルポインタを返す
 	return newModelPtr;
@@ -148,13 +148,13 @@ Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 Model* Model::LoadFbx(const std::string& modelFileName, const bool isSmoothing)
 {
 	// 読み込んだことがあるかチェック
-	for (size_t i = 0; i < models_.size(); i++)
+	for (size_t i = 0; i < sModels_.size(); i++)
 	{
 		// ファイルパス が同じなら
-		if (modelFileName == models_[i]->fileName_)
+		if (modelFileName == sModels_[i]->fileName_)
 		{
 			// そのテクスチャポインタを返す
-			return models_[i].get();
+			return sModels_[i].get();
 		}
 	}
 
@@ -206,7 +206,7 @@ Model* Model::LoadFbx(const std::string& modelFileName, const bool isSmoothing)
 	Model* newModelPtr = newModel.get();
 
 	// モデルを保存
-	models_.push_back(std::move(newModel));
+	sModels_.push_back(std::move(newModel));
 
 	// モデルポインタを返す
 	return newModelPtr;
@@ -215,14 +215,14 @@ Model* Model::LoadFbx(const std::string& modelFileName, const bool isSmoothing)
 void Model::AllClear()
 {
 	// モデル全消去
-	for (size_t i = 0; i < models_.size(); i++)
+	for (size_t i = 0; i < sModels_.size(); i++)
 	{
-		models_[i].reset(nullptr);
+		sModels_[i].reset(nullptr);
 	}
-	models_.clear();
+	sModels_.clear();
 }
 
-void Model::SetDrawCommand(ModelObject* pObj, const DrawLocation& location)
+void Model::SetDrawCommand(Object* pObj, const DrawLocation& location)
 {
 	// 描画セット生成
 	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
@@ -232,7 +232,12 @@ void Model::SetDrawCommand(ModelObject* pObj, const DrawLocation& location)
 	newDrawSet->pObj_ = pObj;
 
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(newDrawSet, location);
+	Pipeline::StaticPushBackDrawSet(this, pObj, location);
+}
+
+void Model::SetIsVisible(const bool isVisible)
+{
+	isVisible_ = isVisible;
 }
 
 #pragma endregion
@@ -304,6 +309,8 @@ void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const
 		newNode->globalMat_ *= parent->globalMat_;
 	}
 
+	// ポインタ取得
+	Node* pNewNode = newNode.get();
 
 	// ノード配列に追加
 	pModel->nodes_.push_back(std::move(newNode));
@@ -333,30 +340,150 @@ void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const
 	// 子ノードに対して再帰呼び出し
 	for (int i = 0; i < fbxNode->GetChildCount(); i++)
 	{
-		ParseNodeRecursive(pModel, fbxNode->GetChild(i), isSmoothing, newNode.get());
+		ParseNodeRecursive(pModel, fbxNode->GetChild(i), isSmoothing, pNewNode);
 	}
 }
 
 #pragma endregion
 
 
-#pragma region Pipeline
+#pragma region Object
 
-void Model::Pipeline::DrawSet::Draw()
+
+Model::Object* Model::Object::Create(const Status& status, const bool isMutable)
 {
-	// 描画しないなら弾く
-	if (pModel_->isInvisible_) { return; }
-
-	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex);
-
-	// メッシュ毎に違うバッファ
-	for (size_t i = 0; i < pModel_->meshes_.size(); i++)
-	{
-		// 描画
-		pModel_->meshes_[i]->Draw(TexIndex);
-	}
+	// インスタンスを返す
+	return Create(status, nullptr, nullptr, nullptr, nullptr, isMutable);
 }
+
+Model::Object* Model::Object::Create(
+	const Status& status,
+	ViewProjection* pVP,
+	Color* pColor,
+	LightGroup* pLightGroup,
+	Material* pMaterial,
+	const bool isMutable)
+{
+	// インスタンス生成 (動的)
+	Object* instance = new Object();
+
+	// 定数バッファ生成
+	instance->cBuff_.Create(isMutable);
+
+	// 初期化(デフォルト)
+	instance->Initialize(status);
+	instance->SetViewProjection(pVP);
+	instance->SetColor(pColor);
+	instance->SetLightGroup(pLightGroup);
+	instance->SetMaterial(pMaterial);
+
+	// インスタンスを返す
+	return instance;
+}
+
+void Model::Object::SetDrawCommand(
+	const UINT transformRPIndex,
+	const UINT colorRPIndex,
+	const UINT lightRPIndex,
+	const UINT materialRPIndex)
+{
+	// 行列
+	cBuff_.map_->matWorld_ = m_;
+	cBuff_.map_->matViewProj_ = pVP_->view_ * pVP_->pro_;
+	cBuff_.map_->cameraPos_ = pVP_->eye_;
+	cBuff_.SetDrawCommand(transformRPIndex);
+
+	// 色
+	pColor_->SetDrawCommand(colorRPIndex);
+
+	// 光
+	pLightGroup_->SetDrawCommand(lightRPIndex);
+
+	// マテリアル
+	pMaterial_->SetDrawCommand(materialRPIndex);
+}
+
+void Model::Object::SetViewProjection(ViewProjection* pVP)
+{
+	// nullなら
+	if (pVP == nullptr)
+	{
+		// デフォルト代入
+		pVP_ = Default::sVP_.get();
+		return;
+	}
+
+	// 代入
+	pVP_ = pVP;
+}
+
+void Model::Object::SetColor(Color* pColor)
+{
+	// nullなら
+	if (pColor == nullptr)
+	{
+		// デフォルト代入
+		pColor_ = Default::sColor_.get();
+		return;
+	}
+
+	// 代入
+	pColor_ = pColor;
+}
+
+void Model::Object::SetLightGroup(LightGroup* pLightGroup)
+{
+	// nullなら
+	if (pLightGroup == nullptr)
+	{
+		// デフォルト代入
+		pLightGroup_ = Default::sLightGroup_.get();
+		return;
+	}
+
+	// 代入
+	pLightGroup_ = pLightGroup;
+}
+
+void Model::Object::SetMaterial(Material* pMaterial)
+{
+	// nullなら
+	if (pMaterial == nullptr)
+	{
+		// デフォルト代入
+		pMaterial_ = Default::sMaterial_.get();
+		return;
+	}
+
+	// 代入
+	pMaterial_ = pMaterial;
+}
+
+std::unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
+std::unique_ptr<YGame::LightGroup> Model::Object::Default::sLightGroup_ = nullptr;
+std::unique_ptr<YGame::Color> Model::Object::Default::sColor_ = nullptr;
+std::unique_ptr<YGame::Material> Model::Object::Default::sMaterial_ = nullptr;
+
+void Model::Object::Default::StaticInitialize()
+{
+	// 生成 + 初期化 (ビュープロジェクションポインタ)
+	sVP_.reset(new YGame::ViewProjection());
+	sVP_->Initialize({});
+
+	// 生成 + 初期化 (色)
+	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+
+	// 生成 + 初期化 (光源ポインタ)
+	sLightGroup_.reset(LightGroup::Create(false));
+
+	// 生成 + 初期化 (マテリアル)
+	sMaterial_.reset(Material::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+}
+
+#pragma endregion
+
+
+#pragma region Pipeline
 
 void Model::Pipeline::ShaderSet::Load()
 {
@@ -379,17 +506,6 @@ void Model::Pipeline::ShaderSet::Load()
 
 void Model::Pipeline::StaticInitialize()
 {
-	// 描画場所の数だけ
-	for (size_t i = 0; i < sDrawSets_.size(); i++)
-	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-
-		// クリア
-		StaticClearDrawSet(location);
-	}
-
-
 	// パイプライン初期化用設定
 	PipelineSet::InitStatus initStatus;
 
@@ -519,6 +635,16 @@ void Model::Pipeline::StaticInitialize()
 		// パイプライン初期化
 		sPipelineSets_[i].Initialize(initStatus);
 	}
+
+	// 描画場所の数だけ
+	for (size_t i = 0; i < sDrawSets_.size(); i++)
+	{
+		// 変換
+		DrawLocation location = static_cast<DrawLocation>(i);
+
+		// クリア
+		StaticClearDrawSet(location);
+	}
 }
 
 void Model::Pipeline::StaticClearDrawSet(const DrawLocation& location)
@@ -534,13 +660,20 @@ void Model::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	}
 }
 
-void Model::Pipeline::StaticPushBackDrawSet(unique_ptr<DrawSet>& drawSet, const DrawLocation& location)
+void Model::Pipeline::StaticPushBackDrawSet(Model* pModel, Model::Object* pObj, const DrawLocation& location)
 {
+	// 描画セット生成
+	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
+
+	// 初期化
+	newDrawSet->pModel_ = pModel;
+	newDrawSet->pObj_ = pObj;
+
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(drawSet));
+	sDrawSets_[index].push_back(std::move(newDrawSet));
 }
 
 void Model::Pipeline::StaticDraw(const DrawLocation& location)
@@ -555,6 +688,22 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
 	{
 		drawSet->Draw();
+	}
+}
+
+void Model::Pipeline::DrawSet::Draw()
+{
+	// 描画しないなら弾く
+	if (pModel_->isVisible_ == false) { return; }
+
+	// 定数バッファをシェーダーに送る
+	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex);
+
+	// メッシュ毎に違うバッファ
+	for (size_t i = 0; i < pModel_->meshes_.size(); i++)
+	{
+		// 描画
+		pModel_->meshes_[i]->Draw(TexIndex);
 	}
 }
 

@@ -150,6 +150,7 @@
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp" />
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
     <ClCompile Include="Engine\GameUtillity\Camera\Camera.cpp" />
@@ -170,11 +171,8 @@
     <ClCompile Include="Engine\GameUtillity\Object\Material.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Mesh.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Model.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Object\ModelObject.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Sprite2D.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Object\Sprite2DObject.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Sprite3D.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Object\Sprite3DObject.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
@@ -262,6 +260,7 @@
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Node.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h" />
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
     <ClInclude Include="Engine\GameUtillity\Audio.h" />
     <ClInclude Include="Engine\GameUtillity\Camera\Camera.h" />
@@ -283,12 +282,9 @@
     <ClInclude Include="Engine\GameUtillity\Object\Material.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Mesh.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Model.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\ModelObject.h" />
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Sprite2D.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\Sprite2DObject.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Sprite3D.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\Sprite3DObject.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />

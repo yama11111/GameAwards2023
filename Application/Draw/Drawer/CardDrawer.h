@@ -27,9 +27,9 @@ private:
 	std::unique_ptr<YGame::Transform> core_;
 	
 	// 数字用オブジェクト
-	std::array<std::unique_ptr<YGame::Sprite2DObject>, 3> numObjs_;
+	std::array<std::unique_ptr<YGame::Sprite2D::Object>, 3> numObjs_;
 	// ステージカードオブジェクト
-	std::unique_ptr<YGame::Sprite2DObject> cardObjs_;
+	std::unique_ptr<YGame::Sprite2D::Object> cardObjs_;
 	// 色
 	std::unique_ptr<YGame::Color> color_;
 

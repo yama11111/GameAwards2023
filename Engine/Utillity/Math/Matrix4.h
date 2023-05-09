@@ -5,7 +5,7 @@ namespace YMath
 	struct Matrix4
 	{
 	public:
-		float m[4][4];
+		float m_[4][4];
 	public:
 		Matrix4();
 		Matrix4(float m00_, float m01_, float m02_, float m03_,

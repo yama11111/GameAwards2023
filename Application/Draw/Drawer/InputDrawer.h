@@ -50,16 +50,16 @@ class InputDrawer : private InputDrawerCommon
 private:
 
 	// WASD
-	std::unique_ptr<YGame::Sprite2DObject> keyWObj_;
-	std::unique_ptr<YGame::Sprite2DObject> keyAObj_;
-	std::unique_ptr<YGame::Sprite2DObject> keySObj_;
-	std::unique_ptr<YGame::Sprite2DObject> keyDObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keyWObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keyAObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keySObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keyDObj_;
 	
 	// SPACE
-	std::unique_ptr<YGame::Sprite2DObject> keySpaceObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keySpaceObj_;
 	
 	// ESC
-	std::unique_ptr<YGame::Sprite2DObject> keyEscObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keyEscObj_;
 
 public:
 	

@@ -24,7 +24,7 @@ namespace YScene
 		// ブロック
 		struct Block
 		{
-			std::unique_ptr<YGame::Sprite2DObject> obj_; // オブジェクト
+			std::unique_ptr<YGame::Sprite2D::Object> obj_; // オブジェクト
 			YMath::Timer actTim_; // 動作タイマー
 			std::unique_ptr<YGame::Color> color_; // 色
 			YMath::Timer colorStartTim_; // 色タイマー (始)

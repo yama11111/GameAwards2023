@@ -9,7 +9,6 @@
 
 using YGame::Transform;
 using YGame::Sprite2D;
-using YGame::Sprite2DObject;
 using YGame::Texture;
 using YGame::UIButtonDrawer;
 using YScene::SceneManager;
@@ -78,16 +77,16 @@ void InputDrawer::Initialize()
 	// ----- ê∂ê¨ ----- //
 
 	// WASD
-	keyWObj_.reset(Sprite2DObject::Create({}));
-	keyAObj_.reset(Sprite2DObject::Create({}));
-	keySObj_.reset(Sprite2DObject::Create({}));
-	keyDObj_.reset(Sprite2DObject::Create({}));
+	keyWObj_.reset(Sprite2D::Object::Create({}));
+	keyAObj_.reset(Sprite2D::Object::Create({}));
+	keySObj_.reset(Sprite2D::Object::Create({}));
+	keyDObj_.reset(Sprite2D::Object::Create({}));
 	
 	// SPACE
-	keySpaceObj_.reset(Sprite2DObject::Create({}));
+	keySpaceObj_.reset(Sprite2D::Object::Create({}));
 	
 	// ESC
-	keyEscObj_.reset(Sprite2DObject::Create({}));
+	keyEscObj_.reset(Sprite2D::Object::Create({}));
 
 
 	// ÉäÉZÉbÉg

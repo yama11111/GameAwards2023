@@ -46,7 +46,7 @@ private:
 	// ----- オブジェクト ----- //
 	
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::ModelObject>, PartsNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
 	
 	// 色
 	std::unique_ptr<YGame::Color> color_;

@@ -54,7 +54,7 @@ private:
 	
 	
 	// 地球モデルオブジェクト
-	std::unique_ptr<YGame::ModelObject> earthObj_;
+	std::unique_ptr<YGame::Model::Object> earthObj_;
 	
 	// 色
 	std::unique_ptr<YGame::Color> color_;
@@ -82,7 +82,7 @@ private:
 
 
 	// ロゴスプライトオブジェクト
-	std::unique_ptr<YGame::Sprite2DObject> logoObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> logoObj_;
 
 
 	// 天球

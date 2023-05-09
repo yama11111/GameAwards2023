@@ -11,7 +11,6 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::Transform;
-using YGame::ModelObject;
 using YGame::Model;
 using YGame::Color;
 using YGame::Material;

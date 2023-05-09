@@ -2,7 +2,6 @@
 #include "HUDConfig.h"
 
 using YGame::Sprite2D;
-using YGame::Sprite2DObject;
 using YGame::Color;
 using YGame::Texture;
 

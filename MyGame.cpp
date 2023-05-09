@@ -56,6 +56,22 @@ void MyGame::Draw()
 	// デスクリプターヒープセット
 	descHeap_.SetDrawCommand();
 
+	// ゲームシーン描画
+	DrawGameScene();
+
+#ifdef _DEBUG
+
+	// imgui描画
+	imguiMan_.Draw();
+
+#endif // DEBUG
+
+	// 描画後処理
+	dx_.PostDraw();
+}
+
+void MyGame::DrawGameScene()
+{
 	// シーン描画
 	sceneExe_->Draw();
 
@@ -78,21 +94,11 @@ void MyGame::Draw()
 
 		// スプライト2D描画セットクリア
 		Sprite2D::Pipeline::StaticClearDrawSet(location);
-	
+
 		// モデル描画セットクリア
 		Model::Pipeline::StaticClearDrawSet(location);
-	
+
 		// スプライト3D描画セットクリア
 		Sprite3D::Pipeline::StaticClearDrawSet(location);
 	}
-
-#ifdef _DEBUG
-
-	// imgui描画
-	imguiMan_.Draw();
-
-#endif // DEBUG
-
-	// 描画後処理
-	dx_.PostDraw();
 }

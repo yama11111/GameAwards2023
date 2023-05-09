@@ -9,7 +9,6 @@ using YMath::Vector4;
 using YGame::MapData;
 using YGame::MapChip;
 using YGame::MapChip2DDisplayer;
-using YGame::ModelObject;
 
 #pragma region MapData
 
@@ -141,8 +140,9 @@ void MapChip::Reset()
 				// オブジェクト
 				float posX = +(chipScale_.x_ * 2.0f) * x + chipScale_.x_;
 				float posY = -(chipScale_.y_ * 2.0f) * y - chipScale_.y_;
-				
-				chip->transform_.reset(ModelObject::Create({ {posX,posY,0.0f},{},chipScale_ }));
+
+				chip->transform_.reset(new Transform());
+				chip->transform_->Initialize({ {posX,posY,0.0f},{},chipScale_ });
 				chip->transform_->pos_ += leftTop_;
 				
 				// モードタイプ
@@ -340,7 +340,7 @@ void MapChip2DDisplayer::Initialize(MapData* pMapData)
 			//posX = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().x_) * x;
 			//posY = +(scale * pMapData_->pSprites_[nums[y][x]]->Size().y_) * y;
 
-			chip->obj_.reset(Sprite2DObject::Create({ {posX,posY,0.0f},{},{scale,scale,1.0f} }));
+			chip->obj_.reset(Sprite2D::Object::Create({ {posX,posY,0.0f},{},{scale,scale,1.0f} }));
 
 			// 色
 			chip->color_.reset(Color::Create());
