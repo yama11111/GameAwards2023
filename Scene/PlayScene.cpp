@@ -264,7 +264,7 @@ void PlayScene::Initialize()
 	player->Reset();
 
 	//パズルマット
-	//puzzleMat.reset(new PuzzleMat(3,2));
+	puzzleMat.reset(new PuzzleMat(3,2));
 
 	////config
 	//stageConfig_ = StageConfig::GetInstance();
@@ -313,19 +313,19 @@ void PlayScene::Initialize()
 	//初期化
 	pises->Initialize();
 
-	//複数のピース生成
-	for (int i = 0; i < 2; i++)
-	{
-		//生成
-		std::unique_ptr<Pises> newPises;
-		newPises.reset(new Pises());
+	////複数のピース生成
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	//生成
+	//	std::unique_ptr<Pises> newPises;
+	//	newPises.reset(new Pises());
 
-		//初期化
-		newPises->Initialize({ i * 20.0f,5.0f,0.0f }, {},{});
+	//	//初期化
+	//	newPises->Initialize({ i * 20.0f,5.0f,0.0f }, {},{});
 
-		//格納
-		piseses.push_back(std::move(newPises));
-	}
+	//	//格納
+	//	piseses.push_back(std::move(newPises));
+	//}
 
 	// 背景初期化
 	background_.Initialize();
@@ -372,12 +372,14 @@ void PlayScene::Update()
 	//右で右回転
 	if (sKeys_->IsTrigger(DIK_RIGHT))
 	{
-		for (int i = 0; i < piseses.size(); i++)
+		/*for (int i = 0; i < piseses.size(); i++)
 		{
 			piseses[i]->SerRotRight(true);
-		}
+		}*/
 	}
 
+	//左右キーで選択
+	pises->ChoosePises(sKeys_->IsDown(DIK_RIGHT) - sKeys_->IsDown(DIK_LEFT));
 
 	//----- Update ---------
 
@@ -385,15 +387,15 @@ void PlayScene::Update()
 	player->Update();
 
 	//PisesのUpdate
-	for (int i = 0; i < piseses.size(); i++)
+	/*for (int i = 0; i < piseses.size(); i++)
 	{
-		piseses[i]->Update();
-	}
+		piseses[i]->Update(nowMode);
+	}*/
 
-	pises->Update();
+	pises->Update(nowMode);
 
 	//ピース更新
-	//puzzleMat->Update();
+	puzzleMat->Update();
 
 	// ゴール
 	goal_.UpdateMatrix();
@@ -463,23 +465,23 @@ void PlayScene::DrawModels()
 	{
 		//pises->DrawPiese();
 
-		for (int i = 0; i < piseses.size(); i++)
+		/*for (int i = 0; i < piseses.size(); i++)
 		{
 			piseses[i]->DrawPiese();
-		}
+		}*/
 	}
 	else
 	{
 	//	pises->DrawBlock();
 
-		for (int i = 0; i < piseses.size(); i++)
+		/*for (int i = 0; i < piseses.size(); i++)
 		{
 			piseses[i]->DrawBlock();
-		}
+		}*/
 	}
 
 	//ピース表示
-	//puzzleMat->Draw();
+	puzzleMat->Draw();
 }
 
 void PlayScene::DrawSprite3Ds()

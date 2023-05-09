@@ -2,8 +2,8 @@
 #include "BaseScene.h"
 
 #include "Player.h"
-#include "Pises.h"
-//#include "PuzzleMat.h"
+//#include "Pises.h"
+#include "PuzzleMat.h"
 #include "Block.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
@@ -44,10 +44,10 @@ namespace YScene
 		//// フィルター
 		//std::unique_ptr<Filter> filter;
 		std::unique_ptr<Pises> pises;
-		std::vector<std::unique_ptr<Pises>> piseses;
+		//std::vector<std::unique_ptr<Pises>> piseses;
 
 		// プレイヤー
-		//std::unique_ptr<PuzzleMat> puzzleMat;
+		std::unique_ptr<PuzzleMat> puzzleMat;
 
 		//// ステージ設定
 		//StageConfig* stageConfig_;

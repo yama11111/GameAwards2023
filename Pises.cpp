@@ -59,12 +59,18 @@ void Pises::Initialize(YMath::Vector3 pos, YMath::Vector3 rot, YMath::Vector3 sc
 	}
 }
 
-void Pises::Update()
+//ピース選択
+void Pises::ChoosePises(bool vec)
+{
+
+}
+
+//更新
+void Pises::Update(bool nowmode)
 {
 	for (int i = 0; i < blocks.size(); i++)
 	{
 		//カウントをこっちに移動する
-
 		if (RotR)
 		{
 			blocks[i]->RotRight(i);
@@ -121,8 +127,7 @@ void Pises::CreateBlock(int mode, YGame::Transform pises, int number)
 	int x = number;
 	int y = number;
 
-	//位置を計算で
-
+	//位置を計算で 
 	y = number / blockX;
 	x = number - (y * blockY);
 

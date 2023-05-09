@@ -47,8 +47,11 @@ public:
 	void Initialize(int x, int y);
 	void Initialize(YMath::Vector3 pos, YMath::Vector3 rot, YMath::Vector3 scale);
 
+	//ピース選択
+	void ChoosePises(bool vec);
+
 	//更新
-	void Update();
+	void Update(bool nowmode);
 
 	//描画
 	void Draw();

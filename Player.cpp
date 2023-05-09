@@ -90,7 +90,6 @@ void Player::Update()
 	ImGui::SliderFloat("Y", &player_.pos_.y_, 0, 10);
 	ImGui::End();
 
-
 	//XV
 	player_.UpdateMatrix();
 	playerDra_.Update();
