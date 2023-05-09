@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include "Def.h"
 
 void YMath::Srand() { srand(static_cast<unsigned int>(time(NULL))); }
 
@@ -73,5 +74,10 @@ YMath::Vector4 YMath::GetColor(const int R, const int G, const int B, const int 
 	result.a_ /= 255.0f;
 
 	return result;
+}
+
+float YMath::ConvertFromDegreeToRadian(const float degree)
+{
+	return degree * (PI / 180.0f);
 }
 

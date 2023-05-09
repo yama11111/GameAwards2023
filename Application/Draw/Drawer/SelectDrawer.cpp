@@ -51,7 +51,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	// ----- モデル読み込み ----- //
 
 	// 地球
-	spEarthModel_ = Model::Load("earth", true);
+	spEarthModel_ = Model::LoadObj("earth", true);
 
 
 	// ステージ設定所得

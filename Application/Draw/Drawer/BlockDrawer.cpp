@@ -60,15 +60,15 @@ void BlockDrawerCommon::StaticInitialize()
 	// ----- モデル読み込み ----- //
 
 	// ブロック (通常)
-	spModels_[IMode::sNormalIdx][CoreIdx] = Model::Load("block/normal/core", true); // 核
-	spModels_[IMode::sNormalIdx][ShellIdx] = Model::Load("block/normal/shell", true); // 殻
+	spModels_[IMode::sNormalIdx][CoreIdx] = Model::LoadObj("block/normal/core", true); // 核
+	spModels_[IMode::sNormalIdx][ShellIdx] = Model::LoadObj("block/normal/shell", true); // 殻
 
 	// ブロック (可動)
-	spModels_[IMode::sMovableIdx][CoreIdx] = Model::Load("block/red/core", true); // 核
-	spModels_[IMode::sMovableIdx][ShellIdx] = Model::Load("block/red/shell", true); // 殻
+	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
 
 	// グリッド
-	spGridModel_ = Model::Load("grid", true);
+	spGridModel_ = Model::LoadObj("grid", true);
 
 	// ---------- ブロック ---------- //
 

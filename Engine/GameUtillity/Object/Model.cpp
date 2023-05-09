@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "CalcTransform.h"
+#include "MathUtillity.h"
 #include "FileUtillity.h"
 #include <cassert>
 #include <fstream>
@@ -37,6 +38,8 @@ static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 vector<unique_ptr<Model>> Model::models_{};
 array<PipelineSet, DrawLocationNum> Model::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
+FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
+FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
 
 #pragma endregion
 
@@ -94,7 +97,7 @@ Model* Model::CreateCube(const std::string& texFileName)
 	return newModelPtr;
 }
 
-Model* Model::Load(const std::string& modelFileName, const bool isSmoothing)
+Model* Model::LoadObj(const std::string& modelFileName, const bool isSmoothing)
 {
 	// 読み込んだことがあるかチェック
 	for (size_t i = 0; i < models_.size(); i++)
@@ -123,13 +126,80 @@ Model* Model::Load(const std::string& modelFileName, const bool isSmoothing)
 	
 
 	// メッシュロード
-	newMesh.reset(Mesh::Load(directoryPath, objFileName, isSmoothing));
+	newMesh.reset(Mesh::LoadObj(directoryPath, objFileName, isSmoothing));
 
 	// 追加
 	newModel->meshes_.push_back(std::move(newMesh));
 
 	// ファイル名代入
 	newModel->fileName_ = modelFileName;
+
+
+	// ポインタを獲得
+	Model* newModelPtr = newModel.get();
+
+	// モデルを保存
+	models_.push_back(std::move(newModel));
+
+	// モデルポインタを返す
+	return newModelPtr;
+}
+
+Model* Model::LoadFbx(const std::string& modelFileName, const bool isSmoothing)
+{
+	// 読み込んだことがあるかチェック
+	for (size_t i = 0; i < models_.size(); i++)
+	{
+		// ファイルパス が同じなら
+		if (modelFileName == models_[i]->fileName_)
+		{
+			// そのテクスチャポインタを返す
+			return models_[i].get();
+		}
+	}
+
+	// モデル生成
+	unique_ptr<Model> newModel = std::make_unique<Model>();
+
+
+	// メッシュ生成
+	std::unique_ptr<Mesh> newMesh;
+
+	// ディレクトリパス (モデルのファイル名と同じフォルダから)
+	std::string directoryPath = "Resources/Models/" + modelFileName + "/";
+
+	// FBXファイル名
+	std::string fbxFileName = modelFileName + ".fbx";
+
+	//フルパス
+	std::string fullPath = directoryPath + fbxFileName;
+
+	// ファイル名代入
+	newModel->fileName_ = modelFileName;
+
+	// ファイル名を指定してFBXファイル読み込み
+	assert(FbxLoader::sFbxImp_->Initialize(fullPath.c_str(), -1, FbxLoader::sFbxMan_->GetIOSettings()));
+
+
+	// シーン生成
+	FbxScene* fbxScene = FbxScene::Create(FbxLoader::sFbxMan_, "fbxScene");
+
+	// ファイルからロードしたFBX情報をインポート
+	FbxLoader::sFbxImp_->Import(fbxScene);
+
+
+	// FBXノードの数
+	int nodeCount = fbxScene->GetNodeCount();
+
+	// 必要分のメモリ確保 (アドレスのずれを予防)
+	newModel->nodes_.reserve(nodeCount);
+
+	// ルートノードから順に解析してモデルに流し込む
+	FbxLoader::ParseNodeRecursive(newModel.get(), fbxScene->GetRootNode(), isSmoothing);
+
+
+	// FBXシーン開放
+	fbxScene->Destroy();
 
 
 	// ポインタを獲得
@@ -166,6 +236,109 @@ void Model::SetDrawCommand(ModelObject* pObj, const DrawLocation& location)
 }
 
 #pragma endregion
+
+
+#pragma region FbxLoader
+
+void Model::FbxLoader::StaticInitialize()
+{
+	// 再初期化チェック
+	assert(sFbxMan_ == nullptr);
+
+	// FBXマネージャーの生成
+	sFbxMan_ = FbxManager::Create();
+
+	// FBXマネージャーの入出力設定
+	FbxIOSettings* ios = FbxIOSettings::Create(sFbxMan_, IOSROOT);
+	sFbxMan_->SetIOSettings(ios);
+
+	// FBXインポーターの生成
+	sFbxImp_ = FbxImporter::Create(sFbxMan_, "");
+}
+
+void Model::FbxLoader::StaticFinalize()
+{
+	// 各種FBXインスタンス破棄
+	sFbxImp_->Destroy();
+	sFbxMan_->Destroy();
+}
+
+void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const bool isSmoothing, Node* parent)
+{
+	// ノード生成
+	std::unique_ptr<Node> newNode = std::make_unique<Node>();
+
+
+	// ノード名
+	newNode->name_ = fbxNode->GetName();
+
+
+	// FBXノードのローカル情報
+	FbxDouble3 fbxPos = fbxNode->LclTranslation.Get();
+	FbxDouble3 fbxRot = fbxNode->LclRotation.Get();
+	FbxDouble3 fbxScale = fbxNode->LclScaling.Get();
+
+	// 変換
+	Vector3 pos = { static_cast<float>(fbxPos[0]), static_cast<float>(fbxPos[1]), static_cast<float>(fbxPos[2]) };
+	Vector3 rot = { static_cast<float>(fbxRot[0]), static_cast<float>(fbxRot[1]), static_cast<float>(fbxRot[2]) };
+	Vector3 scale = { static_cast<float>(fbxScale[0]), static_cast<float>(fbxScale[1]), static_cast<float>(fbxScale[2]) };
+
+	// 回転角を Degree -> Radianに
+	rot.x_ = YMath::ConvertFromDegreeToRadian(rot.x_);
+	rot.y_ = YMath::ConvertFromDegreeToRadian(rot.y_);
+	rot.z_ = YMath::ConvertFromDegreeToRadian(rot.z_);
+
+	// ローカルトランスフォーム初期化
+	newNode->local_.Initialize({ pos, rot, scale });
+
+	// グローバル変形行列の計算
+	newNode->globalMat_ = newNode->local_.m_;
+
+	// 親があるなら
+	if (parent)
+	{
+		// 代入
+		newNode->parent_ = parent;
+
+		// 親行列を乗算
+		newNode->globalMat_ *= parent->globalMat_;
+	}
+
+
+	// ノード配列に追加
+	pModel->nodes_.push_back(std::move(newNode));
+
+
+	// FBXノードのメッシュ情報を解析
+	FbxNodeAttribute* fbxNodeAttribute = fbxNode->GetNodeAttribute();
+
+	// メッシュ情報があるなら
+	if (fbxNodeAttribute)
+	{
+		// メッシュなら
+		if (fbxNodeAttribute->GetAttributeType() == FbxNodeAttribute::EType::eMesh)
+		{
+			// メッシュ生成
+			std::unique_ptr<Mesh> newMesh;
+			
+			// メッシュロード
+			newMesh.reset(Mesh::LoadFbx("Resources/Models/" + pModel->fileName_ + "/", fbxNode, isSmoothing));
+
+			// 追加
+			pModel->meshes_.push_back(std::move(newMesh));
+		}
+	}
+
+
+	// 子ノードに対して再帰呼び出し
+	for (int i = 0; i < fbxNode->GetChildCount(); i++)
+	{
+		ParseNodeRecursive(pModel, fbxNode->GetChild(i), isSmoothing, newNode.get());
+	}
+}
+
+#pragma endregion
+
 
 #pragma region Pipeline
 
@@ -386,3 +559,5 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 }
 
 #pragma endregion
+
+

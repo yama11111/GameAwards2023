@@ -32,7 +32,7 @@ void ParticleManager::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル設定 ----- //
 	
 	// グリッド
-	spGridModel_ = Model::Load("grid", false);
+	spGridModel_ = Model::LoadObj("grid", false);
 
 	// ----- スプライト3D設定 ----- //
 	

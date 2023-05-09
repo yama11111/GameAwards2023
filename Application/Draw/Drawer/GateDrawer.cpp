@@ -41,10 +41,10 @@ void GateDrawerCommon::StaticInitialize()
 {
 	// ----- ƒ‚ƒfƒ‹“Ç‚İ‚İ ----- //
 
-	spModels_[InsideIdx]   = Model::Load("gate/inside", true); // “à˜g
-	spModels_[InLightIdx]  = Model::Load("gate/insideLight", true); // “à˜g (Œõ)
-	spModels_[OutsideIdx]  = Model::Load("gate/outside", true); // ŠO˜g
-	spModels_[OutLightIdx] = Model::Load("gate/outsideLight", true); // ŠO˜g (Œõ)
+	spModels_[InsideIdx]   = Model::LoadObj("gate/inside", true); // “à˜g
+	spModels_[InLightIdx]  = Model::LoadObj("gate/insideLight", true); // “à˜g (Œõ)
+	spModels_[OutsideIdx]  = Model::LoadObj("gate/outside", true); // ŠO˜g
+	spModels_[OutLightIdx] = Model::LoadObj("gate/outsideLight", true); // ŠO˜g (Œõ)
 }
 
 

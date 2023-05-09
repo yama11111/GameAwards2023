@@ -49,11 +49,11 @@ void GoalDrawerCommon::StaticInitialize()
 {
 	// ----- ÉÇÉfÉãì«Ç›çûÇ› ----- //
 
-	spModels_[CoreIdx] = Model::Load("goal/core", true); // äj
-	spModels_[InsideIdx] = Model::Load("goal/inside", true); // ì‡ògäj
-	spModels_[InsideCoreIdx] = Model::Load("goal/insideCore", true); // ì‡òg
-	spModels_[OutsideIdx] = Model::Load("goal/outside", true); // äOògäj
-	spModels_[OutsideCoreIdx] = Model::Load("goal/outsideCore", true); // äOòg
+	spModels_[CoreIdx] = Model::LoadObj("goal/core", true); // äj
+	spModels_[InsideIdx] = Model::LoadObj("goal/inside", true); // ì‡ògäj
+	spModels_[InsideCoreIdx] = Model::LoadObj("goal/insideCore", true); // ì‡òg
+	spModels_[OutsideIdx] = Model::LoadObj("goal/outside", true); // äOògäj
+	spModels_[OutsideCoreIdx] = Model::LoadObj("goal/outsideCore", true); // äOòg
 }
 
 #pragma endregion

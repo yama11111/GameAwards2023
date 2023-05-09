@@ -57,12 +57,12 @@ void TowerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Mate
 	// ----- ÉÇÉfÉãì«Ç›çûÇ› ----- //
 
 	// í èÌ
-	spModels_[IMode::sNormalIdx][CoreIdx] = Model::Load("tower/normal/core", true); // äj
-	spModels_[IMode::sNormalIdx][ShellIdx] = Model::Load("tower/normal/shell", true); // äk
+	spModels_[IMode::sNormalIdx][CoreIdx] = Model::LoadObj("tower/normal/core", true); // äj
+	spModels_[IMode::sNormalIdx][ShellIdx] = Model::LoadObj("tower/normal/shell", true); // äk
 
 	// ê‘
-	spModels_[IMode::sMovableIdx][CoreIdx] = Model::Load("tower/red/core", true); // äj
-	spModels_[IMode::sMovableIdx][ShellIdx] = Model::Load("tower/red/shell", true); // äk
+	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
 }
 
 #pragma endregion

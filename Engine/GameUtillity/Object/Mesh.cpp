@@ -110,19 +110,24 @@ Mesh* Mesh::CreateCube(const std::string& texFileName)
 	return instance;
 }
 
-Mesh* Mesh::Load(const std::string& directoryPath, const std::string& objFileName, const bool isSmoothing)
+Mesh* Mesh::LoadObj(const std::string& directoryPath, const std::string& objFileName, const bool isSmoothing)
 {
 	// インスタンス生成 (動的)
 	Mesh* instance = new Mesh();
 
+
 	// 頂点
 	std::vector<VData> v;
+	
 	// インデックス
 	std::vector<uint16_t> i;
+	
 	// 頂点法線スムーシング用データ
 	std::unordered_map<unsigned short, std::vector<unsigned short>> sd;
+	
 	// テクスチャ
 	Texture* pTex = nullptr;
+
 
 	// ファイルストリーム
 	std::ifstream file;
@@ -132,12 +137,16 @@ Mesh* Mesh::Load(const std::string& directoryPath, const std::string& objFileNam
 	// ファイルオープン失敗をチェック
 	assert(file);
 
+
 	// 頂点座標
 	std::vector<Vector3> positions;
+	
 	// 法線
 	std::vector<Vector3> normals;
+	
 	// UV座標
 	std::vector<Vector2> uvs;
+
 
 	// 1行ずつ読み込み
 	std::string line;
@@ -267,10 +276,68 @@ Mesh* Mesh::Load(const std::string& directoryPath, const std::string& objFileNam
 
 	// 頂点インデックス初期化(代入)
 	instance->vtIdx_.Initialize(v, i);
+	
 	// スムースデータ代入
 	instance->smoothData_ = sd;
+	
 	// テクスチャ代入
 	instance->pTex_ = pTex;
+
+
+	// インスタンスを返す
+	return instance;
+}
+
+Mesh* Mesh::LoadFbx(const std::string& folderPath, FbxNode* fbxNode, const bool isSmoothing)
+{
+	// インスタンス生成 (動的)
+	Mesh* instance = new Mesh();
+
+
+	// 頂点
+	std::vector<VData> v;
+	
+	// インデックス
+	std::vector<uint16_t> i;
+	
+	// 頂点法線スムーシング用データ
+	std::unordered_map<unsigned short, std::vector<unsigned short>> sd;
+	
+	// テクスチャ
+	Texture* pTex = nullptr;
+
+
+	// ノードのメッシュを取得
+	FbxMesh* fbxMesh = fbxNode->GetMesh();
+
+
+	// 頂点読み取り
+	FbxLoader::ParseMeshVertices(v, fbxMesh);
+
+	// 面を構成するデータの読み取り
+	FbxLoader::ParseMeshFaces(v, i, fbxMesh);
+
+	// マテリアルの読み取り
+	FbxLoader::ParseMaterial(folderPath, pTex, fbxNode);
+
+
+	// スムーシングするか
+	if (isSmoothing)
+	{
+		// スムーシング計算
+		CalculateSmoothedVertexNormals(v, sd);
+	}
+
+
+	// 頂点インデックス初期化(代入)
+	instance->vtIdx_.Initialize(v, i);
+	
+	// スムースデータ代入
+	instance->smoothData_ = sd;
+	
+	// テクスチャ代入
+	instance->pTex_ = pTex;
+
 
 	// インスタンスを返す
 	return instance;
@@ -423,3 +490,190 @@ void Mesh::Draw(const UINT texRPIndex)
 	// 頂点バッファを送る + 描画コマンド
 	vtIdx_.Draw();
 }
+
+
+#pragma region FbxLoader
+
+void Mesh::FbxLoader::ParseMeshVertices(std::vector<VData>& vertices, FbxMesh* fbxMesh)
+{
+	// 頂点座標データ数
+	const int controlPointsCount = fbxMesh->GetControlPointsCount();
+
+	// 必要数だけ頂点データ配列を確保
+	VData vData{};
+	vertices.resize(controlPointsCount, vData);
+
+
+	// FBXメッシュの頂点座標配列を取得
+	FbxVector4* pCoord = fbxMesh->GetControlPoints();
+
+	// FBXメッシュの全頂点座標を頂点配列にコピーする
+	for (int i = 0; i < controlPointsCount; i++)
+	{
+		// 頂点読み込み
+		VData& refVertex = vertices[i];
+
+		// 座標コピー
+		refVertex.pos_.x_ = static_cast<float>(pCoord[i][0]);
+		refVertex.pos_.y_ = static_cast<float>(pCoord[i][1]);
+		refVertex.pos_.z_ = static_cast<float>(pCoord[i][2]);
+	}
+}
+
+void Mesh::FbxLoader::ParseMeshFaces(std::vector<VData>& vertices, std::vector<uint16_t>& indices, FbxMesh* fbxMesh)
+{
+	// 複数メッシュのモデルは非対応
+	assert(indices.size() == 0);
+
+	// 面の数
+	const int polygonCount = fbxMesh->GetPolygonCount();
+
+	// UVデータの数
+	const int textureUVCount = fbxMesh->GetTextureUVCount();
+
+	// UV名リスト
+	FbxStringList uvNames;
+	fbxMesh->GetUVSetNames(uvNames);
+
+
+	// 面ごとの情報読み取り
+	for (int i = 0; i < polygonCount; i++)
+	{
+		// 面を構成する頂点の数を取得 (3なら三角ポリゴン)
+		const int polygonSize = fbxMesh->GetPolygonSize(i);
+
+		// 5以上は弾く
+		assert(polygonSize <= 4);
+
+		// 1頂点ずつ処理
+		for (int j = 0; j < polygonSize; j++)
+		{
+			// FBX頂点配列のインデックス
+			int index = fbxMesh->GetPolygonVertex(i, j);
+
+			// 0以下は弾く
+			assert(index >= 0);
+
+			// 頂点読み込み
+			VData& refVertex = vertices[index];
+
+			// 法線読み込み
+			FbxVector4 normal;
+			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
+			{
+				// 代入
+				refVertex.normal_.x_ = static_cast<float>(normal[0]);
+				refVertex.normal_.y_ = static_cast<float>(normal[1]);
+				refVertex.normal_.z_ = static_cast<float>(normal[2]);
+			}
+
+			// テクスチャUV読み込み
+			if (textureUVCount > 0)
+			{
+				FbxVector2 uvs;
+				bool lUnmapedUV = false;
+
+				// 0番決め打ちで読み込み
+				if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, lUnmapedUV))
+				{
+					refVertex.uv_.x_ = static_cast<float>(uvs[0]);
+					refVertex.uv_.y_ = static_cast<float>(uvs[1]);
+				}
+
+				// インデックス配列に頂点インデックス追加
+				// 3頂点目までなら
+				if (j < 3)
+				{
+					// 1点追加し、他の2点と三角形を構築する
+					indices.push_back(index);
+				}
+				// 4頂点目
+				else
+				{
+					// 3点追加し、
+					// 四角形の 0,1,2,3 の内 2,3,0 で三角形を構築する
+					int index2 = indices[indices.size() - 1];
+					int index3 = index;
+					int index0 = indices[indices.size() - 3];
+					indices.push_back(index2);
+					indices.push_back(index3);
+					indices.push_back(index0);
+				}
+			}
+		}
+	}
+}
+
+void Mesh::FbxLoader::ParseMaterial(const std::string& folderPath, Texture*& refPtrTex, FbxNode* fbxNode)
+{
+	// マテリアル数
+	const int materialCount = fbxNode->GetMaterialCount();
+
+	// マテリアルがあるなら
+	if (materialCount > 0)
+	{
+		// 先頭のマテリアルを取得
+		FbxSurfaceMaterial* pMaterial = fbxNode->GetMaterial(0);
+
+		// テクスチャを読み込んだか
+		bool texLoaded = false;
+
+		// マテリアルがあるなら
+		if (pMaterial)
+		{
+			// FbxSurfaceLambertクラスかどうか調べる
+			if (pMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId))
+			{
+				//// 変換
+				//FbxSurfaceLambert* pLambert = static_cast<FbxSurfaceLambert*>(pMaterial);
+
+				//// 環境光係数
+				//FbxPropertyT<FbxDouble3> ambient = pLambert->Ambient;
+				//pModel->ambient.x_ = static_cast<float>(ambient.Get()[0]);
+				//pModel->ambient.y_ = static_cast<float>(ambient.Get()[1]);
+				//pModel->ambient.z_ = static_cast<float>(ambient.Get()[2]);
+
+				//// 拡散反射光係数
+				//FbxPropertyT<FbxDouble3> diffuse = pLambert->Diffuse;
+				//pModel->diffuse.x_ = static_cast<float>(diffuse.Get()[0]);
+				//pModel->diffuse.y_ = static_cast<float>(diffuse.Get()[1]);
+				//pModel->diffuse.z_ = static_cast<float>(diffuse.Get()[2]);
+			}
+
+			// ディフューズテクスチャを取り出す
+			const FbxProperty diffuseProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+			// ディフューズテクスチャが有効なら
+			if (diffuseProperty.IsValid())
+			{
+				// テクスチャ取得
+				const FbxFileTexture* pTexture = diffuseProperty.GetSrcObject<FbxFileTexture>();
+
+				// テクスチャがあるなら
+				if (pTexture)
+				{
+					// テクスチャファイルパス
+					const std::string texFilePath = pTexture->GetFileName();
+
+					// テクスチャファイル名取得
+					const std::string texFileName = YUtil::FilePath(texFilePath);
+
+					// テクスチャ読み込み
+					refPtrTex = Texture::Load(folderPath, texFileName);
+
+					// 完了
+					texLoaded = true;
+				}
+			}
+		}
+
+		// テクスチャを読み込んでいないなら
+		if (!texLoaded)
+		{
+			// デフォルトテクスチャ読み込み
+			refPtrTex = Texture::Load("white1x1.png");
+		}
+	}
+}
+
+#pragma endregion

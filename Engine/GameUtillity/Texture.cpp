@@ -140,7 +140,7 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 	// 拡張子取得
 	std::string ext = YUtil::FileExtension(texFileName);
 
-	if (ext == "png") // png → WIC
+	if (ext == "png" || ext == "jpg") // png || jpg → WIC
 	{
 		// WICテクスチャのロード
 		Result(LoadFromWICFile(fileName, DirectX::WIC_FLAGS_NONE, &metadata, scratchImg));

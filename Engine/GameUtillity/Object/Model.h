@@ -16,6 +16,9 @@ namespace YGame
 		// メッシュ配列
 		std::vector<std::unique_ptr<Mesh>> meshes_;
 
+		// ノード配列
+		std::vector<std::unique_ptr<Node>> nodes_;
+
 		// 非表示
 		bool isInvisible_ = false;
 
@@ -43,12 +46,20 @@ namespace YGame
 		static Model* CreateCube(const std::string& texFileName);
 
 		/// <summary>
-		/// モデル読み込み
+		/// モデル(.obj)読み込み
 		/// </summary>
 		/// <param name="modelFileName"> : モデルのフォルダ名 (objと同じ名前の時のみ) </param>
 		/// <param name="isSmoothing"> : スムーシングするか</param>
 		/// <returns>モデルポインタ</returns>
-		static Model* Load(const std::string& modelFileName, const bool isSmoothing);
+		static Model* LoadObj(const std::string& modelFileName, const bool isSmoothing);
+
+		/// <summary>
+		/// モデル(.obj)読み込み
+		/// </summary>
+		/// <param name="modelFileName"> : モデルのフォルダ名 (objと同じ名前の時のみ) </param>
+		/// <param name="isSmoothing"> : スムーシングするか</param>
+		/// <returns>モデルポインタ</returns>
+		static Model* LoadFbx(const std::string& modelFileName, const bool isSmoothing);
 
 		/// <summary>
 		/// 全削除
@@ -72,6 +83,50 @@ namespace YGame
 		void SetInvisible(const bool isInvisible) { isInvisible_ = isInvisible; }
 
 
+#pragma region FbxLoader
+
+	public:
+
+		// FBX読み込み用
+		class FbxLoader
+		{
+
+		public:
+
+			// 静的FBXマネージャー
+			static FbxManager* sFbxMan_;
+
+			// 静的FBXインポーター
+			static FbxImporter* sFbxImp_;
+
+		public:
+
+			/// <summary>
+			/// 静的初期化
+			/// </summary>
+			static void StaticInitialize();
+
+			/// <summary>
+			/// 静的終了処理
+			/// </summary>
+			static void StaticFinalize();
+
+		public:
+
+			/// <summary>
+			/// 再帰的にノード構成を解析
+			/// </summary>
+			/// <param name="pModel"> : モデルポインタ</param>
+			/// <param name="fbxNode"> : 解析するノード</param>
+			/// <param name="isSmoothing"> : スムーシングするか</param>
+			/// <param name="parent"> : 親ノード</param>
+			static void ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const bool isSmoothing, Node* parent = nullptr);
+
+		};
+
+#pragma endregion
+
+
 #pragma region Pipeline
 
 	public:
@@ -79,6 +134,7 @@ namespace YGame
 		// パイプラインクラス
 		class Pipeline
 		{
+		
 		public:
 
 			// ルートパラメータ番号
@@ -96,6 +152,7 @@ namespace YGame
 			// シェーダーセット
 			class ShaderSet : public YDX::IShaderSet
 			{
+
 			public:
 
 				// 頂点シェーダオブジェクト
@@ -181,5 +238,6 @@ namespace YGame
 		Model() = default;
 
 		~Model() = default;
+
 	};
 }

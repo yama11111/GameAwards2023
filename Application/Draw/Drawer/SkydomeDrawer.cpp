@@ -10,7 +10,7 @@ Color* SkydomeDrawerCommon::spColor_ = nullptr;
 void SkydomeDrawerCommon::StaticInitialize(YGame::Color* pColor)
 {
 	// モデル読み込み
-	spModel_ = Model::Load("skydome", true);
+	spModel_ = Model::LoadObj("skydome", true);
 
 	// 色ポインタ
 	spColor_ = pColor;

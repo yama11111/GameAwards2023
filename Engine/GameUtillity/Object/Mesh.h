@@ -1,11 +1,11 @@
 #pragma once
 #include "Vertices.h"
 #include "Texture.h"
+#include "Node.h"
 #include "Vector2.h"
-#include "Vector3.h"
 #include "Vector4.h"
+#include <fbxsdk.h>
 #include <unordered_map>
-#include <string>
 #include <memory>
 
 namespace YGame
@@ -32,7 +32,10 @@ namespace YGame
 
 		// 頂点法線スムーシング用データ
 		std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;
-		
+
+		// ノード
+		Node node_;
+
 		// テクスチャ
 		Texture* pTex_;
 
@@ -52,13 +55,22 @@ namespace YGame
 		static Mesh* CreateCube(const std::string& texFileName);
 
 		/// <summary>
-		/// メッシュ読み込み
+		/// メッシュ(.obj)読み込み
 		/// </summary>
 		/// <param name="directoryPath"> : ディレクトリパス </param>
 		/// <param name="objFileName"> : objファイル名 </param>
 		/// <param name="isSmoothing"> : スムーシングするか</param>
 		/// <returns>動的インスタンス (new されたもの)</returns>
-		static Mesh* Load(const std::string& directoryPath, const std::string& objFileName, const bool isSmoothing);
+		static Mesh* LoadObj(const std::string& directoryPath, const std::string& objFileName, const bool isSmoothing);
+
+		/// <summary>
+		/// メッシュ(.fbx)読み込み
+		/// </summary>
+		/// <param name="folderPath"> : モデルフォルダのパス</param>
+		/// <param name="fbxNode"> :  FBXノード</param>
+		/// <param name="isSmoothing"> : スムーシングするか</param>
+		/// <returns>動的インスタンス (new されたもの)</returns>
+		static Mesh* LoadFbx(const std::string& folderPath, FbxNode* fbxNode, const bool isSmoothing);
 
 	public:
 
@@ -73,9 +85,9 @@ namespace YGame
 		/// <summary>
 		/// 法線計算
 		/// </summary>
-		/// <param name="v"></param>
-		/// <param name="indices"></param>
-		static void CalculateNormals(std::vector<VData>& v, const std::vector<uint16_t>& indices);
+		/// <param name="vertices"> : 頂点配列</param>
+		/// <param name="indices"> : インデックス配列</param>
+		static void CalculateNormals(std::vector<VData>& vertices, const std::vector<uint16_t>& indices);
 
 		/// <summary>
 		/// 法線計算 (スムーシング)
@@ -92,6 +104,45 @@ namespace YGame
 		/// <param name="fileName"> : ファイル名</param>
 		/// <returns>テクスチャポインタ</returns>
 		static Texture* LoadMaterial(const std::string& directoryPath, const std::string& fileName);
+
+
+#pragma region FbxLoader
+
+	public:
+
+		// FBX読み込み用
+		class FbxLoader
+		{
+
+		public:
+
+			/// <summary>
+			/// 頂点読み取り
+			/// </summary>
+			/// <param name="vertices"> : 頂点配列</param>
+			/// <param name="fbxNode"> : 解析するノード</param>
+			static void ParseMeshVertices(std::vector<VData>& vertices, FbxMesh* fbxMesh);
+
+			/// <summary>
+			/// 面読み取り
+			/// </summary>
+			/// <param name="vertices"> : 頂点配列</param>
+			/// <param name="indices"> : インデックス配列</param>
+			/// <param name="fbxMesh"> : 解析するメッシュ</param>
+			static void ParseMeshFaces(std::vector<VData>& vertices, std::vector<uint16_t>& indices, FbxMesh* fbxMesh);
+
+			/// <summary>
+			/// マテリアル読み取り
+			/// </summary>
+			/// <param name="folderPath"> : モデルフォルダのパス</param>
+			/// <param name="refPtrTex"> : 参照テクスチャポインタ</param>
+			/// <param name="fbxNode"> : 解析するノード</param>
+			static void ParseMaterial(const std::string& folderPath, Texture*& refPtrTex, FbxNode* fbxNode);
+
+		};
+
+#pragma endregion
+
 
 	private:
 

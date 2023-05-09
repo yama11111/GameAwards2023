@@ -8,8 +8,6 @@
 
 #include "DrawerHelper.h"
 
-#include "FbxLoader.h"
-
 #pragma region 名前空間宣言
 
 using YScene::TestScene;
@@ -28,8 +26,6 @@ using namespace YGame;
 
 void TestScene::Load()
 {
-	//FbxLoader::GetInstance()->LoadModel("cube");
-
 	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
@@ -375,6 +371,5 @@ void TestScene::Draw()
 
 	// エフェクト
 	if (isDrawEffect_) { effectMan_.Draw(); }
-
 }
 #pragma endregion

@@ -40,7 +40,7 @@ void PlayerDrawerCommon::StaticInitialize()
 {
 	// ----- ƒ‚ƒfƒ‹“Ç‚İ‚İ ----- //
 
-	spModels_[BodyIdx] = Model::Load("player", true); // ‘Ì
+	spModels_[BodyIdx] = Model::LoadObj("player", true); // ‘Ì
 	spModels_[1] = Model::CreateCube();
 }
 

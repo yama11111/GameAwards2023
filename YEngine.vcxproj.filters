@@ -447,9 +447,6 @@
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp">
       <Filter>Engine\Util\DebugText</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\FbxLoader.cpp">
-      <Filter>Engine\GameUtil\Resource</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -782,8 +779,8 @@
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h">
       <Filter>Engine\Util\DebugText</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\FbxLoader.h">
-      <Filter>Engine\GameUtil\Resource</Filter>
+    <ClInclude Include="Engine\GameUtillity\Object\Node.h">
+      <Filter>Engine\GameUtil\Object\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

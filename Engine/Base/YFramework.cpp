@@ -3,8 +3,6 @@
 #include "Def.h"
 #include <cassert>
 
-#include "FbxLoader.h"
-
 #pragma region 名前空間宣言
 
 using YBase::YFramework;
@@ -76,9 +74,11 @@ bool YFramework::Initialize()
 	Sprite3DObject::Default::StaticInitialize();
 	ModelObject::Default::StaticInitialize();
 
-
 	// FBXLoader読み込み
-	FbxLoader::GetInstance()->Initialize(pDev);
+	Model::FbxLoader::StaticInitialize();
+
+	//// FBXLoader読み込み
+	//FbxLoader::GetInstance()->Initialize(pDev);
 
 
 	// imgui初期化
@@ -107,7 +107,7 @@ bool YFramework::Initialize()
 void YFramework::Finalize()
 {
 	// FBXLoader開放
-	FbxLoader::GetInstance()->Finalize();
+	Model::FbxLoader::StaticFinalize();
 
 	// imguiをクリーン
 	imguiMan_.Finalize();
