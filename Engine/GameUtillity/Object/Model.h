@@ -285,11 +285,12 @@ namespace YGame
 		// ルートパラメータ番号
 		enum class RootParameterIndex
 		{
-			TransformCB = 0, // 行列
-			ColorCB = 1, // 色
-			LightCB = 2, // 光
-			MaterialCB = 3, // マテリアル
-			TexDT = 4, // テクスチャ
+			eTransformCB = 0, // 行列
+			eColorCB	 = 1, // 色
+			eLightCB	 = 2, // 光
+			eMaterialCB	 = 3, // マテリアル
+			eTexDT		 = 4, // テクスチャ
+			eEnd, // リサイズ用
 		};
 
 	private:
@@ -341,7 +342,7 @@ namespace YGame
 	private:
 
 		// パイプライン設定
-		static std::array<YDX::PipelineSet, DrawLocationNum> sPipelineSets_;
+		static std::array<YDX::PipelineSet, 2> sPipelineSets_;
 
 		// 描画用リスト配列
 		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;

@@ -24,18 +24,18 @@ using YGame::DrawLocationNum;
 
 #pragma region ルートパラメータ番号
 
-static const UINT TraIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::TransformCB); // transform
-static const UINT ColIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::ColorCB); // color
-static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::LightCB); // light
-static const UINT MateIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::MaterialCB); // material
-static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::TexDT); // tex
+static const UINT TraIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTransformCB); // transform
+static const UINT ColIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eColorCB); // color
+static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eLightCB); // light
+static const UINT MateIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eMaterialCB); // material
+static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
 
 #pragma region Static
 
 vector<unique_ptr<Model>> Model::sModels_{};
-array<PipelineSet, DrawLocationNum> Model::Pipeline::sPipelineSets_{};
+array<PipelineSet, 2> Model::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
 FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
 FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
@@ -567,7 +567,7 @@ void Model::Pipeline::StaticInitialize()
 
 #pragma region ルートパラメータの設定
 
-	size_t rpIdxCBNum = static_cast<size_t> (RootParameterIndex::TexDT);
+	size_t rpIdxCBNum = static_cast<size_t> (RootParameterIndex::eEnd) - 1;
 
 	for (size_t i = 0; i < rpIdxCBNum; i++)
 	{
@@ -682,7 +682,7 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 	size_t index = static_cast<size_t>(location);
 
 	// パイプラインをセット
-	sPipelineSets_[index].SetDrawCommand();
+	sPipelineSets_[0].SetDrawCommand();
 
 	// モデル描画
 	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])

@@ -367,7 +367,7 @@ void Sprite3D::Pipeline::StaticDraw(const DrawLocation& location)
 	size_t index = static_cast<size_t>(location);
 
 	// パイプラインをセット
-	sPipelineSets_[index].SetDrawCommand();
+	sPipelineSets_[0].SetDrawCommand();
 
 	// モデル描画
 	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])

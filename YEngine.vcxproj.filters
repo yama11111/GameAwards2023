@@ -444,6 +444,9 @@
     <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp">
       <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Scene\TaskScene.cpp">
+      <Filter>Application\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -773,6 +776,9 @@
     <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h">
       <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Scene\TaskScene.h">
+      <Filter>Application\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite3D.hlsli">
@@ -809,6 +815,18 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Sprite2DVS.hlsl">
       <Filter>Engine\GameUtil\Shader\Sprite2D</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ToonPS.hlsl">
+      <Filter>Engine\GameUtil\Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ToonVS.hlsl">
+      <Filter>Engine\GameUtil\Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PhongVS.hlsl">
+      <Filter>Engine\GameUtil\Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PhongPS.hlsl">
+      <Filter>Engine\GameUtil\Shader\Model</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

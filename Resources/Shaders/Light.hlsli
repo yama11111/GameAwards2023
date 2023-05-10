@@ -6,6 +6,7 @@ struct DireLight
 	float3 lightColor;	 // 色
 	uint active;		 // 動作フラグ
 };
+
 // 点光源
 static const int PointLightNum = 3;
 struct PointLight
@@ -15,6 +16,7 @@ struct PointLight
 	float3 lightAtten;	 // 距離減衰係数
 	uint active;		 // 動作フラグ
 };
+
 // スポットライト光源
 static const int SpotLightNum = 3;
 //struct SpotLight

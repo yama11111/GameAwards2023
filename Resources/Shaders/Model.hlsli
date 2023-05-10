@@ -7,20 +7,23 @@ cbuffer cbuff0 : register(b0)
 	matrix matViewProj;	 // ビュープロジェクション行列
 	float3 cameraPos;	 // カメラ座標
 }
+
 // 色
 cbuffer cbuff1 : register(b1)
 {
 	float4 color; // 色(RGBA)
-	float4 originalColorRate; // 元の色の割合
+	float4 texColorRate; // 元の色の割合
 }
+
 // 光
 cbuffer cbuff2 : register(b2)
 {
-	float3 ambientColor;		 // 環境光色
-	DireLight direLights[DireLightNum];	 // 平行光源
-	PointLight pointLights[PointLightNum];	 // 点光源
-	//SpotLight spotLights[SpotLightNum];	 // スポットライト光源
+	float3 ambientColor; // 環境光色
+	DireLight direLights[DireLightNum]; // 平行光源
+	PointLight pointLights[PointLightNum]; // 点光源
+	//SpotLight spotLights[SpotLightNum]; // スポットライト光源
 }
+
 // マテリアル
 cbuffer cbuff3 : register(b3)
 {
@@ -29,6 +32,7 @@ cbuffer cbuff3 : register(b3)
 	float3 mSpecular : packoffset(c2);	 // スペキュラー係数
 	float  mAlpha    : packoffset(c2.w); // アルファ
 }
+
 
 // 頂点シェーダーの入力構造体 
 struct VSInput
@@ -44,6 +48,7 @@ struct VSInput
 	//// 頂点色
 	//float4 color : COLOR;
 };
+
 // ピクセルシェーダーの入力構造体 
 struct PSInput
 {
@@ -55,4 +60,7 @@ struct PSInput
 	float3 normal : NORMAL;
 	// uv値
 	float2 uv : TEXCOORD;
+
+	// 視線ベクトル
+	float3 eyeDir : EYE_DIRECTION;
 };

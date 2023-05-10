@@ -9,20 +9,20 @@ PSInput main(VSInput input)
 
 	// ピクセルシェーダーに渡す値
 	PSInput output;
-	
+
 
 	// システム頂点
 	output.svPos = mul(mul(matViewProj, matWorld), input.pos);
-	
+
 	// ワールド座標
 	output.worldPos = wPos;
-	
+
 	// 法線ベクトル
 	output.normal = wNormal.xyz;
-	
+
 	// UV座標
 	output.uv = input.uv;
-	
+
 	// 頂点から視点への方向ベクトル
 	output.eyeDir = normalize(cameraPos - wPos.xyz);
 

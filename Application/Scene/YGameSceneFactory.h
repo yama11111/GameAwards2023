@@ -23,6 +23,10 @@ namespace YScene
 		// ƒfƒ‚
 		static const std::string Demo_;
 
+
+		// •]‰¿‰Û‘è—p
+		static const std::string Task_;
+
 	public:
 		
 		/// <summary> 

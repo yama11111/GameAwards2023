@@ -382,4 +382,5 @@ void TestScene::Draw()
 	// エフェクト
 	if (isDrawEffect_) { effectMan_.Draw(); }
 }
+
 #pragma endregion
