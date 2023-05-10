@@ -95,7 +95,6 @@ void Player::Update()
 	playerDra_.Update();
 }
 
-
 void Player::Reset()
 {
 	player_.Initialize({ {0.0f,0.0f,0.0f}, {}, {0.49f,0.9f,1.0f} });
