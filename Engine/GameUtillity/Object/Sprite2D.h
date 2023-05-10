@@ -21,8 +21,11 @@ namespace YGame
 		// オブジェクトクラス前方宣言
 		class Object;
 
-		// パイプラインクラス前方宣言
-		class Pipeline;
+		// シェーダーの種類
+		enum class ShaderType
+		{
+			eDefault = 0, // デフォルト
+		};
 
 	public:
 
@@ -78,7 +81,8 @@ namespace YGame
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
-		void SetDrawCommand(Object* pObj, const DrawLocation& location);
+		/// <param name="shaderType"> : シェーダー</param>
+		void SetDrawCommand(Sprite2D::Object* pObj, const DrawLocation& location, const ShaderType& shaderType = ShaderType::eDefault);
 
 		/// <summary>
 		/// スプライトサイズ設定
@@ -207,6 +211,11 @@ namespace YGame
 
 		// 静的スプライト2D格納用vector配列
 		static std::vector<std::unique_ptr<Sprite2D>> sSprites_;
+	
+	public:
+
+		// パイプラインクラス前方宣言
+		class Pipeline;
 
 	};
 
@@ -330,7 +339,10 @@ namespace YGame
 		/// <param name="pSprite2D"> : スプライトポインタ</param>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticPushBackDrawSet(Sprite2D* pSprite3D, Sprite2D::Object* pObj, const DrawLocation& location);
+		/// <param name="shaderType"> : シェーダー</param>
+		static void StaticPushBackDrawSet(
+			Sprite2D* pSprite3D, Sprite2D::Object* pObj, 
+			const DrawLocation& location, const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
@@ -343,9 +355,9 @@ namespace YGame
 		// ルートパラメータ番号
 		enum class RootParameterIndex
 		{
-			TransformCB = 0, // 行列
-			ColorCB = 1, // 色
-			TexDT = 2, // テクスチャ
+			eTransformCB = 0, // 行列
+			eColorCB	 = 1, // 色
+			eTexDT		 = 2, // テクスチャ
 		};
 
 	private:
@@ -353,13 +365,14 @@ namespace YGame
 		// シェーダーセット
 		class ShaderSet : public YDX::IShaderSet
 		{
+
 		public:
 
-			// 頂点シェーダオブジェクト
-			Microsoft::WRL::ComPtr<ID3DBlob> vsBlob_ = nullptr;
+			// DefaultVS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
 
-			// ピクセルシェーダオブジェクト
-			Microsoft::WRL::ComPtr<ID3DBlob> psBlob_ = nullptr;
+			// DefaultPS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
 
 		public:
 
@@ -384,6 +397,9 @@ namespace YGame
 			// スプライト2D用オブジェクト
 			Sprite2D::Object* pObj_;
 
+			// パイプラインインデックス
+			size_t pipelineIndex_;
+
 		public:
 
 			/// <summary> 
@@ -395,8 +411,11 @@ namespace YGame
 
 	private:
 
+		// シェーダーの数
+		static const size_t sShaderNum_ = static_cast<size_t>(ShaderType::eDefault) + 1;
+
 		// パイプライン設定
-		static std::array<YDX::PipelineSet, DrawLocationNum> sPipelineSets_;
+		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
 		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;

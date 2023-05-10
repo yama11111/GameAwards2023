@@ -25,7 +25,7 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize("PLAY", "BLACKOUT");
+	sceneExe_->Initialize("TASK", "BLACKOUT");
 
 	return true;
 }

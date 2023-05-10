@@ -12,8 +12,12 @@ float4 main(PSInput input) : SV_TARGET
 	float4 baseColor = texColor * color;
 
 
+	// 光沢度
+	const float shininess = 4.0f;
+
+
 	// 平行光源の向き
-	float3 direLightVec = float3(-1.0f, +1.0f, -1.0f);
+	float3 direLightVec = normalize(float3(-1.0f, +1.0f, -1.0f));
 
 	// 平行光源の色
 	float3 direLightColor = float3(1.0f, 1.0f, 1.0f);
@@ -38,7 +42,7 @@ float4 main(PSInput input) : SV_TARGET
 	float3 reflectDir = normalize(-direLightVec + (2.0f * dotLightNormal * input.normal));
 
 	// 鏡面反射光
-	float3 specular = pow(saturate(dot(reflectDir, input.eyeDir)), 4.0f) * mSpecular;
+	float3 specular = pow(saturate(dot(reflectDir, input.eyeDir)), shininess) * mSpecular;
 
 
 	// 全て加算

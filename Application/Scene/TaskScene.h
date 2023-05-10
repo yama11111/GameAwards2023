@@ -40,6 +40,10 @@ namespace YScene
 		// 光源グループ
 		std::unique_ptr<YGame::LightGroup> lightGroup_;
 
+
+		// シェーダー
+		YGame::Model::ShaderType shaderType_;
+
 #pragma endregion
 
 	public:

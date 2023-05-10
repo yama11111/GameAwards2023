@@ -43,7 +43,7 @@ void TaskScene::Initialize()
 	// 光源グル－プ初期化
 	lightGroup_.reset(LightGroup::Create());
 	lightGroup_->SetDirectionalLightActive(0, true);
-	lightGroup_->SetDirectionalLightDirection(0, Vector3(+1.0f, +1.0f, +1.0f).Normalized());
+	lightGroup_->SetDirectionalLightDirection(0, Vector3(-1.0f, +1.0f, -1.0f).Normalized());
 	lightGroup_->SetDirectionalLightColor(0, Vector3(1.0f, 1.0f, 1.0f));
 
 	// 色初期化
@@ -54,7 +54,7 @@ void TaskScene::Initialize()
 
 	// オブジェクト初期化
 	cubeObj_.reset(Model::Object::Create(
-		{ {+30.0f,0.0f,0.0f}, {}, {10.0f,10.0f,10.0f} },
+		{ {+30.0f,0.0f,0.0f}, {0.0f,0.0f,0.0f}, {10.0f,10.0f,10.0f} },
 		&transferVP_,
 		color_.get(),
 		lightGroup_.get(),
@@ -85,8 +85,12 @@ void TaskScene::Finalize()
 void TaskScene::Update()
 {
 	// 回転
+	cubeObj_->rota_.x_ += 0.005f;
+	if (cubeObj_->rota_.y_ >= 2.0f * PI) { cubeObj_->rota_.x_ -= 2.0f * PI; }
 	cubeObj_->rota_.y_ += 0.005f;
 	if (cubeObj_->rota_.y_ >= 2.0f * PI) { cubeObj_->rota_.y_ -= 2.0f * PI; }
+	cubeObj_->rota_.z_ += 0.005f;
+	if (cubeObj_->rota_.y_ >= 2.0f * PI) { cubeObj_->rota_.z_ -= 2.0f * PI; }
 
 	// 行列更新
 	cubeObj_->UpdateMatrix();
@@ -94,6 +98,14 @@ void TaskScene::Update()
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
+
+
+	// スペースキーでシェーダー切り替え
+	if (sKeys_->IsTrigger(DIK_SPACE))
+	{
+		if (shaderType_ == Model::ShaderType::ePhong) { shaderType_ = Model::ShaderType::eToon; }
+		else if (shaderType_ == Model::ShaderType::eToon) { shaderType_ = Model::ShaderType::ePhong; }
+	}
 }
 
 #pragma endregion
@@ -104,8 +116,8 @@ void TaskScene::Update()
 void TaskScene::Draw()
 {
 	// モデル描画
-	pCube_->SetDrawCommand(cubeObj_.get(), DrawLocation::Center);
-	pSphere_->SetDrawCommand(sphereObj_.get(), DrawLocation::Center);
+	pCube_->SetDrawCommand(cubeObj_.get(), DrawLocation::Center, shaderType_);
+	pSphere_->SetDrawCommand(sphereObj_.get(), DrawLocation::Center, shaderType_);
 }
 
 #pragma endregion

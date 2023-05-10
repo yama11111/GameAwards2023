@@ -23,44 +23,18 @@ namespace YDX
 
 	public:
 
-		// 初期化用構造体
-		struct InitStatus
-		{
-
-			// 頂点レイアウト
-			std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout_;
-
-			// テクスチャサンプラー
-			std::vector<D3D12_STATIC_SAMPLER_DESC> samplerDescs_;
-
-			// ルートパラメータ
-			std::vector<D3D12_ROOT_PARAMETER> rootParams_;
-
-			// デスクリプタレンジ
-			D3D12_DESCRIPTOR_RANGE descriptorRange_{};
-
-			// パイプライン設定
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc_{};
-
-			// プリミティブ形状
-			D3D_PRIMITIVE_TOPOLOGY primitive_;
-
-		};
-
-	public:
-
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="status"> : 初期化用ステータス</param>
-		/// <param name="-----------------------------------"></param>
-		/// <param name="inputLayout"> : 頂点レイアウト</param>
 		/// <param name="samplerDescs"> : テクスチャサンプラー</param>
 		/// <param name="rootParams"> : ルートパラメータ</param>
-		/// <param name="descriptorRange"> : デスクリプタレンジ</param>
 		/// <param name="pipelineDesc"> : パイプライン設定</param>
 		/// <param name="primitive"> : プリミティブ形状</param>
-		void Initialize(InitStatus& status);
+		void Initialize(
+			const std::vector<D3D12_STATIC_SAMPLER_DESC>& samplerDescs,
+			const std::vector<D3D12_ROOT_PARAMETER>& rootParams,
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC& pipelineDesc,
+			const D3D_PRIMITIVE_TOPOLOGY& primitive);
 
 		/// <summary>
 		/// 描画前コマンド
@@ -74,7 +48,6 @@ namespace YDX
 		/// </summary>
 		/// <param name="rootParams"> : ルートパラメータ</param>
 		/// <param name="samplerDescs"> : テクスチャサンプラー</param>
-		/// <param name="errorBlob"> : エラー用</param>
 		void CreateRootSignature(
 			const std::vector<D3D12_ROOT_PARAMETER>& rootParams,
 			const std::vector<D3D12_STATIC_SAMPLER_DESC>& samplerDescs);
@@ -83,11 +56,7 @@ namespace YDX
 		/// パイプラインステート生成
 		/// </summary>
 		/// <param name="pipelineDesc"> : パイプライン設定</param>
-		/// <param name="inputLayout"> : 頂点レイアウト</param>
-		/// <param name="descriptorRange"> : デスクリプタレンジ</param>
-		void CreatePipelineState(
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC& pipelineDesc,
-			const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
+		void CreatePipelineState(D3D12_GRAPHICS_PIPELINE_STATE_DESC& pipelineDesc);
 
 		/// <summary>
 		/// プリミティブ形状の設定

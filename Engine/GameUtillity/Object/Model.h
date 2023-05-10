@@ -19,11 +19,13 @@ namespace YGame
 		// オブジェクトクラス前方宣言
 		class Object;
 
-		// パイプラインクラス前方宣言
-		class Pipeline;
-
-		// FBX読み込みクラス前方宣言
-		class FbxLoader;
+		// シェーダーの種類
+		enum class ShaderType
+		{
+			ePhong	 = 0, // Phongシェーダー
+			eToon	 = 1, // Toonシェーダー
+			eDefault = 2, // デフォルト
+		};
 
 	public:
 
@@ -68,7 +70,10 @@ namespace YGame
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
-		void SetDrawCommand(Model::Object* pObj, const DrawLocation& location);
+		/// <param name="shaderType"> : シェーダー</param>
+		void SetDrawCommand(
+			Model::Object* pObj, const DrawLocation& location, 
+			const ShaderType& shaderType = ShaderType::eDefault);
 
 		/// <summary>
 		/// 表示するか設定
@@ -100,6 +105,14 @@ namespace YGame
 
 		// 静的モデル格納用vector配列
 		static std::vector<std::unique_ptr<Model>> sModels_;
+	
+	public:
+
+		// パイプラインクラス前方宣言
+		class Pipeline;
+
+		// FBX読み込みクラス前方宣言
+		class FbxLoader;
 
 	};
 
@@ -272,7 +285,9 @@ namespace YGame
 		/// <param name="pModel"> : モデルポインタ</param>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticPushBackDrawSet(Model* pModel, Model::Object* pObj, const DrawLocation& location);
+		static void StaticPushBackDrawSet(
+			Model* pModel, Model::Object* pObj, 
+			const DrawLocation& location, const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
@@ -290,7 +305,6 @@ namespace YGame
 			eLightCB	 = 2, // 光
 			eMaterialCB	 = 3, // マテリアル
 			eTexDT		 = 4, // テクスチャ
-			eEnd, // リサイズ用
 		};
 
 	private:
@@ -301,11 +315,25 @@ namespace YGame
 
 		public:
 
-			// 頂点シェーダオブジェクト
-			Microsoft::WRL::ComPtr<ID3DBlob> vsBlob_ = nullptr;
+			// DefaultVS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
 
-			// ピクセルシェーダオブジェクト
-			Microsoft::WRL::ComPtr<ID3DBlob> psBlob_ = nullptr;
+			// DefaultPS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
+
+
+			// PhongVS
+			Microsoft::WRL::ComPtr<ID3DBlob> phongVSBlob_ = nullptr;
+
+			// PhongPS
+			Microsoft::WRL::ComPtr<ID3DBlob> phongPSBlob_ = nullptr;
+
+
+			// ToonVS
+			Microsoft::WRL::ComPtr<ID3DBlob> toonVSBlob_ = nullptr;
+
+			// ToonPS
+			Microsoft::WRL::ComPtr<ID3DBlob> toonPSBlob_ = nullptr;
 
 		public:
 
@@ -330,6 +358,9 @@ namespace YGame
 			// モデル用オブジェクト
 			Model::Object* pObj_;
 
+			// パイプラインインデックス
+			size_t pipelineIndex_;
+
 		public:
 
 			/// <summary> 
@@ -341,8 +372,11 @@ namespace YGame
 
 	private:
 
+		// シェーダーの数
+		static const size_t sShaderNum_ = static_cast<size_t>(ShaderType::eDefault) + 1;
+
 		// パイプライン設定
-		static std::array<YDX::PipelineSet, 2> sPipelineSets_;
+		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
 		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;

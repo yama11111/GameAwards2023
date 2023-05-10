@@ -35,7 +35,7 @@ static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 #pragma region Static
 
 vector<unique_ptr<Model>> Model::sModels_{};
-array<PipelineSet, 2> Model::Pipeline::sPipelineSets_{};
+array<PipelineSet, Model::Pipeline::sShaderNum_> Model::Pipeline::sPipelineSets_{};
 array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
 FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
 FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
@@ -222,17 +222,10 @@ void Model::AllClear()
 	sModels_.clear();
 }
 
-void Model::SetDrawCommand(Object* pObj, const DrawLocation& location)
+void Model::SetDrawCommand(Object* pObj, const DrawLocation& location, const ShaderType& shaderType)
 {
-	// 描画セット生成
-	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
-
-	// 初期化
-	newDrawSet->pModel_ = this;
-	newDrawSet->pObj_ = pObj;
-
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(this, pObj, location);
+	Pipeline::StaticPushBackDrawSet(this, pObj, location, shaderType);
 }
 
 void Model::SetIsVisible(const bool isVisible)
@@ -483,6 +476,15 @@ void Model::Object::Default::StaticInitialize()
 #pragma endregion
 
 
+#pragma region シェーダー番号
+
+static const UINT DefaultIndex	 = static_cast<UINT>(Model::ShaderType::eDefault);
+static const UINT PhongIndex	 = static_cast<UINT>(Model::ShaderType::ePhong);
+static const UINT ToonIndex		 = static_cast<UINT>(Model::ShaderType::eToon);
+
+#pragma endregion
+
+
 #pragma region Pipeline
 
 void Model::Pipeline::ShaderSet::Load()
@@ -491,28 +493,59 @@ void Model::Pipeline::ShaderSet::Load()
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
 
-	ID3DBlob* vs = nullptr;
-	ID3DBlob* ps = nullptr;
+	// Default
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
 
-	// 頂点シェーダの読み込みとコンパイル
-	LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
-	// ピクセルシェーダの読み込みとコンパイル
-	LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
 
-	vsBlob_ = vs;
-	psBlob_ = ps;
+		defaultVSBlob_ = vs;
+		defaultPSBlob_ = ps;
+	}
+
+	// phong
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/PhongVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/PhongPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		phongVSBlob_ = vs;
+		phongPSBlob_ = ps;
+	}
+
+	// toon
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ToonVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ToonPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		toonVSBlob_ = vs;
+		toonPSBlob_ = ps;
+	}
 
 }
 
 void Model::Pipeline::StaticInitialize()
 {
-	// パイプライン初期化用設定
-	PipelineSet::InitStatus initStatus;
-
 
 #pragma region シェーダー読み込み
 
+	// シェーダー
 	ShaderSet shdrs;
+	
+	// 読み込み
 	shdrs.Load();
 
 #pragma endregion
@@ -520,7 +553,9 @@ void Model::Pipeline::StaticInitialize()
 
 #pragma region 頂点レイアウトの設定
 
-	initStatus.inputLayout_ =
+
+	// 頂点レイアウト
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout =
 	{
 		// 頂点座標	 (x, y, z)
 		{
@@ -549,6 +584,10 @@ void Model::Pipeline::StaticInitialize()
 
 #pragma region テクスチャサンプラーの設定
 
+	// テクスチャサンプラー配列
+	std::vector<D3D12_STATIC_SAMPLER_DESC> samplerDescs;
+
+	// テクスチャサンプラーの設定
 	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 横折り返し   (タイリング)
 	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 縦折り返し   (タイリング)
@@ -560,15 +599,21 @@ void Model::Pipeline::StaticInitialize()
 	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // ピクセルシェーダーからのみ使用可能
 
-	initStatus.samplerDescs_.push_back(samplerDesc);
+	// テクスチャサンプラー配列に挿入
+	samplerDescs.push_back(samplerDesc);
 
 #pragma endregion
 
 
 #pragma region ルートパラメータの設定
 
-	size_t rpIdxCBNum = static_cast<size_t> (RootParameterIndex::eEnd) - 1;
+	// ルートパラメータ
+	std::vector<D3D12_ROOT_PARAMETER> rootParams;
 
+	// 定数バッファの数
+	size_t rpIdxCBNum = static_cast<size_t> (RootParameterIndex::eTexDT);
+
+	// 定数バッファの数だけ
 	for (size_t i = 0; i < rpIdxCBNum; i++)
 	{
 		// 定数バッファ
@@ -578,53 +623,102 @@ void Model::Pipeline::StaticInitialize()
 		rootParam.Descriptor.RegisterSpace = 0;					  // デフォルト値
 		rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダから見える
 
-		initStatus.rootParams_.push_back(rootParam);
+		// 配列に挿入
+		rootParams.push_back(rootParam);
 	}
 
 	// デスクリプタレンジの設定
-	initStatus.descriptorRange_.NumDescriptors = 1; // 1度の描画に使うテクスチャが1枚なので1
-	initStatus.descriptorRange_.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	initStatus.descriptorRange_.BaseShaderRegister = 0; // テクスチャレジスタ0番
-	initStatus.descriptorRange_.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	D3D12_DESCRIPTOR_RANGE descriptorRange{};
+	descriptorRange.NumDescriptors = 1; // 1度の描画に使うテクスチャが1枚なので1
+	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange.BaseShaderRegister = 0; // テクスチャレジスタ0番
+	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// テクスチャレジスタ
 	D3D12_ROOT_PARAMETER rootParam{};
 	rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParam.DescriptorTable.pDescriptorRanges = &initStatus.descriptorRange_;
+	rootParam.DescriptorTable.pDescriptorRanges = &descriptorRange;
 	rootParam.DescriptorTable.NumDescriptorRanges = 1;
 	rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダから見える
 
-	initStatus.rootParams_.push_back(rootParam);
+	// 配列に挿入
+	rootParams.push_back(rootParam);
 
 #pragma endregion
 
 
 #pragma region パイプライン設定
 
+	// パイプライン設定
+	std::array<D3D12_GRAPHICS_PIPELINE_STATE_DESC, sPipelineSets_.size()> pipelineDescs{};
+
 	// シェーダーの設定
-	initStatus.pipelineDesc_.VS.pShaderBytecode = shdrs.vsBlob_.Get()->GetBufferPointer();
-	initStatus.pipelineDesc_.VS.BytecodeLength = shdrs.vsBlob_.Get()->GetBufferSize();
-	initStatus.pipelineDesc_.PS.pShaderBytecode = shdrs.psBlob_.Get()->GetBufferPointer();
-	initStatus.pipelineDesc_.PS.BytecodeLength = shdrs.psBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].VS.pShaderBytecode	 = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].VS.BytecodeLength	 = shdrs.defaultVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].PS.pShaderBytecode	 = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].PS.BytecodeLength	 = shdrs.defaultPSBlob_.Get()->GetBufferSize();
 
-	// ラスタライザの設定
-	initStatus.pipelineDesc_.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // 背面をカリング
+	pipelineDescs[PhongIndex].VS.pShaderBytecode	 = shdrs.phongVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[PhongIndex].VS.BytecodeLength		 = shdrs.phongVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[PhongIndex].PS.pShaderBytecode	 = shdrs.phongPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[PhongIndex].PS.BytecodeLength		 = shdrs.phongPSBlob_.Get()->GetBufferSize();
 
-	// デプスステンシルステートの設定
-	initStatus.pipelineDesc_.DepthStencilState.DepthEnable = true; // 深度テスト
-	initStatus.pipelineDesc_.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
-	initStatus.pipelineDesc_.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
-	initStatus.pipelineDesc_.DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度フォーマット
+	pipelineDescs[ToonIndex].VS.pShaderBytecode		 = shdrs.toonVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[ToonIndex].VS.BytecodeLength		 = shdrs.toonVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[ToonIndex].PS.pShaderBytecode		 = shdrs.toonPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[ToonIndex].PS.BytecodeLength		 = shdrs.toonPSBlob_.Get()->GetBufferSize();
 
-	// 図形の形状設定
-	initStatus.pipelineDesc_.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
+	{
+		// サンプルマスクの設定
+		pipelineDescs[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+
+		// ラスタライザの設定
+		pipelineDescs[i].RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
+		pipelineDescs[i].RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
+		pipelineDescs[i].RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // 背面をカリング
+
+		// デプスステンシルステートの設定
+		pipelineDescs[i].DepthStencilState.DepthEnable = true; // 深度テスト
+		pipelineDescs[i].DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
+		pipelineDescs[i].DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS; // 小さければ合格
+		pipelineDescs[i].DSVFormat = DXGI_FORMAT_D32_FLOAT; // 深度フォーマット
+
+		// ブレンドステート
+		D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDescs[i].BlendState.RenderTarget[0];
+		blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+
+		blendDesc.BlendEnable = true;                // ブレンドを有効にする
+		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD; // 加算
+		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;   // ソースの値を100%使う
+		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO; // デストの値を  0%使う
+
+		// 半透明合成
+		blendDesc.BlendOp = D3D12_BLEND_OP_ADD;			 // 加算
+		blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;      // ソースのアルファ値
+		blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; // 1.0f - ソースのアルファ値
+
+		// 図形の形状設定
+		pipelineDescs[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		// 頂点レイアウトの設定
+		pipelineDescs[i].InputLayout.pInputElementDescs = inputLayout.data(); // 頂点レイアウトの先頭アドレス
+		pipelineDescs[i].InputLayout.NumElements = (UINT)inputLayout.size(); // 頂点レイアウト数
+
+		// その他の設定
+		pipelineDescs[i].NumRenderTargets = 1; // 描画対象は1つ
+		pipelineDescs[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+		pipelineDescs[i].SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	}
 
 #pragma endregion
 
 
 #pragma region プリミティブ形状の設定
 
-	initStatus.primitive_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST; // 三角形リスト
+	// プリミティブ形状
+	D3D_PRIMITIVE_TOPOLOGY primitive = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST; // 三角形リスト
 
 #pragma endregion
 
@@ -633,7 +727,7 @@ void Model::Pipeline::StaticInitialize()
 	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプライン初期化
-		sPipelineSets_[i].Initialize(initStatus);
+		sPipelineSets_[i].Initialize(samplerDescs, rootParams, pipelineDescs[i], primitive);
 	}
 
 	// 描画場所の数だけ
@@ -660,7 +754,9 @@ void Model::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	}
 }
 
-void Model::Pipeline::StaticPushBackDrawSet(Model* pModel, Model::Object* pObj, const DrawLocation& location)
+void Model::Pipeline::StaticPushBackDrawSet(
+	Model* pModel, Model::Object* pObj, 
+	const DrawLocation& location, const ShaderType& shaderType)
 {
 	// 描画セット生成
 	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
@@ -668,6 +764,7 @@ void Model::Pipeline::StaticPushBackDrawSet(Model* pModel, Model::Object* pObj, 
 	// 初期化
 	newDrawSet->pModel_ = pModel;
 	newDrawSet->pObj_ = pObj;
+	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
@@ -681,12 +778,13 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// パイプラインをセット
-	sPipelineSets_[0].SetDrawCommand();
-
 	// モデル描画
 	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
 	{
+		// パイプラインをセット
+		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+
+		// 描画
 		drawSet->Draw();
 	}
 }

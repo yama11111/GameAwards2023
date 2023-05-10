@@ -48,7 +48,7 @@ float4 main(PSInput input) : SV_TARGET
 
 
 			// ‘S‚Ä‰ÁŽZ
-			shaderColor += (ambient + diffuse + specular) * direLights[i].lightColor;
+			shaderColor += (diffuse + specular) * direLights[i].lightColor;
 		}
 	}
 	for (int j = 0; j < PointLightNum; j++)
@@ -125,5 +125,4 @@ float4 main(PSInput input) : SV_TARGET
 
 	// ŒvŽZ‚µ‚½F‚Å•`‰æ
 	return float4(shaderColor, baseColor.a * mAlpha);
-
 }
