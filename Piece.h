@@ -62,6 +62,7 @@ public:
 
     // 諸事情により特別に公開。使うな。
     void UpdateTabs(void); // 全ブロック移動時tabs_情報更新関数
+    void UpdateTabsPos(void); // 上記関数のposのみ版。最適化はもう間に合わないからあと回し
 private:
     void MovePiecePos(void);
 

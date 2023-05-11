@@ -229,7 +229,7 @@ void Stage::ConfirmOperatorPiecePos(const YMath::Vector2& pos)
 
                                     // 3群
                                     // tabsのUpdate()だけ実行しとく
-                                    //pieceVector_[indexOperatorPiece_]->UpdateTabs();
+                                    pieceVector_[indexOperatorPiece_]->UpdateTabsPos();
                                     // 該当Pieceの接続tabのisEntranceOpenをtrueに変更 Update()内にEntranceをfalseにしてしまう関数が含まれているためこの位置
                                     pieceVector_[indexOperatorPiece_]->GetBlocksPtr()->at(pieceVector_[indexOperatorPiece_]->GetTabs()[i].indexBlockVector_)->SetEntranceOpen(true);
                                     // 該当PieceのTabsから接続状態の有無を変更 同上

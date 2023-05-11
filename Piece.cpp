@@ -273,6 +273,14 @@ void Piece::UpdateTabs(void)
     }
 }
 
+void Piece::UpdateTabsPos(void)
+{
+    for (size_t i = 0; i < tabs_.size(); i++) {
+        // tabsに記録しているPieceEntranceBlockの座標を更新
+        tabs_[i].pos_ = blockVector_[tabs_[i].indexBlockVector_]->GetPos();
+    }
+}
+
 void Piece::WriteBlockPos(void)
 {
     float offset{ IBlock::radiusBase_ };
