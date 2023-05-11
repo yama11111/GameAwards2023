@@ -3,6 +3,7 @@
 #include "Sprite2D.h"
 #include "Sprite3D.h"
 #include "Mesh.h"
+#include "PostEffect.h"
 
 using YDX::VertexCommon;
 using YDX::Vertices;
@@ -148,6 +149,8 @@ void VertexIndex<T>::Draw()
 template class YDX::Vertices<YGame::Sprite2D::VData>;
 template class YDX::Vertices<YGame::Sprite3D::VData>;
 template class YDX::Vertices<YGame::Mesh::VData>;
+template class YDX::Vertices<YGame::PostEffect::VData>;
 template class YDX::VertexIndex<YGame::Sprite2D::VData>;
 template class YDX::VertexIndex<YGame::Sprite3D::VData>;
 template class YDX::VertexIndex<YGame::Mesh::VData>;
+template class YDX::VertexIndex<YGame::PostEffect::VData>;

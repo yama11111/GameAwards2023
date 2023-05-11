@@ -1,6 +1,5 @@
 #pragma once
 #include "SceneExecutive.h"
-#include "TransitionManager.h"
 #include "YWindowsApp.h"
 #include "YDirectX.h"
 #include "ScreenDesc.h"

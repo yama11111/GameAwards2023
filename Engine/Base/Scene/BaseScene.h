@@ -3,6 +3,7 @@
 #include "Sprite2D.h"
 #include "Sprite3D.h"
 #include "Model.h"
+#include "PostEffect.h"
 #include "Audio.h"
 #include "WorldRuler.h"
 #include <memory>

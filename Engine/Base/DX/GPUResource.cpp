@@ -17,7 +17,7 @@ void GPUResource::Create(const CreateStatus& state)
 		&state.heapProp_, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&state.resDesc_, // リソース設定
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+		state.resState_,
 		nullptr,
 		IID_PPV_ARGS(&buffer_)));
 }
