@@ -116,6 +116,10 @@ void PlayScene::Update()
 	//	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	//}
 	
+	player->Update();
+
+	pieceManager->Update();
+
 	// ------------ ª ƒvƒŒƒCƒV[ƒ“‚Ìˆ— ª ------------//
 
 	// ”wŒiXV
@@ -149,6 +153,11 @@ void PlayScene::Draw()
 {
 	// ”wŒi•`‰æ
 	background_.Draw();
+
+
+	player->Draw();
+
+	pieceManager->Draw();
 
 
 	// HUD•`‰æ

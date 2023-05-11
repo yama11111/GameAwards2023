@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Scene\TaskScene.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -185,6 +186,9 @@
     <ClCompile Include="Application\Scene\TestScene.cpp" />
     <ClCompile Include="Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Application\Scene\YGameSceneFactory.cpp" />
+    <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="PieceManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="StageConfig.cpp" />
     <ClCompile Include="Application\Transition\Blackout.cpp" />
     <ClCompile Include="Application\Transition\InfectionBlocks.cpp" />
@@ -209,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\TaskScene.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -297,6 +302,9 @@
     <ClInclude Include="Application\Scene\TestScene.h" />
     <ClInclude Include="Application\Scene\TitleScene.h" />
     <ClInclude Include="Application\Scene\YGameSceneFactory.h" />
+    <ClInclude Include="Piece.h" />
+    <ClInclude Include="PieceManager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="StageConfig.h" />
     <ClInclude Include="Application\Transition\Blackout.h" />
     <ClInclude Include="Application\Transition\InfectionBlocks.h" />

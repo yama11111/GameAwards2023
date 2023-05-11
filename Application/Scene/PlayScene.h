@@ -11,6 +11,9 @@
 #include "ScrollCamera.h"
 #include "StageConfig.h"
 
+#include "Player.h"
+#include "PieceManager.h"
+
 namespace YScene
 {
 	// ゲームシーン
@@ -30,14 +33,24 @@ namespace YScene
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
 		
+		// プレイヤー
+		std::unique_ptr<Player> player;
 
+		//// ピース
+		//std::unique_ptr<Piese> pises;
+		//std::vector<std::unique_ptr<Pises>> piseses;\
+
+		// ピースマネージャー
+		std::unique_ptr<PieceManager> pieceManager;
+
+		//ブロック格納用変数
+		std::vector<std::unique_ptr<Block>> block;
 		
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 
 
 		// ステージ設定
 		StageConfig* stageConfig_ = nullptr;
-
 
 		// 背景
 		BackgroundDrawer background_;

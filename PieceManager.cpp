@@ -1,0 +1,45 @@
+#include "PieceManager.h"
+
+//
+PieceManager::PieceManager()
+{
+	//ècâ°êî
+	BloickX = 9;
+	BloickY = 9;
+
+	//ï°êîÇÃÉsÅ[ÉXê∂ê¨
+	for (int i = 0; i < BloickX * BloickY; i++)
+	{
+		//ê∂ê¨
+		std::unique_ptr<Piece> newPises;
+		newPises.reset(new Piece());
+
+		//èâä˙âª
+		newPises->Initialize();
+
+		//pos
+		YMath::Vector3 pos = { 0,0,0 };
+
+		//
+		newPises->SetPos(pos);
+
+		//äiî[
+		piseses.push_back(std::move(newPises));
+	}
+}
+
+void PieceManager::Update(void)
+{
+	for (size_t i = 0; i < piseses.size(); i++)
+	{
+		piseses[i]->Update();
+	}
+}
+
+void PieceManager::Draw(void)
+{
+	for (size_t i = 0; i < piseses.size(); i++)
+	{
+		piseses[i]->Draw();
+	}
+}
