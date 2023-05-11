@@ -11,6 +11,11 @@
 #include "ScrollCamera.h"
 #include "StageConfig.h"
 
+#include "Piece.h"
+#include "Stage.h"
+#include "BasicBlock.h"
+#include "Player.h"
+
 namespace YScene
 {
 	// ゲームシーン
@@ -29,8 +34,11 @@ namespace YScene
 #pragma region ゲームオブジェクト
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
-		
-
+        Stage stage_{};
+        Piece* piecePtr_{};
+        Piece* piece2Ptr_{};
+        Piece* piece3Ptr_{};
+        Player player_{ &stage_ };
 		
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 

@@ -38,7 +38,6 @@ private:
     bool isJump_{ true };
 
     Stage* stagePtr_;
-    size_t indexPiecePlayerInside_{};
 
     YGame::Transform transform_;
     PlayerDrawer pDrawer_;
@@ -49,13 +48,11 @@ public:
     // setterÅEgetter
     inline void SetPos(const YMath::Vector2& pos) { pos_ = pos; };
     inline void SetRadius(const YMath::Vector2& radius) { radius_ = radius; };
-    inline void SetIndexPiece(size_t index) { indexPiecePlayerInside_ = index; }
     inline void SetOffset(const YMath::Vector2& offset) { offsetForPieceCenter_ = offset; }
 
     inline const YMath::Vector2& GetPos(void) { return pos_; }
     inline const YMath::Vector2& GetRadius(void) { return radius_; }
     inline YMath::Vector2* GetPosPtr(void) { return &pos_; }
-    inline size_t GetIndexPiece(void) { return indexPiecePlayerInside_; }
     inline const YMath::Vector2& GetOffset(void) { return offsetForPieceCenter_; }
 };
 
