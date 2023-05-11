@@ -13,24 +13,36 @@ Piece::Piece(const YMath::Vector2& pos, const YMath::Vector2& radiusBlockCount) 
     // 0 ~ radiusBlockCount * 2 まで
     for (size_t t = 0; t < radiusBlockCount.x_ * 2 + 1; t++)
     {
-        blockVector_.emplace_back(new PieceBasicBlock{ YMath::Vector2{(pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2) + t * IBlock::radiusBase_ * 2, pos.y_ - radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - offset}, YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + t * IBlock::radiusBase_ * 2, -radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - offset}, YMath::Vector2{IBlock::radiusBase_,1} });
+        blockVector_.emplace_back(new PieceBasicBlock{ 
+            YMath::Vector2{(pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2) + t * IBlock::radiusBase_ * 2, pos.y_ + radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + offset}, 
+            YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + t * IBlock::radiusBase_ * 2, +radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + offset}, 
+            YMath::Vector2{IBlock::radiusBase_,1} });
     }
     // 底辺
     // radiusBlockCount * 2 + 1 ~ radiusBlockCount * 4 まで
     for (size_t b = 0; b < radiusBlockCount.x_ * 2 + 1; b++)
     {
-        blockVector_.emplace_back(new PieceBasicBlock{ YMath::Vector2{(pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2) + b * IBlock::radiusBase_ * 2, pos.y_ + radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + offset}, YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + b * IBlock::radiusBase_ * 2, radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + offset }, YMath::Vector2{IBlock::radiusBase_,1} });
+        blockVector_.emplace_back(new PieceBasicBlock{ 
+            YMath::Vector2{(pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2) + b * IBlock::radiusBase_ * 2, pos.y_ - radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - offset}, 
+            YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + b * IBlock::radiusBase_ * 2, -radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - offset }, 
+            YMath::Vector2{IBlock::radiusBase_,1} });
     }
     // 左辺
     // radiusBlockCount * 4 + 1 ~ radiusBlockCount * 6 まで
     for (size_t l = 0; l < radiusBlockCount.y_ * 2 + 1; l++)
     {
-        blockVector_.emplace_back(new PieceBasicBlock{ YMath::Vector2{ pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2 - offset, (pos.y_ - radiusBlockCount.y_ * IBlock::radiusBase_ * 2) + l * IBlock::radiusBase_ * 2}, YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 - offset, -radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + l * IBlock::radiusBase_ * 2}, YMath::Vector2{1,IBlock::radiusBase_} });
+        blockVector_.emplace_back(new PieceBasicBlock{ 
+            YMath::Vector2{ pos.x_ - radiusBlockCount.x_ * IBlock::radiusBase_ * 2 - offset, (pos.y_ + radiusBlockCount.y_ * IBlock::radiusBase_ * 2) - l * IBlock::radiusBase_ * 2}, 
+            YMath::Vector2{ -radiusBlockCount.x_ * IBlock::radiusBase_ * 2 - offset, +radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - l * IBlock::radiusBase_ * 2}, 
+            YMath::Vector2{1,IBlock::radiusBase_} });
     }
     // 右辺
     for (size_t r = 0; r < radiusBlockCount.y_ * 2 + 1; r++)
     {
-        blockVector_.emplace_back(new PieceBasicBlock{ YMath::Vector2{ pos.x_ + radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + offset, (pos.y_ - radiusBlockCount.y_ * IBlock::radiusBase_ * 2) + r * IBlock::radiusBase_ * 2}, YMath::Vector2{ +radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + offset,  -radiusBlockCount.y_ * IBlock::radiusBase_ * 2 + r * IBlock::radiusBase_ * 2}, YMath::Vector2{1,IBlock::radiusBase_} });
+        blockVector_.emplace_back(new PieceBasicBlock{ 
+            YMath::Vector2{ pos.x_ + radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + offset, (pos.y_ + radiusBlockCount.y_ * IBlock::radiusBase_ * 2) - r * IBlock::radiusBase_ * 2}, 
+            YMath::Vector2{ +radiusBlockCount.x_ * IBlock::radiusBase_ * 2 + offset,  +radiusBlockCount.y_ * IBlock::radiusBase_ * 2 - r * IBlock::radiusBase_ * 2}, 
+            YMath::Vector2{1,IBlock::radiusBase_} });
     }
 }
 
@@ -116,10 +128,10 @@ void Piece::MovePiecePos(void)
 {
         if (keysPtr_->IsDown(DIK_T)) {
             // Pieceの中心点座標の移動
-            pos_.y_ -= 5;
+            pos_.y_ += 5;
         }
         if (keysPtr_->IsDown(DIK_G)) {
-            pos_.y_ += 5;
+            pos_.y_ -= 5;
         }
         if (keysPtr_->IsDown(DIK_F)) {
             pos_.x_ -= 5;
