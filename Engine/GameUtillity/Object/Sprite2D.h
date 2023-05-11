@@ -220,7 +220,6 @@ namespace YGame
 	};
 
 
-
 #pragma region Object
 
 	// スプライト2D用オブジェクトクラス
