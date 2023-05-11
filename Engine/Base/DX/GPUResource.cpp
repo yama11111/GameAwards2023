@@ -18,6 +18,6 @@ void GPUResource::Create(const CreateStatus& state)
 		D3D12_HEAP_FLAG_NONE,
 		&state.resDesc_, // ƒŠƒ\[ƒXİ’è
 		state.resState_,
-		nullptr,
+		state.pClearValue_, 
 		IID_PPV_ARGS(&buffer_)));
 }

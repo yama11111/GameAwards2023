@@ -15,7 +15,6 @@ using namespace YGame;
 
 #pragma endregion 
 
-
 #pragma region StaticŠÖ˜A
 
 #pragma endregion 
@@ -29,7 +28,7 @@ void TaskScene::Load()
 	pCube_ = Model::CreateCube();
 	pSphere_ = Model::LoadObj("sphere", true);
 
-	pPostEffect_ = PostEffect::Create({}, { Texture::Load("White1x1.png") });
+	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
 }
 
 #pragma endregion
@@ -69,7 +68,7 @@ void TaskScene::Initialize()
 		material_.get()));
 
 
-	postEffectObj_.reset(PostEffect::Object::Create({ {}, {}, {100.0f,100.0f,0.0f} }));
+	postEffectObj_.reset(PostEffect::Object::Create({ {}, {}, {1.0f,1.0f,0.0f} }));
 }
 
 #pragma endregion

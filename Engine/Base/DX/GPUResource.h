@@ -21,6 +21,8 @@ namespace YDX
 			D3D12_RESOURCE_DESC resDesc_{};
 			// リソースステート
 			D3D12_RESOURCE_STATES resState_ = D3D12_RESOURCE_STATE_GENERIC_READ;
+			// クリア値
+			D3D12_CLEAR_VALUE* pClearValue_ = nullptr;
 		};
 	public:
 		// 生成

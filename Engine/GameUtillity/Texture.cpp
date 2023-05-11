@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include "FileUtillity.h"
 #include "YAssert.h"
+#include "Def.h"
 #include <DirectXTex.h>
 
 #pragma region 名前空間
@@ -104,86 +105,94 @@ Texture* Texture::Create(const Vector4& color)
 	return newTexPtr;
 }
 
-//Texture* Texture::CreateRender()
-//{
-//	// テクスチャ生成
-//	unique_ptr<Texture> newTex = std::make_unique<Texture>();
-//
-//	// 横方向ピクセル数
-//	static const size_t textureWidth = 1;
-//	// 縦方向ピクセル数
-//	static const size_t textureHeight = 1;
-//	// 配列の要素数
-//	static const size_t imageDataCount = textureWidth * textureHeight;
-//
-//	// 画像イメージデータ配列
-//	Vector4* imageData = new Vector4[imageDataCount]; // ※必ず後で開放する
-//
-//	// 全ピクセルの色を初期化
-//	for (size_t i = 0; i < imageDataCount; i++)
-//	{
-//		imageData[i].r_ = color.r_; // R
-//		imageData[i].g_ = color.g_; // G
-//		imageData[i].b_ = color.b_; // B
-//		imageData[i].a_ = color.a_; // A
-//	}
-//
-//	// 生成用情報
-//	GPUResource::CreateStatus texState;
-//	// ヒープ設定
-//	//texState.heapProp_.Type = D3D12_HEAP_TYPE_DEFAULT;
-//	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
-//	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-//	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-//	// リソース設定
-//	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-//	texState.resDesc_.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-//	texState.resDesc_.Width = textureWidth;   // 幅
-//	texState.resDesc_.Height = textureHeight; // 高さ
-//	texState.resDesc_.DepthOrArraySize = 1;
-//	texState.resDesc_.MipLevels = 1;
-//	texState.resDesc_.SampleDesc.Count = 1;
-//
-//	// テクスチャバッファ生成
-//	newTex->buff_.Create(texState);
-//
-//	// テクスチャバッファにデータ転送
-//	Result(newTex->buff_.Get()->WriteToSubresource(
-//		0,
-//		nullptr, // 全領域へコピー
-//		imageData, // 元データアドレス
-//		sizeof(Vector4) * textureWidth, // 1ラインサイズ
-//		sizeof(Vector4) * imageDataCount // 全サイズ
-//	));
-//
-//	// データ開放
-//	delete[] imageData;
-//
-//	// シェーダリソースビュー設定
-//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-//	srvDesc.Format = texState.resDesc_.Format;  // RGBA float
-//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
-//	srvDesc.Texture2D.MipLevels = 1;
-//
-//	// SRV生成
-//	DescriptorHeap::Handle handle{};
-//	handle = Common::spDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc, false);
-//
-//	// ハンドル代入
-//	newTex->srvCpuHandle_ = handle.cpu_;
-//	newTex->srvGpuHandle_ = handle.gpu_;
-//
-//
-//	// ポインタを獲得
-//	Texture* newTexPtr = newTex.get();
-//
-//	// テクスチャを保存
-//	sTexs_.push_back(std::move(newTex));
-//
-//	// テクスチャポインタを返す
-//	return newTexPtr;
-//}
+Texture* Texture::CreateRender()
+{
+	// テクスチャ生成
+	unique_ptr<Texture> newTex = std::make_unique<Texture>();
+
+	// 横方向ピクセル数
+	static const size_t textureWidth = static_cast<size_t>(WinSize.x_);
+	// 縦方向ピクセル数
+	static const size_t textureHeight = static_cast<size_t>(WinSize.y_);
+	// 配列の要素数
+	static const size_t imageDataCount = textureWidth * textureHeight;
+
+	// 色
+	static const YMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
+
+	// 画像イメージデータ配列
+	Vector4* imageData = new Vector4[imageDataCount]; // ※必ず後で開放する
+
+	// 全ピクセルの色を初期化
+	for (size_t i = 0; i < imageDataCount; i++)
+	{
+		imageData[i].r_ = color.r_; // R
+		imageData[i].g_ = color.g_; // G
+		imageData[i].b_ = color.b_; // B
+		imageData[i].a_ = color.a_; // A
+	}
+
+	// 生成用情報
+	GPUResource::CreateStatus texState;
+	// ヒープ設定
+	//texState.heapProp_.Type = D3D12_HEAP_TYPE_DEFAULT;
+	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
+	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	// リソース設定
+	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	texState.resDesc_.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	texState.resDesc_.Width = textureWidth;   // 幅
+	texState.resDesc_.Height = textureHeight; // 高さ
+	texState.resDesc_.DepthOrArraySize = 1;
+	texState.resDesc_.MipLevels = 1;
+	texState.resDesc_.SampleDesc.Count = 1;
+	texState.resDesc_.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	// リソースステート設定
+	texState.resState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	// クリア設定
+	texState.pClearValue_ = &;
+
+	// テクスチャバッファ生成
+	newTex->buff_.Create(texState);
+
+	// テクスチャバッファにデータ転送
+	Result(newTex->buff_.Get()->WriteToSubresource(
+		0,
+		nullptr, // 全領域へコピー
+		imageData, // 元データアドレス
+		sizeof(Vector4) * textureWidth, // 1ラインサイズ
+		sizeof(Vector4) * imageDataCount // 全サイズ
+	));
+
+	// データ開放
+	delete[] imageData;
+
+	// シェーダリソースビュー設定
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Format = texState.resDesc_.Format;  // RGBA float
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
+	srvDesc.Texture2D.MipLevels = 1;
+
+	// SRV生成
+	DescriptorHeap::Handle handle{};
+	handle = Common::spDescHeap_->CreateSRV(newTex->buff_.Get(), srvDesc, false);
+
+	// ハンドル代入
+	newTex->srvCpuHandle_ = handle.cpu_;
+	newTex->srvGpuHandle_ = handle.gpu_;
+
+
+	// ポインタを獲得
+	Texture* newTexPtr = newTex.get();
+
+	// テクスチャを保存
+	sTexs_.push_back(std::move(newTex));
+
+	// テクスチャポインタを返す
+	return newTexPtr;
+}
 
 Texture* Texture::Load(const std::string& texFileName, const bool mipMap)
 {

@@ -1,6 +1,6 @@
 #include "PostEffect.h"
 #include "CalcTransform.h"
-#include <cassert>
+#include "YAssert.h"
 
 #pragma region 名前空間
 
@@ -92,6 +92,15 @@ PostEffect* PostEffect::Create(const Status& status, const TexStatus& texStatus)
 	newSprite->pTex_ = texStatus.pTex_; // テクスチャインデックス
 	newSprite->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
 	newSprite->texSize_ = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
+
+	// RTV初期化
+	newSprite->CreateRTV();
+	
+	// 深度バッファ生成
+	newSprite->CreateDepthBuff(newSprite->texSize_);
+	
+	// DSV初期化
+	newSprite->CreateDSV();
 
 
 	// ポインタを獲得
@@ -212,6 +221,75 @@ void PostEffect::SetAllStatus(const Status& status, const TexStatus& texStatus)
 void PostEffect::SetIsVisible(const bool isVisible)
 {
 	isVisible_ = isVisible;
+}
+
+void PostEffect::CreateRTV()
+{
+	// デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー
+	rtvHeapDesc.NumDescriptors = 1;
+
+	// デスクリプタヒープ生成
+	YDX::Result(device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
+
+
+	// レンダーターゲットビュー設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	
+	// シェーダーの計算結果をSRGBに変換して書き込む
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	
+	// レンダーターゲットビュー生成
+	device_->CreateRenderTargetView(pTex_->Buffer(), &rtvDesc, rtvHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::CreateDepthBuff(const YMath::Vector2& size)
+{
+	// リソース設定
+	D3D12_RESOURCE_DESC depthResDesc{};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = (UINT16)size.x_;
+	depthResDesc.Height = (UINT)size.y_;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
+
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp = {}; // バッファ設定
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE clearValue{}; // 深度値のクリア設定
+	clearValue.DepthStencil.Depth = 1.0f; // 深度値1.0f(最大値)でクリア
+	clearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+
+	// 深度バッファ生成
+	depthBuff_.Create({depthHeapProp, depthResDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue });
+}
+
+void PostEffect::CreateDSV()
+{
+	// デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
+	
+	// 深度ビュー用デスクリプターヒープ作成
+	YDX::Result(device_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_)));
+
+	// 深度ビュー設定
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+
+	// 深度ビュー作成
+	device_->CreateDepthStencilView(
+		depthBuff_.Get(),
+		&dsvDesc,
+		dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 }
 
 #pragma endregion

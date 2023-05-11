@@ -10,6 +10,7 @@ namespace YBase
 {
 	class YFramework
 	{
+
 	protected:
 		
 		// WindowsAPI

@@ -207,6 +207,17 @@ namespace YGame
 		// 表示するか
 		bool isVisible_ = true;
 
+
+		// RTV用ヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
+		
+		// DSV用ヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
+		
+		// 深度バッファ
+		YDX::GPUResource depthBuff_;
+
+
 	private:
 
 		// 静的ポストエフェクト格納用vector配列
@@ -216,6 +227,14 @@ namespace YGame
 
 		// パイプラインクラス前方宣言
 		class Pipeline;
+
+	private:
+
+		void CreateRTV();
+
+		void CreateDepthBuff(const YMath::Vector2& size);
+		
+		void CreateDSV();
 
 	};
 
