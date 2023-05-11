@@ -25,7 +25,7 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize("TASK", "BLACKOUT");
+	sceneExe_->Initialize(YGameSceneFactory::Play_, YGameTransitionFactory::Blackout_);
 
 	return true;
 }
@@ -59,6 +59,20 @@ void MyGame::Draw()
 	// ゲームシーン描画
 	DrawGameScene();
 
+	// 描画場所の数だけ
+	for (size_t i = 0; i < DrawLocationNum; i++)
+	{
+		// 変換
+		DrawLocation location = static_cast<DrawLocation>(i);
+		
+		// ポストエフェクト描画
+		PostEffect::Pipeline::StaticDraw(location);
+		
+		// ポストエフェクト描画セットクリア
+		Sprite3D::Pipeline::StaticClearDrawSet(location);
+	}
+
+
 #ifdef _DEBUG
 
 	// imgui描画
@@ -82,13 +96,13 @@ void MyGame::DrawGameScene()
 		DrawLocation location = static_cast<DrawLocation>(i);
 
 
-		// スプライト2D後描画
+		// スプライト2D描画
 		Sprite2D::Pipeline::StaticDraw(location);
 
-		// モデル後描画
+		// モデル描画
 		Model::Pipeline::StaticDraw(location);
 
-		// スプライト3D後描画
+		// スプライト3D描画
 		Sprite3D::Pipeline::StaticDraw(location);
 
 

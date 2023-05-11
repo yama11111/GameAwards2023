@@ -19,6 +19,8 @@ namespace YDX
 			D3D12_HEAP_PROPERTIES heapProp_{};
 			// リソース設定
 			D3D12_RESOURCE_DESC resDesc_{};
+			// リソースステート
+			D3D12_RESOURCE_STATES resState_ = D3D12_RESOURCE_STATE_GENERIC_READ;
 		};
 	public:
 		// 生成

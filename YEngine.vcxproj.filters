@@ -136,6 +136,12 @@
     <Filter Include="Engine\GameUtil\Object\PostEffect">
       <UniqueIdentifier>{75758752-3e56-4f67-ab35-0c4a6cacdaeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameUtil\Shader\PostEffect">
+      <UniqueIdentifier>{a82cfae2-fc24-4686-872d-8bfd9d9eafb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Block">
+      <UniqueIdentifier>{8c68c61c-b5ac-45e3-9553-4c526ef354c1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Application\game">
       <UniqueIdentifier>{15938fd2-8b01-4abb-9bde-14f67a8e59d5}</UniqueIdentifier>
     </Filter>

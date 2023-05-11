@@ -68,11 +68,13 @@ bool YFramework::Initialize()
 	Sprite2D::Object::Default::StaticInitialize();
 	Sprite3D::Object::Default::StaticInitialize();
 	Model::Object::Default::StaticInitialize();
+	PostEffect::Object::Default::StaticInitialize();
 
 	// パイプライン静的初期化
 	Sprite2D::Pipeline::StaticInitialize();
 	Sprite3D::Pipeline::StaticInitialize();
 	Model::Pipeline::StaticInitialize();
+	PostEffect::Pipeline::StaticInitialize();
 
 	// FBXLoader読み込み
 	Model::FbxLoader::StaticInitialize();
@@ -118,6 +120,7 @@ void YFramework::Finalize()
 	TransitionManager::GetInstance()->Finalize();
 
 	// リソース全クリア
+	PostEffect::AllClear();
 	Model::AllClear();
 	Sprite2D::AllClear();
 	Sprite3D::AllClear();
