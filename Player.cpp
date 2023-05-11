@@ -12,6 +12,8 @@ void Player::Update(void)
 {
     Move();
 
+    transform_.UpdateMatrix();
+    pDrawer_.Update();
     //if (pos_.y > 600)pos_.y = 0;
 }
 

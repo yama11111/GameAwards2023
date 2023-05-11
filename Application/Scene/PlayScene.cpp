@@ -66,7 +66,7 @@ void PlayScene::Initialize()
 
 
 	// カメラ
-	camera_.Initialize({ +17.0f,-11.0f,-21.0f }, {});
+	camera_.Initialize({ +0.0f,0.0f,-1000.0f }, {});
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
@@ -107,7 +107,7 @@ void PlayScene::Initialize()
     piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -20,35 }, Vector2{ 60,2 });
     stage_.AddPiece(piece3Ptr_);
 
-    player_.SetPos(Vector2{ 200,460 });
+    player_.SetPos(Vector2{ 0,0 });
 }
 
 #pragma endregion
@@ -142,6 +142,9 @@ void PlayScene::Update()
 	//	// シーンまるごとリセット
 	//	SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
 	//}
+
+    stage_.Update();
+    player_.Update();
 
 	//ゴール判定
 	//if (ゴールしたら)
@@ -182,14 +185,17 @@ void PlayScene::Update()
 void PlayScene::Draw()
 {
 	// 背景描画
-	background_.Draw();
+	//background_.Draw();
 
+    // game描画
+    stage_.Draw();
+    player_.Draw();
 
 	// HUD描画
-	hud_.Draw();
+	//hud_.Draw();
 
 	// パーティクル
-	particleMan_.Draw();
+	//particleMan_.Draw();
 }
 
 #pragma endregion
