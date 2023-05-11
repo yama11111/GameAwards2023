@@ -136,6 +136,12 @@
     <Filter Include="Engine\GameUtil\Object\PostEffect">
       <UniqueIdentifier>{75758752-3e56-4f67-ab35-0c4a6cacdaeb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Block">
+      <UniqueIdentifier>{8c68c61c-b5ac-45e3-9553-4c526ef354c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\game">
+      <UniqueIdentifier>{15938fd2-8b01-4abb-9bde-14f67a8e59d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -446,6 +452,30 @@
     </ClCompile>
     <ClCompile Include="Application\Scene\TaskScene.cpp">
       <Filter>Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicBlock.cpp">
+      <Filter>Application\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="IBlock.cpp">
+      <Filter>Application\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceEntranceBlock.cpp">
+      <Filter>Application\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceBasicBlock.cpp">
+      <Filter>Application\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="SpringBlock.cpp">
+      <Filter>Application\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>Application\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Application\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Application\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -778,6 +808,30 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\TaskScene.h">
       <Filter>Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceEntranceBlock.h">
+      <Filter>Application\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceBasicBlock.h">
+      <Filter>Application\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="IBlock.h">
+      <Filter>Application\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicBlock.h">
+      <Filter>Application\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="SpringBlock.h">
+      <Filter>Application\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>Application\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
+      <Filter>Application\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Application\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

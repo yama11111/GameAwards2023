@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Scene\TaskScene.cpp" />
+    <ClCompile Include="BasicBlock.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
+    <ClCompile Include="IBlock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Application\Scene\DemoScene.cpp" />
@@ -185,6 +187,12 @@
     <ClCompile Include="Application\Scene\TestScene.cpp" />
     <ClCompile Include="Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Application\Scene\YGameSceneFactory.cpp" />
+    <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="PieceBasicBlock.cpp" />
+    <ClCompile Include="PieceEntranceBlock.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SpringBlock.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageConfig.cpp" />
     <ClCompile Include="Application\Transition\Blackout.cpp" />
     <ClCompile Include="Application\Transition\InfectionBlocks.cpp" />
@@ -209,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\TaskScene.h" />
+    <ClInclude Include="BasicBlock.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -290,6 +299,7 @@
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
+    <ClInclude Include="IBlock.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />
     <ClInclude Include="Application\Scene\PlayScene.h" />
@@ -297,6 +307,12 @@
     <ClInclude Include="Application\Scene\TestScene.h" />
     <ClInclude Include="Application\Scene\TitleScene.h" />
     <ClInclude Include="Application\Scene\YGameSceneFactory.h" />
+    <ClInclude Include="Piece.h" />
+    <ClInclude Include="PieceBasicBlock.h" />
+    <ClInclude Include="PieceEntranceBlock.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="SpringBlock.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="StageConfig.h" />
     <ClInclude Include="Application\Transition\Blackout.h" />
     <ClInclude Include="Application\Transition\InfectionBlocks.h" />
