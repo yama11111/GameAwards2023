@@ -1,5 +1,6 @@
 #include "Stage.h"
 #include <cmath>
+#include <imgui.h>
 
 void Stage::Update(void)
 {
@@ -22,6 +23,18 @@ void Stage::Draw(void)
 
     //DrawFormatString(0, 0, 0xffffff, isPossibleInPiece_ && pieceVector_[indexNoOperatorPiece_]->GetTabs()[indexInPieceOtherTab_].isConnected_ == false && pieceVector_[indexOperatorPiece_]->GetTabs()[indexInPieceMineTab_].isTab_ - pieceVector_[indexNoOperatorPiece_]->GetTabs()[indexInPieceOtherTab_].isTab_ != 0 && pieceVector_[indexNoOperatorPiece_]->GetFixity() ? "ready to InPiece" : "no ready to InPiece");
     //DrawFormatString(0, 20, 0xff0000, isReset_ ? "execute reset" : "do not permission to reset");
+}
+
+void Stage::DrawDebug(void)
+{
+        ImGui::Begin("Piece");
+        for (size_t i = 0; i < pieceVector_.size(); i++)
+        {
+        ImGui::Text("IndexPiece[%d]",i);
+        ImGui::Text("posx:%f, posy:%f", pieceVector_[i]->GetPos().x_, pieceVector_[i]->GetPos().y_);
+        ImGui::Spacing();
+        }
+        ImGui::End();
 }
 
 void Stage::AddPiece(Piece* ptr)

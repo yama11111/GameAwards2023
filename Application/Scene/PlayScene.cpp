@@ -71,11 +71,15 @@ void PlayScene::Initialize()
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
 
+    // ビュープロジェクションにカメラ代入
+    transferVP_ = camera_.GetViewProjection();
+    // ビュープロジェクション
+    transferVP_.UpdateMatrix();
+
 	// プレイBGM開始
 	pPlayBGM_->Play(true);
-	transferVP_.Initialize({});
 
-    piecePtr_ = new Piece{ {-200,100},{5,5} };
+    piecePtr_ = new Piece{ {-200,10},{5,5} };
     piecePtr_->RegisterTab(true, 4);
     piecePtr_->RegisterTab(true, 18);
     piecePtr_->RegisterTab(true, 27);
@@ -107,7 +111,8 @@ void PlayScene::Initialize()
     piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -20,-35 }, Vector2{ 60,2 });
     stage_.AddPiece(piece3Ptr_);
 
-    player_.SetPos(Vector2{ 0,0 });
+    player_ = new Player(&stage_);
+    player_->SetPos(Vector2{ -100,0 });
 }
 
 #pragma endregion
@@ -144,7 +149,9 @@ void PlayScene::Update()
 	//}
 
     stage_.Update();
-    player_.Update();
+    player_->Update();
+    stage_.DrawDebug();
+    player_->DrawDebug();
 
 	//ゴール判定
 	//if (ゴールしたら)
@@ -189,7 +196,7 @@ void PlayScene::Draw()
 
     // game描画
     stage_.Draw();
-    player_.Draw();
+    player_->Draw();
 
 	// HUD描画
 	//hud_.Draw();

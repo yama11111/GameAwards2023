@@ -4,6 +4,7 @@ PieceEntranceBlock::PieceEntranceBlock(const YMath::Vector2& pos, const YMath::V
     IBlock(pos, offset, radius)
 {
     SetType(Type::PIECEENTRANCE);
+    IBlock::GetBlockDrawerRef().Reset(IMode::Type::Movable);
 }
 
 void PieceEntranceBlock::Update(void)

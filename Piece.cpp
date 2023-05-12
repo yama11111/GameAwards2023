@@ -3,6 +3,7 @@
 #include "PieceBasicBlock.h"
 #include "PieceEntranceBlock.h"
 #include "MathUtillity.h"
+#include <imgui.h>
 
 Piece::Piece(const YMath::Vector2& pos, const YMath::Vector2& radiusBlockCount) :
     pos_(pos), radiusBlockCount_(radiusBlockCount), rotate_(0), keysPtr_(YInput::Keys::GetInstance())

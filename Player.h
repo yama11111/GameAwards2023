@@ -13,7 +13,7 @@ public:
     static constexpr uint32_t defaultWidth_{ 4 };
     static constexpr uint32_t defaultHeight_{ 8 };
     static constexpr float moveSpeed_{ 3.f };       // 移動速度
-    static constexpr float jumpPower_{ 10.f };       // ジャンプ力
+    static constexpr float jumpPower_{ 7.f };       // ジャンプ力
     static constexpr float fallValue_{ 0.2f };      // ジャンプ力の減衰
     static constexpr float gravity_{ 3.5f };        // 重力
 
@@ -21,6 +21,8 @@ public:
     Player(Stage* stagePtr);
     void Update(void);
     void Draw(void);
+    
+    void DrawDebug(void);
 
 private:
     void Move(void);
@@ -40,7 +42,8 @@ private:
     Stage* stagePtr_;
 
     YGame::Transform transform_;
-    PlayerDrawer pDrawer_;
+    //PlayerDrawer pDrawer_;
+    BlockDrawer pBDrawer_;
     YMath::Vector3 direction_{ 1,0,0 }; 
 
     YInput::Keys* keysPtr_{};

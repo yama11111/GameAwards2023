@@ -62,5 +62,6 @@ public:
     inline const YMath::Vector2& GetOffset(void) { return offset_; }
     inline const YMath::Vector2& GetRadius(void) { return radius_; }
     inline int GetRotate(void) { return rotate_; }
+    inline BlockDrawer& GetBlockDrawerRef(void) { return bDrawer_; }
 };
 

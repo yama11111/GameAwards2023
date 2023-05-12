@@ -14,6 +14,8 @@ public:
     void Update(void);
     void Draw(void);
 
+    void DrawDebug(void);
+
     void AddPiece(Piece* ptr);
 private:
     // ‘I‘ğ‚µ‚½Piece‚ğ‘€ì

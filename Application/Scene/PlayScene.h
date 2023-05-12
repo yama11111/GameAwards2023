@@ -38,7 +38,7 @@ namespace YScene
         Piece* piecePtr_{};
         Piece* piece2Ptr_{};
         Piece* piece3Ptr_{};
-        Player player_{ &stage_ };
+        Player* player_;
 		
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 

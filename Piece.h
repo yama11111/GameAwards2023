@@ -56,6 +56,8 @@ public:
     void Update(void);
     void Draw(void);
 
+    void DrawDebug(void);
+
     // 新規生成するときの初期値はどうでもいい。offsetとradiusは正確な値が必要
     void RegisterBlock(IBlock* ptr,const YMath::Vector2& offset, const YMath::Vector2& radius);
     void RegisterTab(bool isTab, int indexBlockVector); // PieceEntranceBlockの追加関数

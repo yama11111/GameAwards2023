@@ -1,11 +1,13 @@
 #include "Player.h"
 #include <cmath>
+#include <imgui.h>
 
 Player::Player(Stage* stagePtr) :
     stagePtr_(stagePtr), radius_(defaultWidth_, defaultHeight_), keysPtr_(YInput::Keys::GetInstance())
 {
-    transform_.Initialize({ YMath::Vector3{0,0,0},YMath::Vector3{0,0,0},YMath::Vector3{1,1, 1} });
-    pDrawer_.Initialize(&transform_, &direction_);
+    transform_.Initialize({ YMath::Vector3{0,0,0},YMath::Vector3{0,0,0},YMath::Vector3{radius_.x_,radius_.y_, 1} });
+    //pDrawer_.Initialize(&transform_, &direction_);
+    pBDrawer_.Initialize(&transform_, IMode::Type::Movable);
 }
 
 void Player::Update(void)
@@ -13,13 +15,23 @@ void Player::Update(void)
     Move();
 
     transform_.UpdateMatrix();
-    pDrawer_.Update();
+    //pDrawer_.Update();
+    pBDrawer_.Update();
     //if (pos_.y > 600)pos_.y = 0;
 }
 
 void Player::Draw(void)
 {
-    pDrawer_.Draw();
+    //pDrawer_.Draw();
+    pBDrawer_.Draw();
+}
+
+void Player::DrawDebug(void)
+{
+    ImGui::Begin("Player");
+    ImGui::Text("posx: %f,posy: %f,posz:%f", transform_.pos_.x_, transform_.pos_.y_, transform_.pos_.z_);
+    ImGui::Text("scax: %f,scay: %f,scaz:%f", transform_.scale_.x_, transform_.scale_.y_, transform_.scale_.z_);
+    ImGui::End();
 }
 
 void Player::Move(void)
@@ -115,14 +127,14 @@ void Player::Collision(YMath::Vector2& vel)
             // yŽ²•ûŒü
             if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
                 if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
-                    vel.y_ > 0 ? vel.y_ -= surplus : vel.y_ += surplus;
+                    vel.y_ < 0 ? vel.y_ -= surplus : vel.y_ += surplus;
                 }
             }
 
             // xŽ²•ûŒü
             if (CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_)) {
                 if (CheckHit(GetPos().x_, GetRadius().x_, vel.x_, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_, surplus)) {
-                    vel.x_ > 0 ? vel.x_ -= surplus : vel.x_ += surplus;
+                    vel.x_ < 0 ? vel.x_ -= surplus : vel.x_ += surplus;
                 }
             }
         }
