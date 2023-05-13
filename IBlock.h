@@ -55,7 +55,7 @@ public:
     inline void SetPos(const YMath::Vector2& pos) { pos_ = pos; }
     inline void SetOffset(const YMath::Vector2& offset) { offset_ = offset; }
     inline void SetRadius(const YMath::Vector2& radius) { radius_ = radius; }
-    inline void SetRotate(int rotate) { rotate = rotate; }
+    inline void SetRotate(int rotate) { rotate_ = rotate; }
 
     inline const Type& GetType(void) { return type_; }
     inline const YMath::Vector2& GetPos(void) { return pos_; }
