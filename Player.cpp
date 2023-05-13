@@ -46,7 +46,7 @@ void Player::Move(void)
 
     // y軸
     // ジャンプ処理
-    Jump(vel);
+    Jump(vel,false);
     // 重力
     vel.y_ -= gravity_;
 
@@ -65,7 +65,7 @@ void Player::Move(void)
     if (vel.x_ != 0.f) direction_ = { vel.x_, 0, 0 };
 }
 
-void Player::Jump(YMath::Vector2& vel)
+void Player::Jump(YMath::Vector2& vel,bool spring)
 {
     static float jumpValue{ 0.f };
 
@@ -73,6 +73,12 @@ void Player::Jump(YMath::Vector2& vel)
     if (keysPtr_->IsTrigger(DIK_SPACE) && isJump_ == false) {
         isJump_ = true;
         jumpValue += jumpPower_;
+    }
+
+    if (spring && isJump_ == false)
+    {
+        isJump_ = true;
+        jumpValue += springPower_;
     }
 
     // velにジャンプ量(y軸移動量)を加算
@@ -117,8 +123,17 @@ void Player::Collision(YMath::Vector2& vel)
                     continue;
             }
 
+            // バネブロック処理
             if (tempBlockPtr->GetType() == IBlock::Type::SPRING) {
+                if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, 9) &&
+                    CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, 9)) {
 
+                    //DrawFormatString(0, 60, GetColor(100, 100, 100), "true");
+
+                    //if (isJump_ == false) {
+                    Jump(vel, true);
+                    //}
+                }
             }
 
             // ブロックにめり込んだピクセル値

@@ -14,6 +14,7 @@
 #include "Piece.h"
 #include "Stage.h"
 #include "BasicBlock.h"
+#include "SpringBlock.h"
 #include "Player.h"
 
 namespace YScene

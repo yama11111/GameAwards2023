@@ -16,6 +16,7 @@ public:
     static constexpr float jumpPower_{ 7.f };       // ジャンプ力
     static constexpr float fallValue_{ 0.2f };      // ジャンプ力の減衰
     static constexpr float gravity_{ 3.5f };        // 重力
+    static constexpr float springPower_{ 12.f };    // バネで跳ねる時の跳躍力
 
     // 関数
     Player(Stage* stagePtr);
@@ -26,7 +27,7 @@ public:
 
 private:
     void Move(void);
-    void Jump(YMath::Vector2& vel);
+    void Jump(YMath::Vector2& vel,bool spring);
 
     void Collision(YMath::Vector2& vel);
     bool CheckHit(float pos, float radius, float vel, float blockpos, float blockradius);
