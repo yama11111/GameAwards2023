@@ -111,7 +111,7 @@ void PlayScene::Initialize()
     piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -20,-35 }, Vector2{ 60,2 });
     stage_.AddPiece(piece3Ptr_);
 
-    player_ = new Player(&stage_);
+    player_ = std::make_unique<Player>(&stage_);
     player_->SetPos(Vector2{ -100,0 });
 }
 
