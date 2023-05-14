@@ -10,7 +10,7 @@ cbuffer cbuff1 : register(b1)
 	float4 color; // 色(RGBA)
 	float4 texColorRate; // 元の色の割合
 }
-
+//
 //// テクスチャ設定
 //cbuffer cbuff2 : register(b2)
 //{

@@ -33,6 +33,13 @@ cbuffer cbuff3 : register(b3)
 	float  mAlpha    : packoffset(c2.w); // アルファ
 }
 
+//// テクスチャ設定
+//cbuffer cbuff4 : register(b4)
+//{
+//	float2 tiling; // タイリング
+//	float2 offset; // オフセット
+//}
+
 
 // 頂点シェーダーの入力構造体 
 struct VSInput

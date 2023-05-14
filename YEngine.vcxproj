@@ -153,6 +153,7 @@
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\CBTexConfig.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp" />
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Application\Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\CBTexConfig.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Node.h" />
     <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h" />
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
@@ -323,6 +325,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Light.hlsli" />
+    <None Include="Resources\Shaders\PostEffect.hlsli" />
     <None Include="Resources\Shaders\Sprite3D.hlsli" />
     <None Include="Resources\Shaders\Model.hlsli" />
     <None Include="Resources\Shaders\Sprite2D.hlsli" />
@@ -333,6 +336,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PhongVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

@@ -1,19 +1,78 @@
 #pragma once
-#include <d3d12.h>
+#include "GPUResource.h"
 #include <dxgi1_6.h>
-#include <wrl.h>
 #include <vector>
 #include <chrono>
 #include "Vector2.h"
 #include "Vector4.h"
 
-#pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
 namespace YDX 
 {
 	class YDirectX
 	{
+	
+	public:
+		
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <param name="hwnd"> : ウィンドウハンドル</param>
+		/// <param name="windowSize"> : ウィンドウサイズ</param>
+		/// <returns>初期化に成功したか</returns>
+		bool Initialize(const HWND& hwnd, const YMath::Vector2& windowSize = { 1280, 720 }); 
+		
+		/// <summary>
+		/// 描画前準備
+		/// </summary>
+		/// <param name="clearColor"> : 画面クリア時の色</param>
+		void PreDraw(const YMath::Vector4& clearColor);
+
+		/// <summary>
+		/// 描画後処理
+		/// </summary>
+		void PostDraw();
+	
+	public:
+
+		/// <summary>
+		/// DXGIファクトリーポインタ取得
+		/// </summary>
+		/// <returns>DXGIファクトリーポインタ</returns>
+		IDXGIFactory7* DXGIFactoryPtr() { return dxgiFactory_.Get(); }
+
+		/// <summary>
+		/// デバイスポインタ取得
+		/// </summary>
+		/// <returns>デバイスポインタ</returns>
+		ID3D12Device* DevicePtr() { return device_.Get(); }
+		
+		/// <summary>
+		/// コマンドリストポインタ取得
+		/// </summary>
+		/// <returns>コマンドリストポインタ</returns>
+		ID3D12GraphicsCommandList* CommandListPtr() { return cmdList_.Get(); }
+
+		/// <summary>
+		/// コマンドリストポインタ取得
+		/// </summary>
+		/// <returns>コマンドリストポインタ</returns>
+		ID3D12CommandQueue* CommandQueuePtr() { return cmdQueue_.Get(); }
+		
+		/// <summary>
+		/// バックバッファ数取得
+		/// </summary>
+		/// <returns>バックバッファ数</returns>
+		size_t BackBufferCount() { return backBuffers_.size(); }
+	
+	public:
+		
+		/// <summary>
+		/// FPS設定
+		/// </summary>
+		/// <param name="fps"> : FPS</param>
+		static void SetFPS(const float fps);
 	
 	private:
 		
@@ -28,6 +87,7 @@ namespace YDX
 		// デバイス
 		ComPtr<ID3D12Device> device_ = nullptr;
 		
+
 		// コマンドアロケーター
 		ComPtr<ID3D12CommandAllocator> cmdAllocator_ = nullptr;
 		
@@ -37,21 +97,25 @@ namespace YDX
 		// コマンドキュー
 		ComPtr<ID3D12CommandQueue> cmdQueue_ = nullptr;
 		
+
 		// スワップチェーン
 		ComPtr<IDXGISwapChain4> swapChain_ = nullptr;
 		
+
 		// RTV用ヒープ
 		ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
 		
 		// バックバッファ (RTV本体)
 		std::vector<ComPtr<ID3D12Resource>> backBuffers_;
 		
+
 		// DSV用ヒープ
 		ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
 		
-		// DSVバッファ (DSV本体)
-		ComPtr<ID3D12Resource> dsvBuff_ = nullptr;
+		// 深度バッファ (DSV本体)
+		ComPtr<ID3D12Resource> depthBuff_ = nullptr;
 		
+
 		// フェンス
 		ComPtr<ID3D12Fence> fence_ = nullptr;
 		
@@ -61,28 +125,6 @@ namespace YDX
 		// FPS固定用時間記録
 		std::chrono::steady_clock::time_point timeRef_;
 	
-	public:
-		
-		// 初期化
-		bool Initialize(const HWND& hwnd, const YMath::Vector2& size = { 1280, 720 });
-		
-		// 描画前準備
-		void PreDraw(const YMath::Vector4& clearColor);
-		
-		// 描画後処理
-		void PostDraw();
-	
-	public:
-		
-		// デバイスポインタ
-		ID3D12Device* Device() { return device_.Get(); }
-		
-		// コマンドリストポインタ
-		ID3D12GraphicsCommandList* CommandList() { return cmdList_.Get(); }
-		
-		// バックバッファ数取得
-		size_t BackBufferCount() { return backBuffers_.size(); }
-	
 	private:
 		
 		// 固定時fps (初期値 : 60fps)
@@ -90,10 +132,6 @@ namespace YDX
 		
 		// 調整用fps (初期値 : 65fps)
 		static std::chrono::microseconds MinCheckTime_;
-	
-	public:
-		
-		static void SetFPS(const float fps);
 	
 	};
 }

@@ -48,24 +48,25 @@ Texture* Texture::Create(const Vector4& color)
 		imageData[i].a_ = color.a_; // A
 	}
 
-	// 生成用情報
-	GPUResource::CreateStatus texState;
 	// ヒープ設定
-	//texState.heapProp_.Type = D3D12_HEAP_TYPE_DEFAULT;
-	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
-	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	D3D12_HEAP_PROPERTIES heapProp{};
+	//heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+	heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	
 	// リソース設定
-	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	texState.resDesc_.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	texState.resDesc_.Width = textureWidth;   // 幅
-	texState.resDesc_.Height = textureHeight; // 高さ
-	texState.resDesc_.DepthOrArraySize = 1;
-	texState.resDesc_.MipLevels = 1;
-	texState.resDesc_.SampleDesc.Count = 1;
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	resDesc.Width = (UINT16)textureWidth;   // 幅
+	resDesc.Height = (UINT)textureHeight; // 高さ
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
 
 	// テクスチャバッファ生成
-	newTex->buff_.Create(texState);
+	newTex->buff_.Create(&heapProp, &resDesc);
 
 	// テクスチャバッファにデータ転送
 	Result(newTex->buff_.Get()->WriteToSubresource(
@@ -81,7 +82,7 @@ Texture* Texture::Create(const Vector4& color)
 
 	// シェーダリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = texState.resDesc_.Format;  // RGBA float
+	srvDesc.Format = resDesc.Format;  // RGBA float
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
@@ -126,23 +127,26 @@ Texture* Texture::CreateRender()
 		imageData[i] = 0xffffffff;
 	}
 
-	// 生成用情報
-	GPUResource::CreateStatus texState;
 	// ヒープ設定
-	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
-	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	
 	// リソース設定
-	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	texState.resDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-	texState.resDesc_.Width = textureWidth;   // 幅
-	texState.resDesc_.Height = textureHeight; // 高さ
-	texState.resDesc_.DepthOrArraySize = 1;
-	texState.resDesc_.MipLevels = 1;
-	texState.resDesc_.SampleDesc.Count = 1;
-	texState.resDesc_.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	resDesc.Width = (UINT16)textureWidth;   // 幅
+	resDesc.Height = (UINT)textureHeight; // 高さ
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	
 	// リソースステート設定
-	texState.resState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	D3D12_RESOURCE_STATES resState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	
 	// クリア設定
 	D3D12_CLEAR_VALUE clearValue{};
 	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -154,18 +158,17 @@ Texture* Texture::CreateRender()
 	clearValue.Color[1] = 0.5f;
 	clearValue.Color[2] = 0.1f;
 	clearValue.Color[3] = 0.0f;
-	texState.pClearValue_ = &clearValue;
 
 	// テクスチャバッファ生成
-	newTex->buff_.Create(texState);
+	newTex->buff_.Create(&heapProp, &resDesc, resState, &clearValue);
 
 	// テクスチャバッファにデータ転送
 	Result(newTex->buff_.Get()->WriteToSubresource(
 		0,
 		nullptr, // 全領域へコピー
 		imageData, // 元データアドレス
-		sizeof(UINT) * textureWidth, // 1ラインサイズ
-		sizeof(UINT) * imageDataCount // 全サイズ
+		sizeof(UINT) * (UINT)textureWidth, // 1ラインサイズ
+		sizeof(UINT) * (UINT)imageDataCount // 全サイズ
 	));
 
 	// データ開放
@@ -173,7 +176,7 @@ Texture* Texture::CreateRender()
 
 	// シェーダリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = texState.resDesc_.Format;  // RGBA float
+	srvDesc.Format = resDesc.Format;  // RGBA float
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
@@ -262,24 +265,25 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 	//読み込んだディフューズテクスチャを SRGB として扱う
 	metadata.format = DirectX::MakeSRGB(metadata.format);
 
-	// 生成用情報
-	GPUResource::CreateStatus texState;
 	// ヒープ設定
+	D3D12_HEAP_PROPERTIES heapProp{};
 	//texState.heapProp_.Type = D3D12_HEAP_TYPE_DEFAULT;
-	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
-	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	
 	// リソース設定
-	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	texState.resDesc_.Format = metadata.format;
-	texState.resDesc_.Width = metadata.width;   // 幅
-	texState.resDesc_.Height = (UINT)metadata.height; // 高さ
-	texState.resDesc_.DepthOrArraySize = (UINT16)metadata.arraySize;
-	texState.resDesc_.MipLevels = (UINT16)metadata.mipLevels;
-	texState.resDesc_.SampleDesc.Count = 1;
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Format = metadata.format;
+	resDesc.Width = metadata.width;   // 幅
+	resDesc.Height = (UINT)metadata.height; // 高さ
+	resDesc.DepthOrArraySize = (UINT16)metadata.arraySize;
+	resDesc.MipLevels = (UINT16)metadata.mipLevels;
+	resDesc.SampleDesc.Count = 1;
 
 	// テクスチャバッファ生成
-	newTex->buff_.Create(texState);
+	newTex->buff_.Create(&heapProp, &resDesc);
 
 	// テクスチャバッファにデータ転送
 	//全ミップマップについて
@@ -299,10 +303,10 @@ Texture* Texture::Load(const std::string& directoryPath, const std::string texFi
 
 	// シェーダリソースビュー設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = texState.resDesc_.Format;
+	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // 2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = texState.resDesc_.MipLevels;
+	srvDesc.Texture2D.MipLevels = resDesc.MipLevels;
 
 	// SRV生成
 	DescriptorHeap::Handle handle{};

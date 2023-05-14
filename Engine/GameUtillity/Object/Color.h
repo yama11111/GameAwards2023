@@ -7,6 +7,7 @@ namespace YGame
 {
 	class Color
 	{
+	
 	public:
 
 		// 定数バッファデータ構造体 (色)

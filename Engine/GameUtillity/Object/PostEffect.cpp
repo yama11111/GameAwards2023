@@ -313,7 +313,7 @@ void PostEffect::CreateDepthBuff(const YMath::Vector2& size)
 	clearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
 	// 深度バッファ生成
-	depthBuff_.Create({depthHeapProp, depthResDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue });
+	depthBuff_.Create(&depthHeapProp, &depthResDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue);
 }
 
 void PostEffect::CreateDSV()
@@ -433,9 +433,9 @@ void PostEffect::Pipeline::ShaderSet::Load()
 		ID3DBlob* ps = nullptr;
 
 		// 頂点シェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/Sprite2DVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		LoadShader(L"Resources/Shaders/PostEffectVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
 		// ピクセルシェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/Sprite2DPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+		LoadShader(L"Resources/Shaders/PostEffectPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
 
 		defaultVSBlob_ = vs;
 		defaultPSBlob_ = ps;

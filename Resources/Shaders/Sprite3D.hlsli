@@ -4,12 +4,21 @@ cbuffer cbuff0 : register(b0)
 	matrix matWorld; // 3D変換行列
 	matrix matBillboard; // ビルボード行列
 }
+
 // 色
 cbuffer cbuff1 : register(b1)
 {
 	float4 color; // 色(RGBA)
-	float4 originalColorRate; // 元の色の割合
+	float4 texColorRate; // 元の色の割合
 }
+
+//// テクスチャ設定
+//cbuffer cbuff2 : register(b2)
+//{
+//	float2 tiling; // タイリング
+//	float2 offset; // オフセット
+//}
+
 
 // 頂点シェーダーの入力構造体 
 struct VSInput 
@@ -17,12 +26,14 @@ struct VSInput
 	// 頂点座標
 	float4 pos : POSITION;
 };
+
 // ジオメトリシェーダーの入力構造体 
 struct GSInput 
 {
 	// 頂点座標
 	float4 pos : POSITION;
 };
+
 // ピクセルシェーダーの入力構造体 
 struct PSInput
 {

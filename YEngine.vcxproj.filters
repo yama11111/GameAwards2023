@@ -447,6 +447,9 @@
     <ClCompile Include="Engine\GameUtillity\Texture.cpp">
       <Filter>Engine\GameUtil</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\CBTexConfig.cpp">
+      <Filter>Engine\GameUtil\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -779,6 +782,9 @@
     <ClInclude Include="Engine\GameUtillity\Texture.h">
       <Filter>Engine\GameUtil</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\CBTexConfig.h">
+      <Filter>Engine\GameUtil\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite3D.hlsli">
@@ -792,6 +798,9 @@
     </None>
     <None Include="Resources\Shaders\Light.hlsli">
       <Filter>Engine\GameUtil\Shader\Model</Filter>
+    </None>
+    <None Include="Resources\Shaders\PostEffect.hlsli">
+      <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -827,6 +836,12 @@
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PhongPS.hlsl">
       <Filter>Engine\GameUtil\Shader\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectPS.hlsl">
+      <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectVS.hlsl">
+      <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

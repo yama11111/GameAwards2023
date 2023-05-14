@@ -207,6 +207,10 @@ namespace YGame
 			YMath::Matrix4 matWorld_;	 // ワールド行列
 			YMath::Matrix4 matViewProj_; // ビュープロジェクション行列
 			YMath::Vector3 cameraPos_;	 // カメラ座標
+			//float pad_; // パディング
+			//YGame::LightGroup::CBData lightGroup_; // 光源グループ
+			//YGame::Material::CBData material_; // マテリアル
+
 		};
 
 	private:
