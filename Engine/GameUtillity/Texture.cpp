@@ -117,31 +117,24 @@ Texture* Texture::CreateRender()
 	// 配列の要素数
 	static const size_t imageDataCount = textureWidth * textureHeight;
 
-	// 色
-	static const YMath::Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-
 	// 画像イメージデータ配列
-	Vector4* imageData = new Vector4[imageDataCount]; // ※必ず後で開放する
+	UINT* imageData = new UINT[imageDataCount]; // ※必ず後で開放する
 
 	// 全ピクセルの色を初期化
 	for (size_t i = 0; i < imageDataCount; i++)
 	{
-		imageData[i].r_ = color.r_; // R
-		imageData[i].g_ = color.g_; // G
-		imageData[i].b_ = color.b_; // B
-		imageData[i].a_ = color.a_; // A
+		imageData[i] = 0xffffffff;
 	}
 
 	// 生成用情報
 	GPUResource::CreateStatus texState;
 	// ヒープ設定
-	//texState.heapProp_.Type = D3D12_HEAP_TYPE_DEFAULT;
 	texState.heapProp_.Type = D3D12_HEAP_TYPE_CUSTOM;
 	texState.heapProp_.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	texState.heapProp_.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 	// リソース設定
 	texState.resDesc_.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	texState.resDesc_.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	texState.resDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	texState.resDesc_.Width = textureWidth;   // 幅
 	texState.resDesc_.Height = textureHeight; // 高さ
 	texState.resDesc_.DepthOrArraySize = 1;
@@ -151,7 +144,17 @@ Texture* Texture::CreateRender()
 	// リソースステート設定
 	texState.resState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	// クリア設定
-	texState.pClearValue_ = &;
+	D3D12_CLEAR_VALUE clearValue{};
+	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//clearValue.Color[0] = ClearColor.r_;
+	//clearValue.Color[1] = ClearColor.g_;
+	//clearValue.Color[2] = ClearColor.b_;
+	//clearValue.Color[3] = ClearColor.a_;
+	clearValue.Color[0] = 0.25f;
+	clearValue.Color[1] = 0.5f;
+	clearValue.Color[2] = 0.1f;
+	clearValue.Color[3] = 0.0f;
+	texState.pClearValue_ = &clearValue;
 
 	// テクスチャバッファ生成
 	newTex->buff_.Create(texState);
@@ -161,8 +164,8 @@ Texture* Texture::CreateRender()
 		0,
 		nullptr, // 全領域へコピー
 		imageData, // 元データアドレス
-		sizeof(Vector4) * textureWidth, // 1ラインサイズ
-		sizeof(Vector4) * imageDataCount // 全サイズ
+		sizeof(UINT) * textureWidth, // 1ラインサイズ
+		sizeof(UINT) * imageDataCount // 全サイズ
 	));
 
 	// データ開放

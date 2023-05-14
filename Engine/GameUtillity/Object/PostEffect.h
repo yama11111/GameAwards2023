@@ -3,10 +3,9 @@
 #include "IShaderSet.h"
 #include "PipelineSet.h"
 #include "Texture.h"
-#include "ObjectConfig.h"
 #include "Transform.h"
 #include "Color.h"
-#include "Vector2.h"
+#include "ScreenDesc.h"
 #include <list>
 #include <array>
 
@@ -80,9 +79,18 @@ namespace YGame
 		/// 描画コマンド
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
-		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
-		void SetDrawCommand(PostEffect::Object* pObj, const DrawLocation& location, const ShaderType& shaderType = ShaderType::eDefault);
+		void SetDrawCommand(PostEffect::Object* pObj, const ShaderType& shaderType = ShaderType::eDefault);
+
+		/// <summary>
+		/// 書き込み開始
+		/// </summary>
+		void StartRender();
+
+		/// <summary>
+		/// 書き込み終了
+		/// </summary>
+		void EndRender();
 
 		/// <summary>
 		/// スプライトサイズ設定
@@ -210,10 +218,10 @@ namespace YGame
 
 		// RTV用ヒープ
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
-		
+
 		// DSV用ヒープ
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
-		
+
 		// 深度バッファ
 		YDX::GPUResource depthBuff_;
 
@@ -233,8 +241,32 @@ namespace YGame
 		void CreateRTV();
 
 		void CreateDepthBuff(const YMath::Vector2& size);
-		
+
 		void CreateDSV();
+
+	private:
+
+		// 静的デバイスポインタ
+		static ID3D12Device* spDevice_;
+
+		// 静的コマンドリストポインタ
+		static ID3D12GraphicsCommandList* spCmdList_;
+
+		// 静的スクリーン設定ポインタ
+		static YDX::ScreenDesc* spScreenDesc_;
+
+	public:
+
+		/// <summary>
+		/// 静的初期化
+		/// </summary>
+		/// <param name="pDevice"> : デバイスポインタ</param>
+		/// <param name="pCmdList"> : コマンドリストポインタ</param>
+		/// <param name="pScrreenDesc"> : スクリーン設定ポインタ</param>
+		static void StaticInitialize(
+			ID3D12Device* pDevice,
+			ID3D12GraphicsCommandList* pCmdList,
+			YDX::ScreenDesc* pScreenDesc);
 
 	};
 
@@ -348,25 +380,22 @@ namespace YGame
 		/// <summary>
 		/// 静的描画リストクリア
 		/// </summary>
-		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticClearDrawSet(const DrawLocation& location);
+		static void StaticClearDrawSet();
 
 		/// <summary>
 		/// 静的描画セット挿入
 		/// </summary>
 		/// <param name="pPostEffect"> : ポストエフェクトポインタ</param>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
-		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
 		static void StaticPushBackDrawSet(
 			PostEffect* pPostEffect, PostEffect::Object* pObj,
-			const DrawLocation& location, const ShaderType& shaderType);
+			const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
 		/// </summary>
-		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticDraw(const DrawLocation& location);
+		static void StaticDraw();
 
 	public:
 
@@ -415,9 +444,6 @@ namespace YGame
 			// ポストエフェクト用オブジェクト
 			PostEffect::Object* pObj_;
 
-			// パイプラインインデックス
-			size_t pipelineIndex_;
-
 		public:
 
 			/// <summary> 
@@ -436,7 +462,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+		static std::array<std::list<std::unique_ptr<DrawSet>>, sShaderNum_> sDrawSets_;
 
 	};
 

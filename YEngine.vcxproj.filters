@@ -46,9 +46,6 @@
     <Filter Include="Engine\GameUtil\Light">
       <UniqueIdentifier>{8d2ddc5c-59f9-41e1-a31e-064f18b71408}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameUtil\Resource">
-      <UniqueIdentifier>{28e50d81-eb17-4533-a659-ee5403e36748}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GameUtil\Object">
       <UniqueIdentifier>{5b49a32d-655f-4aff-bad9-1d276da48a06}</UniqueIdentifier>
     </Filter>
@@ -306,12 +303,6 @@
     <ClCompile Include="StageConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Audio.cpp">
-      <Filter>Engine\GameUtil\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Texture.cpp">
-      <Filter>Engine\GameUtil\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\Color.cpp">
       <Filter>Engine\GameUtil\Object</Filter>
     </ClCompile>
@@ -449,6 +440,12 @@
     </ClCompile>
     <ClCompile Include="Application\Scene\TaskScene.cpp">
       <Filter>Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Audio.cpp">
+      <Filter>Engine\GameUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Texture.cpp">
+      <Filter>Engine\GameUtil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -626,12 +623,6 @@
     <ClInclude Include="Engine\GameUtillity\Camera\ScrollCamera.h">
       <Filter>Engine\GameUtil\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Audio.h">
-      <Filter>Engine\GameUtil\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Texture.h">
-      <Filter>Engine\GameUtil\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Color.h">
       <Filter>Engine\GameUtil\Object</Filter>
     </ClInclude>
@@ -781,6 +772,12 @@
     </ClInclude>
     <ClInclude Include="Application\Scene\TaskScene.h">
       <Filter>Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Audio.h">
+      <Filter>Engine\GameUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Texture.h">
+      <Filter>Engine\GameUtil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

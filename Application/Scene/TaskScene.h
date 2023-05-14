@@ -19,9 +19,6 @@ namespace YScene
 		YGame::Model* pCube_ = nullptr;
 		YGame::Model* pSphere_ = nullptr;
 
-		// ポストエフェクトポインタ
-		YGame::PostEffect* pPostEffect_ = nullptr;
-
 #pragma endregion
 
 
@@ -30,9 +27,6 @@ namespace YScene
 		// モデルオブジェクト
 		std::unique_ptr<YGame::Model::Object> cubeObj_;
 		std::unique_ptr<YGame::Model::Object> sphereObj_;
-
-		// ポストエフェクトオブジェクト
-		std::unique_ptr<YGame::PostEffect::Object> postEffectObj_;
 
 		// 色
 		std::unique_ptr<YGame::Color> color_;

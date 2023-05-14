@@ -27,8 +27,6 @@ void TaskScene::Load()
 	// モデル
 	pCube_ = Model::CreateCube();
 	pSphere_ = Model::LoadObj("sphere", true);
-
-	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
 }
 
 #pragma endregion
@@ -66,9 +64,6 @@ void TaskScene::Initialize()
 		color_.get(),
 		lightGroup_.get(),
 		material_.get()));
-
-
-	postEffectObj_.reset(PostEffect::Object::Create({ {}, {}, {1.0f,1.0f,0.0f} }));
 }
 
 #pragma endregion
@@ -99,8 +94,6 @@ void TaskScene::Update()
 	// 行列更新
 	cubeObj_->UpdateMatrix();
 	sphereObj_->UpdateMatrix();
-	
-	postEffectObj_->UpdateMatrix();
 
 	// ビュープロジェクション
 	transferVP_.UpdateMatrix();
@@ -124,8 +117,6 @@ void TaskScene::Draw()
 	// モデル描画
 	pCube_->SetDrawCommand(cubeObj_.get(), DrawLocation::Center, shaderType_);
 	pSphere_->SetDrawCommand(sphereObj_.get(), DrawLocation::Center, shaderType_);
-
-	pPostEffect_->SetDrawCommand(postEffectObj_.get(), DrawLocation::Center);
 }
 
 #pragma endregion

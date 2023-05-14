@@ -1,6 +1,7 @@
 #include "PostEffect.h"
 #include "CalcTransform.h"
 #include "YAssert.h"
+#include "Def.h"
 
 #pragma region 名前空間
 
@@ -12,8 +13,6 @@ using YGame::PostEffect;
 using YDX::PipelineSet;
 using YMath::Vector2;
 using YMath::Matrix4;
-using YGame::DrawLocation;
-using YGame::DrawLocationNum;
 
 #pragma endregion
 
@@ -29,7 +28,10 @@ static const UINT TexIndex = static_cast<UINT>(PostEffect::Pipeline::RootParamet
 
 vector<unique_ptr<PostEffect>> PostEffect::sPostEffects_{};
 array<PipelineSet, PostEffect::Pipeline::sShaderNum_> PostEffect::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<PostEffect::Pipeline::DrawSet>>, DrawLocationNum> PostEffect::Pipeline::sDrawSets_;
+array<list<unique_ptr<PostEffect::Pipeline::DrawSet>>, PostEffect::Pipeline::sShaderNum_> PostEffect::Pipeline::sDrawSets_;
+ID3D12Device* PostEffect::spDevice_ = nullptr;
+ID3D12GraphicsCommandList* PostEffect::spCmdList_ = nullptr;
+YDX::ScreenDesc* PostEffect::spScreenDesc_ = nullptr;
 
 #pragma endregion
 
@@ -123,10 +125,54 @@ void PostEffect::AllClear()
 	sPostEffects_.clear();
 }
 
-void PostEffect::SetDrawCommand(Object* pObj, const DrawLocation& location, const ShaderType& shaderType)
+void PostEffect::SetDrawCommand(PostEffect::Object* pObj, const ShaderType& shaderType)
 {
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(this, pObj, location, shaderType);
+	Pipeline::StaticPushBackDrawSet(this, pObj, shaderType);
+}
+
+void PostEffect::StartRender()
+{
+	// リソースバリア設定
+	D3D12_RESOURCE_BARRIER barrierDesc{};
+	barrierDesc.Transition.pResource = pTex_->Buffer(); // テクスチャを指定
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; // シェーダーリソース 状態から
+	barrierDesc.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;  // 描画 状態へ
+
+	// リソースバリアを変更
+	spCmdList_->ResourceBarrier(1, &barrierDesc);
+
+	// RTVのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+	// DSVのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
+	
+	// レンダーターゲットをセット
+	spCmdList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+
+	// スクリーン設定の描画コマンド
+	spScreenDesc_->SetDrawCommand();
+
+
+	// 画面クリア
+	//FLOAT clear[] = { ClearColor.r_,ClearColor.g_,ClearColor.b_,ClearColor.a_ };
+	FLOAT clear[] = { 0.25f, 0.5f ,0.1f, 0.0f };
+	spCmdList_->ClearRenderTargetView(rtvHandle, clear, 0, nullptr); // 青っぽい色
+	
+	// 深度バッファクリア
+	spCmdList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void PostEffect::EndRender()
+{
+	// リソースバリア設定
+	D3D12_RESOURCE_BARRIER barrierDesc{};
+	barrierDesc.Transition.pResource = pTex_->Buffer(); // テクスチャを指定
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET; // 描画 状態から
+	barrierDesc.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; // シェーダーリソース 状態へ
+	
+	// リソースバリアを戻す
+	spCmdList_->ResourceBarrier(1, &barrierDesc);
 }
 
 void PostEffect::SetSize(const Vector2& size)
@@ -231,7 +277,7 @@ void PostEffect::CreateRTV()
 	rtvHeapDesc.NumDescriptors = 1;
 
 	// デスクリプタヒープ生成
-	YDX::Result(device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
+	YDX::Result(spDevice_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
 
 
 	// レンダーターゲットビュー設定
@@ -242,7 +288,7 @@ void PostEffect::CreateRTV()
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 	
 	// レンダーターゲットビュー生成
-	device_->CreateRenderTargetView(pTex_->Buffer(), &rtvDesc, rtvHeap_->GetCPUDescriptorHandleForHeapStart());
+	spDevice_->CreateRenderTargetView(pTex_->Buffer(), &rtvDesc, rtvHeap_->GetCPUDescriptorHandleForHeapStart());
 }
 
 void PostEffect::CreateDepthBuff(const YMath::Vector2& size)
@@ -278,7 +324,7 @@ void PostEffect::CreateDSV()
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
 	
 	// 深度ビュー用デスクリプターヒープ作成
-	YDX::Result(device_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_)));
+	YDX::Result(spDevice_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_)));
 
 	// 深度ビュー設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
@@ -286,10 +332,26 @@ void PostEffect::CreateDSV()
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
 	// 深度ビュー作成
-	device_->CreateDepthStencilView(
+	spDevice_->CreateDepthStencilView(
 		depthBuff_.Get(),
 		&dsvDesc,
 		dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::StaticInitialize(
+	ID3D12Device* pDevice,
+	ID3D12GraphicsCommandList* pCmdList,
+	YDX::ScreenDesc* pScreenDesc)
+{
+	// nullチェック
+	assert(pDevice);
+	assert(pCmdList);
+	assert(pScreenDesc);
+
+	// 代入
+	spDevice_ = pDevice;
+	spCmdList_ = pCmdList;
+	spScreenDesc_ = pScreenDesc;
 }
 
 #pragma endregion
@@ -546,33 +608,27 @@ void PostEffect::Pipeline::StaticInitialize()
 
 	sPipelineSets_[0].Initialize(samplerDescs, rootParams, pipelineDesc, primitive);
 
+	// クリア
+	StaticClearDrawSet();
+}
+
+void PostEffect::Pipeline::StaticClearDrawSet()
+{
 	// 描画場所の数だけ
 	for (size_t i = 0; i < sDrawSets_.size(); i++)
 	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-
-		// クリア
-		StaticClearDrawSet(location);
-	}
-}
-
-void PostEffect::Pipeline::StaticClearDrawSet(const DrawLocation& location)
-{
-	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
-
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
-	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[i].clear();
+		}
 	}
 }
 
 void PostEffect::Pipeline::StaticPushBackDrawSet(
-	PostEffect* pPostEffect, PostEffect::Object* pObj,
-	const DrawLocation& location, const ShaderType& shaderType)
+	PostEffect* pPostEffect, PostEffect::Object* pObj, 
+	const ShaderType& shaderType)
 {
 	// 描画セット生成
 	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
@@ -580,28 +636,26 @@ void PostEffect::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pPostEffect_ = pPostEffect;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t index = static_cast<size_t>(shaderType);
 
 	// 挿入
 	sDrawSets_[index].push_back(std::move(newDrawSet));
 }
 
-void PostEffect::Pipeline::StaticDraw(const DrawLocation& location)
+void PostEffect::Pipeline::StaticDraw()
 {
-	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
-
-	// スプライト2D描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
-
-		// 描画
-		drawSet->Draw();
+		sPipelineSets_[i].SetDrawCommand();
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 

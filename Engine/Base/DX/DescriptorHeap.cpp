@@ -23,7 +23,7 @@ void DescriptorHeap::Initialize()
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; // シェーダーから見えるように
-	heapDesc.NumDescriptors = MaxSRVCount_  + MaxUAVCount_ + MaxCBVCount_;
+	heapDesc.NumDescriptors = MaxSRVCount_ + MaxUAVCount_ + MaxCBVCount_;
 
 	// 設定をもとにデスクリプタヒープ(SRV,UAV,CBV用)を生成
 	Result(spDevice_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&descriptorHeap_)));

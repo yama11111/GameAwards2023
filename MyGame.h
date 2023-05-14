@@ -5,6 +5,11 @@ namespace YBase
 {
 	class MyGame : public YFramework
 	{
+
+	private:
+
+		YGame::PostEffect* pPostEffect_ = nullptr;
+		std::unique_ptr<YGame::PostEffect::Object> postEffectObject_;
 	
 	public:
 
