@@ -47,7 +47,7 @@ void CoreColor::StaticInitialize()
 	}
 
 	// 色値
-	sColorValues_ = { Color::Normal, Color::Movable, Color::Clear };
+	sColorValues_ = { Color::Normal, Color::Movable, Color::Spring, Color::Clear };
 
 	// マテリアル
 	sMate_.reset(CBMaterial::Create(Ambient::Normal));
@@ -205,11 +205,14 @@ CBColor* CoreColor::ColorPtr(const ColorType& colorType)
 	return sColors_[idx].get();
 }
 
-CBColor* CoreColor::ColorPtr(const size_t& idx)
+CBColor* CoreColor::ColorPtr(const size_t& index)
 {
-	// 0以下 か 最大値を超える なら弾く
-	assert(0 <= idx);
-	assert(idx < sColors_.size());
+	// インデックス
+	size_t idx = index;
+
+	// クランプ
+	if (idx <= 0) { idx = 0; }
+	if (idx >= sColors_.size() - 1) { idx = sColors_.size() - 1; }
 
 	// 色ポインタを返す
 	return sColors_[idx].get();

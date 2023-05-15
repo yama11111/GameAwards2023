@@ -31,8 +31,10 @@ Model* SelectDrawerCommon::spEarthModel_ = nullptr;
 Sprite2D* SelectDrawerCommon::spLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
 StageConfig* SelectDrawerCommon::spStageConfig_ = nullptr;
-std::unique_ptr<YGame::CBMaterial> SelectDrawerCommon::sMate_;
-std::unique_ptr<YGame::CBLightGroup> SelectDrawerCommon::sLight_;
+std::unique_ptr<YGame::CBMaterial> SelectDrawerCommon::sTowerMate_;
+std::unique_ptr<YGame::CBLightGroup> SelectDrawerCommon::sTowerLight_;
+std::unique_ptr<YGame::CBMaterial> SelectDrawerCommon::sEarthMate_;
+std::unique_ptr<YGame::CBLightGroup> SelectDrawerCommon::sEarthLight_;
 YGame::ParticleManager* SelectDrawerCommon::spParticleMan_ = nullptr;
 
 void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
@@ -60,17 +62,29 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 
 
 	// 生成
-	sMate_.reset(CBMaterial::Create());
-	sMate_->SetAmbient(Ambient);
+	sTowerMate_.reset(CBMaterial::Create());
+	sTowerMate_->SetAmbient(Tower::Material::Ambient);
 
-	sLight_.reset(CBLightGroup::Create());
-	//sLight_
+	sTowerLight_.reset(CBLightGroup::Create());
+	sTowerLight_->SetAmbientColor(Tower::Light::Ambient);
+	sTowerLight_->SetDirectionalLightActive(0, true);
+	sTowerLight_->SetDirectionalLightColor(0, Tower::Light::Direction::Color);
+	sTowerLight_->SetDirectionalLightDirection(0, Tower::Light::Direction::Dire);
+
+	sEarthMate_.reset(CBMaterial::Create());
+	sEarthMate_->SetAmbient(Earth::Material::Ambient);
+
+	sEarthLight_.reset(CBLightGroup::Create());
+	sEarthLight_->SetAmbientColor(Earth::Light::Ambient);
+	sEarthLight_->SetDirectionalLightActive(0, true);
+	sEarthLight_->SetDirectionalLightColor(0, Earth::Light::Direction::Color);
+	sEarthLight_->SetDirectionalLightDirection(0, Earth::Light::Direction::Dire);
 
 	// 核色
 	CoreColor::StaticInitialize();
 
 	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sMate_.get(), sLight_.get());
+	TowerDrawerCommon::StaticInitialize(pVP, sTowerMate_.get(), sTowerLight_.get());
 
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));
@@ -97,7 +111,7 @@ void SelectDrawer::Initialize()
 	color_.reset(CBColor::Create());
 
 	// 地球
-	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), nullptr, sMate_.get(), nullptr));
+	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), sEarthLight_.get(), sEarthMate_.get(), nullptr));
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)
@@ -186,7 +200,7 @@ void SelectDrawer::Reset()
 
 	// 地球
 	earthObj_->Initialize({ {},{},{earthScaleVal,earthScaleVal,earthScaleVal} });
-	color_->Initialize({ 0.01f,0.0f,0.0f,1.0f });
+	color_->Initialize(Earth::Color);
 
 	// ----- ステージ ----- //
 

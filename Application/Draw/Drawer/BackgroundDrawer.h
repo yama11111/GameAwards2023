@@ -22,11 +22,14 @@ protected:
 	// 統一用フラグ
 	static bool sIsUnify_;
 
-	// アンビエント統一用タイマー
+	// 統一用タイマー
 	static YMath::Timer sUnifyTim_;
 
 	// アンビエント統一イージング
 	static YMath::Ease<YMath::Vector3> sUnifyAmbientEas_;
+
+	// ライト色統一イージング
+	static YMath::Ease<YMath::Vector3> sUnifyLightColorEas_;
 
 public:
 

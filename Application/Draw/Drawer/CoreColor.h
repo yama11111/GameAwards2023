@@ -15,13 +15,15 @@ public:
 	// 種類
 	enum class ColorType
 	{
-		Gray = 0, // 灰色
-		Red  = 1, // 赤色
-		Blue = 2, // 青色
+		Gray	 = 0, // 灰色
+		Red		 = 1, // 赤色
+		Green	 = 2, // 緑色
+		Blue	 = 3, // 青色
+		End, // リサイズ用
 	};
 
 	// 種類の数
-	static const size_t sTypeNum_ = 3;
+	static const size_t sTypeNum_ = static_cast<size_t>(ColorType::End);
 
 private:
 	
@@ -94,9 +96,9 @@ public:
 	/// <summary>
 	/// 色ポインタ取得
 	/// </summary>
-	/// <param name="idx"> : インデックス</param>
+	/// <param name="index"> : インデックス</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::CBColor* ColorPtr(const size_t& idx);
+	static YGame::CBColor* ColorPtr(const size_t& index);
 
 	/// <summary>
 	/// マテリアルポインタ取得

@@ -25,11 +25,17 @@ protected:
 	// ステージ設定ポインタ
 	static StageConfig* spStageConfig_;
 
-	// マテリアル
-	static std::unique_ptr<YGame::CBMaterial> sMate_;
+	// タワー用マテリアル
+	static std::unique_ptr<YGame::CBMaterial> sTowerMate_;
 
-	// ライト
-	static std::unique_ptr<YGame::CBLightGroup> sLight_;
+	// タワー用ライト
+	static std::unique_ptr<YGame::CBLightGroup> sTowerLight_;
+	
+	// 地球用マテリアル
+	static std::unique_ptr<YGame::CBMaterial> sEarthMate_;
+
+	// 地球用ライト
+	static std::unique_ptr<YGame::CBLightGroup> sEarthLight_;
 
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;

@@ -442,6 +442,9 @@ namespace DrawerConfig
 			// 可動
 			const YMath::Vector3 Movable = { 0.60f, 0.00f, 0.00f };
 
+			// ばね
+			const YMath::Vector3 Spring = { 0.00f, 0.60f, 0.00f };
+
 			// クリア
 			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
 		}
@@ -495,6 +498,7 @@ namespace DrawerConfig
 		// 光
 		namespace Light
 		{
+			// 環境光
 			const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
 
 			// 平行光源
@@ -502,6 +506,9 @@ namespace DrawerConfig
 			{ 
 				// 色
 				const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+				
+				// クリア時の色
+				const YMath::Vector3 ClearColor = { 0.0f,0.0f,1.0f };
 				
 				// 向き
 				const YMath::Vector3 Dire = { 0.0f,-1.0f,0.0f };
@@ -720,8 +727,65 @@ namespace DrawerConfig
 			const YMath::Vector3 Pos = { 224.0f,48.0f,0.0f };
 		}
 
-		// アンビエント
-		const YMath::Vector3 Ambient = { 0.8f,0.6f,0.6f };
+
+		// タワー
+		namespace Tower
+		{
+			// マテリアル
+			namespace Material
+			{
+				// アンビエント
+				const YMath::Vector3 Ambient = { 0.3f,0.2f,0.2f };
+			}
+
+			// 光
+			namespace Light
+			{
+				// 環境光
+				const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
+
+				// 平行光源
+				namespace Direction
+				{
+					// 色
+					const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+
+					// 向き
+					const YMath::Vector3 Dire = { 0.0f,-1.0f,0.0f };
+				}
+			}
+		}
+
+		// 地球
+		namespace Earth
+		{
+			// 色
+			const YMath::Vector4 Color = { 1.0f,1.0f,1.0f,1.0f };
+
+			// マテリアル
+			namespace Material
+			{
+				// アンビエント
+				const YMath::Vector3 Ambient = { 1.0f,0.3f,0.3f };
+			}
+
+			// 光
+			namespace Light
+			{
+				// 環境光
+				const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
+
+				// 平行光源
+				namespace Direction
+				{
+					// 色
+					const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+
+					// 向き
+					const YMath::Vector3 Dire = { 0.0f,+1.0f,0.0f };
+				}
+			}
+		}
 
 		// 泡グリッド
 		namespace BubbleGrid

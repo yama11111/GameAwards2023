@@ -66,6 +66,14 @@ void BlockDrawerCommon::StaticInitialize()
 	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
 	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
 
+	// ブロック (ばね)
+	spModels_[IMode::sSpringIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
+	// ブロック (接合)
+	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
 	// グリッド
 	spGridModel_ = Model::LoadObj("grid", true);
 
@@ -147,6 +155,7 @@ void BlockDrawer::Reset(const IMode::Type& modeType)
 	}
 
 	// 核の色とマテリアル設定
+	modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 
 	// グリッド
@@ -329,7 +338,7 @@ void BlockDrawer::Update()
 void BlockDrawer::Draw()
 {
 	// モデルの数描画
-	for (size_t i = 0; i < spModels_.size(); i++)
+	for (size_t i = 0; i < spModels_[CurrentTypeIndex()].size(); i++)
 	{
 		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}

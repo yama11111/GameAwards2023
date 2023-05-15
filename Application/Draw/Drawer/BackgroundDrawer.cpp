@@ -35,6 +35,7 @@ unique_ptr<CBLightGroup> BackgroundDrawerCommon::sBackLight_;
 bool BackgroundDrawerCommon::sIsUnify_ = false;
 Timer BackgroundDrawerCommon::sUnifyTim_;
 Ease<Vector3> BackgroundDrawerCommon::sUnifyAmbientEas_;
+Ease<Vector3> BackgroundDrawerCommon::sUnifyLightColorEas_;
 
 #pragma endregion
 
@@ -63,6 +64,8 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 	// クリア時背景アンビエントイージング
 	sUnifyAmbientEas_.Initialize(Ambient, ClearAmbient, Unify::Exponent);
 	
+	// クリア時背景ライト色イージング
+	sUnifyLightColorEas_.Initialize(Light::Direction::Color, Light::Direction::ClearColor, Unify::Exponent);
 
 	// タワー
 	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get(), sBackLight_.get());
@@ -90,6 +93,12 @@ void BackgroundDrawerCommon::StaticUpdate()
 
 	// アンビエント設定
 	sBackMate_->SetAmbient(ambient);
+
+	// イーズイン
+	Vector3 color = sUnifyLightColorEas_.In(sUnifyTim_.Ratio());
+
+	// ライト色設定
+	sBackLight_->SetDirectionalLightColor(0, color);
 }
 
 void BackgroundDrawerCommon::StaticUnify()
