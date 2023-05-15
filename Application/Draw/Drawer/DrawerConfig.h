@@ -437,10 +437,10 @@ namespace DrawerConfig
 		namespace Color
 		{
 			// 通常
-			const YMath::Vector3 Normal = { 0.40f, 0.40f, 0.40f };
+			const YMath::Vector3 Normal = { 0.30f, 0.30f, 0.30f };
 
 			// 可動
-			const YMath::Vector3 Movable = { 1.00f, 0.00f, 0.00f };
+			const YMath::Vector3 Movable = { 0.60f, 0.00f, 0.00f };
 
 			// クリア
 			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
@@ -450,7 +450,7 @@ namespace DrawerConfig
 		namespace Ambient
 		{
 			// 通常
-			const YMath::Vector3 Normal = { 0.8f, 0.6f, 0.6f };
+			const YMath::Vector3 Normal = { 0.5f, 0.5f, 0.5f };
 
 			// クリア
 			const YMath::Vector3 Clear = { 0.7f, 0.7f, 0.8f };
@@ -466,7 +466,7 @@ namespace DrawerConfig
 			const float Start = 1.0f;
 
 			// 最終値
-			const float End = 0.5f;
+			const float End = 0.75f;
 
 			// 指数
 			const float Exponent = 3.0f;
