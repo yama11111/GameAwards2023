@@ -15,6 +15,9 @@ protected:
 	// 背景マテリアル
 	static std::unique_ptr<YGame::CBMaterial> sBackMate_;
 
+	// 背景ライト
+	static std::unique_ptr<YGame::CBLightGroup> sBackLight_;
+
 
 	// 統一用フラグ
 	static bool sIsUnify_;

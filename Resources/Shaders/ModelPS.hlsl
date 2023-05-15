@@ -24,7 +24,7 @@ float4 main(PSInput input) : SV_TARGET
 
 
 	// ライト毎の計算
-	for (int i = 0; i < DireLightNum; i++)
+	for (float i = 0; i < DireLightNum; i++)
 	{
 		// 平行光源
 		if (direLights_[i].active_)

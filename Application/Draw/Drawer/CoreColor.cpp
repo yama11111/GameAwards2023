@@ -8,6 +8,7 @@ using std::array;
 using std::unique_ptr;
 
 using YGame::CBColor;
+using YGame::CBMaterial;
 
 using YMath::Ease;
 using YMath::Timer;
@@ -23,6 +24,7 @@ using namespace DrawerConfig::CoreColorConfig;
 
 array<unique_ptr<CBColor>, CoreColor::sTypeNum_> CoreColor::sColors_;
 array<Vector3, CoreColor::sTypeNum_> CoreColor::sColorValues_;
+unique_ptr<CBMaterial> CoreColor::sMate_;
 
 Power CoreColor::sFlickeringPow_;
 bool CoreColor::sIsSwitchFlickeringPow_ = false;
@@ -31,6 +33,7 @@ Ease<float> CoreColor::sFlickeringColorRateEas_;
 bool CoreColor::sIsUnify_ = false;
 Timer CoreColor::sUnifyTim_;
 array<Ease<Vector3>, CoreColor::sTypeNum_> CoreColor::sUnifyColorEass_;
+Ease<Vector3> CoreColor::sUnifyMaterialEas_;
 
 #pragma endregion
 
@@ -44,7 +47,10 @@ void CoreColor::StaticInitialize()
 	}
 
 	// 色値
-	sColorValues_ = { Normal, Movable, Clear };
+	sColorValues_ = { Color::Normal, Color::Movable, Color::Clear };
+
+	// マテリアル
+	sMate_.reset(CBMaterial::Create(Ambient::Normal));
 
 
 	// 色統一用タイマー
@@ -72,6 +78,12 @@ void CoreColor::StaticReset()
 		// 核色値初期化
 		sUnifyColorEass_[i].Initialize({}, {}, 0.0f);
 	}
+
+	// 核マテリアル値初期化
+	sMate_->SetAmbient(Ambient::Normal);
+	
+	// 核マテリアル値初期化
+	sUnifyMaterialEas_.Initialize({}, {}, 0.0f);
 
 
 	// 色統一用フラグ
@@ -147,6 +159,13 @@ void CoreColor::StaticUpdate()
 		// 色更新
 		sColors_[i]->SetRGB(color);
 	}
+
+	// 統一中なら
+	if (sIsUnify_)
+	{
+		// イーズイン
+		sMate_->SetAmbient(sUnifyMaterialEas_.In(sUnifyTim_.Ratio()));
+	}
 }
 
 void CoreColor::StaticClearAnimation(const ColorType& colorType)
@@ -170,6 +189,9 @@ void CoreColor::StaticClearAnimation(const ColorType& colorType)
 		sUnifyColorEass_[i].Initialize(start, end, Unify::Exponent);
 	}
 
+	// マテリアル統一用イージング初期化
+	sUnifyMaterialEas_.Initialize(Ambient::Normal, Ambient::Clear, Unify::Exponent);
+
 	// タイマーリセット + 開始
 	sUnifyTim_.Reset(true);
 }
@@ -191,4 +213,10 @@ CBColor* CoreColor::ColorPtr(const size_t& idx)
 
 	// 色ポインタを返す
 	return sColors_[idx].get();
+}
+
+CBMaterial* CoreColor::MaterialPtr()
+{
+	// マテリアルポインタを返す
+	return sMate_.get();
 }

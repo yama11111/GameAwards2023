@@ -27,9 +27,12 @@ protected:
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
-
+	
 	// マテリアルポインタ
 	static YGame::CBMaterial* spMate_;
+
+	// ライトポインタ
+	static YGame::CBLightGroup* spLight_;
 
 public:
 
@@ -38,9 +41,11 @@ public:
 	/// </summary>
 	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pMate"> : マテリアルポインタ</param>
-	/// <param name="pCoreColors"> : 核色ポインタ配列</param>
-	/// <param name="pCoreMate"> : 核マテリアルポインタ</param>
-	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::CBMaterial* pMate);
+	/// <param name="pLight"> : ライトポインタ</param>
+	static void StaticInitialize(
+		YGame::ViewProjection* pVP, 
+		YGame::CBMaterial* pMate,
+		YGame::CBLightGroup* pLight);
 
 public:
 	

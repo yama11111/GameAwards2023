@@ -24,6 +24,7 @@ CBDirectionalLight::Data CBDirectionalLight::GetData() const
 	// ‘ã“ü
 	result.lightVec_ = direction_;
 	result.lightColor_ = color_;
+	result.active_ = isAct_;
 
 	// •Ô‚·
 	return result;

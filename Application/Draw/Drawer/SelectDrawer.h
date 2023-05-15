@@ -28,6 +28,9 @@ protected:
 	// マテリアル
 	static std::unique_ptr<YGame::CBMaterial> sMate_;
 
+	// ライト
+	static std::unique_ptr<YGame::CBLightGroup> sLight_;
+
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
 
