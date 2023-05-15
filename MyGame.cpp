@@ -57,20 +57,21 @@ void MyGame::Draw()
 
 	pPostEffect_->StartRender();
 
-	// ゲームシーン描画
-	DrawGameScene();
 	
 	
 	pPostEffect_->EndRender();
 
-	pPostEffect_->SetDrawCommand(postEffectObject_.get());
-	pPostEffect_->SetDrawCommand(postEffectObject_.get(), PostEffect::ShaderType::eBloom);
+	//pPostEffect_->SetDrawCommand(postEffectObject_.get());
+	//pPostEffect_->SetDrawCommand(postEffectObject_.get(), PostEffect::ShaderType::eBloom);
 
 	// 描画準備
 	dx_.PreDraw(ClearColor);
 
 	// スクリーン設定セット
 	screenDesc_.SetDrawCommand();
+	
+	// ゲームシーン描画
+	DrawGameScene();
 	
 	// ポストエフェクト描画
 	PostEffect::Pipeline::StaticDraw();
