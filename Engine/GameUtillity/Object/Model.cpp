@@ -37,7 +37,7 @@ static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 
 vector<unique_ptr<Model>> Model::sModels_{};
 array<PipelineSet, Model::Pipeline::sShaderNum_> Model::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
+array<array<list<unique_ptr<Model::Pipeline::DrawSet>>, Model::Pipeline::sShaderNum_>, DrawLocationNum> Model::Pipeline::sDrawSets_;
 FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
 FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
 
@@ -518,20 +518,6 @@ void Model::Pipeline::ShaderSet::Load()
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
 
-	// Default
-	{
-		ID3DBlob* vs = nullptr;
-		ID3DBlob* ps = nullptr;
-
-		// 頂点シェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
-		// ピクセルシェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
-
-		defaultVSBlob_ = vs;
-		defaultPSBlob_ = ps;
-	}
-
 	// phong
 	{
 		ID3DBlob* vs = nullptr;
@@ -558,6 +544,20 @@ void Model::Pipeline::ShaderSet::Load()
 
 		toonVSBlob_ = vs;
 		toonPSBlob_ = ps;
+	}
+
+	// Default
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		defaultVSBlob_ = vs;
+		defaultPSBlob_ = ps;
 	}
 
 }
@@ -678,11 +678,6 @@ void Model::Pipeline::StaticInitialize()
 	std::array<D3D12_GRAPHICS_PIPELINE_STATE_DESC, sPipelineSets_.size()> pipelineDescs{};
 
 	// シェーダーの設定
-	pipelineDescs[DefaultIndex].VS.pShaderBytecode	 = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
-	pipelineDescs[DefaultIndex].VS.BytecodeLength	 = shdrs.defaultVSBlob_.Get()->GetBufferSize();
-	pipelineDescs[DefaultIndex].PS.pShaderBytecode	 = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
-	pipelineDescs[DefaultIndex].PS.BytecodeLength	 = shdrs.defaultPSBlob_.Get()->GetBufferSize();
-
 	pipelineDescs[PhongIndex].VS.pShaderBytecode	 = shdrs.phongVSBlob_.Get()->GetBufferPointer();
 	pipelineDescs[PhongIndex].VS.BytecodeLength		 = shdrs.phongVSBlob_.Get()->GetBufferSize();
 	pipelineDescs[PhongIndex].PS.pShaderBytecode	 = shdrs.phongPSBlob_.Get()->GetBufferPointer();
@@ -692,6 +687,11 @@ void Model::Pipeline::StaticInitialize()
 	pipelineDescs[ToonIndex].VS.BytecodeLength		 = shdrs.toonVSBlob_.Get()->GetBufferSize();
 	pipelineDescs[ToonIndex].PS.pShaderBytecode		 = shdrs.toonPSBlob_.Get()->GetBufferPointer();
 	pipelineDescs[ToonIndex].PS.BytecodeLength		 = shdrs.toonPSBlob_.Get()->GetBufferSize();
+
+	pipelineDescs[DefaultIndex].VS.pShaderBytecode	 = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].VS.BytecodeLength	 = shdrs.defaultVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].PS.pShaderBytecode	 = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].PS.BytecodeLength	 = shdrs.defaultPSBlob_.Get()->GetBufferSize();
 
 	// パイプラインの数だけ
 	for (size_t i = 0; i < sPipelineSets_.size(); i++)
@@ -771,11 +771,15 @@ void Model::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[index][i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[index][i].clear();
+		}
 	}
 }
 
@@ -789,13 +793,15 @@ void Model::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pModel_ = pModel;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
+	
+	// インデックスに変換
+	size_t locationIdx = static_cast<size_t>(location);
 
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t shaderIdx = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_[locationIdx][shaderIdx].push_back(std::move(newDrawSet));
 }
 
 void Model::Pipeline::StaticDraw(const DrawLocation& location)
@@ -803,14 +809,18 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// モデル描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+		sPipelineSets_[i].SetDrawCommand();
 
-		// 描画
-		drawSet->Draw();
+		// モデル描画
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index][i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 

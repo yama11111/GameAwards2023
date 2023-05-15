@@ -60,9 +60,11 @@ void MyGame::Draw()
 	// ƒQ[ƒ€ƒV[ƒ“•`‰æ
 	DrawGameScene();
 	
+	
 	pPostEffect_->EndRender();
 
 	pPostEffect_->SetDrawCommand(postEffectObject_.get());
+	pPostEffect_->SetDrawCommand(postEffectObject_.get(), PostEffect::ShaderType::eBloom);
 
 	// •`‰æ€”õ
 	dx_.PreDraw(ClearColor);

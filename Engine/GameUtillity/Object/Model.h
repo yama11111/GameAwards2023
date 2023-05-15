@@ -23,8 +23,8 @@ namespace YGame
 		// シェーダーの種類
 		enum class ShaderType
 		{
-			ePhong	 = 0, // Phongシェーダー
-			eToon	 = 1, // Toonシェーダー
+			ePhong	 = 0, // Phong
+			eToon	 = 1, // Toon
 			eDefault = 2, // デフォルト
 		};
 
@@ -338,13 +338,6 @@ namespace YGame
 
 		public:
 
-			// DefaultVS
-			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
-
-			// DefaultPS
-			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
-
-
 			// PhongVS
 			Microsoft::WRL::ComPtr<ID3DBlob> phongVSBlob_ = nullptr;
 
@@ -357,6 +350,13 @@ namespace YGame
 
 			// ToonPS
 			Microsoft::WRL::ComPtr<ID3DBlob> toonPSBlob_ = nullptr;
+
+
+			// DefaultVS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
+
+			// DefaultPS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
 
 		public:
 
@@ -381,9 +381,6 @@ namespace YGame
 			// モデル用オブジェクト
 			Model::Object* pObj_;
 
-			// パイプラインインデックス
-			size_t pipelineIndex_;
-
 		public:
 
 			/// <summary> 
@@ -402,7 +399,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+		static std::array<std::array<std::list<std::unique_ptr<DrawSet>>, sShaderNum_>, DrawLocationNum> sDrawSets_;
 
 	};
 

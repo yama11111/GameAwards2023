@@ -24,7 +24,8 @@ namespace YGame
 		// シェーダーの種類
 		enum class ShaderType
 		{
-			eDefault = 0, // デフォルト
+			eBloom	 = 0, // Bloom
+			eDefault = 1, // デフォルト
 		};
 
 	public:
@@ -445,6 +446,12 @@ namespace YGame
 			// DefaultPS
 			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
 
+			// VS
+			Microsoft::WRL::ComPtr<ID3DBlob> bloomVSBlob_ = nullptr;
+
+			// PS
+			Microsoft::WRL::ComPtr<ID3DBlob> bloomPSBlob_ = nullptr;
+
 		public:
 
 			/// <summary>
@@ -468,6 +475,9 @@ namespace YGame
 			// ポストエフェクト用オブジェクト
 			PostEffect::Object* pObj_;
 
+			// パイプラインインデックス
+			size_t pipelineIndex_;
+
 		public:
 
 			/// <summary> 
@@ -486,7 +496,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, sShaderNum_> sDrawSets_;
+		static std::list<std::unique_ptr<DrawSet>> sDrawSets_;
 
 	};
 

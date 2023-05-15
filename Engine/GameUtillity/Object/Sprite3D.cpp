@@ -30,7 +30,8 @@ static const UINT TexIndex = static_cast<UINT>(Sprite3D::Pipeline::RootParameter
 
 std::vector<std::unique_ptr<Sprite3D>> Sprite3D::sSprites_{};
 array<PipelineSet, Sprite3D::Pipeline::sShaderNum_> Sprite3D::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<Sprite3D::Pipeline::DrawSet>>, DrawLocationNum> Sprite3D::Pipeline::sDrawSets_;
+array<array<list<unique_ptr<Sprite3D::Pipeline::DrawSet>>, 
+	Sprite3D::Pipeline::sShaderNum_>, DrawLocationNum> Sprite3D::Pipeline::sDrawSets_;
 
 #pragma endregion
 
@@ -417,11 +418,15 @@ void Sprite3D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[index][i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[index][i].clear();
+		}
 	}
 }
 
@@ -435,13 +440,15 @@ void Sprite3D::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pSprite3D_ = pSprite3D;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
-	
+
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t locationIdx = static_cast<size_t>(location);
+
+	// インデックスに変換
+	size_t shaderIdx = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_[locationIdx][shaderIdx].push_back(std::move(newDrawSet));
 }
 
 void Sprite3D::Pipeline::StaticDraw(const DrawLocation& location)
@@ -449,14 +456,18 @@ void Sprite3D::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// スプライト3D描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+		sPipelineSets_[i].SetDrawCommand();
 
-		// 描画
-		drawSet->Draw();
+		// モデル描画
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index][i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 

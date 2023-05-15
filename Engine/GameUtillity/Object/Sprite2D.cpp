@@ -30,7 +30,8 @@ static const UINT TexIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameter
 
 vector<unique_ptr<Sprite2D>> Sprite2D::sSprites_{};
 array<PipelineSet, Sprite2D::Pipeline::sShaderNum_> Sprite2D::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<Sprite2D::Pipeline::DrawSet>>, DrawLocationNum> Sprite2D::Pipeline::sDrawSets_;
+array<array<list<unique_ptr<Sprite2D::Pipeline::DrawSet>>,
+	Sprite2D::Pipeline::sShaderNum_>, DrawLocationNum> Sprite2D::Pipeline::sDrawSets_;
 
 #pragma endregion
 
@@ -514,11 +515,15 @@ void Sprite2D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[index][i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[index][i].clear();
+		}
 	}
 }
 
@@ -532,13 +537,15 @@ void Sprite2D::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pSprite2D_ = pSprite2D;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t locationIdx = static_cast<size_t>(location);
+
+	// インデックスに変換
+	size_t shaderIdx = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_[locationIdx][shaderIdx].push_back(std::move(newDrawSet));
 }
 
 void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
@@ -546,14 +553,18 @@ void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// スプライト2D描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+		sPipelineSets_[i].SetDrawCommand();
 
-		// 描画
-		drawSet->Draw();
+		// モデル描画
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index][i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 

@@ -331,9 +331,6 @@ namespace YGame
 			// スプライト3D用オブジェクト
 			Sprite3D::Object* pObj_;
 
-			// パイプラインインデックス
-			size_t pipelineIndex_;
-
 		public:
 
 			/// <summary> 
@@ -352,7 +349,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+		static std::array<std::array<std::list<std::unique_ptr<DrawSet>>, sShaderNum_>, DrawLocationNum> sDrawSets_;
 
 	};
 

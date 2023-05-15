@@ -29,7 +29,7 @@ static const UINT TexIndex = static_cast<UINT>(PostEffect::Pipeline::RootParamet
 
 vector<unique_ptr<PostEffect>> PostEffect::sPostEffects_{};
 array<PipelineSet, PostEffect::Pipeline::sShaderNum_> PostEffect::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<PostEffect::Pipeline::DrawSet>>, PostEffect::Pipeline::sShaderNum_> PostEffect::Pipeline::sDrawSets_;
+list<unique_ptr<PostEffect::Pipeline::DrawSet>> PostEffect::Pipeline::sDrawSets_;
 ID3D12Device* PostEffect::spDevice_ = nullptr;
 ID3D12GraphicsCommandList* PostEffect::spCmdList_ = nullptr;
 YDX::ScreenDesc* PostEffect::spScreenDesc_ = nullptr;
@@ -450,12 +450,34 @@ void PostEffect::Object::Default::StaticInitialize()
 #pragma endregion
 
 
+#pragma region シェーダー番号
+
+static const UINT BloomIndex = static_cast<UINT>(PostEffect::ShaderType::eBloom);
+static const UINT DefaultIndex = static_cast<UINT>(PostEffect::ShaderType::eDefault);
+
+#pragma endregion
+
+
 #pragma region Pipeline
 
 void PostEffect::Pipeline::ShaderSet::Load()
 {
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
+
+	// Bloom
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/BloomVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/BloomPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		bloomVSBlob_ = vs;
+		bloomPSBlob_ = ps;
+	}
 
 	// Default
 	{
@@ -572,51 +594,70 @@ void PostEffect::Pipeline::StaticInitialize()
 #pragma region パイプライン設定
 
 	// パイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	std::array<D3D12_GRAPHICS_PIPELINE_STATE_DESC, sPipelineSets_.size()> pipelineDescs{};
 
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = shdrs.defaultVSBlob_.Get()->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = shdrs.defaultPSBlob_.Get()->GetBufferSize();
+	pipelineDescs[BloomIndex].VS.pShaderBytecode = shdrs.bloomVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[BloomIndex].VS.BytecodeLength = shdrs.bloomVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[BloomIndex].PS.pShaderBytecode = shdrs.bloomPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[BloomIndex].PS.BytecodeLength = shdrs.bloomPSBlob_.Get()->GetBufferSize();
+	
+	pipelineDescs[DefaultIndex].VS.pShaderBytecode = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].VS.BytecodeLength = shdrs.defaultVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].PS.pShaderBytecode = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].PS.BytecodeLength = shdrs.defaultPSBlob_.Get()->GetBufferSize();
 
-	// サンプルマスクの設定
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
+	{
+		// サンプルマスクの設定
+		pipelineDescs[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
-	// ラスタライザの設定
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
-	pipelineDesc.RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+		// ラスタライザの設定
+		pipelineDescs[i].RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
+		pipelineDescs[i].RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
+		pipelineDescs[i].RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
 
-	// デプスステンシルステートの設定
-	pipelineDesc.DepthStencilState.DepthEnable = false; // 深度テストしない
-	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
+		// デプスステンシルステートの設定
+		pipelineDescs[i].DepthStencilState.DepthEnable = false; // 深度テストしない
+		pipelineDescs[i].DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
 
-	// ブレンドステート
-	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
-	blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+		// ブレンドステート
+		D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDescs[i].BlendState.RenderTarget[0];
+		blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
 
-	blendDesc.BlendEnable = true;                // ブレンドを有効にする
-	blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD; // 加算
-	blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;   // ソースの値を100%使う
-	blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO; // デストの値を  0%使う
+		blendDesc.BlendEnable = true;                // ブレンドを有効にする
+		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD; // 加算
+		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;   // ソースの値を100%使う
+		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO; // デストの値を  0%使う
+		
+		if (i == BloomIndex)
+		{
+			// 加算合成
+			blendDesc.BlendOp = D3D12_BLEND_OP_ADD; // 加算
+			blendDesc.SrcBlend = D3D12_BLEND_ONE; // ソースの値を100%使う
+			blendDesc.DestBlend = D3D12_BLEND_ONE; // デストの値を100%使う
+		}
+		else
+		{
+			// 半透明合成
+			blendDesc.BlendOp = D3D12_BLEND_OP_ADD; // 加算
+			blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; // ソースのアルファ値
+			blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; // 1.0f - ソースのアルファ値
+		}
 
-	// 半透明合成
-	blendDesc.BlendOp = D3D12_BLEND_OP_ADD;			 // 加算
-	blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;      // ソースのアルファ値
-	blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; // 1.0f - ソースのアルファ値
+		// 図形の形状設定
+		pipelineDescs[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	// 図形の形状設定
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// 頂点レイアウトの設定
+		pipelineDescs[i].InputLayout.pInputElementDescs = inputLayout.data(); // 頂点レイアウトの先頭アドレス
+		pipelineDescs[i].InputLayout.NumElements = (UINT)inputLayout.size(); // 頂点レイアウト数
 
-	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout.data(); // 頂点レイアウトの先頭アドレス
-	pipelineDesc.InputLayout.NumElements = (UINT)inputLayout.size(); // 頂点レイアウト数
-
-	// その他の設定
-	pipelineDesc.NumRenderTargets = 1; // 描画対象は1つ
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
-	pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		// その他の設定
+		pipelineDescs[i].NumRenderTargets = 1; // 描画対象は1つ
+		pipelineDescs[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+		pipelineDescs[i].SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	}
 
 #pragma endregion
 
@@ -629,14 +670,12 @@ void PostEffect::Pipeline::StaticInitialize()
 #pragma endregion
 
 
-	//// パイプラインの数だけ
-	//for (size_t i = 0; i < sPipelineSets_.size(); i++)
-	//{
-	//	// パイプライン初期化
-	//	sPipelineSets_[i].Initialize(samplerDescs, rootParams, pipelineDesc, primitive);
-	//}
-
-	sPipelineSets_[0].Initialize(samplerDescs, rootParams, pipelineDesc, primitive);
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
+	{
+		// パイプライン初期化
+		sPipelineSets_[i].Initialize(samplerDescs, rootParams, pipelineDescs[i], primitive);
+	}
 
 	// クリア
 	StaticClearDrawSet();
@@ -644,15 +683,11 @@ void PostEffect::Pipeline::StaticInitialize()
 
 void PostEffect::Pipeline::StaticClearDrawSet()
 {
-	// 描画場所の数だけ
-	for (size_t i = 0; i < sDrawSets_.size(); i++)
+	// あるなら
+	if (sDrawSets_.empty())
 	{
-		// あるなら
-		if (sDrawSets_[i].empty() == false)
-		{
-			// クリア
-			sDrawSets_[i].clear();
-		}
+		// クリア
+		sDrawSets_.clear();
 	}
 }
 
@@ -666,26 +701,22 @@ void PostEffect::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pPostEffect_ = pPostEffect;
 	newDrawSet->pObj_ = pObj;
-
-	// インデックスに変換
-	size_t index = static_cast<size_t>(shaderType);
+	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_.push_back(std::move(newDrawSet));
 }
 
 void PostEffect::Pipeline::StaticDraw()
 {
-	// パイプラインの数だけ
-	for (size_t i = 0; i < sPipelineSets_.size(); i++)
+	// ポストエフェクト描画
+	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_)
 	{
 		// パイプラインをセット
-		sPipelineSets_[i].SetDrawCommand();
-		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[i])
-		{
-			// 描画
-			drawSet->Draw();
-		}
+		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+
+		// 描画
+		drawSet->Draw();
 	}
 }
 
