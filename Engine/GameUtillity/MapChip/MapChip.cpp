@@ -343,7 +343,7 @@ void MapChip2DDisplayer::Initialize(MapData* pMapData)
 			chip->obj_.reset(Sprite2D::Object::Create({ {posX,posY,0.0f},{},{scale,scale,1.0f} }));
 
 			// F
-			chip->color_.reset(Color::Create());
+			chip->color_.reset(CBColor::Create());
 
 			// 1”ÔŒã‚ë‚É‘}“ü
 			chips_[y].push_back(std::move(chip));

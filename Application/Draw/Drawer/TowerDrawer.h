@@ -29,7 +29,7 @@ protected:
 	static YGame::ViewProjection* spVP_;
 
 	// マテリアルポインタ
-	static YGame::Material* spMate_;
+	static YGame::CBMaterial* spMate_;
 
 public:
 
@@ -40,7 +40,7 @@ public:
 	/// <param name="pMate"> : マテリアルポインタ</param>
 	/// <param name="pCoreColors"> : 核色ポインタ配列</param>
 	/// <param name="pCoreMate"> : 核マテリアルポインタ</param>
-	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::Material* pMate);
+	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::CBMaterial* pMate);
 
 public:
 	

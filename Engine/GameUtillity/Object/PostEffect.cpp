@@ -18,8 +18,9 @@ using YMath::Matrix4;
 
 #pragma region ルートパラメータ番号
 
-static const UINT TraIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTransformCB); // obj
+static const UINT TraIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTransformCB); // transform
 static const UINT ColIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eColorCB); // color
+static const UINT TexConfigIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
@@ -362,10 +363,14 @@ void PostEffect::StaticInitialize(
 PostEffect::Object* PostEffect::Object::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, isMutable);
+	return Create(status, nullptr, nullptr, isMutable);
 }
 
-PostEffect::Object* PostEffect::Object::Create(const Status& status, Color* pColor, const bool isMutable)
+PostEffect::Object* PostEffect::Object::Create(
+	const Status& status,
+	CBColor* pColor,
+	CBTexConfig* pTexConfig,
+	const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	Object* instance = new Object();
@@ -376,12 +381,16 @@ PostEffect::Object* PostEffect::Object::Create(const Status& status, Color* pCol
 	// 初期化(デフォルト)
 	instance->Initialize(status);
 	instance->SetColor(pColor);
+	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
 	return instance;
 }
 
-void PostEffect::Object::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
+void PostEffect::Object::SetDrawCommand(
+	const UINT transformRPIndex,
+	const UINT colorRPIndex,
+	const UINT texConfigRPIndex)
 {
 	// 行列
 	cBuff_.map_->matWorld_ = m_ * Default::sProjection_;
@@ -389,9 +398,12 @@ void PostEffect::Object::SetDrawCommand(const UINT transformRPIndex, const UINT 
 
 	// 色
 	pColor_->SetDrawCommand(colorRPIndex);
+
+	// テクスチャ設定
+	pTexConfig_->SetDrawCommand(texConfigRPIndex);
 }
 
-void PostEffect::Object::SetColor(Color* pColor)
+void PostEffect::Object::SetColor(CBColor* pColor)
 {
 	// nullなら
 	if (pColor == nullptr)
@@ -405,16 +417,34 @@ void PostEffect::Object::SetColor(Color* pColor)
 	pColor_ = pColor;
 }
 
-YMath::Matrix4 PostEffect::Object::Default::sProjection_ = YMath::Matrix4::Identity();
-std::unique_ptr<YGame::Color> PostEffect::Object::Default::sColor_ = nullptr;
+void PostEffect::Object::SetTexConfig(CBTexConfig* pTexConfig)
+{
+	// nullなら
+	if (pTexConfig == nullptr)
+	{
+		// デフォルト代入
+		pTexConfig_ = Default::sTexConfig_.get();
+		return;
+	}
+
+	// 代入
+	pTexConfig_ = pTexConfig;
+}
+
+Matrix4 PostEffect::Object::Default::sProjection_ = Matrix4::Identity();
+unique_ptr<YGame::CBColor> PostEffect::Object::Default::sColor_ = nullptr;
+unique_ptr<YGame::CBTexConfig> PostEffect::Object::Default::sTexConfig_ = nullptr;
 
 void PostEffect::Object::Default::StaticInitialize()
 {
 	// プロジェクション行列を設定
 	sProjection_ = YMath::MatOrthoGraphic();
 
-	// 生成 + 初期化
-	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	// 生成 + 初期化 (色)
+	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+
+	// 生成 + 初期化 (テクスチャ設定)
+	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
 }
 
 #pragma endregion
@@ -665,7 +695,7 @@ void PostEffect::Pipeline::DrawSet::Draw()
 	if (pPostEffect_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, TexConfigIndex);
 
 	// テクスチャ
 	pPostEffect_->pTex_->SetDrawCommand(TexIndex);

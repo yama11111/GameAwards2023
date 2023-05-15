@@ -65,7 +65,7 @@ namespace YGame
 		std::unique_ptr<Model::Object> obj_;
 
 		// 色
-		std::unique_ptr<Color> color_;
+		std::unique_ptr<CBColor> color_;
 
 
 		// モデルポインタ
@@ -122,7 +122,7 @@ namespace YGame
 		std::unique_ptr<Sprite3D::Object> obj_;
 
 		// 色
-		std::unique_ptr<Color> color_;
+		std::unique_ptr<CBColor> color_;
 
 
 		// スプライト3Dポインタ

@@ -5,8 +5,8 @@
 #include "Texture.h"
 #include "ObjectConfig.h"
 #include "Transform.h"
-#include "Color.h"
-#include "Vector2.h"
+#include "CBColor.h"
+#include "CBTexConfig.h"
 #include <list>
 #include <array>
 
@@ -241,25 +241,40 @@ namespace YGame
 		/// </summary>
 		/// <param name="status"> : 位置, 回転, 大きさ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Object* Create(const Status& status, Color* pColor, const bool isMutable = true);
+		static Object* Create(
+			const Status& status,
+			CBColor* pColor,
+			CBTexConfig* pTexConfig,
+			const bool isMutable = true);
 
 	public:
 
 		/// <summary>
 		/// 描画前コマンド
 		/// </summary>
-		/// <param name="transformRPIndex"></param>
-		/// <param name="colorRPIndex"></param>
-		void SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex);
+		/// <param name="transformRPIndex"> : トランスフォームルートパラメータ番号</param>
+		/// <param name="colorRPIndex"> : 色ルートパラメータ番号</param>
+		/// <param name="texConfigRPIndex"> : テクスチャ設定ルートパラメータ番号</param>
+		void SetDrawCommand(
+			const UINT transformRPIndex,
+			const UINT colorRPIndex,
+			const UINT texConfigRPIndex);
 
 
 		/// <summary>
 		/// 色設定 (null = Default)
 		/// </summary>
 		/// <param name="pColor"> : 色ポインタ</param>
-		void SetColor(Color* pColor);
+		void SetColor(CBColor* pColor);
+
+		/// <summary>
+		/// テクスチャ設定 (null = Default)
+		/// </summary>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
+		void SetTexConfig(CBTexConfig* pTexConfig);
 
 	private:
 
@@ -283,7 +298,10 @@ namespace YGame
 		YDX::ConstBuffer<CBData> cBuff_;
 
 		// 色ポインタ
-		Color* pColor_ = nullptr;
+		CBColor* pColor_ = nullptr;
+
+		// テクスチャ設定ポインタ
+		CBTexConfig* pTexConfig_ = nullptr;
 
 	public:
 
@@ -297,7 +315,10 @@ namespace YGame
 			static YMath::Matrix4 sProjection_;
 
 			// 色 (デフォルト)
-			static std::unique_ptr<Color> sColor_;
+			static std::unique_ptr<CBColor> sColor_;
+
+			// テクスチャ設定 (デフォルト)
+			static std::unique_ptr<CBTexConfig> sTexConfig_;
 
 		public:
 
@@ -340,8 +361,10 @@ namespace YGame
 		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
 		static void StaticPushBackDrawSet(
-			Sprite2D* pSprite3D, Sprite2D::Object* pObj, 
-			const DrawLocation& location, const ShaderType& shaderType);
+			Sprite2D* pSprite3D, 
+			Sprite2D::Object* pObj, 
+			const DrawLocation& location, 
+			const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
@@ -356,7 +379,8 @@ namespace YGame
 		{
 			eTransformCB = 0, // 行列
 			eColorCB	 = 1, // 色
-			eTexDT		 = 2, // テクスチャ
+			eTexConfigCB = 2, // テクスチャ設定
+			eTexDT		 = 3, // テクスチャ
 		};
 
 	private:

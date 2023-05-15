@@ -12,8 +12,8 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
 
 using YMath::Ease;
 using YMath::Timer;
@@ -29,7 +29,7 @@ using namespace DrawerConfig::Background;
 #pragma region Static
 
 YGame::ParticleManager* BackgroundDrawerCommon::spParticleMan_ = nullptr;
-unique_ptr<Material> BackgroundDrawerCommon::sBackMate_;
+unique_ptr<CBMaterial> BackgroundDrawerCommon::sBackMate_;
 bool BackgroundDrawerCommon::sIsUnify_ = false;
 Timer BackgroundDrawerCommon::sUnifyTim_;
 Ease<Vector3> BackgroundDrawerCommon::sUnifyAmbientEas_;
@@ -46,7 +46,8 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 
 
 	// 生成
-	sBackMate_.reset(YGame::Material::Create(Ambient));
+	sBackMate_.reset(YGame::CBMaterial::Create());
+	sBackMate_->SetAmbient(Ambient);
 
 
 	// クリア時アンビエント用タイマー

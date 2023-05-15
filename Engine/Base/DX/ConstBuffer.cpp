@@ -3,9 +3,11 @@
 #include "Sprite3D.h"
 #include "Model.h"
 #include "PostEffect.h"
-#include "LightGroup.h"
-#include "Color.h"
-#include "Material.h"
+#include "CBColor.h"
+#include "CBLightGroup.h"
+#include "CBMaterial.h"
+#include "CBTexConfig.h"
+#include "PostEffect.h"
 #include "YAssert.h"
 
 using YDX::ConstBufferCommon;
@@ -63,6 +65,7 @@ template class ConstBuffer<YGame::Sprite2D::Object::CBData>;
 template class ConstBuffer<YGame::Sprite3D::Object::CBData>;
 template class ConstBuffer<YGame::Model::Object::CBData>;
 template class ConstBuffer<YGame::PostEffect::Object::CBData>;
-template class ConstBuffer<YGame::Color::CBData>;
-template class ConstBuffer<YGame::LightGroup::CBData>;
-template class ConstBuffer<YGame::Material::CBData>;
+template class ConstBuffer<YGame::CBColor::CBData>;
+template class ConstBuffer<YGame::CBLightGroup::CBData>;
+template class ConstBuffer<YGame::CBMaterial::CBData>;
+template class ConstBuffer<YGame::CBTexConfig::CBData>;

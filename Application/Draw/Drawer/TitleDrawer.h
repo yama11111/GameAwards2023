@@ -70,12 +70,12 @@ private:
 	// スタート
 	std::unique_ptr<YGame::Sprite2D::Object> startObj_;
 	// スタート色
-	std::unique_ptr<YGame::Color> startColor_;
+	std::unique_ptr<YGame::CBColor> startColor_;
 
 	// 終了
 	std::unique_ptr<YGame::Sprite2D::Object> exitObj_;
 	// 終了色
-	std::unique_ptr<YGame::Color> exitColor_;
+	std::unique_ptr<YGame::CBColor> exitColor_;
 
 	// ----- アニメーション ----- //
 

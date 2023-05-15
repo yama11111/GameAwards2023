@@ -13,7 +13,7 @@ protected:
 
 	
 	// 背景マテリアル
-	static std::unique_ptr<YGame::Material> sBackMate_;
+	static std::unique_ptr<YGame::CBMaterial> sBackMate_;
 
 
 	// 統一用フラグ

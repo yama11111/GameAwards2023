@@ -5,7 +5,7 @@
 
 using YScene::InfectionBlocks;
 using YGame::Sprite2D;
-using YGame::Color;
+using YGame::CBColor;
 using YMath::Vector2;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -52,8 +52,8 @@ void InfectionBlocks::Initialize()
 			// ブロック生成 + 初期化
 			blocks_[y][x].reset(new Block());
 
-			blocks_[y][x]->color_.reset(Color::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
-			blocks_[y][x]->obj_.reset(Sprite2D::Object::Create({}, blocks_[y][x]->color_.get(), false));
+			blocks_[y][x]->color_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+			blocks_[y][x]->obj_.reset(Sprite2D::Object::Create({}, blocks_[y][x]->color_.get(), nullptr, false));
 
 			// 2ブロック間の距離
 			Vector2 dist = { sSize_ * x, sSize_ * y };

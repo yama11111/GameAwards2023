@@ -8,7 +8,7 @@
 #pragma region –¼‘O‹óŠÔ
 
 using YGame::Sprite2D;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::Texture;
 using YMath::Vector3;
 using YScene::SceneManager;
@@ -61,17 +61,17 @@ void PauseDrawer::Initialize()
 	pauseObj_.	reset(Sprite2D::Object::Create({}));
 	
 	// resumeColor
-	resumeColor_.reset(Color::Create());
+	resumeColor_.reset(CBColor::Create());
 	// resume
 	resumeObj_.	reset(Sprite2D::Object::Create({}, resumeColor_.get()));
 	
 	// titleColor
-	changeColor_.reset(Color::Create());
+	changeColor_.reset(CBColor::Create());
 	// title
 	changeObj_.	reset(Sprite2D::Object::Create({}, changeColor_.get()));
 	
 	// curtenColor
-	curtenColor_.reset(Color::Create());
+	curtenColor_.reset(CBColor::Create());
 	// curten
 	curtenObj_.reset(Sprite2D::Object::Create({}, curtenColor_.get()));
 

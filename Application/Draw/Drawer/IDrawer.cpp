@@ -4,20 +4,20 @@
 #pragma region –¼‘O‹óŠÔ
 
 using YGame::Transform;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::SlimeActor;
 using YMath::Vector3;
 
 #pragma endregion
 
 YGame::ViewProjection* IDrawer::spVP_ = nullptr;
-YGame::Material* IDrawer::spMate_ = nullptr;
+YGame::CBMaterial* IDrawer::spMate_ = nullptr;
 YGame::Camera* IDrawer::spCamera_ = nullptr;
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
 
 void IDrawer::StaticInitialize(
 	YGame::ViewProjection* pVP,
-	YGame::Material* pMate,
+	YGame::CBMaterial* pMate,
 	YGame::Camera* pCamera,
 	YGame::ParticleManager* pParticleMan)
 {

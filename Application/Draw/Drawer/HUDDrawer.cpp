@@ -2,7 +2,7 @@
 #include "HUDConfig.h"
 
 using YGame::Sprite2D;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::Texture;
 
 #pragma region HUDDrawerCommon

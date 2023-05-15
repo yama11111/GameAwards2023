@@ -28,6 +28,7 @@ static const UINT TraIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 static const UINT ColIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eColorCB); // color
 static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eLightCB); // light
 static const UINT MateIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eMaterialCB); // material
+static const UINT TexConfigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
@@ -346,15 +347,16 @@ void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const
 Model::Object* Model::Object::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, nullptr, nullptr, nullptr, isMutable);
+	return Create(status, nullptr, nullptr, nullptr, nullptr, nullptr, isMutable);
 }
 
 Model::Object* Model::Object::Create(
 	const Status& status,
 	ViewProjection* pVP,
-	Color* pColor,
-	LightGroup* pLightGroup,
-	Material* pMaterial,
+	CBColor* pColor,
+	CBLightGroup* pLightGroup,
+	CBMaterial* pMaterial,
+	CBTexConfig* pTexConfig,
 	const bool isMutable)
 {
 	// インスタンス生成 (動的)
@@ -369,6 +371,7 @@ Model::Object* Model::Object::Create(
 	instance->SetColor(pColor);
 	instance->SetLightGroup(pLightGroup);
 	instance->SetMaterial(pMaterial);
+	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
 	return instance;
@@ -378,7 +381,8 @@ void Model::Object::SetDrawCommand(
 	const UINT transformRPIndex,
 	const UINT colorRPIndex,
 	const UINT lightRPIndex,
-	const UINT materialRPIndex)
+	const UINT materialRPIndex, 
+	const UINT texConfigRPIndex)
 {
 	// 行列
 	cBuff_.map_->matWorld_ = m_;
@@ -394,6 +398,9 @@ void Model::Object::SetDrawCommand(
 
 	// マテリアル
 	pMaterial_->SetDrawCommand(materialRPIndex);
+
+	// テクスチャ設定
+	pTexConfig_->SetDrawCommand(texConfigRPIndex);
 }
 
 void Model::Object::SetViewProjection(ViewProjection* pVP)
@@ -410,7 +417,7 @@ void Model::Object::SetViewProjection(ViewProjection* pVP)
 	pVP_ = pVP;
 }
 
-void Model::Object::SetColor(Color* pColor)
+void Model::Object::SetColor(CBColor* pColor)
 {
 	// nullなら
 	if (pColor == nullptr)
@@ -424,7 +431,7 @@ void Model::Object::SetColor(Color* pColor)
 	pColor_ = pColor;
 }
 
-void Model::Object::SetLightGroup(LightGroup* pLightGroup)
+void Model::Object::SetLightGroup(CBLightGroup* pLightGroup)
 {
 	// nullなら
 	if (pLightGroup == nullptr)
@@ -438,7 +445,7 @@ void Model::Object::SetLightGroup(LightGroup* pLightGroup)
 	pLightGroup_ = pLightGroup;
 }
 
-void Model::Object::SetMaterial(Material* pMaterial)
+void Model::Object::SetMaterial(CBMaterial* pMaterial)
 {
 	// nullなら
 	if (pMaterial == nullptr)
@@ -452,10 +459,25 @@ void Model::Object::SetMaterial(Material* pMaterial)
 	pMaterial_ = pMaterial;
 }
 
-std::unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
-std::unique_ptr<YGame::LightGroup> Model::Object::Default::sLightGroup_ = nullptr;
-std::unique_ptr<YGame::Color> Model::Object::Default::sColor_ = nullptr;
-std::unique_ptr<YGame::Material> Model::Object::Default::sMaterial_ = nullptr;
+void Model::Object::SetTexConfig(CBTexConfig* pTexConfig)
+{
+	// nullなら
+	if (pTexConfig == nullptr)
+	{
+		// デフォルト代入
+		pTexConfig_ = Default::sTexConfig_.get();
+		return;
+	}
+
+	// 代入
+	pTexConfig_ = pTexConfig;
+}
+
+unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
+unique_ptr<YGame::CBLightGroup> Model::Object::Default::sLightGroup_ = nullptr;
+unique_ptr<YGame::CBColor> Model::Object::Default::sColor_ = nullptr;
+unique_ptr<YGame::CBMaterial> Model::Object::Default::sMaterial_ = nullptr;
+unique_ptr<YGame::CBTexConfig> Model::Object::Default::sTexConfig_ = nullptr;
 
 void Model::Object::Default::StaticInitialize()
 {
@@ -464,13 +486,16 @@ void Model::Object::Default::StaticInitialize()
 	sVP_->Initialize({});
 
 	// 生成 + 初期化 (色)
-	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 
 	// 生成 + 初期化 (光源ポインタ)
-	sLightGroup_.reset(LightGroup::Create(false));
+	sLightGroup_.reset(CBLightGroup::Create({ 1.0f,1.0f,1.0f }, false));
 
 	// 生成 + 初期化 (マテリアル)
-	sMaterial_.reset(Material::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+	sMaterial_.reset(CBMaterial::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+
+	// 生成 + 初期化 (テクスチャ設定)
+	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
 }
 
 #pragma endregion
@@ -795,7 +820,7 @@ void Model::Pipeline::DrawSet::Draw()
 	if (pModel_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex, TexConfigIndex);
 
 	// メッシュ毎に違うバッファ
 	for (size_t i = 0; i < pModel_->meshes_.size(); i++)

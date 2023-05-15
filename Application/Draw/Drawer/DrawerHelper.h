@@ -8,7 +8,7 @@ class DrawerHelper
 private:
 
 	// デフォルトマテリアル
-	static std::unique_ptr<YGame::Material> sDefMate_;
+	static std::unique_ptr<YGame::CBMaterial> sDefMate_;
 
 
 	// クリアフラグ

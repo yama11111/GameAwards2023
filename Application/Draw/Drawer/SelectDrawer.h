@@ -26,7 +26,7 @@ protected:
 	static StageConfig* spStageConfig_;
 
 	// マテリアル
-	static std::unique_ptr<YGame::Material> sMate_;
+	static std::unique_ptr<YGame::CBMaterial> sMate_;
 
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
@@ -57,7 +57,7 @@ private:
 	std::unique_ptr<YGame::Model::Object> earthObj_;
 	
 	// 色
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 	
 	// ステージトランスフォーム (使う用)

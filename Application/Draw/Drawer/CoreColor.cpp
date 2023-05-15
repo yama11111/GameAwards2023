@@ -7,7 +7,7 @@
 using std::array;
 using std::unique_ptr;
 
-using YGame::Color;
+using YGame::CBColor;
 
 using YMath::Ease;
 using YMath::Timer;
@@ -21,7 +21,7 @@ using namespace DrawerConfig::CoreColorConfig;
 
 #pragma region Static
 
-array<unique_ptr<Color>, CoreColor::sTypeNum_> CoreColor::sColors_;
+array<unique_ptr<CBColor>, CoreColor::sTypeNum_> CoreColor::sColors_;
 array<Vector3, CoreColor::sTypeNum_> CoreColor::sColorValues_;
 
 Power CoreColor::sFlickeringPow_;
@@ -40,7 +40,7 @@ void CoreColor::StaticInitialize()
 	for (size_t i = 0; i < sColors_.size(); i++)
 	{
 		// 生成
-		sColors_[i]. reset(Color::Create());
+		sColors_[i]. reset(CBColor::Create());
 	}
 
 	// 色値
@@ -174,7 +174,7 @@ void CoreColor::StaticClearAnimation(const ColorType& colorType)
 	sUnifyTim_.Reset(true);
 }
 
-Color* CoreColor::ColorPtr(const ColorType& colorType)
+CBColor* CoreColor::ColorPtr(const ColorType& colorType)
 {
 	// インデックス
 	size_t idx = static_cast<size_t>(colorType);
@@ -183,7 +183,7 @@ Color* CoreColor::ColorPtr(const ColorType& colorType)
 	return sColors_[idx].get();
 }
 
-Color* CoreColor::ColorPtr(const size_t& idx)
+CBColor* CoreColor::ColorPtr(const size_t& idx)
 {
 	// 0以下 か 最大値を超える なら弾く
 	assert(0 <= idx);

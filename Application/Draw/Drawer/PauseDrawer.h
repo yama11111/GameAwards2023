@@ -69,12 +69,12 @@ private:
 	// ----- Color ----- //
 
 	// resumeColor
-	std::unique_ptr<YGame::Color> resumeColor_;
+	std::unique_ptr<YGame::CBColor> resumeColor_;
 	// changeColor
-	std::unique_ptr<YGame::Color> changeColor_;
+	std::unique_ptr<YGame::CBColor> changeColor_;
 
 	// curtenColor
-	std::unique_ptr<YGame::Color> curtenColor_;
+	std::unique_ptr<YGame::CBColor> curtenColor_;
 
 
 	// É|Å[ÉYíÜÇ©

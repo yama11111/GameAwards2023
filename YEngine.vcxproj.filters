@@ -43,9 +43,6 @@
     <Filter Include="Engine\GameUtil\MapChip">
       <UniqueIdentifier>{18d033b2-cb29-495e-ae8b-c1bf43090687}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameUtil\Light">
-      <UniqueIdentifier>{8d2ddc5c-59f9-41e1-a31e-064f18b71408}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\GameUtil\Object">
       <UniqueIdentifier>{5b49a32d-655f-4aff-bad9-1d276da48a06}</UniqueIdentifier>
     </Filter>
@@ -136,6 +133,12 @@
     <Filter Include="Engine\GameUtil\Shader\PostEffect">
       <UniqueIdentifier>{a82cfae2-fc24-4686-872d-8bfd9d9eafb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameUtil\Object\CB">
+      <UniqueIdentifier>{287384b7-4132-48a0-9c3d-1484b963bd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameUtil\Object\CB\Light">
+      <UniqueIdentifier>{156675cc-1163-4432-9d0a-c044b2e202ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -225,20 +228,8 @@
     <ClCompile Include="Engine\Utillity\Math\Shake.cpp">
       <Filter>Engine\Util\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Light\LightGroup.cpp">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Light\DirectionalLight.cpp">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Light\PointLight.cpp">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Base\YFramework.cpp">
       <Filter>Engine\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Light\SpotLight.cpp">
-      <Filter>Engine\GameUtil\Light</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Utillity\Math\Lerp.cpp">
       <Filter>Engine\Util\Math\Lerp</Filter>
@@ -303,9 +294,6 @@
     <ClCompile Include="StageConfig.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Object\Color.cpp">
-      <Filter>Engine\GameUtil\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp">
       <Filter>Engine\GameUtil\Object</Filter>
     </ClCompile>
@@ -323,9 +311,6 @@
     </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\Mesh.cpp">
       <Filter>Engine\GameUtil\Object\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameUtillity\Object\Material.cpp">
-      <Filter>Engine\GameUtil\Object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Base\DX\IShaderSet.cpp">
       <Filter>Engine\Base\Pipeline</Filter>
@@ -438,9 +423,6 @@
     <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp">
       <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Scene\TaskScene.cpp">
-      <Filter>Application\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Audio.cpp">
       <Filter>Engine\GameUtil</Filter>
     </ClCompile>
@@ -448,7 +430,25 @@
       <Filter>Engine\GameUtil</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameUtillity\Object\CBTexConfig.cpp">
-      <Filter>Engine\GameUtil\Object</Filter>
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\CBColor.cpp">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\CBMaterial.cpp">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBDirectionalLight.cpp">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBPointLight.cpp">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBSpotLight.cpp">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBLightGroup.cpp">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,20 +542,8 @@
     <ClInclude Include="Engine\Utillity\Math\Shake.h">
       <Filter>Engine\Util\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Light\LightGroup.h">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Light\DirectionalLight.h">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Light\PointLight.h">
-      <Filter>Engine\GameUtil\Light</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Base\YFramework.h">
       <Filter>Engine\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Light\SpotLight.h">
-      <Filter>Engine\GameUtil\Light</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Utillity\Math\Lerp.h">
       <Filter>Engine\Util\Math\Lerp</Filter>
@@ -626,9 +614,6 @@
     <ClInclude Include="Engine\GameUtillity\Camera\ScrollCamera.h">
       <Filter>Engine\GameUtil\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\Color.h">
-      <Filter>Engine\GameUtil\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h">
       <Filter>Engine\GameUtil\Object</Filter>
     </ClInclude>
@@ -643,9 +628,6 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Sprite3D.h">
       <Filter>Engine\GameUtil\Object\Sprite3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\Material.h">
-      <Filter>Engine\GameUtil\Object</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Base\DX\IShaderSet.h">
       <Filter>Engine\Base\Pipeline</Filter>
@@ -773,9 +755,6 @@
     <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h">
       <Filter>Engine\GameUtil\Object\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Scene\TaskScene.h">
-      <Filter>Application\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Audio.h">
       <Filter>Engine\GameUtil</Filter>
     </ClInclude>
@@ -783,7 +762,25 @@
       <Filter>Engine\GameUtil</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\CBTexConfig.h">
-      <Filter>Engine\GameUtil\Object</Filter>
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\CBColor.h">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\CBMaterial.h">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBDirectionalLight.h">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBPointLight.h">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBSpotLight.h">
+      <Filter>Engine\GameUtil\Object\CB\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBLightGroup.h">
+      <Filter>Engine\GameUtil\Object\CB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -796,11 +793,11 @@
     <None Include="Resources\Shaders\Sprite2D.hlsli">
       <Filter>Engine\GameUtil\Shader\Sprite2D</Filter>
     </None>
-    <None Include="Resources\Shaders\Light.hlsli">
-      <Filter>Engine\GameUtil\Shader\Model</Filter>
-    </None>
     <None Include="Resources\Shaders\PostEffect.hlsli">
       <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
+    </None>
+    <None Include="Resources\Shaders\Light.hlsli">
+      <Filter>Engine\GameUtil\Shader\Model</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -841,6 +838,12 @@
       <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PostEffectVS.hlsl">
+      <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomPS.hlsl">
+      <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomVS.hlsl">
       <Filter>Engine\GameUtil\Shader\PostEffect</Filter>
     </FxCompile>
   </ItemGroup>

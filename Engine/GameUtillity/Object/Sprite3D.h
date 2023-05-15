@@ -6,7 +6,8 @@
 #include "ObjectConfig.h"
 #include "Transform.h"
 #include "ViewProjection.h"
-#include "Color.h"
+#include "CBColor.h"
+#include "CBTexConfig.h"
 #include <list>
 #include <array>
 
@@ -124,16 +125,36 @@ namespace YGame
 		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
 		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Object* Create(
 			const Status& status,
 			bool isXAxisBillboard, bool isYAxisBillboard,
 			ViewProjection* pVP,
-			Color* pColor,
+			CBColor* pColor, 
+			CBTexConfig* pTexConfig,
 			const bool isMutable = true);
 
 	public:
+
+		/// <summary>
+		/// 描画前コマンド
+		/// </summary>
+		/// <param name="transformRPIndex"></param>
+		/// <param name="texConfigRPIndex"> : テクスチャ設定ルートパラメータ番号</param>
+		void SetDrawCommand(
+			const UINT transformRPIndex, 
+			const UINT colorRPIndex,
+			const UINT texConfigRPIndex);
+
+
+		/// <summary>
+		/// ビルボード設定
+		/// </summary>
+		/// <param name="isXAxisBillboard"> : X軸ビルボードか</param>
+		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
+		void SetIsBillboard(bool isXAxisBillboard, bool isYAxisBillboard);
 		
 		/// <summary>
 		/// ビュープロジェクション設定 (null = Default)
@@ -145,23 +166,13 @@ namespace YGame
 		/// 色設定 (null = Default)
 		/// </summary>
 		/// <param name="pColor"> : 色ポインタ</param>
-		void SetColor(Color* pColor);
+		void SetColor(CBColor* pColor);
 
 		/// <summary>
-		/// ビルボード設定
+		/// テクスチャ設定 (null = Default)
 		/// </summary>
-		/// <param name="isXAxisBillboard"> : X軸ビルボードか</param>
-		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
-		void SetIsBillboard(bool isXAxisBillboard, bool isYAxisBillboard);
-
-	public:
-
-		/// <summary>
-		/// 描画前コマンド
-		/// </summary>
-		/// <param name="transformRPIndex"></param>
-		/// <param name="colorRPIndex"></param>
-		void SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex);
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
+		void SetTexConfig(CBTexConfig* pTexConfig);
 
 	private:
 
@@ -195,7 +206,10 @@ namespace YGame
 		ViewProjection* pVP_ = nullptr;
 
 		// 色ポインタ
-		Color* pColor_ = nullptr;
+		CBColor* pColor_ = nullptr;
+
+		// テクスチャ設定ポインタ
+		CBTexConfig* pTexConfig_ = nullptr;
 
 	public:
 
@@ -209,7 +223,10 @@ namespace YGame
 			static std::unique_ptr<ViewProjection> sVP_;
 
 			// 色 (デフォルト)
-			static std::unique_ptr<Color> sColor_;
+			static std::unique_ptr<CBColor> sColor_;
+
+			// テクスチャ設定 (デフォルト)
+			static std::unique_ptr<CBTexConfig> sTexConfig_;
 
 		public:
 
@@ -252,8 +269,10 @@ namespace YGame
 		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
 		static void StaticPushBackDrawSet(
-			Sprite3D* pSprite3D, Sprite3D::Object* pObj, 
-			const DrawLocation& location, const ShaderType& shaderType);
+			Sprite3D* pSprite3D, 
+			Sprite3D::Object* pObj, 
+			const DrawLocation& location, 
+			const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
@@ -268,7 +287,8 @@ namespace YGame
 		{
 			eTransformCB = 0, // 行列
 			eColorCB	 = 1, // 色
-			eTexDT		 = 2, // テクスチャ
+			eTexConfigCB = 2, // テクスチャ設定
+			eTexDT		 = 3, // テクスチャ
 		};
 
 	private:

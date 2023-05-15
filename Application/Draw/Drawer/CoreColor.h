@@ -1,5 +1,5 @@
 #pragma once
-#include "Color.h"
+#include "CBColor.h"
 #include "Lerp.h"
 #include "Power.h"
 #include "Timer.h"
@@ -25,7 +25,7 @@ public:
 private:
 	
 	// 核色
-	static std::array<std::unique_ptr<YGame::Color>, sTypeNum_> sColors_;
+	static std::array<std::unique_ptr<YGame::CBColor>, sTypeNum_> sColors_;
 
 	// 核色値
 	static std::array<YMath::Vector3, sTypeNum_> sColorValues_;
@@ -82,13 +82,13 @@ public:
 	/// </summary>
 	/// <param name="colorType"> : 色のタイプ</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::Color* ColorPtr(const ColorType& colorType);
+	static YGame::CBColor* ColorPtr(const ColorType& colorType);
 
 	/// <summary>
 	/// 色ポインタ取得
 	/// </summary>
 	/// <param name="idx"> : インデックス</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::Color* ColorPtr(const size_t& idx);
+	static YGame::CBColor* ColorPtr(const size_t& idx);
 };
 

@@ -31,7 +31,7 @@ private:
 	// ステージカードオブジェクト
 	std::unique_ptr<YGame::Sprite2D::Object> cardObjs_;
 	// 色
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 	// 数字
 	int number_ = 0;

@@ -11,8 +11,8 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
 
 using YMath::Ease;
 using YMath::Power;
@@ -31,7 +31,7 @@ array<array<Model*, TowerDrawerCommon::PartsNum_>, IMode::sTypeNum_> TowerDrawer
 	nullptr, nullptr, 
 };
 YGame::ViewProjection* TowerDrawerCommon::spVP_ = nullptr;
-Material* TowerDrawerCommon::spMate_ = nullptr;
+CBMaterial* TowerDrawerCommon::spMate_ = nullptr;
 
 #pragma endregion
 
@@ -44,7 +44,7 @@ static const size_t ShellIdx = static_cast<size_t>(TowerDrawerCommon::Parts::She
 
 #pragma region Common
 
-void TowerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Material* pMate)
+void TowerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::CBMaterial* pMate)
 {
 	// nullチェック
 	assert(pVP);
@@ -82,7 +82,7 @@ void TowerDrawer::Initialize(YMath::Matrix4* pParent, const IMode::Type& modeTyp
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_, nullptr));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
