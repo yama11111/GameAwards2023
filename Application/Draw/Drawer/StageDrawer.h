@@ -51,10 +51,10 @@ private:
 public:
 	
 	// 初期化
-	void Initialize(YGame::Transform* pParent, const int number);
+	void Initialize(YGame::Transform* pParent, const int number, IMode::Type type = IMode::Type::Normal);
 	
 	// リセット
-	void Reset();
+	void Reset(IMode::Type type = IMode::Type::Normal);
 	
 	// 更新
 	void Update();

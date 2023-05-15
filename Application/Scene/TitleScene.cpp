@@ -22,8 +22,14 @@ void TitleScene::Load()
 	// ----- オーディオ ----- //
 
 	// タイトルBGM
-	pTitleBGM_ = Audio::Load("vigilante.wav");
-	//pTitleBGM_ = Audio::Load("fanfare.wav");
+	pTitleBGM_ = Audio::Load("BGM/select.wav");
+
+
+	//// セレクトSE
+	//pSelectSE_ = Audio::Load("SE/select.wav");
+
+	//// 決定SE
+	//pDecisionSE_ = Audio::Load("SE/decision.wav");
 
 	// ----- 静的初期化 ----- //
 
@@ -81,10 +87,23 @@ void TitleScene::Update()
 	// 入力描画更新
 	inputDra_.Update();
 
+	// キー取得
+	bool up		 = (sKeys_->IsTrigger(DIK_W) || sKeys_->IsTrigger(DIK_UP));
+	bool left	 = (sKeys_->IsTrigger(DIK_A) || sKeys_->IsTrigger(DIK_LEFT));
+	bool down	 = (sKeys_->IsTrigger(DIK_S) || sKeys_->IsTrigger(DIK_DOWN));
+	bool right	 = (sKeys_->IsTrigger(DIK_D) || sKeys_->IsTrigger(DIK_RIGHT));
+
 	// 選択変更
-	titleDra_.Select(
-		sKeys_->IsTrigger(DIK_W) || sKeys_->IsTrigger(DIK_D),
-		sKeys_->IsTrigger(DIK_S) || sKeys_->IsTrigger(DIK_A));
+	titleDra_.Select(up || right, left || down);
+
+	// SE
+	if (TransitionManager::GetInstance()->IsFalling() == false)
+	{
+		if (up || right || left || down)
+		{
+			//pSelectSE_->Play(false);
+		}
+	}
 
 	// 選択更新
 	titleDra_.Update();
@@ -106,6 +125,9 @@ void TitleScene::Update()
 		// Startなら
 		if (titleDra_.GetSelection() == TitleDrawerCommon::Selection::Start)
 		{
+			// SE
+			//pDecisionSE_->Play(false);
+
 			// セレクトシーンへ
 			SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 		}

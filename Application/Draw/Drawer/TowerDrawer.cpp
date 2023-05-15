@@ -139,6 +139,7 @@ void TowerDrawer::Draw(const YGame::DrawLocation& location)
 	// •`‰æ
 	for (size_t i = 0; i < spModels_.size(); i++)
 	{
+		int a = CurrentTypeIndex();
 		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), location, Model::ShaderType::eDefault);
 	}
 }

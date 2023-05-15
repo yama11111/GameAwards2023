@@ -47,7 +47,7 @@ void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 }
 
-void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
+void StageDrawer::Initialize(YGame::Transform* pParent, const int number, IMode::Type type)
 {
 	// 数字
 	// 0以下なら弾く
@@ -73,13 +73,13 @@ void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
 	}
 
 	// タワー
-	towerDra_.Initialize(&core_->m_, IMode::Type::Normal);
+	towerDra_.Initialize(&core_->m_, type);
 
 	// リセット
-	Reset();
+	Reset(type);
 }
 
-void StageDrawer::Reset()
+void StageDrawer::Reset(IMode::Type type)
 {
 	// ----- オブジェクト初期化 ----- //
 
@@ -101,7 +101,7 @@ void StageDrawer::Reset()
 	}
 
 	// ビル
-	towerDra_.Reset(IMode::Type::Normal);
+	towerDra_.Reset(type);
 
 	// 色初期化
 	color_->SetRGBA({ 1.0f,1.0f,1.0f,1.0f });

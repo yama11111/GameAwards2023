@@ -27,7 +27,7 @@ void DemoScene::Load()
 	// ----- オーディオ ----- //
 
 	// プレイBGM
-	pPlayBGM_ = Audio::Load("vigilante.wav");
+	pPlayBGM_ = Audio::Load("BGM/select.wav");
 	
 	// ----- 静的初期化 ----- //
 
@@ -214,6 +214,7 @@ void DemoScene::Update()
 	//ゴール判定
 	if (afterglowTim_.IsEnd())
 	{
+		StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
 		SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	}
 }

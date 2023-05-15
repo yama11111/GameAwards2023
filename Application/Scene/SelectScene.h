@@ -18,6 +18,13 @@ namespace YScene
 		// セレクトシーンBGM
 		YGame::Audio* pSelectBGM_ = nullptr;
 
+
+		// セレクトSE
+		YGame::Audio* pSelectSE_ = nullptr;
+		
+		// 決定SE
+		YGame::Audio* pDecisionSE_ = nullptr;
+
 #pragma endregion
 
 #pragma region ゲームオブジェクト

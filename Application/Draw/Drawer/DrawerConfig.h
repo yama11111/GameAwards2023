@@ -511,7 +511,7 @@ namespace DrawerConfig
 				const YMath::Vector3 ClearColor = { 0.0f,0.0f,1.0f };
 				
 				// 向き
-				const YMath::Vector3 Dire = { 0.0f,-1.0f,0.0f };
+				const YMath::Vector3 Dire = { -0.3f,-1.0f,-0.3f };
 			}
 		}
 
@@ -630,7 +630,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
+			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
 
 			// 位
 			const float Place = 100.0f;
@@ -735,7 +735,7 @@ namespace DrawerConfig
 			namespace Material
 			{
 				// アンビエント
-				const YMath::Vector3 Ambient = { 0.3f,0.2f,0.2f };
+				const YMath::Vector3 Ambient = { 0.5f,0.2f,0.2f };
 			}
 
 			// 光
@@ -748,10 +748,10 @@ namespace DrawerConfig
 				namespace Direction
 				{
 					// 色
-					const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+					const YMath::Vector3 Color = { 0.3f,0.0f,0.1f };
 
 					// 向き
-					const YMath::Vector3 Dire = { 0.0f,-1.0f,0.0f };
+					const YMath::Vector3 Dire = { +0.1f,-0.4f,-0.3f };
 				}
 			}
 		}
@@ -760,13 +760,13 @@ namespace DrawerConfig
 		namespace Earth
 		{
 			// 色
-			const YMath::Vector4 Color = { 1.0f,1.0f,1.0f,1.0f };
+			const YMath::Vector4 Color = { 0.02f,0.0f,0.02f,1.0f };
 
 			// マテリアル
 			namespace Material
 			{
 				// アンビエント
-				const YMath::Vector3 Ambient = { 1.0f,0.3f,0.3f };
+				const YMath::Vector3 Ambient = { 1.0f,0.3f,0.5f };
 			}
 
 			// 光
@@ -779,7 +779,7 @@ namespace DrawerConfig
 				namespace Direction
 				{
 					// 色
-					const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+					const YMath::Vector3 Color = { 0.8f,0.0f,0.4f };
 
 					// 向き
 					const YMath::Vector3 Dire = { 0.0f,+1.0f,0.0f };
@@ -838,7 +838,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
+			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
 		}
 	}
 

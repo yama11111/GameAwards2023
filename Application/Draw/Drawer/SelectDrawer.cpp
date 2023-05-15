@@ -130,17 +130,27 @@ void SelectDrawer::Initialize()
 	{
 		stageDras_[i].reset(new StageDrawer());
 
+		// 種類
+		IMode::Type type = IMode::Type::Normal;
+
+		// クリアしているなら変更
+		if(spStageConfig_->GetIsClearStage((int)i))
+		{
+			// クリアしているなら変更
+			type = IMode::Type::Movable;
+		}
+
 		// 番号がトランスフォームの数より小さいなら
 		if (i < aliveStages_.size())
 		{
 			// 使う用のトランスフォームを代入
-			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1), type);
 		}
 		// それ以外なら
 		else
 		{
 			// 使わない用のトランスフォームを代入
-			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1), type);
 		}
 	}
 	
@@ -227,7 +237,17 @@ void SelectDrawer::Reset()
 	// 描画クラス
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
-		stageDras_[i]->Reset();
+		// 種類
+		IMode::Type type = IMode::Type::Normal;
+
+		// クリアしているなら変更
+		if (spStageConfig_->GetIsClearStage((int)i))
+		{
+			// クリアしているなら変更
+			type = IMode::Type::Movable;
+		}
+
+		stageDras_[i]->Reset(type);
 	}
 
 	// ----- ステージカード ----- //

@@ -22,7 +22,14 @@ void SelectScene::Load()
 	// ----- オーディオ ----- //
 
 	// セレクトシーンBGM
-	pSelectBGM_ = Audio::Load("vigilante.wav");
+	pSelectBGM_ = Audio::Load("BGM/select.wav");
+
+
+	//// セレクトSE
+	//pSelectSE_ = Audio::Load("SE/select.wav");
+
+	//// 決定SE
+	//pDecisionSE_ = Audio::Load("SE/decision.wav");
 	
 	// ----- 静的初期化 ----- //
 
@@ -83,6 +90,9 @@ void SelectScene::Finalize()
 #pragma region 更新
 void SelectScene::Update()
 {
+	// input静的更新
+	InputDrawerCommon::StaticUpdate();
+
 	// pause更新
 	pauseDra_.Update();
 
@@ -95,10 +105,23 @@ void SelectScene::Update()
 	// ステージ番号取得
 	int stageIdx = stageConfig_->GetCurrentStageIndex();
 
-	// ステージ選択 (A or D)
-	stageIdx +=
-		+(sKeys_->IsTrigger(DIK_D) + sKeys_->IsTrigger(DIK_W))
-		- (sKeys_->IsTrigger(DIK_A) + sKeys_->IsTrigger(DIK_S));
+	// キー取得
+	bool up		 = (sKeys_->IsTrigger(DIK_W) || sKeys_->IsTrigger(DIK_UP));
+	bool left	 = (sKeys_->IsTrigger(DIK_A) || sKeys_->IsTrigger(DIK_LEFT));
+	bool down	 = (sKeys_->IsTrigger(DIK_S) || sKeys_->IsTrigger(DIK_DOWN));
+	bool right	 = (sKeys_->IsTrigger(DIK_D) || sKeys_->IsTrigger(DIK_RIGHT));
+
+	// ステージ選択
+	stageIdx += up + right - down - left;
+
+	// SE
+	if (TransitionManager::GetInstance()->IsFalling() == false)
+	{
+		if (up || right || left || down)
+		{
+			//pSelectSE_->Play(false);
+		}
+	}
 
 	// ステージ番号設定
 	stageConfig_->SetCurrentStageIndex(stageIdx);
@@ -106,7 +129,11 @@ void SelectScene::Update()
 	// 次のシーンへ (SPACE)
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
-		SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
+		// SE
+		//pDecisionSE_->Play(false);
+
+		//SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
+		SceneExecutive::GetInstance()->Change("DEMO", "INFECTION", 5, 10);
 	}
 
 	ImGui::Begin("StageIdx");

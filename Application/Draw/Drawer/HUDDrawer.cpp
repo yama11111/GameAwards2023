@@ -41,6 +41,9 @@ void HUDDrawer::Reset()
 
 void HUDDrawer::Update()
 {
+	// “ü—Í•`‰æÃ“IXV
+	InputDrawerCommon::StaticUpdate();
+
 	// pause
 	pauseDra_.Update();
 

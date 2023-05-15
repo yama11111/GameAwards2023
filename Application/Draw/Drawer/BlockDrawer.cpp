@@ -155,7 +155,7 @@ void BlockDrawer::Reset(const IMode::Type& modeType)
 	}
 
 	// 核の色とマテリアル設定
-	modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
+	//modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 
 	// グリッド
