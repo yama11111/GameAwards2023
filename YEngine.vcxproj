@@ -180,6 +180,7 @@
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
+    <ClCompile Include="GoalBlock.cpp" />
     <ClCompile Include="IBlock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyGame.cpp" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Engine\Utillity\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Utillity\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Utillity\Math\Vector4.cpp" />
+    <ClCompile Include="WoodenBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\TaskScene.h" />
@@ -301,6 +303,7 @@
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
+    <ClInclude Include="GoalBlock.h" />
     <ClInclude Include="IBlock.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />
@@ -336,6 +339,7 @@
     <ClInclude Include="Engine\Utillity\Math\Vector2.h" />
     <ClInclude Include="Engine\Utillity\Math\Vector3.h" />
     <ClInclude Include="Engine\Utillity\Math\Vector4.h" />
+    <ClInclude Include="WoodenBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Light.hlsli" />

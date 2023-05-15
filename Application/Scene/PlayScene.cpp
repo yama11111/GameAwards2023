@@ -87,6 +87,7 @@ void PlayScene::Initialize()
     piecePtr_->RegisterTab(true, 43);
     piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,-20 }, Vector2{ 60,2 });
     piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,70 }, Vector2{ 60,2 });
+    piecePtr_->RegisterBlock(new SpringBlock{ Vector2{},Vector2{} }, Vector2{ 50,-120 }, Vector2{ 8,8 });
     piecePtr_->SetFixity(true);
     piecePtr_->SetState(Piece::State::ROOT);
     stage_.AddPiece(piecePtr_);
@@ -100,6 +101,7 @@ void PlayScene::Initialize()
     piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -80,60 }, Vector2{ 30,2 });
     piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -50,10 }, Vector2{ 20,2 });
     piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -10, -60 }, Vector2{ 60,2 });
+    piece2Ptr_->RegisterBlock(new WoodenBlock{ Vector2{},Vector2{} }, Vector2{ 50,-30 }, Vector2{ 8,8 });
     stage_.AddPiece(piece2Ptr_);
 
     piece3Ptr_ = new Piece{ {400,0},{2,6} };

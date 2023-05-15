@@ -8,10 +8,12 @@ SpringBlock::SpringBlock(const YMath::Vector2& pos, const YMath::Vector2& offset
 
 void SpringBlock::Update(void)
 {
+    IBlock::Update();
 }
 
 void SpringBlock::Draw(void)
 {
+    IBlock::Draw();
     //int posX{ static_cast<int>(GetPos().x) }, posY{ static_cast<int>(GetPos().y) };
     //int radiusX{ static_cast<int>(GetRadius().x) }, radiusY{ static_cast<int>(GetRadius().y) };
 

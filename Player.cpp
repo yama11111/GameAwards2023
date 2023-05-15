@@ -46,7 +46,11 @@ void Player::Move(void)
 
     // y軸
     // ジャンプ処理
-    Jump(vel,false);
+    Jump(vel);
+
+    // バネ処理
+    Spring(vel, nowSpringRot);
+
     // 重力
     vel.y_ -= gravity_;
 
@@ -65,7 +69,7 @@ void Player::Move(void)
     if (vel.x_ != 0.f) direction_ = { vel.x_, 0, 0 };
 }
 
-void Player::Jump(YMath::Vector2& vel,bool spring)
+void Player::Jump(YMath::Vector2& vel)
 {
     static float jumpValue{ 0.f };
 
@@ -73,12 +77,6 @@ void Player::Jump(YMath::Vector2& vel,bool spring)
     if (keysPtr_->IsTrigger(DIK_SPACE) && isJump_ == false) {
         isJump_ = true;
         jumpValue += jumpPower_;
-    }
-
-    if (spring && isJump_ == false)
-    {
-        isJump_ = true;
-        jumpValue += springPower_;
     }
 
     // velにジャンプ量(y軸移動量)を加算
@@ -92,6 +90,85 @@ void Player::Jump(YMath::Vector2& vel,bool spring)
 
     // 0未満の値にならない。
     jumpValue = (std::max)(jumpValue, 0.f);
+}
+
+void Player::Spring(YMath::Vector2& vel, int rot)
+{
+    //trueじゃなければ抜ける
+    if (!isSpring_ && nowVel.x_ == 0 && nowVel.y_ == 0)
+    {
+        nowSpringRot = 0;
+        return;
+    }
+
+    //ジャンプ防止
+    isJump_ = true;
+
+    //回転角
+    int rot_ = rot;
+
+    if (isSpring_)
+    {
+        //90度ごとに
+        switch (rot_ / 90)
+        {
+        case 0:
+            nowVel.y_ = -springPower_;
+            break;
+        case 1:
+            nowVel.x_ = springPower_ / 2;
+            break;
+        case 2:
+            nowVel.y_ = springPower_;
+            break;
+        case 3:
+            nowVel.x_ = -springPower_ / 2;
+            break;
+        }
+
+        isSpring_ = false;
+    }
+    else
+    {
+        //90度ごとに
+        switch (rot_ / 90)
+        {
+        case 0:
+            nowVel.y_ += fallValue_;
+
+            if (nowVel.y_ > 0)
+            {
+                nowVel.y_ = 0;
+            }
+            break;
+        case 1:
+            nowVel.x_ -= fallValue_;
+
+            if (nowVel.x_ < 0)
+            {
+                nowVel.x_ = 0;
+            }
+            break;
+        case 2:
+            nowVel.y_ -= fallValue_;
+
+            if (nowVel.y_ < 0)
+            {
+                nowVel.y_ = 0;
+            }
+            break;
+        case 3:
+            nowVel.x_ += fallValue_;
+
+            if (nowVel.x_ > 0)
+            {
+                nowVel.x_ = 0;
+            }
+            break;
+        }
+    }
+
+    vel += nowVel;
 }
 
 void Player::Collision(YMath::Vector2& vel)
@@ -131,9 +208,55 @@ void Player::Collision(YMath::Vector2& vel)
                     //DrawFormatString(0, 60, GetColor(100, 100, 100), "true");
 
                     //if (isJump_ == false) {
-                    Jump(vel, true);
+                    /*Jump(vel, true);*/
                     //}
+                    nowSpringRot = tempBlockPtr->GetRotate();
+                    isSpring_ = true;
                 }
+            }
+
+            // ローカル変数
+            bool isWoodenSetPosLater{}; // 座標変換を後に行うかどうかの判定値
+            YMath::Vector2 woodenBoxPos{}; // 座標変換を当たり判定の後に行う際の参照値
+            // 木箱
+            if (tempBlockPtr->GetType() == IBlock::Type::WOODEN) {
+                if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_ + 3) &&
+                    CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_ - 1)) {
+                    if (keysPtr_->IsTrigger(DIK_E)) {
+                        isCarryWoodenBox_ ?
+                            isCarryWoodenBox_ = false :
+                            isCarryWoodenBox_ = true;
+                    }
+
+                    if (isCarryWoodenBox_) {
+                        // playerがx軸において、木箱より左側にいるならば
+                        if (GetPos().x_ < tempBlockPtr->GetPos().x_) {
+                            // かつvelの値が正負どちらなのか
+                            if (vel.x_ > 0.f) tempBlockPtr->SetPos(tempBlockPtr->GetPos() + vel);
+                            else {
+                                woodenBoxPos = tempBlockPtr->GetPos() + vel;
+                                isWoodenSetPosLater = true;
+                            }
+                        }
+                        // 右側にいるなら
+                        else {
+                            // かつvelの値が正負どちらなのか
+                            if (vel.x_ < 0.f) tempBlockPtr->SetPos(tempBlockPtr->GetPos() + vel);
+                            else {
+                                woodenBoxPos = tempBlockPtr->GetPos() + vel;
+                                isWoodenSetPosLater = true;
+                            }
+                        }
+                    }
+                }
+                else {
+                    isCarryWoodenBox_ = false;
+                }
+            }
+
+            // ゴール
+            if (tempBlockPtr->GetType() == IBlock::Type::GOAL) {
+                stagePtr_->SetIsGoal(true);
             }
 
             // ブロックにめり込んだピクセル値
@@ -152,6 +275,8 @@ void Player::Collision(YMath::Vector2& vel)
                     vel.x_ < 0 ? vel.x_ -= surplus : vel.x_ += surplus;
                 }
             }
+
+            if (tempBlockPtr->GetType() == IBlock::Type::WOODEN && isWoodenSetPosLater) tempBlockPtr->SetPos(tempBlockPtr->GetPos() + vel);
         }
     }
 }

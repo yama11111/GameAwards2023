@@ -16,18 +16,19 @@ public:
     static constexpr float jumpPower_{ 7.f };       // ジャンプ力
     static constexpr float fallValue_{ 0.2f };      // ジャンプ力の減衰
     static constexpr float gravity_{ 3.5f };        // 重力
-    static constexpr float springPower_{ 12.f };    // バネで跳ねる時の跳躍力
+    static constexpr float springPower_{ 8.f };    // バネで跳ねる時の跳躍力
 
     // 関数
     Player(Stage* stagePtr);
     void Update(void);
     void Draw(void);
-    
+
     void DrawDebug(void);
 
 private:
     void Move(void);
-    void Jump(YMath::Vector2& vel,bool spring);
+    void Jump(YMath::Vector2& vel);
+    void Spring(YMath::Vector2& vel, int rot);
 
     void Collision(YMath::Vector2& vel);
     bool CheckHit(float pos, float radius, float vel, float blockpos, float blockradius);
@@ -39,8 +40,16 @@ private:
     YMath::Vector2 offsetForPieceCenter_{};
 
     bool isJump_{ true };
+    bool isSpring_{};
+    // 持ち運び
+    bool isCarryWoodenBox_{};
 
     Stage* stagePtr_;
+
+    //ばねに触れた時の角度を入れる変数
+    int nowSpringRot = 0;
+    //代入変数
+    YMath::Vector2 nowVel = { 0, 0 };
 
     YGame::Transform transform_;
     //PlayerDrawer pDrawer_;

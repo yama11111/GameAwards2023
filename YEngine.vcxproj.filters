@@ -480,6 +480,12 @@
     <ClCompile Include="Player.cpp">
       <Filter>Application\game</Filter>
     </ClCompile>
+    <ClCompile Include="WoodenBlock.cpp">
+      <Filter>Application\game\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalBlock.cpp">
+      <Filter>Application\game\Block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -835,6 +841,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Application\game</Filter>
+    </ClInclude>
+    <ClInclude Include="WoodenBlock.h">
+      <Filter>Application\game\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalBlock.h">
+      <Filter>Application\game\Block</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

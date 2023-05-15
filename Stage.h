@@ -42,10 +42,14 @@ private:
     bool isPossibleInPiece_{ false };
 
     bool isReset_{ false };
+    bool isGoal_{};
 
     YInput::Keys* keysPtr_{};
 public:
     //setterÅEgetter
     std::vector<std::unique_ptr<Piece>>* GetPieceVectorPtr(void) { return &pieceVector_; }
+
+    inline void SetIsGoal(bool goal) { isGoal_ = goal; }
+    inline bool GetIsGoal(void) { return isGoal_; }
 };
 

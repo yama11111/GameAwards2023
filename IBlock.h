@@ -14,6 +14,8 @@ public:
         BASIC,
         PLATFORM,
         SPRING,
+        WOODEN,
+        GOAL,
     };
 
     static constexpr float radiusBase_{ 16.f };

@@ -15,6 +15,7 @@
 #include "Stage.h"
 #include "BasicBlock.h"
 #include "SpringBlock.h"
+#include "WoodenBlock.h"
 #include "Player.h"
 
 namespace YScene
