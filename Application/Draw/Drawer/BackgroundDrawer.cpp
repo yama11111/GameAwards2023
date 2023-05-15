@@ -12,8 +12,9 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
+using YGame::CBLightGroup;
 
 using YMath::Ease;
 using YMath::Timer;
@@ -29,7 +30,8 @@ using namespace DrawerConfig::Background;
 #pragma region Static
 
 YGame::ParticleManager* BackgroundDrawerCommon::spParticleMan_ = nullptr;
-unique_ptr<Material> BackgroundDrawerCommon::sBackMate_;
+unique_ptr<CBMaterial> BackgroundDrawerCommon::sBackMate_;
+unique_ptr<CBLightGroup> BackgroundDrawerCommon::sBackLight_;
 bool BackgroundDrawerCommon::sIsUnify_ = false;
 Timer BackgroundDrawerCommon::sUnifyTim_;
 Ease<Vector3> BackgroundDrawerCommon::sUnifyAmbientEas_;
@@ -46,8 +48,14 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 
 
 	// 生成
-	sBackMate_.reset(YGame::Material::Create(Ambient));
+	sBackMate_.reset(CBMaterial::Create());
+	sBackMate_->SetAmbient(Ambient);
 
+	sBackLight_.reset(CBLightGroup::Create());
+	sBackLight_->SetAmbientColor(Light::Ambient);
+	sBackLight_->SetDirectionalLightActive(0, true);
+	sBackLight_->SetDirectionalLightColor(0, Light::Direction::Color);
+	sBackLight_->SetDirectionalLightDirection(0, Light::Direction::Dire);
 
 	// クリア時アンビエント用タイマー
 	sUnifyTim_.Initialize(Unify::Frame);
@@ -57,7 +65,7 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 	
 
 	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get());
+	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get(), sBackLight_.get());
 
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));

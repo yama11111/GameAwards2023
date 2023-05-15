@@ -42,7 +42,7 @@ private:
 	TowerDrawer towerDra_;
 
 	// F
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 	
 	// ”š

@@ -19,8 +19,8 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
 
 using YGame::SlimeActor;
 
@@ -35,7 +35,7 @@ using namespace DrawerConfig;
 
 #pragma region Static
 
-unique_ptr<Material> DrawerHelper::sDefMate_;
+unique_ptr<CBMaterial> DrawerHelper::sDefMate_;
 
 bool DrawerHelper::sIsClear_ = false;
 bool DrawerHelper::sIsElderClear_ = false;
@@ -50,7 +50,7 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	assert(pParticleMan);
 
 	// ê∂ê¨
-	sDefMate_.reset(YGame::Material::Create());
+	sDefMate_.reset(YGame::CBMaterial::Create());
 
 	// ----- ê√ìIèâä˙âª ----- // 
 	{

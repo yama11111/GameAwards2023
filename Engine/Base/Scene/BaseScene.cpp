@@ -11,7 +11,7 @@ using YGame::Texture;
 using YGame::Audio;
 using YGame::WorldRuler;
 using YGame::ViewProjection;
-using YGame::LightGroup;
+using YGame::CBLightGroup;
 
 #pragma endregion 
 

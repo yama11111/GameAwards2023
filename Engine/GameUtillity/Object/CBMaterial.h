@@ -5,7 +5,7 @@
 namespace YGame
 {
 	// マテリアル構造体
-	struct Material
+	struct CBMaterial
 	{
 	
 	public:
@@ -14,34 +14,17 @@ namespace YGame
 		struct CBData
 		{
 			YMath::Vector3 ambient_;  // アンビエント係数
-			float pad1_; // パディング1
+			float pad1_;
 			YMath::Vector3 diffuse_;  // ディフューズ係数
-			float pad2_; // パディング2
+			float pad2_;
 			YMath::Vector3 specular_; // スペキュラー係数
 			float alpha_;			  // アルファ値
 		};
 
-	private:
-		
-		// 定数バッファ(マテリアル)
-		YDX::ConstBuffer<CBData> cBuff_;
-		
-		// アンビエント影響度 (環境光)
-		YMath::Vector3 ambient_;
-		
-		// ディフューズ影響度 (拡散反射光)
-		YMath::Vector3 diffuse_;
-		
-		// スペキュラー影響度 (鏡面反射光)
-		YMath::Vector3 specular_;
-		
-		// アルファ値
-		float alpha_ = 1.0f;
-
 	public:
 
 		/// <summary>
-		/// 生成
+		/// 初期化
 		/// </summary>
 		/// <param name="ambient"> : アンビエント影響度 (環境光)</param>
 		/// <param name="diffuse"> : ディフューズ影響度 (拡散反射光)</param>
@@ -49,15 +32,15 @@ namespace YGame
 		/// <param name="alpha"> : アルファ値</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Material* Create(
-			const YMath::Vector3& ambient = { 0.8f,0.8f,0.8f },
+		static CBMaterial* Create(
+			const YMath::Vector3& ambient = { 1.0f,1.0f,1.0f },
 			const YMath::Vector3& diffuse = { 1.0f,1.0f,1.0f },
 			const YMath::Vector3& specular = { 1.0f,1.0f,1.0f },
 			const float alpha = 1.0f,
 			const bool isMutable = true);
-
+	
 	public:
-
+		
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -74,8 +57,8 @@ namespace YGame
 		/// <summary>
 		/// 描画前コマンド
 		/// </summary>
-		/// <param name="rpIndex"> : ルートパラメータ番号</param>
-		void SetDrawCommand(const UINT rpIndex);
+		/// <param name="rootParamIndex"> : ルートパラメータ番号</param>
+		void SetDrawCommand(const UINT rootParamIndex);
 	
 	public:
 
@@ -132,11 +115,28 @@ namespace YGame
 
 	private:
 
-		Material() = default;
+		CBMaterial() = default;
 
 	public:
 
-		~Material() = default;
+		~CBMaterial() = default;
+
+	private:
+
+		// 定数バッファ(色)
+		YDX::ConstBuffer<CBData> cBuff_;
+
+		// アンビエント影響度 (環境光)
+		YMath::Vector3 ambient_ = { 1.0f,1.0f,1.0f };
+
+		// ディフューズ影響度 (拡散反射光)
+		YMath::Vector3 diffuse_ = { 1.0f,1.0f,1.0f };
+
+		// スペキュラー影響度 (鏡面反射光)
+		YMath::Vector3 specular_ = { 1.0f,1.0f,1.0f };
+
+		// アルファ値
+		float alpha_ = 1.0f;
 
 	};
 }

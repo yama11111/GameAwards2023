@@ -25,7 +25,12 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize(YGameSceneFactory::Play_, YGameTransitionFactory::Blackout_);
+	sceneExe_->Initialize(YGameSceneFactory::Title_, YGameTransitionFactory::Blackout_);
+
+
+	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
+	//postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {100.0f,100.0f,0.0f} }));
+	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f } }));
 
 	return true;
 }
@@ -47,31 +52,32 @@ void MyGame::Update()
 
 void MyGame::Draw()
 {
+	// デスクリプターヒープセット
+	descHeap_.SetDrawCommand();
+
+	pPostEffect_->StartRender();
+
+	
+	
+	pPostEffect_->EndRender();
+
+	//pPostEffect_->SetDrawCommand(postEffectObject_.get());
+	//pPostEffect_->SetDrawCommand(postEffectObject_.get(), PostEffect::ShaderType::eBloom);
+
 	// 描画準備
 	dx_.PreDraw(ClearColor);
 
 	// スクリーン設定セット
 	screenDesc_.SetDrawCommand();
-
-	// デスクリプターヒープセット
-	descHeap_.SetDrawCommand();
-
+	
 	// ゲームシーン描画
 	DrawGameScene();
+	
+	// ポストエフェクト描画
+	PostEffect::Pipeline::StaticDraw();
 
-	// 描画場所の数だけ
-	for (size_t i = 0; i < DrawLocationNum; i++)
-	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-		
-		// ポストエフェクト描画
-		PostEffect::Pipeline::StaticDraw(location);
-		
-		// ポストエフェクト描画セットクリア
-		Sprite3D::Pipeline::StaticClearDrawSet(location);
-	}
-
+	// ポストエフェクト描画セットクリア
+	PostEffect::Pipeline::StaticClearDrawSet();
 
 #ifdef _DEBUG
 

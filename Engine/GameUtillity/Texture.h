@@ -11,6 +11,7 @@ namespace YGame
 	// テクスチャ
 	class Texture
 	{
+		
 	private:
 		
 		// テクスチャバッファ
@@ -39,11 +40,11 @@ namespace YGame
 		/// <returns>テクスチャポインタ</returns>
 		static Texture* Create(const YMath::Vector4& color = { 1.0f,1.0f,1.0f,1.0f });
 
-		///// <summary>
-		///// レンダーテクスチャ生成
-		///// </summary>
-		///// <returns>テクスチャポインタ</returns>
-		//static Texture* CreateRender();
+		/// <summary>
+		/// レンダーテクスチャ生成
+		/// </summary>
+		/// <returns>テクスチャポインタ</returns>
+		static Texture* CreateRender();
 
 		/// <summary>
 		/// テクスチャ読み込み

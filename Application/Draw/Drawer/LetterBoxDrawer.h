@@ -35,7 +35,7 @@ namespace YGame
 		std::array<std::unique_ptr<Sprite2D::Object>, 2> sprObjs_;
 		
 		// F
-		std::unique_ptr<Color> color_;
+		std::unique_ptr<CBColor> color_;
 
 		
 		// ‚‚³ (ã)

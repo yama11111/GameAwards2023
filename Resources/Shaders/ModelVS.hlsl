@@ -3,8 +3,8 @@
 PSInput main(VSInput input)
 {
 	// 法線にワールド行列によるスケーリング、回転を適用
-	float4 wNormal = normalize(mul(matWorld, float4(input.normal, 0)));
-	float4 wPos = mul(matWorld, input.pos);
+	float4 wNormal = normalize(mul(matWorld_, float4(input.normal_, 0)));
+	float4 wPos = mul(matWorld_, input.pos_);
 
 
 	// ピクセルシェーダーに渡す値
@@ -12,19 +12,19 @@ PSInput main(VSInput input)
 	
 
 	// システム頂点
-	output.svPos = mul(mul(matViewProj, matWorld), input.pos);
+	output.svPos_ = mul(mul(matViewProj_, matWorld_), input.pos_);
 	
 	// ワールド座標
-	output.worldPos = wPos;
+	output.worldPos_ = wPos;
 	
 	// 法線ベクトル
-	output.normal = wNormal.xyz;
+	output.normal_ = wNormal.xyz;
 	
 	// UV座標
-	output.uv = input.uv;
+	output.uv_ = input.uv_;
 	
 	// 頂点から視点への方向ベクトル
-	output.eyeDir = normalize(cameraPos - wPos.xyz);
+	output.eyeDir_ = normalize(cameraPos_ - wPos.xyz);
 
 
 	return output;

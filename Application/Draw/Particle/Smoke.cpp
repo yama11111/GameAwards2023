@@ -4,7 +4,7 @@ using YGame::IParticleSprite3D;
 using YGame::Smoke;
 using YGame::ViewProjection;
 using YGame::Model;
-using YGame::Color;
+using YGame::CBColor;
 using YMath::Ease;
 using YMath::Timer;
 using YMath::Power;

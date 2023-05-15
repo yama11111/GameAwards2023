@@ -16,7 +16,9 @@ using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Model;
 using YGame::Texture;
-using YGame::Color;
+using YGame::CBColor;
+using YGame::CBMaterial;
+using YGame::CBLightGroup;
 using YGame::SlimeActor;
 using YGame::LetterBoxDrawer;
 using YMath::Vector3;
@@ -29,7 +31,8 @@ Model* SelectDrawerCommon::spEarthModel_ = nullptr;
 Sprite2D* SelectDrawerCommon::spLogoSpr_ = nullptr;
 YGame::ViewProjection* SelectDrawerCommon::spVP_ = nullptr;
 StageConfig* SelectDrawerCommon::spStageConfig_ = nullptr;
-std::unique_ptr<YGame::Material> SelectDrawerCommon::sMate_;
+std::unique_ptr<YGame::CBMaterial> SelectDrawerCommon::sMate_;
+std::unique_ptr<YGame::CBLightGroup> SelectDrawerCommon::sLight_;
 YGame::ParticleManager* SelectDrawerCommon::spParticleMan_ = nullptr;
 
 void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
@@ -57,14 +60,17 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 
 
 	// 生成
-	sMate_.reset(YGame::Material::Create(Ambient));
+	sMate_.reset(CBMaterial::Create());
+	sMate_->SetAmbient(Ambient);
 
+	sLight_.reset(CBLightGroup::Create());
+	//sLight_
 
 	// 核色
 	CoreColor::StaticInitialize();
 
 	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sMate_.get());
+	TowerDrawerCommon::StaticInitialize(pVP, sMate_.get(), sLight_.get());
 
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));
@@ -88,10 +94,10 @@ void SelectDrawer::Initialize()
 	core_.reset(new Transform());
 
 	// 色
-	color_.reset(Color::Create());
+	color_.reset(CBColor::Create());
 
 	// 地球
-	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), nullptr, sMate_.get()));
+	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), nullptr, sMate_.get(), nullptr));
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)

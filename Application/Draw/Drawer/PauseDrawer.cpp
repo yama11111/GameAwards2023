@@ -1,18 +1,18 @@
 #include "PauseDrawer.h"
 #include "HUDConfig.h"
-#include "SceneManager.h"
+#include "SceneExecutive.h"
 
-#include "SceneManager.h"
 #include "YGameSceneFactory.h"
 
 #pragma region 名前空間
 
 using YGame::Sprite2D;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::Texture;
 using YMath::Vector3;
 using YScene::SceneManager;
 using YScene::YGameSceneFactory;
+using YScene::SceneExecutive;
 using namespace HUDConfig::Pause;
 
 #pragma endregion
@@ -58,22 +58,22 @@ void PauseDrawer::Initialize()
 	// ----- 生成 ----- //
 
 	// pause
-	pauseObj_.	reset(Sprite2D::Object::Create({}));
+	pauseObj_.reset(Sprite2D::Object::Create({}));
 	
 	// resumeColor
-	resumeColor_.reset(Color::Create());
+	resumeColor_.reset(CBColor::Create());
 	// resume
-	resumeObj_.	reset(Sprite2D::Object::Create({}, resumeColor_.get()));
+	resumeObj_.reset(Sprite2D::Object::Create({}, resumeColor_.get()));
 	
 	// titleColor
-	changeColor_.reset(Color::Create());
+	changeColor_.reset(CBColor::Create());
 	// title
-	changeObj_.	reset(Sprite2D::Object::Create({}, changeColor_.get()));
+	changeObj_.reset(Sprite2D::Object::Create({}, changeColor_.get()));
 	
 	// curtenColor
-	curtenColor_.reset(Color::Create());
+	curtenColor_.reset(CBColor::Create());
 	// curten
-	curtenObj_.reset(Sprite2D::Object::Create({}, curtenColor_.get()));
+	curtenObj_.reset(Sprite2D::Object::Create({}, curtenColor_.get(), nullptr));
 
 	// 選択スケールイージング
 	selectScaleEas_.Initialize(-0.25f, 0.0f, 3.0f);
@@ -262,13 +262,13 @@ void PauseDrawer::Update()
 			if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
 			{
 				// シーン遷移
-				//SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
+				SceneExecutive::GetInstance()->Change("TITLE", "BLACKOUT", 20, 20);
 			}
 			// プレイなら
 			else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
 			{
 				// シーン遷移
-				//SceneManager::GetInstance()->Change("TITLE", "BLACKOUT");
+				SceneExecutive::GetInstance()->Change("SELECT", "BLACKOUT", 20, 20);
 			}
 		}
 	}

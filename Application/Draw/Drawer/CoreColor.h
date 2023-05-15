@@ -1,5 +1,6 @@
 #pragma once
-#include "Color.h"
+#include "CBColor.h"
+#include "CBMaterial.h"
 #include "Lerp.h"
 #include "Power.h"
 #include "Timer.h"
@@ -25,10 +26,13 @@ public:
 private:
 	
 	// 核色
-	static std::array<std::unique_ptr<YGame::Color>, sTypeNum_> sColors_;
+	static std::array<std::unique_ptr<YGame::CBColor>, sTypeNum_> sColors_;
 
 	// 核色値
 	static std::array<YMath::Vector3, sTypeNum_> sColorValues_;
+
+	// マテリアル
+	static std::unique_ptr<YGame::CBMaterial> sMate_;
 
 
 	// 核色明滅パワー
@@ -49,6 +53,9 @@ private:
 
 	// 色統一用イージング
 	static std::array<YMath::Ease<YMath::Vector3>, sTypeNum_> sUnifyColorEass_;
+	
+	// マテリアル統一用イージング
+	static YMath::Ease<YMath::Vector3> sUnifyMaterialEas_;
 
 public:
 
@@ -82,13 +89,20 @@ public:
 	/// </summary>
 	/// <param name="colorType"> : 色のタイプ</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::Color* ColorPtr(const ColorType& colorType);
+	static YGame::CBColor* ColorPtr(const ColorType& colorType);
 
 	/// <summary>
 	/// 色ポインタ取得
 	/// </summary>
 	/// <param name="idx"> : インデックス</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::Color* ColorPtr(const size_t& idx);
+	static YGame::CBColor* ColorPtr(const size_t& idx);
+
+	/// <summary>
+	/// マテリアルポインタ取得
+	/// </summary>
+	/// <returns>マテリアルのポインタ</returns>
+	static YGame::CBMaterial* MaterialPtr();
+
 };
 

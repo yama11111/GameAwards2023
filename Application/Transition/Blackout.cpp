@@ -5,7 +5,7 @@ using YScene::Blackout;
 using YMath::Vector2;
 using YGame::Sprite2D;
 using YGame::Texture;
-using YGame::Color;
+using YGame::CBColor;
 
 YGame::Sprite2D* Blackout::spCurtenSpr_ = nullptr;
 YMath::Ease<float> Blackout::sBlendEas_;
@@ -25,8 +25,8 @@ void Blackout::StaticInitialize()
 void Blackout::Initialize()
 {
 	// èâä˙âª
-	color_.reset(Color::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
-	obj_.reset(Sprite2D::Object::Create({}, color_.get(), false));
+	color_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	obj_.reset(Sprite2D::Object::Create({}, color_.get(), nullptr, false));
 
 	Reset();
 }

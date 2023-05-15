@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -154,6 +154,11 @@
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
     <ClCompile Include="Application\Draw\Particle\Smoke.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\CBTexConfig.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBDirectionalLight.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBLightGroup.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBPointLight.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\Light\CBSpotLight.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\PostEffect.cpp" />
     <ClCompile Include="Engine\Utillity\DebugText\ImGuiManager.cpp" />
     <ClCompile Include="Engine\GameUtillity\Audio.cpp" />
@@ -164,15 +169,11 @@
     <ClCompile Include="Engine\GameUtillity\Collision\CollisionManager.cpp" />
     <ClCompile Include="Engine\GameUtillity\Collision\CollisionPrimitive.cpp" />
     <ClCompile Include="Engine\GameUtillity\Collision\PrimitiveCollider.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Light\DirectionalLight.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Light\LightGroup.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Light\PointLight.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Light\SpotLight.cpp" />
     <ClCompile Include="Engine\GameUtillity\MapChip\MapChip.cpp" />
     <ClCompile Include="Engine\GameUtillity\MapChip\MapChipCollider.cpp" />
     <ClCompile Include="Engine\GameUtillity\MapChip\MapChipManager.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Object\Color.cpp" />
-    <ClCompile Include="Engine\GameUtillity\Object\Material.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\CBColor.cpp" />
+    <ClCompile Include="Engine\GameUtillity\Object\CBMaterial.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Mesh.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Model.cpp" />
     <ClCompile Include="Engine\GameUtillity\Object\Sprite2D.cpp" />
@@ -221,7 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Scene\TaskScene.h" />
-    <ClInclude Include="BasicBlock.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -274,6 +274,11 @@
     <ClInclude Include="Application\Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />
     <ClInclude Include="Application\Draw\Particle\Smoke.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\CBTexConfig.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBDirectionalLight.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBLightGroup.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBPointLight.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\Light\CBSpotLight.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Node.h" />
     <ClInclude Include="Engine\GameUtillity\Object\PostEffect.h" />
     <ClInclude Include="Engine\Utillity\DebugText\ImGuiManager.h" />
@@ -286,15 +291,11 @@
     <ClInclude Include="Engine\GameUtillity\Collision\CollisionManager.h" />
     <ClInclude Include="Engine\GameUtillity\Collision\CollisionPrimitive.h" />
     <ClInclude Include="Engine\GameUtillity\Collision\PrimitiveCollider.h" />
-    <ClInclude Include="Engine\GameUtillity\Light\DirectionalLight.h" />
-    <ClInclude Include="Engine\GameUtillity\Light\LightGroup.h" />
-    <ClInclude Include="Engine\GameUtillity\Light\PointLight.h" />
-    <ClInclude Include="Engine\GameUtillity\Light\SpotLight.h" />
     <ClInclude Include="Engine\GameUtillity\MapChip\MapChip.h" />
     <ClInclude Include="Engine\GameUtillity\MapChip\MapChipCollider.h" />
     <ClInclude Include="Engine\GameUtillity\MapChip\MapChipManager.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\Color.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\Material.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\CBColor.h" />
+    <ClInclude Include="Engine\GameUtillity\Object\CBMaterial.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Mesh.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Model.h" />
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
@@ -343,16 +344,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Light.hlsli" />
+    <None Include="Resources\Shaders\PostEffect.hlsli" />
     <None Include="Resources\Shaders\Sprite3D.hlsli" />
     <None Include="Resources\Shaders\Model.hlsli" />
     <None Include="Resources\Shaders\Sprite2D.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\Shaders\BloomPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BloomVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Resources\Shaders\PhongPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\PhongVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\PostEffectVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>

@@ -4,9 +4,10 @@
 #include "PipelineSet.h"
 #include "ObjectConfig.h"
 #include "ViewProjection.h"
-#include "Color.h"
-#include "LightGroup.h"
-#include "Material.h"
+#include "CBColor.h"
+#include "CBLightGroup.h"
+#include "CBMaterial.h"
+#include "CBTexConfig.h"
 
 namespace YGame
 {
@@ -22,8 +23,8 @@ namespace YGame
 		// シェーダーの種類
 		enum class ShaderType
 		{
-			ePhong	 = 0, // Phongシェーダー
-			eToon	 = 1, // Toonシェーダー
+			ePhong	 = 0, // Phong
+			eToon	 = 1, // Toon
 			eDefault = 2, // デフォルト
 		};
 
@@ -72,7 +73,8 @@ namespace YGame
 		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
 		void SetDrawCommand(
-			Model::Object* pObj, const DrawLocation& location, 
+			Model::Object* pObj, 
+			const DrawLocation& location, 
 			const ShaderType& shaderType = ShaderType::eDefault);
 
 		/// <summary>
@@ -141,14 +143,16 @@ namespace YGame
 		/// <param name="pColor"> : 色ポインタ</param>
 		/// <param name="pLightGroup"> : 光源ポインタ</param>
 		/// <param name="pMaterial"> : 光源ポインタ</param>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Object* Create(
 			const Status& status,
 			ViewProjection* pVP,
-			Color* pColor,
-			LightGroup* pLightGroup,
-			Material* pMaterial,
+			CBColor* pColor,
+			CBLightGroup* pLightGroup,
+			CBMaterial* pMaterial,
+			CBTexConfig* pTexConfig,
 			const bool isMutable = true);
 
 	public:
@@ -160,11 +164,14 @@ namespace YGame
 		/// <param name="colorRPIndex"> : 色ルートパラメータ番号</param>
 		/// <param name="lightRPIndex"> : ライトグループルートパラメータ番号</param>
 		/// <param name="materialRPIndex"> : マテリアルルートパラメータ番号</param>
+		/// <param name="texConfigRPIndex"> : テクスチャ設定ルートパラメータ番号</param>
 		void SetDrawCommand(
 			const UINT transformRPIndex,
 			const UINT colorRPIndex,
 			const UINT lightRPIndex,
-			const UINT materialRPIndex);
+			const UINT materialRPIndex,
+			const UINT texConfigRPIndex);
+
 
 		/// <summary>
 		/// ビュープロジェクション設定 (null = Default)
@@ -176,19 +183,25 @@ namespace YGame
 		/// 色設定 (null = Default)
 		/// </summary>
 		/// <param name="pColor"> : 色ポインタ</param>
-		void SetColor(Color* pColor);
+		void SetColor(CBColor* pColor);
 
 		/// <summary>
 		/// 光源設定 (null = Default)
 		/// </summary>
 		/// <param name="pLightGroup"> : 光源ポインタ</param>
-		void SetLightGroup(LightGroup* pLightGroup);
+		void SetLightGroup(CBLightGroup* pLightGroup);
 
 		/// <summary>
 		/// マテリアル設定 (null = Default)
 		/// </summary>
 		/// <param name="pMaterial"> : マテリアルポインタ</param>
-		void SetMaterial(Material* pMaterial);
+		void SetMaterial(CBMaterial* pMaterial);
+
+		/// <summary>
+		/// テクスチャ設定 (null = Default)
+		/// </summary>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
+		void SetTexConfig(CBTexConfig* pTexConfig);
 
 	private:
 
@@ -207,6 +220,7 @@ namespace YGame
 			YMath::Matrix4 matWorld_;	 // ワールド行列
 			YMath::Matrix4 matViewProj_; // ビュープロジェクション行列
 			YMath::Vector3 cameraPos_;	 // カメラ座標
+			float pad_;
 		};
 
 	private:
@@ -218,13 +232,16 @@ namespace YGame
 		ViewProjection* pVP_ = nullptr;
 
 		// 色ポインタ
-		Color* pColor_ = nullptr;
+		CBColor* pColor_ = nullptr;
 
 		// 光源ポインタ
-		LightGroup* pLightGroup_ = nullptr;
+		CBLightGroup* pLightGroup_ = nullptr;
 
 		// マテリアルポインタ
-		Material* pMaterial_ = nullptr;
+		CBMaterial* pMaterial_ = nullptr;
+
+		// テクスチャ設定ポインタ
+		CBTexConfig* pTexConfig_ = nullptr;
 
 	public:
 
@@ -238,13 +255,16 @@ namespace YGame
 			static std::unique_ptr<ViewProjection> sVP_;
 
 			// 光源ポインタ (デフォルト)
-			static std::unique_ptr<LightGroup> sLightGroup_;
+			static std::unique_ptr<CBLightGroup> sLightGroup_;
 
 			// 色 (デフォルト)
-			static std::unique_ptr<Color> sColor_;
+			static std::unique_ptr<CBColor> sColor_;
 
 			// マテリアル (デフォルト)
-			static std::unique_ptr<Material> sMaterial_;
+			static std::unique_ptr<CBMaterial> sMaterial_;
+
+			// テクスチャ設定 (デフォルト)
+			static std::unique_ptr<CBTexConfig> sTexConfig_;
 
 		public:
 
@@ -286,8 +306,10 @@ namespace YGame
 		/// <param name="pObj"> : オブジェクトポインタ</param>
 		/// <param name="locaiton"> : 描画場所</param>
 		static void StaticPushBackDrawSet(
-			Model* pModel, Model::Object* pObj, 
-			const DrawLocation& location, const ShaderType& shaderType);
+			Model* pModel, 
+			Model::Object* pObj, 
+			const DrawLocation& location, 
+			const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
@@ -304,7 +326,8 @@ namespace YGame
 			eColorCB	 = 1, // 色
 			eLightCB	 = 2, // 光
 			eMaterialCB	 = 3, // マテリアル
-			eTexDT		 = 4, // テクスチャ
+			eTexConfigCB = 4, // テクスチャ設定
+			eTexDT		 = 5, // テクスチャ
 		};
 
 	private:
@@ -314,13 +337,6 @@ namespace YGame
 		{
 
 		public:
-
-			// DefaultVS
-			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
-
-			// DefaultPS
-			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
-
 
 			// PhongVS
 			Microsoft::WRL::ComPtr<ID3DBlob> phongVSBlob_ = nullptr;
@@ -334,6 +350,13 @@ namespace YGame
 
 			// ToonPS
 			Microsoft::WRL::ComPtr<ID3DBlob> toonPSBlob_ = nullptr;
+
+
+			// DefaultVS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultVSBlob_ = nullptr;
+
+			// DefaultPS
+			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
 
 		public:
 
@@ -358,9 +381,6 @@ namespace YGame
 			// モデル用オブジェクト
 			Model::Object* pObj_;
 
-			// パイプラインインデックス
-			size_t pipelineIndex_;
-
 		public:
 
 			/// <summary> 
@@ -379,7 +399,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+		static std::array<std::array<std::list<std::unique_ptr<DrawSet>>, sShaderNum_>, DrawLocationNum> sDrawSets_;
 
 	};
 
