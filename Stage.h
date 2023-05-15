@@ -52,4 +52,3 @@ public:
     inline void SetIsGoal(bool goal) { isGoal_ = goal; }
     inline bool GetIsGoal(void) { return isGoal_; }
 };
-

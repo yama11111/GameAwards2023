@@ -27,10 +27,10 @@ public:
 
 private:
     void Move(void);
-    void Jump(YMath::Vector2& vel);
+    void Jump(YMath::Vector2& vel, float& jumpValue);
     void Spring(YMath::Vector2& vel, int rot);
 
-    void Collision(YMath::Vector2& vel);
+    void Collision(YMath::Vector2& vel, float& jumpValue);
     bool CheckHit(float pos, float radius, float vel, float blockpos, float blockradius);
     bool CheckHit(float pos, float radius, float vel, float blockpos, float blockradius, float& surplus);
 

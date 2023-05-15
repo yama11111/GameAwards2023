@@ -44,9 +44,10 @@ void Player::Move(void)
     vel.x_ += (keysPtr_->IsDown(DIK_D) - keysPtr_->IsDown(DIK_A)) * moveSpeed_;
     //vel.y += (KEY::IsDown(KEY_INPUT_S) - KEY::IsDown(KEY_INPUT_W)) * moveSpeed_;
 
+    static float jumpValue{ 0.f };
     // y軸
     // ジャンプ処理
-    Jump(vel);
+    Jump(vel,jumpValue);
 
     // バネ処理
     Spring(vel, nowSpringRot);
@@ -57,7 +58,7 @@ void Player::Move(void)
     //vel = vel.normalize();
 
     // 移動量補正
-    Collision(vel);
+    Collision(vel,jumpValue);
 
     // 補正済の移動量をposに加算
     YMath::Vector2 pos{ GetPos() + vel };
@@ -69,10 +70,8 @@ void Player::Move(void)
     if (vel.x_ != 0.f) direction_ = { vel.x_, 0, 0 };
 }
 
-void Player::Jump(YMath::Vector2& vel)
+void Player::Jump(YMath::Vector2& vel, float& jumpValue)
 {
-    static float jumpValue{ 0.f };
-
     // トリガーでジャンプ
     if (keysPtr_->IsTrigger(DIK_SPACE) && isJump_ == false) {
         isJump_ = true;
@@ -171,7 +170,7 @@ void Player::Spring(YMath::Vector2& vel, int rot)
     vel += nowVel;
 }
 
-void Player::Collision(YMath::Vector2& vel)
+void Player::Collision(YMath::Vector2& vel, float& jumpValue)
 {
     for (size_t i = 0; i < stagePtr_->GetPieceVectorPtr()->size(); i++) {
         // 該当Pieceが操作されている場合スキップ
@@ -204,6 +203,51 @@ void Player::Collision(YMath::Vector2& vel)
             if (tempBlockPtr->GetType() == IBlock::Type::SPRING) {
                 if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, 9) &&
                     CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, 9)) {
+
+                    int sizex = defaultHeight_ + 1;
+                    int sizey = 1;
+
+                    int sizeX = 0;
+                    int sizeY = 0;
+
+                    //90度ごとに
+                    switch (tempBlockPtr->GetRotate() / 90)
+                    {
+                    case 0://上
+
+                        sizex = 0;
+                        sizeX = defaultHeight_;
+                        sizey = defaultHeight_;
+                        sizey = sizey * -1;
+                        sizeY = 1;
+
+                        break;
+                    case 1://右
+
+                        sizex = defaultHeight_;
+                        sizeX = 1;
+                        sizey = 0;
+                        sizeY = defaultHeight_;
+
+                        break;
+                    case 2://下
+
+                        sizex = 0;
+                        sizeX = defaultHeight_;
+                        sizey = defaultHeight_;
+                        sizeY = 1;
+
+                        break;
+                    case 3://左
+
+                        sizex = defaultHeight_;
+                        sizey = sizey * -1;
+                        sizeX = 1;
+                        sizey = 0;
+                        sizeY = defaultHeight_;
+
+                        break;
+                    }
 
                     //DrawFormatString(0, 60, GetColor(100, 100, 100), "true");
 
@@ -265,6 +309,12 @@ void Player::Collision(YMath::Vector2& vel)
             // y軸方向
             if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
                 if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
+                    //天井に当たった処理
+                    if (GetPos().y_ - GetRadius().y_ + vel.y_ > tempBlockPtr->GetPos().y_ - tempBlockPtr->GetRadius().y_) {
+                        //この中でジャンプ量を0にすると天井にぶつかった瞬間落ちる
+                        jumpValue = 0.f;
+                        nowVel = { 0,0 };
+                    }
                     vel.y_ < 0 ? vel.y_ -= surplus : vel.y_ += surplus;
                 }
             }
