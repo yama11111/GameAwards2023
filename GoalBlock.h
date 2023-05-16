@@ -1,5 +1,7 @@
 #pragma once
 #include "IBlock.h"
+#include "GoalDrawer.h"
+
 class GoalBlock :
     public IBlock
 {
@@ -9,5 +11,9 @@ class GoalBlock :
 
     void Update(void) override;
     void Draw(void) override;
+
+private:
+    // ïœêî
+    GoalDrawer goalDrawer_{};
 };
 

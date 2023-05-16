@@ -53,6 +53,10 @@ public:
     inline void SetPlayerEnterInside(bool enterinside) { isPlayerEnterInside_ = enterinside; }
     inline bool GetPlayerEnterInside(void) { return isPlayerEnterInside_; }
 
+    inline YGame::Transform* GetTransformPtr(void) { return &transform_; }
+    inline void SetTransform(const YGame::Transform& transform) { transform_ = transform; }
+    inline void UseTransformUpdate(void) { transform_.UpdateMatrix(); }
+
     inline void SetType(const Type& type) { type_ = type; }
     inline void SetPos(const YMath::Vector2& pos) { pos_ = pos; }
     inline void SetOffset(const YMath::Vector2& offset) { offset_ = offset; }
