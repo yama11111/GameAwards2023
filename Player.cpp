@@ -112,13 +112,13 @@ void Player::Spring(YMath::Vector2& vel, int rot)
         switch (rot_ / 90)
         {
         case 0:
-            nowVel.y_ = -springPower_;
+            nowVel.y_ = springPower_;
             break;
         case 1:
             nowVel.x_ = springPower_ / 2;
             break;
         case 2:
-            nowVel.y_ = springPower_;
+            nowVel.y_ = -springPower_;
             break;
         case 3:
             nowVel.x_ = -springPower_ / 2;
@@ -133,7 +133,7 @@ void Player::Spring(YMath::Vector2& vel, int rot)
         switch (rot_ / 90)
         {
         case 0:
-            nowVel.y_ += fallValue_;
+            nowVel.y_ -= fallValue_;
 
             if (nowVel.y_ > 0)
             {
@@ -149,7 +149,7 @@ void Player::Spring(YMath::Vector2& vel, int rot)
             }
             break;
         case 2:
-            nowVel.y_ -= fallValue_;
+            nowVel.y_ += fallValue_;
 
             if (nowVel.y_ < 0)
             {
