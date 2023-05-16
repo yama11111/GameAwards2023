@@ -62,8 +62,8 @@ void Piece::Update(void)
     {
         MovePiecePos();
 
-        UpdateTabs();
         WriteBlockPos();
+        UpdateTabs();
     }
 }
 
