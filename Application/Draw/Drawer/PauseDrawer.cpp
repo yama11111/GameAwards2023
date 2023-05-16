@@ -262,13 +262,13 @@ void PauseDrawer::Update()
 			if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
 			{
 				// シーン遷移
-				SceneExecutive::GetInstance()->Change("TITLE", "BLACKOUT", 5, 10);
+				SceneExecutive::GetInstance()->Change("TITLE", "BLACKOUT", 20, 10);
 			}
 			// プレイなら
 			else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
 			{
 				// シーン遷移
-				SceneExecutive::GetInstance()->Change("SELECT", "BLACKOUT", 5, 10);
+				SceneExecutive::GetInstance()->Change("SELECT", "BLACKOUT", 20, 10);
 			}
 		}
 	}

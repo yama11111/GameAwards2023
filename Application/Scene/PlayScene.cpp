@@ -79,42 +79,47 @@ void PlayScene::Initialize()
 	// プレイBGM開始
 	pPlayBGM_->Play(true);
 
-    piecePtr_ = new Piece{ {-200,10},{5,5} };
-    piecePtr_->RegisterTab(true, 4);
-    piecePtr_->RegisterTab(true, 18);
-    piecePtr_->RegisterTab(true, 27);
-    piecePtr_->RegisterTab(true, 35);
-    piecePtr_->RegisterTab(true, 43);
-    piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,-20 }, Vector2{ 60,2 });
-    piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,70 }, Vector2{ 60,2 });
-    piecePtr_->RegisterBlock(new SpringBlock{ Vector2{},Vector2{} }, Vector2{ 50,-160 }, Vector2{ 8,8 });
-    piecePtr_->SetFixity(true);
-    piecePtr_->SetState(Piece::State::ROOT);
-    stage_.AddPiece(piecePtr_);
+	if (stageConfig_->GetInstance()->GetCurrentStageIndex() == 1)
+	{
 
-    piece2Ptr_ = new Piece{ {150,200},{3,3} };
-    piece2Ptr_->RegisterTab(false, 4);
-    piece2Ptr_->RegisterTab(false, 10);
-    piece2Ptr_->RegisterTab(false, 14);
-    piece2Ptr_->RegisterTab(false, 20);
-    piece2Ptr_->RegisterTab(false, 26);
-    piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -80,60 }, Vector2{ 30,2 });
-    piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -50,10 }, Vector2{ 20,2 });
-    piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -10, -60 }, Vector2{ 60,2 });
-    piece2Ptr_->RegisterBlock(new WoodenBlock{ Vector2{},Vector2{} }, Vector2{ 50,-30 }, Vector2{ 8,8 });
-    stage_.AddPiece(piece2Ptr_);
+		piecePtr_ = new Piece{ {-200,10},{5,5} };
+		piecePtr_->RegisterTab(true, 4);
+		piecePtr_->RegisterTab(true, 18);
+		piecePtr_->RegisterTab(true, 27);
+		piecePtr_->RegisterTab(true, 35);
+		piecePtr_->RegisterTab(true, 43);
+		piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,-20 }, Vector2{ 60,2 });
+		piecePtr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -12,70 }, Vector2{ 60,2 });
+		piecePtr_->RegisterBlock(new SpringBlock{ Vector2{},Vector2{} }, Vector2{ 50,-140 }, Vector2{ 8,8 });
+		piecePtr_->SetFixity(true);
+		piecePtr_->SetState(Piece::State::ROOT);
+		stage_.AddPiece(piecePtr_);
 
-    piece3Ptr_ = new Piece{ {400,0},{2,6} };
-    piece3Ptr_->RegisterTab(false, 0);
-    piece3Ptr_->RegisterTab(true, 9);
-    piece3Ptr_->RegisterTab(false, 15);
-    piece3Ptr_->RegisterTab(true, 26);
-    piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ 20,15 }, Vector2{ 2,60 });
-    piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -20,-35 }, Vector2{ 60,2 });
-    stage_.AddPiece(piece3Ptr_);
+		piece2Ptr_ = new Piece{ {150,200},{3,3} };
+		piece2Ptr_->RegisterTab(false, 4);
+		piece2Ptr_->RegisterTab(false, 10);
+		piece2Ptr_->RegisterTab(false, 14);
+		piece2Ptr_->RegisterTab(false, 20);
+		piece2Ptr_->RegisterTab(false, 26);
+		piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -80,60 }, Vector2{ 30,2 });
+		piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -50,10 }, Vector2{ 20,2 });
+		piece2Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -10, -60 }, Vector2{ 60,2 });
+		piece2Ptr_->RegisterBlock(new WoodenBlock{ Vector2{},Vector2{} }, Vector2{ 50,-30 }, Vector2{ 8,8 });
+		stage_.AddPiece(piece2Ptr_);
 
-    player_ = std::make_unique<Player>(&stage_);
-    player_->SetPos(Vector2{ -100,0 });
+		piece3Ptr_ = new Piece{ {400,0},{2,6} };
+		piece3Ptr_->RegisterTab(false, 0);
+		piece3Ptr_->RegisterTab(true, 9);
+		piece3Ptr_->RegisterTab(false, 15);
+		piece3Ptr_->RegisterTab(true, 26);
+		piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ 20,15 }, Vector2{ 2,60 });
+		piece3Ptr_->RegisterBlock(new BasicBlock{ Vector2{},Vector2{} }, Vector2{ -20,-35 }, Vector2{ 60,2 });
+		stage_.AddPiece(piece3Ptr_);
+
+		player_ = std::make_unique<Player>(&stage_);
+		player_->SetPos(Vector2{ -100,0 });
+	}
+
 }
 
 #pragma endregion
@@ -205,7 +210,7 @@ void PlayScene::Draw()
     player_->Draw();
 
 	// HUD描画
-	//hud_.Draw();
+	hud_.Draw();
 
 	// パーティクル
 	//particleMan_.Draw();
