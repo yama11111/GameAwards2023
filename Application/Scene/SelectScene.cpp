@@ -132,8 +132,8 @@ void SelectScene::Update()
 		// SE
 		//pDecisionSE_->Play(false);
 
-		//SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
-		SceneExecutive::GetInstance()->Change("DEMO", "INFECTION", 5, 10);
+		SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
+		//SceneExecutive::GetInstance()->Change("DEMO", "INFECTION", 5, 10);
 	}
 
 	ImGui::Begin("StageIdx");

@@ -459,6 +459,7 @@ namespace DrawerConfig
 			const YMath::Vector3 Clear = { 0.7f, 0.7f, 0.8f };
 		}
 
+
 		// 明滅
 		namespace Flickering
 		{
@@ -735,7 +736,7 @@ namespace DrawerConfig
 			namespace Material
 			{
 				// アンビエント
-				const YMath::Vector3 Ambient = { 0.5f,0.2f,0.2f };
+				const YMath::Vector3 Ambient = { 0.9f,0.6f,0.6f };
 			}
 
 			// 光

@@ -58,7 +58,7 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 		IDrawer::StaticInitialize(pVP, sDefMate_.get(), pCamera, pParticleMan);
 
 		// 核色
-		CoreColor::StaticInitialize();
+		CoreColor::StaticInitialize(true);
 
 
 		// プレイヤー

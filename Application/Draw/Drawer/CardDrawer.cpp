@@ -22,7 +22,8 @@ using namespace DrawerConfig::Card;
 
 std::array<YGame::Sprite2D*, 10> CardDrawerCommon::spNumberSpr_ =
 { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-YGame::Sprite2D* CardDrawerCommon::spCardSpr_ = nullptr;
+std::array<YGame::Sprite2D*, 2> CardDrawerCommon::spCardSprs_ =
+{ nullptr, nullptr };
 
 void CardDrawerCommon::StaticInitialize()
 {
@@ -41,10 +42,11 @@ void CardDrawerCommon::StaticInitialize()
 	spNumberSpr_[9] = Sprite2D::Create({}, { Texture::Load("Numbers/9.png", false) });
 
 	// ステージカード
-	spCardSpr_ = Sprite2D::Create({}, { Texture::Load("Select/card.png", false) });
+	spCardSprs_[0] = Sprite2D::Create({}, {Texture::Load("Select/card.png", false)});
+	spCardSprs_[1] = Sprite2D::Create({}, {Texture::Load("Select/clearCard.png", false)});
 }
 
-void CardDrawer::Initialize(YGame::Transform* pParent, const int number)
+void CardDrawer::Initialize(YGame::Transform* pParent, const int number, const bool isClear)
 {
 	// 数字
 	// 0以下なら弾く
@@ -61,22 +63,25 @@ void CardDrawer::Initialize(YGame::Transform* pParent, const int number)
 	// 色
 	color_.reset(CBColor::Create());
 
+	// クリア色
+	clearCharaColor_.reset(CBColor::Create());
+
 	// ステージカードオブジェクト
-	cardObjs_.reset(Sprite2D::Object::Create({}, color_.get()));
+	cardObjs_.reset(Sprite2D::Object::Create({}, color_.get(), nullptr));
 	cardObjs_->parent_ = &core_->m_;
 
 	// 数字用オブジェクト
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
-		numObjs_[i].reset(Sprite2D::Object::Create({}, color_.get()));
+		numObjs_[i].reset(Sprite2D::Object::Create({}, color_.get(), nullptr));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// リセット
-	Reset();
+	Reset(isClear);
 }
 
-void CardDrawer::Reset()
+void CardDrawer::Reset(const bool isClear)
 {
 	// ブヨブヨアニメーション初期化
 	SlimeActor::Initialize();
@@ -93,11 +98,16 @@ void CardDrawer::Reset()
 
 		numObjs_[0]->Initialize({ {0.0f,0.0f,0.0f},{},{scale,scale,0.0f} });
 
+		if (isClear) { numObjs_[0]->SetColor(clearCharaColor_.get()); }
+
 		// 幅
 		float x = 16.0f;
 
 		numObjs_[1]->Initialize({ {+x,0.0f,0.0f},{},{scale,scale,0.0f} });
 		numObjs_[2]->Initialize({ {-x,0.0f,0.0f},{},{scale,scale,0.0f} });
+
+		if (isClear) { numObjs_[1]->SetColor(clearCharaColor_.get()); }
+		if (isClear) { numObjs_[2]->SetColor(clearCharaColor_.get()); }
 	}
 
 	// カード
@@ -105,6 +115,9 @@ void CardDrawer::Reset()
 
 	// 色初期化
 	color_->SetRGBA({ 1.0f,1.0f,1.0f,1.0f });
+	
+	// 色初期化
+	clearCharaColor_->SetRGBA({ 1.0f,1.0f,0.0f,1.0f });
 
 	// ----- アニメーション ----- //
 
@@ -121,6 +134,9 @@ void CardDrawer::Reset()
 	scaleEas_.Initialize(0.0f, Animation::Scale::Value, Animation::Scale::Exponent);
 	// 選択用パワー
 	selectPow_.Initialize(Animation::Frame);
+
+	// クリアしたか
+	isClear_ = isClear;
 }
 
 void CardDrawer::UpdateSelectAnimation()
@@ -211,22 +227,26 @@ void CardDrawer::UpdateSelectAnimation()
 
 	// 色の値
 	Vector3 colorVal = {};
+	Vector3 clearColorVal = {};
 
 	// 選ばれているなら
 	if (isSelected_)
 	{
 		// 通常色に
 		colorVal = { 1.0f,1.0f,1.0f };
+		clearColorVal = { 1.0f,1.0f,0.0f };
 	}
 	// それ以外なら
 	else
 	{
 		// 暗い色に
 		colorVal = { 0.25f,0.25f,0.25f };
+		clearColorVal = { 0.25f,0.25f,0.0f };
 	}
 
 	// 色設定
 	color_->SetRGB(colorVal);
+	clearCharaColor_->SetRGB(clearColorVal);
 }
 
 
@@ -260,7 +280,7 @@ void CardDrawer::Update()
 void CardDrawer::Draw()
 {
 	// カード描画
-	spCardSpr_->SetDrawCommand(cardObjs_.get(), YGame::DrawLocation::Front);
+	spCardSprs_[isClear_]->SetDrawCommand(cardObjs_.get(), YGame::DrawLocation::Front);
 
 	// 数字
 	// 10未満なら

@@ -26,8 +26,10 @@ using namespace DrawerConfig::Tower;
 
 #pragma region Static
 
-array<array<Model*, TowerDrawerCommon::PartsNum_>, 2> TowerDrawerCommon::spModels_ =
+array<array<Model*, TowerDrawerCommon::PartsNum_>, IMode::sTypeNum_> TowerDrawerCommon::spModels_ =
 {
+	nullptr, nullptr, 
+	nullptr, nullptr, 
 	nullptr, nullptr, 
 	nullptr, nullptr, 
 };
@@ -69,6 +71,14 @@ void TowerDrawerCommon::StaticInitialize(
 	// ê‘
 	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
 	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
+
+		// ê‘
+	spModels_[IMode::sSpringIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
+
+		// ê‘
+	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
 }
 
 #pragma endregion
@@ -137,9 +147,8 @@ void TowerDrawer::Update()
 void TowerDrawer::Draw(const YGame::DrawLocation& location)
 {
 	// ï`âÊ
-	for (size_t i = 0; i < spModels_.size(); i++)
+	for (size_t i = 0; i < spModels_[CurrentTypeIndex()].size(); i++)
 	{
-		int a = CurrentTypeIndex();
 		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), location, Model::ShaderType::eDefault);
 	}
 }
