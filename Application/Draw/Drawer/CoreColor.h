@@ -64,7 +64,7 @@ public:
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	static void StaticInitialize();
+	static void StaticInitialize(const bool isPlay);
 
 	/// <summary>
 	/// 静的リセット

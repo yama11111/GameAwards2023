@@ -81,7 +81,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	sEarthLight_->SetDirectionalLightDirection(0, Earth::Light::Direction::Dire);
 
 	// 核色
-	CoreColor::StaticInitialize();
+	CoreColor::StaticInitialize(false);
 
 	// タワー
 	TowerDrawerCommon::StaticInitialize(pVP, sTowerMate_.get(), sTowerLight_.get());
@@ -130,27 +130,17 @@ void SelectDrawer::Initialize()
 	{
 		stageDras_[i].reset(new StageDrawer());
 
-		// 種類
-		IMode::Type type = IMode::Type::Normal;
-
-		// クリアしているなら変更
-		if(spStageConfig_->GetIsClearStage((int)i))
-		{
-			// クリアしているなら変更
-			type = IMode::Type::Movable;
-		}
-
 		// 番号がトランスフォームの数より小さいなら
 		if (i < aliveStages_.size())
 		{
 			// 使う用のトランスフォームを代入
-			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1), type);
+			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1));
 		}
 		// それ以外なら
 		else
 		{
 			// 使わない用のトランスフォームを代入
-			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1), type);
+			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1));
 		}
 	}
 	
@@ -244,7 +234,7 @@ void SelectDrawer::Reset()
 		if (spStageConfig_->GetIsClearStage((int)i))
 		{
 			// クリアしているなら変更
-			type = IMode::Type::Movable;
+			type = IMode::Type::Junction;
 		}
 
 		stageDras_[i]->Reset(type);
@@ -273,7 +263,8 @@ void SelectDrawer::Reset()
 	// 描画クラス
 	for (size_t i = 0; i < cardDras_.size(); i++)
 	{
-		cardDras_[i]->Reset();
+		// クリアしているなら変更
+		cardDras_[i]->Reset(spStageConfig_->GetIsClearStage((int)i));
 	}
 
 

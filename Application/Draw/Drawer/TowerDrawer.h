@@ -23,7 +23,7 @@ protected:
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, PartsNum_>, 2> spModels_;
+	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;

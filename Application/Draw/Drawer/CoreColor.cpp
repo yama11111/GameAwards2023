@@ -37,7 +37,7 @@ Ease<Vector3> CoreColor::sUnifyMaterialEas_;
 
 #pragma endregion
 
-void CoreColor::StaticInitialize()
+void CoreColor::StaticInitialize(const bool isPlay)
 {
 	// êF
 	for (size_t i = 0; i < sColors_.size(); i++)

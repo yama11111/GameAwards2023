@@ -10,7 +10,7 @@ protected:
 	// 静的数字スプライト
 	static std::array<YGame::Sprite2D*, 10> spNumberSpr_;
 	// 静的スプライト
-	static YGame::Sprite2D* spCardSpr_;
+	static std::array<YGame::Sprite2D*,  2> spCardSprs_;
 public:
 	// 静的初期化
 	static void StaticInitialize();
@@ -49,11 +49,16 @@ private:
 	YMath::Ease<float> scaleEas_;
 	// 選択用パワー
 	YMath::Power selectPow_;
+
+	// 数字用色
+	std::unique_ptr<YGame::CBColor> clearCharaColor_;
+	// クリアしたか
+	bool isClear_ = false;
 public:
 	// 初期化
-	void Initialize(YGame::Transform* pParent, const int number);
+	void Initialize(YGame::Transform* pParent, const int number, const bool isClear = false);
 	// リセット
-	void Reset();
+	void Reset(const bool isClear = false);
 	// 更新
 	void Update();
 	// 描画

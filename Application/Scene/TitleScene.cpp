@@ -37,7 +37,7 @@ void TitleScene::Load()
 	ParticleManager::StaticInitialize(&transferVP_);
 
 	// äjêF
-	CoreColor::StaticInitialize();
+	CoreColor::StaticInitialize(false);
 	// îwåi
 	BackgroundDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
 
