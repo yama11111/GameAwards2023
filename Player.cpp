@@ -47,7 +47,7 @@ void Player::Move(void)
     static float jumpValue{ 0.f };
     // y軸
     // ジャンプ処理
-    Jump(vel,jumpValue);
+    Jump(vel, jumpValue);
 
     // バネ処理
     Spring(vel, nowSpringRot);
@@ -58,7 +58,7 @@ void Player::Move(void)
     //vel = vel.normalize();
 
     // 移動量補正
-    Collision(vel,jumpValue);
+    Collision(vel, jumpValue);
 
     // 補正済の移動量をposに加算
     YMath::Vector2 pos{ GetPos() + vel };
@@ -201,61 +201,65 @@ void Player::Collision(YMath::Vector2& vel, float& jumpValue)
 
             // バネブロック処理
             if (tempBlockPtr->GetType() == IBlock::Type::SPRING) {
-                if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, 9) &&
-                    CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, 9)) {
 
-                    int sizex = defaultHeight_ + 1;
-                    int sizey = 1;
+                int sizex = defaultHeight_ + 1;
+                int sizey = 1;
 
-                    int sizeX = 0;
-                    int sizeY = 0;
+                int sizeX = 0;
+                int sizeY = 0;
 
-                    //90度ごとに
-                    switch (tempBlockPtr->GetRotate() / 90)
-                    {
-                    case 0://上
+                //90度ごとに
+                switch (tempBlockPtr->GetRotate() / 90)
+                {
+                case 0://上
 
-                        sizex = 0;
-                        sizeX = defaultHeight_;
-                        sizey = defaultHeight_;
-                        sizey = sizey * -1;
-                        sizeY = 1;
+                    sizex = 0;
+                    sizeX = defaultHeight_;
+                    sizey = defaultHeight_;
+                    sizey = sizey * -1;
+                    sizeY = 1;
 
-                        break;
-                    case 1://右
+                    break;
+                case 1://右
 
-                        sizex = defaultHeight_;
-                        sizeX = 1;
-                        sizey = 0;
-                        sizeY = defaultHeight_;
+                    sizex = defaultHeight_;
+                    sizeX = 1;
+                    sizey = 0;
+                    sizeY = defaultHeight_;
 
-                        break;
-                    case 2://下
+                    break;
+                case 2://下
 
-                        sizex = 0;
-                        sizeX = defaultHeight_;
-                        sizey = defaultHeight_;
-                        sizeY = 1;
+                    sizex = 0;
+                    sizeX = defaultHeight_;
+                    sizey = defaultHeight_;
+                    sizeY = 1;
 
-                        break;
-                    case 3://左
+                    break;
+                case 3://左
 
-                        sizex = defaultHeight_;
-                        sizey = sizey * -1;
-                        sizeX = 1;
-                        sizey = 0;
-                        sizeY = defaultHeight_;
+                    sizex = defaultHeight_;
+                    sizey = sizey * -1;
+                    sizeX = 1;
+                    sizey = 0;
+                    sizeY = defaultHeight_;
 
-                        break;
-                    }
+                    break;
 
                     //DrawFormatString(0, 60, GetColor(100, 100, 100), "true");
 
                     //if (isJump_ == false) {
                     /*Jump(vel, true);*/
                     //}
-                    nowSpringRot = tempBlockPtr->GetRotate();
-                    isSpring_ = true;
+                    if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_ + sizex, sizeX) &&
+                        CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_ + sizey, sizeY)) {
+
+                        nowSpringRot = tempBlockPtr->GetRotate();
+
+                        isSpring_ = true;
+
+                        //jumpValue = 0.f;
+                    }
                 }
             }
 
