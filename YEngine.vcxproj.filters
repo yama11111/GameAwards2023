@@ -486,6 +486,9 @@
     <ClCompile Include="GoalBlock.cpp">
       <Filter>Application\game\Block</Filter>
     </ClCompile>
+    <ClCompile Include="PlatformBlock.cpp">
+      <Filter>Application\game\Block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -846,6 +849,9 @@
       <Filter>Application\game\Block</Filter>
     </ClInclude>
     <ClInclude Include="GoalBlock.h">
+      <Filter>Application\game\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformBlock.h">
       <Filter>Application\game\Block</Filter>
     </ClInclude>
   </ItemGroup>

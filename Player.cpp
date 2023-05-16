@@ -310,25 +310,75 @@ void Player::Collision(YMath::Vector2& vel, float& jumpValue)
             // ブロックにめり込んだピクセル値
             float surplus{};
 
-            // y軸方向
-            if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
-                if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
-                    //天井に当たった処理
-                    if (GetPos().y_ - GetRadius().y_ + vel.y_ > tempBlockPtr->GetPos().y_ - tempBlockPtr->GetRadius().y_) {
-                        //この中でジャンプ量を0にすると天井にぶつかった瞬間落ちる
-                        jumpValue = 0.f;
-                        nowVel = { 0,0 };
+            //下からすり抜け足場ブロック
+            if (tempBlockPtr->GetType() == IBlock::Type::PLATFORM) {
+                // y軸方向
+                if (!isJump_ && GetPos().y_ < tempBlockPtr->GetPos().y_)
+                {
+                    if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
+                        if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
+                            //天井に当たった処理
+                            if (GetPos().y_ - GetRadius().y_ + vel.y_ > tempBlockPtr->GetPos().y_ - tempBlockPtr->GetRadius().y_) {
+                                //この中でジャンプ量を0にすると天井にぶつかった瞬間落ちる
+                                jumpValue = 0.f;
+                                nowVel = { 0,0 };
+                            }
+
+                            vel.y_ > 0 ? vel.y_ += surplus : vel.y_ -= surplus;
+                        }
                     }
-                    vel.y_ < 0 ? vel.y_ -= surplus : vel.y_ += surplus;
+                    // x軸方向
+                    if (CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_)) {
+                        if (CheckHit(GetPos().x_, GetRadius().x_, vel.x_, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_, surplus)) {
+                            vel.x_ > 0 ? vel.x_ += surplus : vel.x_ -= surplus;
+                        }
+                    }
+                }
+            }
+            //通常ブロック判定
+            else
+            {
+                // y軸方向
+                if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
+                    if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
+                        //天井に当たった処理
+                        if (GetPos().y_ - GetRadius().y_ + vel.y_ > tempBlockPtr->GetPos().y_ - tempBlockPtr->GetRadius().y_) {
+                            //この中でジャンプ量を0にすると天井にぶつかった瞬間落ちる
+                            jumpValue = 0.f;
+                            nowVel = { 0,0 };
+                            //isJump_ = true;
+                        }
+
+                        vel.y_ > 0 ? vel.y_ += surplus : vel.y_ -= surplus;
+                    }
+                }
+                // x軸方向
+                if (CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_)) {
+                    if (CheckHit(GetPos().x_, GetRadius().x_, vel.x_, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_, surplus)) {
+                        vel.x_ > 0 ? vel.x_ += surplus : vel.x_ -= surplus;
+                    }
                 }
             }
 
-            // x軸方向
-            if (CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_)) {
-                if (CheckHit(GetPos().x_, GetRadius().x_, vel.x_, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_, surplus)) {
-                    vel.x_ < 0 ? vel.x_ -= surplus : vel.x_ += surplus;
-                }
-            }
+            //// y軸方向
+            //if (CheckHit(GetPos().x_, GetRadius().x_, 0, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_)) {
+            //    if (CheckHit(GetPos().y_, GetRadius().y_, vel.y_, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_, surplus)) {
+            //        //天井に当たった処理
+            //        if (GetPos().y_ - GetRadius().y_ + vel.y_ > tempBlockPtr->GetPos().y_ - tempBlockPtr->GetRadius().y_) {
+            //            //この中でジャンプ量を0にすると天井にぶつかった瞬間落ちる
+            //            jumpValue = 0.f;
+            //            nowVel = { 0,0 };
+            //        }
+            //        vel.y_ < 0 ? vel.y_ -= surplus : vel.y_ += surplus;
+            //    }
+            //}
+
+            //// x軸方向
+            //if (CheckHit(GetPos().y_, GetRadius().y_, 0, tempBlockPtr->GetPos().y_, tempBlockPtr->GetRadius().y_)) {
+            //    if (CheckHit(GetPos().x_, GetRadius().x_, vel.x_, tempBlockPtr->GetPos().x_, tempBlockPtr->GetRadius().x_, surplus)) {
+            //        vel.x_ < 0 ? vel.x_ -= surplus : vel.x_ += surplus;
+            //    }
+            //}
 
             if (tempBlockPtr->GetType() == IBlock::Type::WOODEN && isWoodenSetPosLater) tempBlockPtr->SetPos(tempBlockPtr->GetPos() + vel);
         }

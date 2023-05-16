@@ -18,7 +18,9 @@ public:
 		Gray	 = 0, // 灰色
 		Red		 = 1, // 赤色
 		Green	 = 2, // 緑色
-		Blue	 = 3, // 青色
+        Yellow   = 3, // 黄色
+        Purple   = 4, // 紫色
+		Blue	 = 5, // 青色
 		End, // リサイズ用
 	};
 

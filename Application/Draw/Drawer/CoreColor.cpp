@@ -47,7 +47,7 @@ void CoreColor::StaticInitialize(const bool isPlay)
 	}
 
 	// 色値
-	sColorValues_ = { Color::Normal, Color::Movable, Color::Spring, Color::Clear };
+	sColorValues_ = { Color::Normal, Color::Movable, Color::Spring, Color::Junction1, Color::Junction2, Color::Clear };
 
 	// マテリアル
 	sMate_.reset(CBMaterial::Create(Ambient::Normal));

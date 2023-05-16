@@ -12,7 +12,9 @@ public:
 		Normal	 = 0, // 通常
 		Movable  = 1, // 可動
 		Spring	 = 2, // ばね
-		Junction = 3, // 接合
+		Junction1 = 3, // 凸
+		Junction2 = 4, // 凹
+		Clear = 5, // クリア
 		End, // リサイズ用
 	};
 
@@ -29,7 +31,9 @@ public:
 	static const size_t sSpringIdx	 = static_cast<size_t>(IMode::Type::Spring);
 
 	// 接合インデックス
-	static const size_t sJunctionIdx = static_cast<size_t>(IMode::Type::Junction);
+	static const size_t sJunction1Idx = static_cast<size_t>(IMode::Type::Junction1);
+	static const size_t sJunction2Idx = static_cast<size_t>(IMode::Type::Junction2);
+	static const size_t sClearIdx = static_cast<size_t>(IMode::Type::Clear);
 
 private:
 

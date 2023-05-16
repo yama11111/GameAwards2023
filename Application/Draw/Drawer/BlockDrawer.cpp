@@ -71,8 +71,14 @@ void BlockDrawerCommon::StaticInitialize()
 	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
 
 	// ブロック (接合)
-	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
-	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+	spModels_[IMode::sJunction1Idx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sJunction1Idx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
+    spModels_[IMode::sJunction2Idx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+    spModels_[IMode::sJunction2Idx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
+    spModels_[IMode::sClearIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+    spModels_[IMode::sClearIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
 
 	// グリッド
 	spGridModel_ = Model::LoadObj("grid", true);
@@ -155,7 +161,7 @@ void BlockDrawer::Reset(const IMode::Type& modeType)
 	}
 
 	// 核の色とマテリアル設定
-	//modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
+	modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 
 	// グリッド

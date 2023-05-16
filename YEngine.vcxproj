@@ -193,6 +193,7 @@
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="PieceBasicBlock.cpp" />
     <ClCompile Include="PieceEntranceBlock.cpp" />
+    <ClCompile Include="PlatformBlock.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpringBlock.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="Piece.h" />
     <ClInclude Include="PieceBasicBlock.h" />
     <ClInclude Include="PieceEntranceBlock.h" />
+    <ClInclude Include="PlatformBlock.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpringBlock.h" />
     <ClInclude Include="Stage.h" />

@@ -77,8 +77,16 @@ void TowerDrawerCommon::StaticInitialize(
 	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
 
 		// ê‘
-	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
-	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
+	spModels_[IMode::sJunction1Idx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+	spModels_[IMode::sJunction1Idx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
+
+            // ê‘
+    spModels_[IMode::sJunction2Idx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+    spModels_[IMode::sJunction2Idx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
+
+            // ê‘
+    spModels_[IMode::sClearIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // äj
+    spModels_[IMode::sClearIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // äk
 }
 
 #pragma endregion

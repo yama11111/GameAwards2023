@@ -445,6 +445,9 @@ namespace DrawerConfig
 			// ÇŒÇÀ
 			const YMath::Vector3 Spring = { 0.00f, 0.60f, 0.00f };
 
+			const YMath::Vector3 Junction1 = { 1.00f, 1.00f, 0.00f };
+			const YMath::Vector3 Junction2 = { 1.00f, 0.00f, 1.00f };
+
 			// ÉNÉäÉA
 			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
 		}

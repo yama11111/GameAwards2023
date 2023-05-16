@@ -234,7 +234,7 @@ void SelectDrawer::Reset()
 		if (spStageConfig_->GetIsClearStage((int)i))
 		{
 			// ƒNƒŠƒA‚µ‚Ä‚¢‚é‚È‚ç•ÏX
-			type = IMode::Type::Junction;
+			type = IMode::Type::Clear;
 		}
 
 		stageDras_[i]->Reset(type);

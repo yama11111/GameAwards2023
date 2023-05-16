@@ -189,7 +189,7 @@ void TestScene::Update()
 		}
 		if (ImGui::Button("Reset (Junction)"))
 		{
-			blockDra_.Reset(IMode::Type::Junction);
+			//blockDra_.Reset(IMode::Type::Junction);
 		}
 
 		ImGui::Text("---------------");
