@@ -127,17 +127,17 @@ void Piece::RegisterTab(bool isTab, int indexBlockVector)
 
 void Piece::MovePiecePos(void)
 {
-        if (keysPtr_->IsDown(DIK_T)) {
+        if (keysPtr_->IsDown(DIK_UP)) {
             // Piece‚Ì’†S“_À•W‚ÌˆÚ“®
             pos_.y_ += 5;
         }
-        if (keysPtr_->IsDown(DIK_G)) {
+        if (keysPtr_->IsDown(DIK_DOWN)) {
             pos_.y_ -= 5;
         }
-        if (keysPtr_->IsDown(DIK_F)) {
+        if (keysPtr_->IsDown(DIK_LEFT)) {
             pos_.x_ -= 5;
         }
-        if (keysPtr_->IsDown(DIK_H)) {
+        if (keysPtr_->IsDown(DIK_RIGHT)) {
             pos_.x_ += 5;
         }
 }
