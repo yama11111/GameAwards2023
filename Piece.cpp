@@ -122,7 +122,7 @@ void Piece::RegisterTab(bool isTab, int indexBlockVector)
 
     tabs_.emplace_back(tab);
 
-    blockVector_[indexBlockVector] = std::make_unique<PieceEntranceBlock>(blockVector_[indexBlockVector]->GetPos(), blockVector_[indexBlockVector]->GetOffset(), blockVector_[indexBlockVector]->GetRadius());
+    blockVector_[indexBlockVector] = std::make_unique<PieceEntranceBlock>(blockVector_[indexBlockVector]->GetPos(), blockVector_[indexBlockVector]->GetOffset(),isTab, blockVector_[indexBlockVector]->GetRadius());
 }
 
 void Piece::MovePiecePos(void)

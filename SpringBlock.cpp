@@ -4,6 +4,7 @@ SpringBlock::SpringBlock(const YMath::Vector2& pos, const YMath::Vector2& offset
     IBlock(pos, offset, radius)
 {
     SetType(Type::SPRING);
+    IBlock::GetBlockDrawerRef().Reset(IMode::Type::Spring);
 }
 
 void SpringBlock::Update(void)
