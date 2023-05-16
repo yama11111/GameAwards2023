@@ -66,6 +66,6 @@ public:
     inline const YMath::Vector2& GetPos(void) { return pos_; }
     inline const YMath::Vector2& GetRadius(void) { return radius_; }
     inline YMath::Vector2* GetPosPtr(void) { return &pos_; }
-    inline const YMath::Vector2& GetOffset(void) { return offsetForPieceCenter_; }
+    inline const YMath::Vector2& GetOffset(void) { return offsetForPieceCenter_; } 
 };
 
