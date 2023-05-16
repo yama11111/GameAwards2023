@@ -4,7 +4,7 @@ WoodenBlock::WoodenBlock(const YMath::Vector2& pos, const YMath::Vector2& offset
     IBlock(pos, offset, radius)
 {
     SetType(Type::WOODEN);
-    IBlock::GetBlockDrawerRef().Reset(IMode::Type::Movable)
+    IBlock::GetBlockDrawerRef().Reset(IMode::Type::Movable);
 }
 
 void WoodenBlock::Update(void)
