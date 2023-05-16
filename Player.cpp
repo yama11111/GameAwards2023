@@ -135,7 +135,7 @@ void Player::Spring(YMath::Vector2& vel, int rot)
         case 0:
             nowVel.y_ -= fallValue_;
 
-            if (nowVel.y_ > 0)
+            if (nowVel.y_ < 0)
             {
                 nowVel.y_ = 0;
             }
@@ -151,7 +151,7 @@ void Player::Spring(YMath::Vector2& vel, int rot)
         case 2:
             nowVel.y_ += fallValue_;
 
-            if (nowVel.y_ < 0)
+            if (nowVel.y_ > 0)
             {
                 nowVel.y_ = 0;
             }
