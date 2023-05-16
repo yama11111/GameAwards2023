@@ -16,7 +16,7 @@ public:
     static constexpr float jumpPower_{ 9.f };       // ジャンプ力
     static constexpr float fallValue_{ 0.2f };      // ジャンプ力の減衰
     static constexpr float gravity_{ 3.5f };        // 重力
-    static constexpr float springPower_{ 8.f };    // バネで跳ねる時の跳躍力
+    static constexpr float springPower_{ 10.f };    // バネで跳ねる時の跳躍力
 
     // 関数
     Player(Stage* stagePtr);
