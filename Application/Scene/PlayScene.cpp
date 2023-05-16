@@ -31,7 +31,7 @@ void PlayScene::Load()
 	// ----- オーディオ ----- //
 
 	// プレイBGM
-	pPlayBGM_ = Audio::Load("vigilante.wav");
+	pPlayBGM_ = Audio::Load("BGM/select.wav");
 
 	// ----- 静的初期化 ----- //
 
@@ -159,12 +159,12 @@ void PlayScene::Update()
     player_->DrawDebug();
 
 	//ゴール判定
-	//if (ゴールしたら)
-	//{
-	//	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
-	//	// セレクトシーンに行く
-	//	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
-	//}
+	if (stage_.GetIsGoal())
+	{
+		StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
+		// セレクトシーンに行く
+		SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
+	}
 	
 	// ------------ ↑ プレイシーンの処理 ↑ ------------//
 
