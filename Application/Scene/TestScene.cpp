@@ -183,6 +183,14 @@ void TestScene::Update()
 		{
 			blockDra_.Reset(IMode::Type::Movable);
 		}
+		if (ImGui::Button("Reset (Spring)"))
+		{
+			blockDra_.Reset(IMode::Type::Spring);
+		}
+		if (ImGui::Button("Reset (Junction)"))
+		{
+			blockDra_.Reset(IMode::Type::Junction);
+		}
 
 		ImGui::Text("---------------");
 

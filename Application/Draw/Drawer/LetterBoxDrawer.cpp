@@ -6,7 +6,7 @@ using YGame::LetterBoxDrawerCommon;
 using YGame::LetterBoxDrawer;
 using YGame::Texture;
 using YGame::Sprite2D;
-using YGame::Color;
+using YGame::CBColor;
 
 Sprite2D* LetterBoxDrawerCommon::spSpr_ = nullptr;
 
@@ -32,12 +32,12 @@ void LetterBoxDrawer::Initialize(const float topHeight, const float bottomHeight
 	// ----- 生成 ----- //
 	
 	// 色生成
-	color_.reset(Color::Create());
+	color_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,1.0f }));
 
 	// 上 (幅 : ウィンドウ、位置 : 指定)
-	sprObjs_[0].reset(Sprite2D::Object::Create({}, color_.get()));
+	sprObjs_[0].reset(Sprite2D::Object::Create({}, color_.get(), nullptr, true));
 	// 下 (幅 : ウィンドウ、位置 : ウィンドウ - 指定)
-	sprObjs_[1].reset(Sprite2D::Object::Create({}, color_.get()));
+	sprObjs_[1].reset(Sprite2D::Object::Create({}, color_.get(), nullptr, true));
 
 	// リセット
 	Reset();

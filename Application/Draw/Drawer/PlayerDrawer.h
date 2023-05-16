@@ -49,7 +49,7 @@ private:
 	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
 	
 	// 色
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 	// 向きポインタ
 	YMath::Vector3* pDirection_ = nullptr;

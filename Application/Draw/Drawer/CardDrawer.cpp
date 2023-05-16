@@ -13,7 +13,7 @@ using std::unique_ptr;
 using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Texture;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::SlimeActor;
 using YMath::Vector3;
 using namespace DrawerConfig::Card;
@@ -59,7 +59,7 @@ void CardDrawer::Initialize(YGame::Transform* pParent, const int number)
 	core_->parent_ = &pParent->m_;
 
 	// 色
-	color_.reset(Color::Create());
+	color_.reset(CBColor::Create());
 
 	// ステージカードオブジェクト
 	cardObjs_.reset(Sprite2D::Object::Create({}, color_.get()));

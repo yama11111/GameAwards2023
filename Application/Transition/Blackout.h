@@ -24,7 +24,7 @@ namespace YScene
 		std::unique_ptr<YGame::Sprite2D::Object> obj_;
 		
 		// F
-		std::unique_ptr<YGame::Color> color_;
+		std::unique_ptr<YGame::CBColor> color_;
 
 		// ’iŠK
 		Step step_ = Step::Dark;

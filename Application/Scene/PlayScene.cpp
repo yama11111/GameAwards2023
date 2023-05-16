@@ -135,6 +135,9 @@ void PlayScene::Finalize()
 
 void PlayScene::Update()
 {
+	// 入力描画静的更新
+	InputDrawerCommon::StaticUpdate();
+
 	// HUD更新
 	hud_.Update();
 
@@ -158,6 +161,7 @@ void PlayScene::Update()
 	//ゴール判定
 	//if (ゴールしたら)
 	//{
+	//	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
 	//	// セレクトシーンに行く
 	//	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	//}

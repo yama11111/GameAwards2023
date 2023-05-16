@@ -39,7 +39,7 @@ namespace YDX
 	private:
 
 		// バッファ
-		GPUResource rsc_;
+		GPUResource buff_;
 
 		// CBV設定
 		D3D12_CONSTANT_BUFFER_VIEW_DESC viewDesc_{};

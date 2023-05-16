@@ -6,7 +6,7 @@ using YGame::IParticleModel;
 using YGame::IParticleSprite3D;
 using YGame::ViewProjection;
 using YGame::Model;
-using YGame::Color;
+using YGame::CBColor;
 using YMath::Ease;
 using YMath::Timer;
 using YMath::Power;
@@ -62,8 +62,8 @@ void IParticleModel::StaticInitialize(YGame::ViewProjection* pVP)
 void IParticleModel::CreateObject()
 {
 	// ê∂ê¨
-	color_.reset(Color::Create());
-	obj_.reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, nullptr));
+	color_.reset(CBColor::Create());
+	obj_.reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, nullptr, nullptr));
 }
 
 #pragma endregion
@@ -82,8 +82,8 @@ void IParticleSprite3D::StaticInitialize(YGame::ViewProjection* pVP)
 void IParticleSprite3D::CreateObject(const bool isXAxisBillboard, const bool isYAxisBillboard)
 {
 	// ê∂ê¨
-	color_.reset(Color::Create());
-	obj_.reset(Sprite3D::Object::Create({}, isXAxisBillboard, isYAxisBillboard, spVP_, color_.get()));
+	color_.reset(CBColor::Create());
+	obj_.reset(Sprite3D::Object::Create({}, isXAxisBillboard, isYAxisBillboard, spVP_, color_.get(), nullptr));
 }
 
 #pragma endregion

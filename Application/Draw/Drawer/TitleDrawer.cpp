@@ -12,7 +12,7 @@ using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Model;
 using YGame::Texture;
-using YGame::Color;
+using YGame::CBColor;
 using YMath::Vector3;
 using namespace DrawerConfig::Title;
 
@@ -71,7 +71,7 @@ void TitleDrawer::Initialize()
 
 
 	// スタート色
-	startColor_.reset(Color::Create());
+	startColor_.reset(CBColor::Create());
 	
 	// スタート
 	startObj_.reset(Sprite2D::Object::Create({}, startColor_.get()));
@@ -79,7 +79,7 @@ void TitleDrawer::Initialize()
 
 
 	// 終了色
-	exitColor_.reset(Color::Create());
+	exitColor_.reset(CBColor::Create());
 	
 	// 終了
 	exitObj_.reset(Sprite2D::Object::Create({}, exitColor_.get()));

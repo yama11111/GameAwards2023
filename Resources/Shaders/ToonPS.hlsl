@@ -6,10 +6,10 @@ SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 float4 main(PSInput input) : SV_TARGET
 {
 	// テクスチャマッピング
-	float4 texColor = tex.Sample(smp, input.uv);
+	float4 texColor = tex.Sample(smp, input.uv_ * texTiling_ + texOffset_) * texColorRate_;
 
-	// 原色
-	float4 baseColor = texColor * color;
+	// 色
+	float4 color = texColor * baseColor_;
 
 
 	// 光沢度
@@ -30,11 +30,11 @@ float4 main(PSInput input) : SV_TARGET
 
 
 	// ライトに向かうベクトルと法線の計算
-	float3 dotLightNormal = dot(direLightVec, input.normal);
+	float3 dotLightNormal = dot(direLightVec, input.normal_);
 
 
 	// 環境反射光
-	float3 ambient = baseColor.rgb * mAmbient * ambientColor;
+	float3 ambient = color.rgb * mAmbient_;
 
 
 	// ライトに向かうベクトルと法線の内積をクランプ
@@ -44,14 +44,14 @@ float4 main(PSInput input) : SV_TARGET
 	intensity = smoothstep(thresholdStart, thresholdEnd, intensity);
 
 	// 拡散反射光
-	float3 diffuse = intensity * baseColor.rgb * mDiffuse;
+	float3 diffuse = intensity * color.rgb * mDiffuse_;
 
 
 	// 反射光ベクトル
-	float3 reflectDir = normalize(-direLightVec + (2.0f * dotLightNormal * input.normal));
+	float3 reflectDir = normalize(-direLightVec + (2.0f * dotLightNormal * input.normal_));
 
 	// 鏡面反射光
-	float3 specular = pow(saturate(dot(reflectDir, input.eyeDir)), shininess) * mSpecular;
+	float3 specular = pow(saturate(dot(reflectDir, input.eyeDir_)), shininess) * mSpecular_;
 
 	// 鏡面反射光にスムースステップを適応
 	specular = smoothstep(thresholdStart, thresholdEnd, specular);
@@ -62,5 +62,5 @@ float4 main(PSInput input) : SV_TARGET
 
 
 	// 計算した色で描画
-	return float4(shaderColor, baseColor.a * mAlpha);
+	return float4(shaderColor, color.a * mAlpha_);
 }

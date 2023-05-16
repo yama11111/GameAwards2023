@@ -433,14 +433,31 @@ namespace DrawerConfig
 	// 核
 	namespace CoreColorConfig
 	{
-		// 通常
-		const YMath::Vector3 Normal  = { 0.40f, 0.40f, 0.40f};
+		// 色
+		namespace Color
+		{
+			// 通常
+			const YMath::Vector3 Normal = { 0.30f, 0.30f, 0.30f };
 
-		// 可動
-		const YMath::Vector3 Movable = { 1.00f, 0.00f, 0.00f};
+			// 可動
+			const YMath::Vector3 Movable = { 0.60f, 0.00f, 0.00f };
 
-		// クリア
-		const YMath::Vector3 Clear	 = { 0.05f, 0.20f, 0.90f };
+			// ばね
+			const YMath::Vector3 Spring = { 0.00f, 0.60f, 0.00f };
+
+			// クリア
+			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
+		}
+
+		// アンビエント
+		namespace Ambient
+		{
+			// 通常
+			const YMath::Vector3 Normal = { 0.5f, 0.5f, 0.5f };
+
+			// クリア
+			const YMath::Vector3 Clear = { 0.7f, 0.7f, 0.8f };
+		}
 
 		// 明滅
 		namespace Flickering
@@ -452,7 +469,7 @@ namespace DrawerConfig
 			const float Start = 1.0f;
 
 			// 最終値
-			const float End = 0.5f;
+			const float End = 0.75f;
 
 			// 指数
 			const float Exponent = 3.0f;
@@ -477,6 +494,26 @@ namespace DrawerConfig
 		
 		// クリア時用アンビエント
 		const YMath::Vector3 ClearAmbient = { 0.5f,0.5f,0.7f };
+
+		// 光
+		namespace Light
+		{
+			// 環境光
+			const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
+
+			// 平行光源
+			namespace Direction
+			{ 
+				// 色
+				const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+				
+				// クリア時の色
+				const YMath::Vector3 ClearColor = { 0.0f,0.0f,1.0f };
+				
+				// 向き
+				const YMath::Vector3 Dire = { -0.3f,-1.0f,-0.3f };
+			}
+		}
 
 		// 統一
 		namespace Unify
@@ -593,7 +630,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
+			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
 
 			// 位
 			const float Place = 100.0f;
@@ -690,8 +727,65 @@ namespace DrawerConfig
 			const YMath::Vector3 Pos = { 224.0f,48.0f,0.0f };
 		}
 
-		// アンビエント
-		const YMath::Vector3 Ambient = { 0.8f,0.6f,0.6f };
+
+		// タワー
+		namespace Tower
+		{
+			// マテリアル
+			namespace Material
+			{
+				// アンビエント
+				const YMath::Vector3 Ambient = { 0.5f,0.2f,0.2f };
+			}
+
+			// 光
+			namespace Light
+			{
+				// 環境光
+				const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
+
+				// 平行光源
+				namespace Direction
+				{
+					// 色
+					const YMath::Vector3 Color = { 0.3f,0.0f,0.1f };
+
+					// 向き
+					const YMath::Vector3 Dire = { +0.1f,-0.4f,-0.3f };
+				}
+			}
+		}
+
+		// 地球
+		namespace Earth
+		{
+			// 色
+			const YMath::Vector4 Color = { 0.02f,0.0f,0.02f,1.0f };
+
+			// マテリアル
+			namespace Material
+			{
+				// アンビエント
+				const YMath::Vector3 Ambient = { 1.0f,0.3f,0.5f };
+			}
+
+			// 光
+			namespace Light
+			{
+				// 環境光
+				const YMath::Vector3 Ambient = { 1.0f,1.0f,1.0f };
+
+				// 平行光源
+				namespace Direction
+				{
+					// 色
+					const YMath::Vector3 Color = { 0.8f,0.0f,0.4f };
+
+					// 向き
+					const YMath::Vector3 Dire = { 0.0f,+1.0f,0.0f };
+				}
+			}
+		}
 
 		// 泡グリッド
 		namespace BubbleGrid
@@ -744,7 +838,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 1.0f,1.0f,1.0f };
+			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
 		}
 	}
 

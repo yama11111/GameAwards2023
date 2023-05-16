@@ -12,7 +12,7 @@ using YGame::Transform;
 using YGame::Model;
 using YGame::Sprite3D;
 using YGame::Texture;
-using YGame::Color;
+using YGame::CBColor;
 using YGame::SlimeActor;
 using YMath::Vector3;
 //using namespace DrawerConfig::Gate;
@@ -47,7 +47,7 @@ void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 }
 
-void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
+void StageDrawer::Initialize(YGame::Transform* pParent, const int number, IMode::Type type)
 {
 	// 数字
 	// 0以下なら弾く
@@ -62,24 +62,24 @@ void StageDrawer::Initialize(YGame::Transform* pParent, const int number)
 	core_->parent_ = &pParent->m_;
 
 	// 色
-	color_.reset(Color::Create());
+	color_.reset(CBColor::Create());
 
 	// 数字
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
 		// ビルボード化
-		numObjs_[i].reset(Sprite3D::Object::Create({}, true, true, spVP_, color_.get()));
+		numObjs_[i].reset(Sprite3D::Object::Create({}, true, true, spVP_, color_.get(), nullptr));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// タワー
-	towerDra_.Initialize(&core_->m_, IMode::Type::Normal);
+	towerDra_.Initialize(&core_->m_, type);
 
 	// リセット
-	Reset();
+	Reset(type);
 }
 
-void StageDrawer::Reset()
+void StageDrawer::Reset(IMode::Type type)
 {
 	// ----- オブジェクト初期化 ----- //
 
@@ -101,7 +101,7 @@ void StageDrawer::Reset()
 	}
 
 	// ビル
-	towerDra_.Reset(IMode::Type::Normal);
+	towerDra_.Reset(type);
 
 	// 色初期化
 	color_->SetRGBA({ 1.0f,1.0f,1.0f,1.0f });

@@ -10,7 +10,7 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
+using YGame::CBColor;
 
 using YGame::SlimeActor;
 
@@ -53,13 +53,13 @@ void GateDrawer::Initialize(YGame::Transform* pParent)
 	IDrawer::Initialze(pParent, Idle::IntervalTime);
 
 	// 色生成
-	color_.reset(Color::Create());
+	color_.reset(CBColor::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, spMate_, nullptr));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;

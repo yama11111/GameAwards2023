@@ -5,19 +5,23 @@ using YDX::GPUResource;
 
 ID3D12Device* GPUResource::spDevice_ = nullptr;
 
+void GPUResource::Create(
+	const D3D12_HEAP_PROPERTIES* pHeapProp, 
+	const D3D12_RESOURCE_DESC* pResourceDesc, 
+	const D3D12_RESOURCE_STATES resourceState, 
+	const D3D12_CLEAR_VALUE* pClearValue)
+{
+	Result(spDevice_->CreateCommittedResource(
+		pHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		pResourceDesc,
+		resourceState,
+		pClearValue,
+		IID_PPV_ARGS(&buffer_)));
+}
+
 void GPUResource::StaticInitialize(ID3D12Device* pDevice)
 {
 	assert(pDevice);
 	spDevice_ = pDevice;
-}
-
-void GPUResource::Create(const CreateStatus& state)
-{
-	Result(spDevice_->CreateCommittedResource(
-		&state.heapProp_, // ヒープ設定
-		D3D12_HEAP_FLAG_NONE,
-		&state.resDesc_, // リソース設定
-		state.resState_,
-		nullptr,
-		IID_PPV_ARGS(&buffer_)));
 }

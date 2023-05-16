@@ -80,7 +80,7 @@ namespace YGame
 		struct Chip
 		{
 			std::unique_ptr<Sprite2D::Object> obj_; // 定数バッファ
-			std::unique_ptr<Color> color_;
+			std::unique_ptr<CBColor> color_;
 		};
 	private:
 		// マップチップ2D

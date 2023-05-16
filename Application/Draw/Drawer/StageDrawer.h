@@ -42,7 +42,7 @@ private:
 	TowerDrawer towerDra_;
 
 	// 色
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 	
 	// 数字
@@ -51,10 +51,10 @@ private:
 public:
 	
 	// 初期化
-	void Initialize(YGame::Transform* pParent, const int number);
+	void Initialize(YGame::Transform* pParent, const int number, IMode::Type type = IMode::Type::Normal);
 	
 	// リセット
-	void Reset();
+	void Reset(IMode::Type type = IMode::Type::Normal);
 	
 	// 更新
 	void Update();

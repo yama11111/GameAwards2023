@@ -11,8 +11,8 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
 
 using YGame::SlimeActor;
 
@@ -32,12 +32,12 @@ array<array<Model*, BlockDrawerCommon::PartsNum_>, IMode::sTypeNum_> BlockDrawer
 	nullptr, nullptr,
 	nullptr, nullptr,
 };
-unique_ptr<Color> BlockDrawerCommon::sFailShellColor_;
+unique_ptr<CBColor> BlockDrawerCommon::sFailShellColor_;
 
 Model* BlockDrawerCommon::spGridModel_ = nullptr;
-unique_ptr<Color> BlockDrawerCommon::sGridColor_;
-unique_ptr<Color> BlockDrawerCommon::sFailGridColor_;
-unique_ptr<Material> BlockDrawerCommon::sGridMate_;
+unique_ptr<CBColor> BlockDrawerCommon::sGridColor_;
+unique_ptr<CBColor> BlockDrawerCommon::sFailGridColor_;
+unique_ptr<CBMaterial> BlockDrawerCommon::sGridMate_;
 Ease<float> BlockDrawerCommon::sCatchGridScaleValueEas_;
 Ease<float> BlockDrawerCommon::sFailToCatchGridScaleValueEas_;
 Ease<float> BlockDrawerCommon::sPlaceGridScaleValueEas_;
@@ -66,24 +66,36 @@ void BlockDrawerCommon::StaticInitialize()
 	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
 	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
 
+	// ブロック (ばね)
+	spModels_[IMode::sSpringIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
+	// ブロック (接合)
+	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("block/red/core", true); // 核
+	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("block/red/shell", true); // 殻
+
 	// グリッド
 	spGridModel_ = Model::LoadObj("grid", true);
 
 	// ---------- ブロック ---------- //
 
 	// 殻失敗色
-	sFailShellColor_.reset(Color::Create(ShellColor::Failure, ShellColor::OriginalRate));
+	sFailShellColor_.reset(CBColor::Create());
+	sFailShellColor_->SetRGBA(ShellColor::Failure);
+	sFailShellColor_->SetTexColorRateRGBA(ShellColor::OriginalRate);
 
 	// --------- グリッド --------- //
 
 	// 色
-	sGridColor_.reset(Color::Create(GridColor::Success));
+	sGridColor_.reset(CBColor::Create());
+	sGridColor_->SetRGBA(GridColor::Success);
 
 	// 失敗色
-	sFailGridColor_.reset(Color::Create(GridColor::Failure));
+	sFailGridColor_.reset(CBColor::Create());
+	sFailGridColor_->SetRGBA(GridColor::Failure);
 
 	// マテリアル
-	sGridMate_.reset(Material::Create());
+	sGridMate_.reset(CBMaterial::Create());
 
 
 	// 取得時大きさイージング
@@ -112,14 +124,14 @@ void BlockDrawer::Initialize(Transform* pParent, const IMode::Type& modeType)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr, nullptr));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// グリッド生成
-	gridObj_.reset(Model::Object::Create({}, spVP_, sGridColor_.get(), nullptr, sGridMate_.get()));
+	gridObj_.reset(Model::Object::Create({}, spVP_, sGridColor_.get(), nullptr, sGridMate_.get(), nullptr));
 
 	// 親行列挿入
 	gridObj_->parent_ = &core_->m_;
@@ -143,6 +155,7 @@ void BlockDrawer::Reset(const IMode::Type& modeType)
 	}
 
 	// 核の色とマテリアル設定
+	//modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 
 	// グリッド
@@ -325,7 +338,7 @@ void BlockDrawer::Update()
 void BlockDrawer::Draw()
 {
 	// モデルの数描画
-	for (size_t i = 0; i < spModels_.size(); i++)
+	for (size_t i = 0; i < spModels_[CurrentTypeIndex()].size(); i++)
 	{
 		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}

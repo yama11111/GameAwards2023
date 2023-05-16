@@ -3,10 +3,10 @@
 #include "IShaderSet.h"
 #include "PipelineSet.h"
 #include "Texture.h"
-#include "ObjectConfig.h"
 #include "Transform.h"
-#include "Color.h"
-#include "Vector2.h"
+#include "CBColor.h"
+#include "CBTexConfig.h"
+#include "ScreenDesc.h"
 #include <list>
 #include <array>
 
@@ -24,7 +24,8 @@ namespace YGame
 		// シェーダーの種類
 		enum class ShaderType
 		{
-			eDefault = 0, // デフォルト
+			eBloom	 = 0, // Bloom
+			eDefault = 1, // デフォルト
 		};
 
 	public:
@@ -80,9 +81,18 @@ namespace YGame
 		/// 描画コマンド
 		/// </summary>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
-		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
-		void SetDrawCommand(PostEffect::Object* pObj, const DrawLocation& location, const ShaderType& shaderType = ShaderType::eDefault);
+		void SetDrawCommand(PostEffect::Object* pObj, const ShaderType& shaderType = ShaderType::eDefault);
+
+		/// <summary>
+		/// 書き込み開始
+		/// </summary>
+		void StartRender();
+
+		/// <summary>
+		/// 書き込み終了
+		/// </summary>
+		void EndRender();
 
 		/// <summary>
 		/// スプライトサイズ設定
@@ -207,6 +217,17 @@ namespace YGame
 		// 表示するか
 		bool isVisible_ = true;
 
+
+		// RTV用ヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_ = nullptr;
+
+		// DSV用ヒープ
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap_ = nullptr;
+
+		// 深度バッファ
+		YDX::GPUResource depthBuff_;
+
+
 	private:
 
 		// 静的ポストエフェクト格納用vector配列
@@ -216,6 +237,38 @@ namespace YGame
 
 		// パイプラインクラス前方宣言
 		class Pipeline;
+
+	private:
+
+		void CreateRTV();
+
+		void CreateDepthBuff(const YMath::Vector2& size);
+
+		void CreateDSV();
+
+	private:
+
+		// 静的デバイスポインタ
+		static ID3D12Device* spDevice_;
+
+		// 静的コマンドリストポインタ
+		static ID3D12GraphicsCommandList* spCmdList_;
+
+		// 静的スクリーン設定ポインタ
+		static YDX::ScreenDesc* spScreenDesc_;
+
+	public:
+
+		/// <summary>
+		/// 静的初期化
+		/// </summary>
+		/// <param name="pDevice"> : デバイスポインタ</param>
+		/// <param name="pCmdList"> : コマンドリストポインタ</param>
+		/// <param name="pScrreenDesc"> : スクリーン設定ポインタ</param>
+		static void StaticInitialize(
+			ID3D12Device* pDevice,
+			ID3D12GraphicsCommandList* pCmdList,
+			YDX::ScreenDesc* pScreenDesc);
 
 	};
 
@@ -241,25 +294,40 @@ namespace YGame
 		/// </summary>
 		/// <param name="status"> : 位置, 回転, 大きさ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Object* Create(const Status& status, Color* pColor, const bool isMutable = true);
+		static Object* Create(
+			const Status& status, 
+			CBColor* pColor,
+			CBTexConfig* pTexConfig,
+			const bool isMutable = true);
 
 	public:
 
 		/// <summary>
 		/// 描画前コマンド
 		/// </summary>
-		/// <param name="transformRPIndex"></param>
-		/// <param name="colorRPIndex"></param>
-		void SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex);
+		/// <param name="transformRPIndex"> : トランスフォームルートパラメータ番号</param>
+		/// <param name="colorRPIndex"> : 色ルートパラメータ番号</param>
+		/// <param name="texConfigRPIndex"> : テクスチャ設定ルートパラメータ番号</param>
+		void SetDrawCommand(
+			const UINT transformRPIndex,
+			const UINT colorRPIndex,
+			const UINT texConfigRPIndex);
 
 
 		/// <summary>
 		/// 色設定 (null = Default)
 		/// </summary>
 		/// <param name="pColor"> : 色ポインタ</param>
-		void SetColor(Color* pColor);
+		void SetColor(CBColor* pColor);
+
+		/// <summary>
+		/// テクスチャ設定 (null = Default)
+		/// </summary>
+		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
+		void SetTexConfig(CBTexConfig* pTexConfig);
 
 	private:
 
@@ -283,7 +351,10 @@ namespace YGame
 		YDX::ConstBuffer<CBData> cBuff_;
 
 		// 色ポインタ
-		Color* pColor_ = nullptr;
+		CBColor* pColor_ = nullptr;
+
+		// テクスチャ設定ポインタ
+		CBTexConfig* pTexConfig_ = nullptr;
 
 	public:
 
@@ -297,7 +368,10 @@ namespace YGame
 			static YMath::Matrix4 sProjection_;
 
 			// 色 (デフォルト)
-			static std::unique_ptr<Color> sColor_;
+			static std::unique_ptr<CBColor> sColor_;
+
+			// テクスチャ設定 (デフォルト)
+			static std::unique_ptr<CBTexConfig> sTexConfig_;
 
 		public:
 
@@ -329,25 +403,23 @@ namespace YGame
 		/// <summary>
 		/// 静的描画リストクリア
 		/// </summary>
-		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticClearDrawSet(const DrawLocation& location);
+		static void StaticClearDrawSet();
 
 		/// <summary>
 		/// 静的描画セット挿入
 		/// </summary>
 		/// <param name="pPostEffect"> : ポストエフェクトポインタ</param>
 		/// <param name="pObj"> : オブジェクトポインタ</param>
-		/// <param name="locaiton"> : 描画場所</param>
 		/// <param name="shaderType"> : シェーダー</param>
 		static void StaticPushBackDrawSet(
-			PostEffect* pPostEffect, PostEffect::Object* pObj,
-			const DrawLocation& location, const ShaderType& shaderType);
+			PostEffect* pPostEffect, 
+			PostEffect::Object* pObj,
+			const ShaderType& shaderType);
 
 		/// <summary>
 		/// 静的描画
 		/// </summary>
-		/// <param name="locaiton"> : 描画場所</param>
-		static void StaticDraw(const DrawLocation& location);
+		static void StaticDraw();
 
 	public:
 
@@ -356,7 +428,8 @@ namespace YGame
 		{
 			eTransformCB = 0, // 行列
 			eColorCB	 = 1, // 色
-			eTexDT		 = 2, // テクスチャ
+			eTexConfigCB = 2, // テクスチャ設定
+			eTexDT		 = 3, // テクスチャ
 		};
 
 	private:
@@ -372,6 +445,12 @@ namespace YGame
 
 			// DefaultPS
 			Microsoft::WRL::ComPtr<ID3DBlob> defaultPSBlob_ = nullptr;
+
+			// VS
+			Microsoft::WRL::ComPtr<ID3DBlob> bloomVSBlob_ = nullptr;
+
+			// PS
+			Microsoft::WRL::ComPtr<ID3DBlob> bloomPSBlob_ = nullptr;
 
 		public:
 
@@ -417,7 +496,7 @@ namespace YGame
 		static std::array<YDX::PipelineSet, sShaderNum_> sPipelineSets_;
 
 		// 描画用リスト配列
-		static std::array<std::list<std::unique_ptr<DrawSet>>, DrawLocationNum> sDrawSets_;
+		static std::list<std::unique_ptr<DrawSet>> sDrawSets_;
 
 	};
 

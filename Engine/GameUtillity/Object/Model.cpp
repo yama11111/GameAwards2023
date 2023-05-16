@@ -28,6 +28,7 @@ static const UINT TraIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 static const UINT ColIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eColorCB); // color
 static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eLightCB); // light
 static const UINT MateIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eMaterialCB); // material
+static const UINT TexConfigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
@@ -36,7 +37,7 @@ static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterInd
 
 vector<unique_ptr<Model>> Model::sModels_{};
 array<PipelineSet, Model::Pipeline::sShaderNum_> Model::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<Model::Pipeline::DrawSet>>, DrawLocationNum> Model::Pipeline::sDrawSets_;
+array<array<list<unique_ptr<Model::Pipeline::DrawSet>>, Model::Pipeline::sShaderNum_>, DrawLocationNum> Model::Pipeline::sDrawSets_;
 FbxManager* Model::FbxLoader::sFbxMan_ = nullptr;
 FbxImporter* Model::FbxLoader::sFbxImp_ = nullptr;
 
@@ -346,15 +347,16 @@ void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const
 Model::Object* Model::Object::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, nullptr, nullptr, nullptr, isMutable);
+	return Create(status, nullptr, nullptr, nullptr, nullptr, nullptr, isMutable);
 }
 
 Model::Object* Model::Object::Create(
 	const Status& status,
 	ViewProjection* pVP,
-	Color* pColor,
-	LightGroup* pLightGroup,
-	Material* pMaterial,
+	CBColor* pColor,
+	CBLightGroup* pLightGroup,
+	CBMaterial* pMaterial,
+	CBTexConfig* pTexConfig,
 	const bool isMutable)
 {
 	// インスタンス生成 (動的)
@@ -369,6 +371,7 @@ Model::Object* Model::Object::Create(
 	instance->SetColor(pColor);
 	instance->SetLightGroup(pLightGroup);
 	instance->SetMaterial(pMaterial);
+	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
 	return instance;
@@ -378,7 +381,8 @@ void Model::Object::SetDrawCommand(
 	const UINT transformRPIndex,
 	const UINT colorRPIndex,
 	const UINT lightRPIndex,
-	const UINT materialRPIndex)
+	const UINT materialRPIndex, 
+	const UINT texConfigRPIndex)
 {
 	// 行列
 	cBuff_.map_->matWorld_ = m_;
@@ -394,6 +398,9 @@ void Model::Object::SetDrawCommand(
 
 	// マテリアル
 	pMaterial_->SetDrawCommand(materialRPIndex);
+
+	// テクスチャ設定
+	pTexConfig_->SetDrawCommand(texConfigRPIndex);
 }
 
 void Model::Object::SetViewProjection(ViewProjection* pVP)
@@ -410,7 +417,7 @@ void Model::Object::SetViewProjection(ViewProjection* pVP)
 	pVP_ = pVP;
 }
 
-void Model::Object::SetColor(Color* pColor)
+void Model::Object::SetColor(CBColor* pColor)
 {
 	// nullなら
 	if (pColor == nullptr)
@@ -424,7 +431,7 @@ void Model::Object::SetColor(Color* pColor)
 	pColor_ = pColor;
 }
 
-void Model::Object::SetLightGroup(LightGroup* pLightGroup)
+void Model::Object::SetLightGroup(CBLightGroup* pLightGroup)
 {
 	// nullなら
 	if (pLightGroup == nullptr)
@@ -438,7 +445,7 @@ void Model::Object::SetLightGroup(LightGroup* pLightGroup)
 	pLightGroup_ = pLightGroup;
 }
 
-void Model::Object::SetMaterial(Material* pMaterial)
+void Model::Object::SetMaterial(CBMaterial* pMaterial)
 {
 	// nullなら
 	if (pMaterial == nullptr)
@@ -452,10 +459,25 @@ void Model::Object::SetMaterial(Material* pMaterial)
 	pMaterial_ = pMaterial;
 }
 
-std::unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
-std::unique_ptr<YGame::LightGroup> Model::Object::Default::sLightGroup_ = nullptr;
-std::unique_ptr<YGame::Color> Model::Object::Default::sColor_ = nullptr;
-std::unique_ptr<YGame::Material> Model::Object::Default::sMaterial_ = nullptr;
+void Model::Object::SetTexConfig(CBTexConfig* pTexConfig)
+{
+	// nullなら
+	if (pTexConfig == nullptr)
+	{
+		// デフォルト代入
+		pTexConfig_ = Default::sTexConfig_.get();
+		return;
+	}
+
+	// 代入
+	pTexConfig_ = pTexConfig;
+}
+
+unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
+unique_ptr<YGame::CBLightGroup> Model::Object::Default::sLightGroup_ = nullptr;
+unique_ptr<YGame::CBColor> Model::Object::Default::sColor_ = nullptr;
+unique_ptr<YGame::CBMaterial> Model::Object::Default::sMaterial_ = nullptr;
+unique_ptr<YGame::CBTexConfig> Model::Object::Default::sTexConfig_ = nullptr;
 
 void Model::Object::Default::StaticInitialize()
 {
@@ -464,13 +486,16 @@ void Model::Object::Default::StaticInitialize()
 	sVP_->Initialize({});
 
 	// 生成 + 初期化 (色)
-	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 
 	// 生成 + 初期化 (光源ポインタ)
-	sLightGroup_.reset(LightGroup::Create(false));
+	sLightGroup_.reset(CBLightGroup::Create({ 1.0f,1.0f,1.0f }, false));
 
 	// 生成 + 初期化 (マテリアル)
-	sMaterial_.reset(Material::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+	sMaterial_.reset(CBMaterial::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+
+	// 生成 + 初期化 (テクスチャ設定)
+	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
 }
 
 #pragma endregion
@@ -492,20 +517,6 @@ void Model::Pipeline::ShaderSet::Load()
 
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
-
-	// Default
-	{
-		ID3DBlob* vs = nullptr;
-		ID3DBlob* ps = nullptr;
-
-		// 頂点シェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
-		// ピクセルシェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
-
-		defaultVSBlob_ = vs;
-		defaultPSBlob_ = ps;
-	}
 
 	// phong
 	{
@@ -533,6 +544,20 @@ void Model::Pipeline::ShaderSet::Load()
 
 		toonVSBlob_ = vs;
 		toonPSBlob_ = ps;
+	}
+
+	// Default
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/ModelPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		defaultVSBlob_ = vs;
+		defaultPSBlob_ = ps;
 	}
 
 }
@@ -653,11 +678,6 @@ void Model::Pipeline::StaticInitialize()
 	std::array<D3D12_GRAPHICS_PIPELINE_STATE_DESC, sPipelineSets_.size()> pipelineDescs{};
 
 	// シェーダーの設定
-	pipelineDescs[DefaultIndex].VS.pShaderBytecode	 = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
-	pipelineDescs[DefaultIndex].VS.BytecodeLength	 = shdrs.defaultVSBlob_.Get()->GetBufferSize();
-	pipelineDescs[DefaultIndex].PS.pShaderBytecode	 = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
-	pipelineDescs[DefaultIndex].PS.BytecodeLength	 = shdrs.defaultPSBlob_.Get()->GetBufferSize();
-
 	pipelineDescs[PhongIndex].VS.pShaderBytecode	 = shdrs.phongVSBlob_.Get()->GetBufferPointer();
 	pipelineDescs[PhongIndex].VS.BytecodeLength		 = shdrs.phongVSBlob_.Get()->GetBufferSize();
 	pipelineDescs[PhongIndex].PS.pShaderBytecode	 = shdrs.phongPSBlob_.Get()->GetBufferPointer();
@@ -667,6 +687,11 @@ void Model::Pipeline::StaticInitialize()
 	pipelineDescs[ToonIndex].VS.BytecodeLength		 = shdrs.toonVSBlob_.Get()->GetBufferSize();
 	pipelineDescs[ToonIndex].PS.pShaderBytecode		 = shdrs.toonPSBlob_.Get()->GetBufferPointer();
 	pipelineDescs[ToonIndex].PS.BytecodeLength		 = shdrs.toonPSBlob_.Get()->GetBufferSize();
+
+	pipelineDescs[DefaultIndex].VS.pShaderBytecode	 = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].VS.BytecodeLength	 = shdrs.defaultVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].PS.pShaderBytecode	 = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].PS.BytecodeLength	 = shdrs.defaultPSBlob_.Get()->GetBufferSize();
 
 	// パイプラインの数だけ
 	for (size_t i = 0; i < sPipelineSets_.size(); i++)
@@ -746,11 +771,15 @@ void Model::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[index][i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[index][i].clear();
+		}
 	}
 }
 
@@ -764,13 +793,15 @@ void Model::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pModel_ = pModel;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
+	
+	// インデックスに変換
+	size_t locationIdx = static_cast<size_t>(location);
 
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t shaderIdx = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_[locationIdx][shaderIdx].push_back(std::move(newDrawSet));
 }
 
 void Model::Pipeline::StaticDraw(const DrawLocation& location)
@@ -778,14 +809,18 @@ void Model::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// モデル描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+		sPipelineSets_[i].SetDrawCommand();
 
-		// 描画
-		drawSet->Draw();
+		// モデル描画
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index][i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 
@@ -795,7 +830,7 @@ void Model::Pipeline::DrawSet::Draw()
 	if (pModel_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex, TexConfigIndex);
 
 	// メッシュ毎に違うバッファ
 	for (size_t i = 0; i < pModel_->meshes_.size(); i++)

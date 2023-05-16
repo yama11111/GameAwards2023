@@ -4,7 +4,7 @@ using YGame::IParticleModel;
 using YGame::Bubble;
 using YGame::ViewProjection;
 using YGame::Model;
-using YGame::Color;
+using YGame::CBColor;
 using YMath::Ease;
 using YMath::Timer;
 using YMath::Power;

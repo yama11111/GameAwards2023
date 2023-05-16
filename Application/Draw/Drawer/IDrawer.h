@@ -52,7 +52,7 @@ protected:
 	static YGame::ViewProjection* spVP_;
 
 	// マテリアルポインタ
-	static YGame::Material* spMate_;
+	static YGame::CBMaterial* spMate_;
 
 	// 静的カメラポインタ
 	static YGame::Camera* spCamera_;
@@ -71,7 +71,7 @@ public:
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
 	static void StaticInitialize(
 		YGame::ViewProjection* pVP, 
-		YGame::Material* pMate, 
+		YGame::CBMaterial* pMate, 
 		YGame::Camera* pCamera, 
 		YGame::ParticleManager* pParticleMan);
 

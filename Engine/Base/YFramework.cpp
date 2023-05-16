@@ -36,9 +36,9 @@ bool YFramework::Initialize()
 
 
 	// デバイスポインタ
-	ID3D12Device* pDev = dx_.Device();
+	ID3D12Device* pDev = dx_.DevicePtr();
 	// コマンドリストポインタ
-	ID3D12GraphicsCommandList* pCmdList = dx_.CommandList();
+	ID3D12GraphicsCommandList* pCmdList = dx_.CommandListPtr();
 
 	// スクリーン設定
 	ScreenDesc::StaticInitialize(pCmdList);
@@ -75,6 +75,8 @@ bool YFramework::Initialize()
 	Sprite3D::Pipeline::StaticInitialize();
 	Model::Pipeline::StaticInitialize();
 	PostEffect::Pipeline::StaticInitialize();
+
+	PostEffect::StaticInitialize(pDev, pCmdList, &screenDesc_);
 
 	// FBXLoader読み込み
 	Model::FbxLoader::StaticInitialize();

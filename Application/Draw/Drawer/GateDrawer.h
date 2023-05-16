@@ -51,7 +51,7 @@ private:
 	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
 
 	// F (•’Ê, Ô, “§–¾)
-	std::unique_ptr<YGame::Color> color_;
+	std::unique_ptr<YGame::CBColor> color_;
 
 public:
 	

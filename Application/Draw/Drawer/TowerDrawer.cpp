@@ -11,8 +11,9 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
-using YGame::Color;
-using YGame::Material;
+using YGame::CBColor;
+using YGame::CBMaterial;
+using YGame::CBLightGroup;
 
 using YMath::Ease;
 using YMath::Power;
@@ -25,13 +26,14 @@ using namespace DrawerConfig::Tower;
 
 #pragma region Static
 
-array<array<Model*, TowerDrawerCommon::PartsNum_>, IMode::sTypeNum_> TowerDrawerCommon::spModels_ =
+array<array<Model*, TowerDrawerCommon::PartsNum_>, 2> TowerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, 
 	nullptr, nullptr, 
 };
 YGame::ViewProjection* TowerDrawerCommon::spVP_ = nullptr;
-Material* TowerDrawerCommon::spMate_ = nullptr;
+CBMaterial* TowerDrawerCommon::spMate_ = nullptr;
+CBLightGroup* TowerDrawerCommon::spLight_ = nullptr;
 
 #pragma endregion
 
@@ -44,14 +46,19 @@ static const size_t ShellIdx = static_cast<size_t>(TowerDrawerCommon::Parts::She
 
 #pragma region Common
 
-void TowerDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Material* pMate)
+void TowerDrawerCommon::StaticInitialize(
+	YGame::ViewProjection* pVP,
+	YGame::CBMaterial* pMate,
+	YGame::CBLightGroup* pLight)
 {
 	// nullチェック
 	assert(pVP);
 	assert(pMate);
+	assert(pLight);
 	// 代入
 	spVP_ = pVP;
 	spMate_ = pMate;
+	spLight_ = pLight;
 
 	// ----- モデル読み込み ----- //
 
@@ -81,8 +88,13 @@ void TowerDrawer::Initialize(YMath::Matrix4* pParent, const IMode::Type& modeTyp
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
+		CBMaterial* pMate = nullptr;
+
+		if (i == CoreIdx) { pMate = CoreColor::MaterialPtr(); }
+		else if (i == ShellIdx) { pMate = spMate_; }
+
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_));
+		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, spLight_, pMate, nullptr));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
@@ -127,7 +139,8 @@ void TowerDrawer::Draw(const YGame::DrawLocation& location)
 	// 描画
 	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), location);
+		int a = CurrentTypeIndex();
+		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), location, Model::ShaderType::eDefault);
 	}
 }
 

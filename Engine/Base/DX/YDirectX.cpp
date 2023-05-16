@@ -16,29 +16,40 @@ void  YDirectX::SetFPS(const float fps)
 	MinCheckTime_ = microseconds(uint64_t(1000000.0f / (fps + 5.0f)));
 }
 
-bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
+bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& windowSize)
 {
 	// ----- FPS固定関連 ----- //
+	
 	// 現在時間を記録
 	timeRef_ = steady_clock::now();
 
+
 	// ----- デバッグレイヤーを有効に ----- //
+
 #ifdef _DEBUG
+	
 	ComPtr<ID3D12Debug1> debugController;
+	
 	//デバッグレイヤーをオンに
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
 	{
 		debugController->EnableDebugLayer();
 		debugController->SetEnableGPUBasedValidation(true);
 	}
+
 #endif
 
+
 	// ----- DXGIファクトリー生成 ----- //
+	
 	Result(CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_)));
+	
 
 	// ----- デバイス生成 ----- //
+	
 	// アダプターの列挙用
 	std::vector<ComPtr<IDXGIAdapter4>> adapters;
+	
 	// ここに特定の名前を持つアダプターオブジェクトが入る
 	ComPtr<IDXGIAdapter4> tmpAdapter = nullptr;
 
@@ -105,8 +116,11 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 		return false;
 	}
 
+
 	// ----- エラー時止まるように ----- //
+
 #ifdef _DEBUG
+	
 	Microsoft::WRL::ComPtr<ID3D12InfoQueue> infoQueue;
 	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue))))
 	{
@@ -124,29 +138,38 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 	filter.DenyList.NumSeverities = _countof(severities);
 	filter.DenyList.pSeverityList = severities;
 	infoQueue->PushStorageFilter(&filter);
+
 #endif
 
+	
 	// ----- コマンドアロケータ生成 ----- //
+	
 	Result(device_->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(&cmdAllocator_)));
 
+
 	// ----- コマンドリスト生成 ----- //
+	
 	Result(device_->CreateCommandList(
 		0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 		cmdAllocator_.Get(), nullptr,
 		IID_PPV_ARGS(&cmdList_)));
 
+
 	// ----- コマンドキュー生成 ----- //
+	
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{}; // 設定
 	Result(device_->CreateCommandQueue(
 		&commandQueueDesc, 
 		IID_PPV_ARGS(&cmdQueue_)));
 
+
 	// ----- スワップチェーン生成 ----- //
+	
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{}; // 設定
-	swapChainDesc.Width = (UINT)size.x_;
-	swapChainDesc.Height = (UINT)size.y_;
+	swapChainDesc.Width = (UINT)windowSize.x_;
+	swapChainDesc.Height = (UINT)windowSize.y_;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		  // 色情報の書式
 	swapChainDesc.SampleDesc.Count = 1;						  // マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;		  // バックバッファ用
@@ -166,13 +189,17 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 
 	swapChain1.As(&swapChain_);
 
+
 	// ----- レンダーターゲットビュー生成 ----- //
+	
 	// デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー
 	rtvHeapDesc.NumDescriptors = swapChainDesc.BufferCount; // 裏表の2つ
+	
 	// デスクリプタヒープ生成
 	Result(device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
+	
 	// バックバッファ調整
 	backBuffers_.resize(swapChainDesc.BufferCount);
 
@@ -180,32 +207,39 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 	for (size_t i = 0; i < backBuffers_.size(); i++)
 	{
 		// スワップチェーンからバッファ取得
-		swapChain_->GetBuffer((UINT)i, IID_PPV_ARGS(&backBuffers_[i]));
+		swapChain_->GetBuffer((UINT)i, IID_PPV_ARGS(backBuffers_[i].GetAddressOf()));
+		
 		// デスクリプタヒープのハンドル取得
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+		
 		// 裏か表かでアドレスがずれる
 		rtvHandle.ptr += i * device_->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+		
 		// レンダーターゲットビュー設定
 		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+		
 		// シェーダーの計算結果をSRGBに変換して書き込む
 		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		
 		// レンダーターゲットビュー生成
 		device_->CreateRenderTargetView(backBuffers_[i].Get(), &rtvDesc, rtvHandle);
 	}
 
 	// ----- デプスステンシルビュー生成 ----- //
-	D3D12_RESOURCE_DESC dsvResDesc{}; // リソース設定
+	
+	// 深度バッファ設定
+	D3D12_RESOURCE_DESC dsvResDesc{};
 	dsvResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	dsvResDesc.Width = (UINT16)size.x_; // レンダーターゲットに合わせる
-	dsvResDesc.Height = (UINT)size.y_; // レンダーターゲットに合わせる
+	dsvResDesc.Width = (UINT16)windowSize.x_; // レンダーターゲットに合わせる
+	dsvResDesc.Height = (UINT)windowSize.y_; // レンダーターゲットに合わせる
 	dsvResDesc.DepthOrArraySize = 1;
 	dsvResDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	dsvResDesc.SampleDesc.Count = 1;
 	dsvResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
 
 	// 深度値用ヒーププロパティ
-	D3D12_HEAP_PROPERTIES dsvHeapProp = {}; // バッファ設定
+	D3D12_HEAP_PROPERTIES dsvHeapProp = {};
 	dsvHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	// 深度値のクリア設定
@@ -213,16 +247,16 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 	clearValue.DepthStencil.Depth = 1.0f; // 深度値1.0f(最大値)でクリア
 	clearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 
-	// リソース生成
+	// 深度バッファ生成
 	Result(device_->CreateCommittedResource(
 		&dsvHeapProp, // ヒープ設定
 		D3D12_HEAP_FLAG_NONE,
 		&dsvResDesc, // リソース設定
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&clearValue,
-		IID_PPV_ARGS(&dsvBuff_)));
+		IID_PPV_ARGS(&depthBuff_)));
 
-	// 深度ビュー用デスクリプターヒープ作成
+
 	// デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
 	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
@@ -234,14 +268,19 @@ bool YDirectX::Initialize(const HWND& hwnd, const YMath::Vector2& size)
 	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
+	// 深度ビュー用デスクリプターヒープ作成
 	device_->CreateDepthStencilView(
-		dsvBuff_.Get(),
+		depthBuff_.Get(),
 		&dsvDesc,
 		dsvHeap_->GetCPUDescriptorHandleForHeapStart());
 
+
 	// ----- フェンス生成 ----- //
+	
 	Result(device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_)));
 
+
+	// 成功
 	return true;
 }
 
@@ -256,9 +295,11 @@ void YDirectX::PreDraw(const YMath::Vector4& clearColor)
 	cmdList_->ResourceBarrier(1, &barrierDesc);
 
 	// 2.描画先の変更
+	
 	// レンダーターゲットビューのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += (SIZE_T)bbIndex * device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	
 	// デプスステンシルビューのハンドルを取得
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
 	cmdList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
@@ -306,6 +347,7 @@ void YDirectX::PostDraw()
 
 	// 現在時間を取得
 	steady_clock::time_point now = steady_clock::now();
+	
 	// 前回からの経過時間を取得
 	microseconds elpsed = std::chrono::duration_cast<microseconds>(now - timeRef_);
 
@@ -325,6 +367,7 @@ void YDirectX::PostDraw()
 
 	// キューをクリア
 	Result(cmdAllocator_->Reset());
+	
 	// 再びコマンドリストを貯める準備
 	Result(cmdList_->Reset(cmdAllocator_.Get(), nullptr));
 }

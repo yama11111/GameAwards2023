@@ -19,8 +19,9 @@ using YGame::DrawLocationNum;
 
 #pragma region ルートパラメータ番号
 
-static const UINT TraIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameterIndex::eTransformCB); // obj
+static const UINT TraIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameterIndex::eTransformCB); // transform
 static const UINT ColIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameterIndex::eColorCB); // color
+static const UINT TexConfigIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
@@ -29,7 +30,8 @@ static const UINT TexIndex = static_cast<UINT>(Sprite2D::Pipeline::RootParameter
 
 vector<unique_ptr<Sprite2D>> Sprite2D::sSprites_{};
 array<PipelineSet, Sprite2D::Pipeline::sShaderNum_> Sprite2D::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<Sprite2D::Pipeline::DrawSet>>, DrawLocationNum> Sprite2D::Pipeline::sDrawSets_;
+array<array<list<unique_ptr<Sprite2D::Pipeline::DrawSet>>,
+	Sprite2D::Pipeline::sShaderNum_>, DrawLocationNum> Sprite2D::Pipeline::sDrawSets_;
 
 #pragma endregion
 
@@ -222,10 +224,14 @@ void Sprite2D::SetIsVisible(const bool isVisible)
 Sprite2D::Object* Sprite2D::Object::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, isMutable);
+	return Create(status, nullptr, nullptr, isMutable);
 }
 
-Sprite2D::Object* Sprite2D::Object::Create(const Status& status, Color* pColor, const bool isMutable)
+Sprite2D::Object* Sprite2D::Object::Create(
+	const Status& status,
+	CBColor* pColor,
+	CBTexConfig* pTexConfig,
+	const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	Object* instance = new Object();
@@ -236,12 +242,16 @@ Sprite2D::Object* Sprite2D::Object::Create(const Status& status, Color* pColor, 
 	// 初期化(デフォルト)
 	instance->Initialize(status);
 	instance->SetColor(pColor);
+	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
 	return instance;
 }
 
-void Sprite2D::Object::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
+void Sprite2D::Object::SetDrawCommand(
+	const UINT transformRPIndex,
+	const UINT colorRPIndex,
+	const UINT texConfigRPIndex)
 {
 	// 行列
 	cBuff_.map_->matWorld_ = m_ * Default::sProjection_;
@@ -249,9 +259,12 @@ void Sprite2D::Object::SetDrawCommand(const UINT transformRPIndex, const UINT co
 
 	// 色
 	pColor_->SetDrawCommand(colorRPIndex);
+
+	// テクスチャ設定
+	pTexConfig_->SetDrawCommand(texConfigRPIndex);
 }
 
-void Sprite2D::Object::SetColor(Color* pColor)
+void Sprite2D::Object::SetColor(CBColor* pColor)
 {
 	// nullなら
 	if (pColor == nullptr)
@@ -265,16 +278,34 @@ void Sprite2D::Object::SetColor(Color* pColor)
 	pColor_ = pColor;
 }
 
-YMath::Matrix4 Sprite2D::Object::Default::sProjection_ = YMath::Matrix4::Identity();
-std::unique_ptr<YGame::Color> Sprite2D::Object::Default::sColor_ = nullptr;
+void Sprite2D::Object::SetTexConfig(CBTexConfig* pTexConfig)
+{
+	// nullなら
+	if (pTexConfig == nullptr)
+	{
+		// デフォルト代入
+		pTexConfig_ = Default::sTexConfig_.get();
+		return;
+	}
+
+	// 代入
+	pTexConfig_ = pTexConfig;
+}
+
+Matrix4 Sprite2D::Object::Default::sProjection_ = Matrix4::Identity();
+unique_ptr<YGame::CBColor> Sprite2D::Object::Default::sColor_ = nullptr;
+unique_ptr<YGame::CBTexConfig> Sprite2D::Object::Default::sTexConfig_ = nullptr;
 
 void Sprite2D::Object::Default::StaticInitialize()
 {
 	// プロジェクション行列を設定
 	sProjection_ = YMath::MatOrthoGraphic();
 
-	// 生成 + 初期化
-	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	// 生成 + 初期化 (色)
+	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+
+	// 生成 + 初期化 (テクスチャ設定)
+	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
 }
 
 #pragma endregion
@@ -484,11 +515,15 @@ void Sprite2D::Pipeline::StaticClearDrawSet(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// クリア
-		sDrawSets_[index].clear();
+		// あるなら
+		if (sDrawSets_[index][i].empty() == false)
+		{
+			// クリア
+			sDrawSets_[index][i].clear();
+		}
 	}
 }
 
@@ -502,13 +537,15 @@ void Sprite2D::Pipeline::StaticPushBackDrawSet(
 	// 初期化
 	newDrawSet->pSprite2D_ = pSprite2D;
 	newDrawSet->pObj_ = pObj;
-	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
 	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
+	size_t locationIdx = static_cast<size_t>(location);
+
+	// インデックスに変換
+	size_t shaderIdx = static_cast<size_t>(shaderType);
 
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_[locationIdx][shaderIdx].push_back(std::move(newDrawSet));
 }
 
 void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
@@ -516,14 +553,18 @@ void Sprite2D::Pipeline::StaticDraw(const DrawLocation& location)
 	// インデックスに変換
 	size_t index = static_cast<size_t>(location);
 
-	// スプライト2D描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
 		// パイプラインをセット
-		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
+		sPipelineSets_[i].SetDrawCommand();
 
-		// 描画
-		drawSet->Draw();
+		// モデル描画
+		for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index][i])
+		{
+			// 描画
+			drawSet->Draw();
+		}
 	}
 }
 
@@ -533,7 +574,7 @@ void Sprite2D::Pipeline::DrawSet::Draw()
 	if (pSprite2D_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, TexConfigIndex);
 
 	// テクスチャ
 	pSprite2D_->pTex_->SetDrawCommand(TexIndex);

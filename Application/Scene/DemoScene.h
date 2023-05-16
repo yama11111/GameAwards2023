@@ -50,7 +50,7 @@ namespace YScene
 		YMath::Ease<float> fontAlphaEas_;
 
 		std::unique_ptr<YGame::Sprite2D::Object> fontObj_;
-		std::unique_ptr<YGame::Color> fontColor_;
+		std::unique_ptr<YGame::CBColor> fontColor_;
 
 		YGame::Sprite2D* fontSpr_ = nullptr;
 

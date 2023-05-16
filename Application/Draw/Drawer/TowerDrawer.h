@@ -23,13 +23,16 @@ protected:
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
+	static std::array<std::array<YGame::Model*, PartsNum_>, 2> spModels_;
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
-
+	
 	// マテリアルポインタ
-	static YGame::Material* spMate_;
+	static YGame::CBMaterial* spMate_;
+
+	// ライトポインタ
+	static YGame::CBLightGroup* spLight_;
 
 public:
 
@@ -38,9 +41,11 @@ public:
 	/// </summary>
 	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pMate"> : マテリアルポインタ</param>
-	/// <param name="pCoreColors"> : 核色ポインタ配列</param>
-	/// <param name="pCoreMate"> : 核マテリアルポインタ</param>
-	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::Material* pMate);
+	/// <param name="pLight"> : ライトポインタ</param>
+	static void StaticInitialize(
+		YGame::ViewProjection* pVP, 
+		YGame::CBMaterial* pMate,
+		YGame::CBLightGroup* pLight);
 
 public:
 	

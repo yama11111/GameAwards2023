@@ -27,7 +27,7 @@ void DemoScene::Load()
 	// ----- オーディオ ----- //
 
 	// プレイBGM
-	pPlayBGM_ = Audio::Load("vigilante.wav");
+	pPlayBGM_ = Audio::Load("BGM/select.wav");
 	
 	// ----- 静的初期化 ----- //
 
@@ -85,7 +85,7 @@ void DemoScene::Initialize()
 
 	fontAlphaEas_.Initialize(0.0f, 1.0f, 3.0f);
 
-	fontColor_.reset(Color::Create());
+	fontColor_.reset(CBColor::Create());
 
 	fontObj_.reset(Sprite2D::Object::Create({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} }, fontColor_.get()));
 
@@ -214,6 +214,7 @@ void DemoScene::Update()
 	//ゴール判定
 	if (afterglowTim_.IsEnd())
 	{
+		StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
 		SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	}
 }

@@ -10,7 +10,7 @@ protected:
 	static YGame::Model* spModel_;
 
 	// 静的色ポインタ
-	static YGame::Color* spColor_;
+	static YGame::CBColor* spColor_;
 
 public:
 	
@@ -18,7 +18,7 @@ public:
 	/// 静的初期化
 	/// </summary>
 	/// <param name="pColor"> : 色ポインタ</param>
-	static void StaticInitialize(YGame::Color* pColor);
+	static void StaticInitialize(YGame::CBColor* pColor);
 
 public:
 	

@@ -1,6 +1,7 @@
 #include "PostEffect.h"
 #include "CalcTransform.h"
-#include <cassert>
+#include "YAssert.h"
+#include "Def.h"
 
 #pragma region 名前空間
 
@@ -12,15 +13,14 @@ using YGame::PostEffect;
 using YDX::PipelineSet;
 using YMath::Vector2;
 using YMath::Matrix4;
-using YGame::DrawLocation;
-using YGame::DrawLocationNum;
 
 #pragma endregion
 
 #pragma region ルートパラメータ番号
 
-static const UINT TraIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTransformCB); // obj
+static const UINT TraIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTransformCB); // transform
 static const UINT ColIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eColorCB); // color
+static const UINT TexConfigIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(PostEffect::Pipeline::RootParameterIndex::eTexDT); // tex
 
 #pragma endregion
@@ -29,7 +29,10 @@ static const UINT TexIndex = static_cast<UINT>(PostEffect::Pipeline::RootParamet
 
 vector<unique_ptr<PostEffect>> PostEffect::sPostEffects_{};
 array<PipelineSet, PostEffect::Pipeline::sShaderNum_> PostEffect::Pipeline::sPipelineSets_{};
-array<list<unique_ptr<PostEffect::Pipeline::DrawSet>>, DrawLocationNum> PostEffect::Pipeline::sDrawSets_;
+list<unique_ptr<PostEffect::Pipeline::DrawSet>> PostEffect::Pipeline::sDrawSets_;
+ID3D12Device* PostEffect::spDevice_ = nullptr;
+ID3D12GraphicsCommandList* PostEffect::spCmdList_ = nullptr;
+YDX::ScreenDesc* PostEffect::spScreenDesc_ = nullptr;
 
 #pragma endregion
 
@@ -93,6 +96,15 @@ PostEffect* PostEffect::Create(const Status& status, const TexStatus& texStatus)
 	newSprite->texLeftTop_ = texStatus.isDiv_ ? Vector2(0.0f, 0.0f) : texStatus.leftTop_; // テクスチャの左上
 	newSprite->texSize_ = texStatus.isDiv_ ? Vector2(rscSizeX, rscSizeY) : texStatus.size_; // テクスチャの大きさ
 
+	// RTV初期化
+	newSprite->CreateRTV();
+	
+	// 深度バッファ生成
+	newSprite->CreateDepthBuff(newSprite->texSize_);
+	
+	// DSV初期化
+	newSprite->CreateDSV();
+
 
 	// ポインタを獲得
 	PostEffect* newSpritePtr = newSprite.get();
@@ -114,10 +126,54 @@ void PostEffect::AllClear()
 	sPostEffects_.clear();
 }
 
-void PostEffect::SetDrawCommand(Object* pObj, const DrawLocation& location, const ShaderType& shaderType)
+void PostEffect::SetDrawCommand(PostEffect::Object* pObj, const ShaderType& shaderType)
 {
 	// 描画セット挿入
-	Pipeline::StaticPushBackDrawSet(this, pObj, location, shaderType);
+	Pipeline::StaticPushBackDrawSet(this, pObj, shaderType);
+}
+
+void PostEffect::StartRender()
+{
+	// リソースバリア設定
+	D3D12_RESOURCE_BARRIER barrierDesc{};
+	barrierDesc.Transition.pResource = pTex_->Buffer(); // テクスチャを指定
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; // シェーダーリソース 状態から
+	barrierDesc.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;  // 描画 状態へ
+
+	// リソースバリアを変更
+	spCmdList_->ResourceBarrier(1, &barrierDesc);
+
+	// RTVのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+	// DSVのハンドルを取得
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvHeap_->GetCPUDescriptorHandleForHeapStart();
+	
+	// レンダーターゲットをセット
+	spCmdList_->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+
+	// スクリーン設定の描画コマンド
+	spScreenDesc_->SetDrawCommand();
+
+
+	// 画面クリア
+	//FLOAT clear[] = { ClearColor.r_,ClearColor.g_,ClearColor.b_,ClearColor.a_ };
+	FLOAT clear[] = { 0.25f, 0.5f ,0.1f, 0.0f };
+	spCmdList_->ClearRenderTargetView(rtvHandle, clear, 0, nullptr); // 青っぽい色
+	
+	// 深度バッファクリア
+	spCmdList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void PostEffect::EndRender()
+{
+	// リソースバリア設定
+	D3D12_RESOURCE_BARRIER barrierDesc{};
+	barrierDesc.Transition.pResource = pTex_->Buffer(); // テクスチャを指定
+	barrierDesc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET; // 描画 状態から
+	barrierDesc.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; // シェーダーリソース 状態へ
+	
+	// リソースバリアを戻す
+	spCmdList_->ResourceBarrier(1, &barrierDesc);
 }
 
 void PostEffect::SetSize(const Vector2& size)
@@ -214,6 +270,91 @@ void PostEffect::SetIsVisible(const bool isVisible)
 	isVisible_ = isVisible;
 }
 
+void PostEffect::CreateRTV()
+{
+	// デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{};
+	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV; // レンダーターゲットビュー
+	rtvHeapDesc.NumDescriptors = 1;
+
+	// デスクリプタヒープ生成
+	YDX::Result(spDevice_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap_)));
+
+
+	// レンダーターゲットビュー設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	
+	// シェーダーの計算結果をSRGBに変換して書き込む
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	
+	// レンダーターゲットビュー生成
+	spDevice_->CreateRenderTargetView(pTex_->Buffer(), &rtvDesc, rtvHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::CreateDepthBuff(const YMath::Vector2& size)
+{
+	// リソース設定
+	D3D12_RESOURCE_DESC depthResDesc{};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = (UINT16)size.x_;
+	depthResDesc.Height = (UINT)size.y_;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL; // デプスステンシル
+
+	// 深度値用ヒーププロパティ
+	D3D12_HEAP_PROPERTIES depthHeapProp = {}; // バッファ設定
+	depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	// 深度値のクリア設定
+	D3D12_CLEAR_VALUE clearValue{}; // 深度値のクリア設定
+	clearValue.DepthStencil.Depth = 1.0f; // 深度値1.0f(最大値)でクリア
+	clearValue.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+
+	// 深度バッファ生成
+	depthBuff_.Create(&depthHeapProp, &depthResDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue);
+}
+
+void PostEffect::CreateDSV()
+{
+	// デスクリプタヒープ設定
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+	dsvHeapDesc.NumDescriptors = 1; // 深度ビューは1つ
+	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV; // デプスステンシルビュー
+	
+	// 深度ビュー用デスクリプターヒープ作成
+	YDX::Result(spDevice_->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap_)));
+
+	// 深度ビュー設定
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+
+	// 深度ビュー作成
+	spDevice_->CreateDepthStencilView(
+		depthBuff_.Get(),
+		&dsvDesc,
+		dsvHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void PostEffect::StaticInitialize(
+	ID3D12Device* pDevice,
+	ID3D12GraphicsCommandList* pCmdList,
+	YDX::ScreenDesc* pScreenDesc)
+{
+	// nullチェック
+	assert(pDevice);
+	assert(pCmdList);
+	assert(pScreenDesc);
+
+	// 代入
+	spDevice_ = pDevice;
+	spCmdList_ = pCmdList;
+	spScreenDesc_ = pScreenDesc;
+}
+
 #pragma endregion
 
 
@@ -222,10 +363,14 @@ void PostEffect::SetIsVisible(const bool isVisible)
 PostEffect::Object* PostEffect::Object::Create(const Status& status, const bool isMutable)
 {
 	// インスタンスを返す
-	return Create(status, nullptr, isMutable);
+	return Create(status, nullptr, nullptr, isMutable);
 }
 
-PostEffect::Object* PostEffect::Object::Create(const Status& status, Color* pColor, const bool isMutable)
+PostEffect::Object* PostEffect::Object::Create(
+	const Status& status,
+	CBColor* pColor,
+	CBTexConfig* pTexConfig,
+	const bool isMutable)
 {
 	// インスタンス生成 (動的)
 	Object* instance = new Object();
@@ -236,12 +381,16 @@ PostEffect::Object* PostEffect::Object::Create(const Status& status, Color* pCol
 	// 初期化(デフォルト)
 	instance->Initialize(status);
 	instance->SetColor(pColor);
+	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
 	return instance;
 }
 
-void PostEffect::Object::SetDrawCommand(const UINT transformRPIndex, const UINT colorRPIndex)
+void PostEffect::Object::SetDrawCommand(
+	const UINT transformRPIndex,
+	const UINT colorRPIndex,
+	const UINT texConfigRPIndex)
 {
 	// 行列
 	cBuff_.map_->matWorld_ = m_ * Default::sProjection_;
@@ -249,9 +398,12 @@ void PostEffect::Object::SetDrawCommand(const UINT transformRPIndex, const UINT 
 
 	// 色
 	pColor_->SetDrawCommand(colorRPIndex);
+
+	// テクスチャ設定
+	pTexConfig_->SetDrawCommand(texConfigRPIndex);
 }
 
-void PostEffect::Object::SetColor(Color* pColor)
+void PostEffect::Object::SetColor(CBColor* pColor)
 {
 	// nullなら
 	if (pColor == nullptr)
@@ -265,17 +417,43 @@ void PostEffect::Object::SetColor(Color* pColor)
 	pColor_ = pColor;
 }
 
-YMath::Matrix4 PostEffect::Object::Default::sProjection_ = YMath::Matrix4::Identity();
-std::unique_ptr<YGame::Color> PostEffect::Object::Default::sColor_ = nullptr;
+void PostEffect::Object::SetTexConfig(CBTexConfig* pTexConfig)
+{
+	// nullなら
+	if (pTexConfig == nullptr)
+	{
+		// デフォルト代入
+		pTexConfig_ = Default::sTexConfig_.get();
+		return;
+	}
+
+	// 代入
+	pTexConfig_ = pTexConfig;
+}
+
+Matrix4 PostEffect::Object::Default::sProjection_ = Matrix4::Identity();
+unique_ptr<YGame::CBColor> PostEffect::Object::Default::sColor_ = nullptr;
+unique_ptr<YGame::CBTexConfig> PostEffect::Object::Default::sTexConfig_ = nullptr;
 
 void PostEffect::Object::Default::StaticInitialize()
 {
 	// プロジェクション行列を設定
 	sProjection_ = YMath::MatOrthoGraphic();
 
-	// 生成 + 初期化
-	sColor_.reset(Color::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+	// 生成 + 初期化 (色)
+	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
+
+	// 生成 + 初期化 (テクスチャ設定)
+	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
 }
+
+#pragma endregion
+
+
+#pragma region シェーダー番号
+
+static const UINT BloomIndex = static_cast<UINT>(PostEffect::ShaderType::eBloom);
+static const UINT DefaultIndex = static_cast<UINT>(PostEffect::ShaderType::eDefault);
 
 #pragma endregion
 
@@ -287,15 +465,29 @@ void PostEffect::Pipeline::ShaderSet::Load()
 	// エラーオブジェクト
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
 
+	// Bloom
+	{
+		ID3DBlob* vs = nullptr;
+		ID3DBlob* ps = nullptr;
+
+		// 頂点シェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/BloomVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		// ピクセルシェーダの読み込みとコンパイル
+		LoadShader(L"Resources/Shaders/BloomPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+
+		bloomVSBlob_ = vs;
+		bloomPSBlob_ = ps;
+	}
+
 	// Default
 	{
 		ID3DBlob* vs = nullptr;
 		ID3DBlob* ps = nullptr;
 
 		// 頂点シェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/Sprite2DVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
+		LoadShader(L"Resources/Shaders/PostEffectVS.hlsl", "main", "vs_5_0", vs, errorBlob.Get());
 		// ピクセルシェーダの読み込みとコンパイル
-		LoadShader(L"Resources/Shaders/Sprite2DPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
+		LoadShader(L"Resources/Shaders/PostEffectPS.hlsl", "main", "ps_5_0", ps, errorBlob.Get());
 
 		defaultVSBlob_ = vs;
 		defaultPSBlob_ = ps;
@@ -402,51 +594,70 @@ void PostEffect::Pipeline::StaticInitialize()
 #pragma region パイプライン設定
 
 	// パイプライン設定
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	std::array<D3D12_GRAPHICS_PIPELINE_STATE_DESC, sPipelineSets_.size()> pipelineDescs{};
 
 	// シェーダーの設定
-	pipelineDesc.VS.pShaderBytecode = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
-	pipelineDesc.VS.BytecodeLength = shdrs.defaultVSBlob_.Get()->GetBufferSize();
-	pipelineDesc.PS.pShaderBytecode = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
-	pipelineDesc.PS.BytecodeLength = shdrs.defaultPSBlob_.Get()->GetBufferSize();
+	pipelineDescs[BloomIndex].VS.pShaderBytecode = shdrs.bloomVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[BloomIndex].VS.BytecodeLength = shdrs.bloomVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[BloomIndex].PS.pShaderBytecode = shdrs.bloomPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[BloomIndex].PS.BytecodeLength = shdrs.bloomPSBlob_.Get()->GetBufferSize();
+	
+	pipelineDescs[DefaultIndex].VS.pShaderBytecode = shdrs.defaultVSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].VS.BytecodeLength = shdrs.defaultVSBlob_.Get()->GetBufferSize();
+	pipelineDescs[DefaultIndex].PS.pShaderBytecode = shdrs.defaultPSBlob_.Get()->GetBufferPointer();
+	pipelineDescs[DefaultIndex].PS.BytecodeLength = shdrs.defaultPSBlob_.Get()->GetBufferSize();
 
-	// サンプルマスクの設定
-	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
+	{
+		// サンプルマスクの設定
+		pipelineDescs[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
-	// ラスタライザの設定
-	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
-	pipelineDesc.RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
-	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
+		// ラスタライザの設定
+		pipelineDescs[i].RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
+		pipelineDescs[i].RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
+		pipelineDescs[i].RasterizerState.CullMode = D3D12_CULL_MODE_NONE; // 背面をカリングしない
 
-	// デプスステンシルステートの設定
-	pipelineDesc.DepthStencilState.DepthEnable = false; // 深度テストしない
-	pipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
+		// デプスステンシルステートの設定
+		pipelineDescs[i].DepthStencilState.DepthEnable = false; // 深度テストしない
+		pipelineDescs[i].DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS; // 常に上書き
 
-	// ブレンドステート
-	D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDesc.BlendState.RenderTarget[0];
-	blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
+		// ブレンドステート
+		D3D12_RENDER_TARGET_BLEND_DESC& blendDesc = pipelineDescs[i].BlendState.RenderTarget[0];
+		blendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL; // RBGA全てのチャンネルを描画
 
-	blendDesc.BlendEnable = true;                // ブレンドを有効にする
-	blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD; // 加算
-	blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;   // ソースの値を100%使う
-	blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO; // デストの値を  0%使う
+		blendDesc.BlendEnable = true;                // ブレンドを有効にする
+		blendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD; // 加算
+		blendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;   // ソースの値を100%使う
+		blendDesc.DestBlendAlpha = D3D12_BLEND_ZERO; // デストの値を  0%使う
+		
+		if (i == BloomIndex)
+		{
+			// 加算合成
+			blendDesc.BlendOp = D3D12_BLEND_OP_ADD; // 加算
+			blendDesc.SrcBlend = D3D12_BLEND_ONE; // ソースの値を100%使う
+			blendDesc.DestBlend = D3D12_BLEND_ONE; // デストの値を100%使う
+		}
+		else
+		{
+			// 半透明合成
+			blendDesc.BlendOp = D3D12_BLEND_OP_ADD; // 加算
+			blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA; // ソースのアルファ値
+			blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; // 1.0f - ソースのアルファ値
+		}
 
-	// 半透明合成
-	blendDesc.BlendOp = D3D12_BLEND_OP_ADD;			 // 加算
-	blendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;      // ソースのアルファ値
-	blendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA; // 1.0f - ソースのアルファ値
+		// 図形の形状設定
+		pipelineDescs[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
-	// 図形の形状設定
-	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// 頂点レイアウトの設定
+		pipelineDescs[i].InputLayout.pInputElementDescs = inputLayout.data(); // 頂点レイアウトの先頭アドレス
+		pipelineDescs[i].InputLayout.NumElements = (UINT)inputLayout.size(); // 頂点レイアウト数
 
-	// 頂点レイアウトの設定
-	pipelineDesc.InputLayout.pInputElementDescs = inputLayout.data(); // 頂点レイアウトの先頭アドレス
-	pipelineDesc.InputLayout.NumElements = (UINT)inputLayout.size(); // 頂点レイアウト数
-
-	// その他の設定
-	pipelineDesc.NumRenderTargets = 1; // 描画対象は1つ
-	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
-	pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+		// その他の設定
+		pipelineDescs[i].NumRenderTargets = 1; // 描画対象は1つ
+		pipelineDescs[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0~255指定のRGBA
+		pipelineDescs[i].SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+	}
 
 #pragma endregion
 
@@ -459,42 +670,30 @@ void PostEffect::Pipeline::StaticInitialize()
 #pragma endregion
 
 
-	//// パイプラインの数だけ
-	//for (size_t i = 0; i < sPipelineSets_.size(); i++)
-	//{
-	//	// パイプライン初期化
-	//	sPipelineSets_[i].Initialize(samplerDescs, rootParams, pipelineDesc, primitive);
-	//}
-
-	sPipelineSets_[0].Initialize(samplerDescs, rootParams, pipelineDesc, primitive);
-
-	// 描画場所の数だけ
-	for (size_t i = 0; i < sDrawSets_.size(); i++)
+	// パイプラインの数だけ
+	for (size_t i = 0; i < sPipelineSets_.size(); i++)
 	{
-		// 変換
-		DrawLocation location = static_cast<DrawLocation>(i);
-
-		// クリア
-		StaticClearDrawSet(location);
+		// パイプライン初期化
+		sPipelineSets_[i].Initialize(samplerDescs, rootParams, pipelineDescs[i], primitive);
 	}
+
+	// クリア
+	StaticClearDrawSet();
 }
 
-void PostEffect::Pipeline::StaticClearDrawSet(const DrawLocation& location)
+void PostEffect::Pipeline::StaticClearDrawSet()
 {
-	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
-
 	// あるなら
-	if (sDrawSets_[index].empty() == false)
+	if (sDrawSets_.empty())
 	{
 		// クリア
-		sDrawSets_[index].clear();
+		sDrawSets_.clear();
 	}
 }
 
 void PostEffect::Pipeline::StaticPushBackDrawSet(
-	PostEffect* pPostEffect, PostEffect::Object* pObj,
-	const DrawLocation& location, const ShaderType& shaderType)
+	PostEffect* pPostEffect, PostEffect::Object* pObj, 
+	const ShaderType& shaderType)
 {
 	// 描画セット生成
 	unique_ptr<Pipeline::DrawSet> newDrawSet = std::make_unique<Pipeline::DrawSet>();
@@ -504,20 +703,14 @@ void PostEffect::Pipeline::StaticPushBackDrawSet(
 	newDrawSet->pObj_ = pObj;
 	newDrawSet->pipelineIndex_ = static_cast<size_t>(shaderType);
 
-	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
-
 	// 挿入
-	sDrawSets_[index].push_back(std::move(newDrawSet));
+	sDrawSets_.push_back(std::move(newDrawSet));
 }
 
-void PostEffect::Pipeline::StaticDraw(const DrawLocation& location)
+void PostEffect::Pipeline::StaticDraw()
 {
-	// インデックスに変換
-	size_t index = static_cast<size_t>(location);
-
-	// スプライト2D描画
-	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_[index])
+	// ポストエフェクト描画
+	for (std::unique_ptr<DrawSet>& drawSet : sDrawSets_)
 	{
 		// パイプラインをセット
 		sPipelineSets_[drawSet->pipelineIndex_].SetDrawCommand();
@@ -533,7 +726,7 @@ void PostEffect::Pipeline::DrawSet::Draw()
 	if (pPostEffect_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, TexConfigIndex);
 
 	// テクスチャ
 	pPostEffect_->pTex_->SetDrawCommand(TexIndex);

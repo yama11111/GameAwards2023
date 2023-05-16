@@ -56,10 +56,10 @@ void InputDrawerCommon::StaticInitialize()
 void InputDrawerCommon::StaticUpdate()
 {
 	// WASD 押したか更新
-	spKeyW_.Update(sKeys_->IsDown(DIK_W));
-	spKeyA_.Update(sKeys_->IsDown(DIK_A));
-	spKeyS_.Update(sKeys_->IsDown(DIK_S));
-	spKeyD_.Update(sKeys_->IsDown(DIK_D));
+	spKeyW_.Update(sKeys_->IsUp());
+	spKeyA_.Update(sKeys_->IsLeft());
+	spKeyS_.Update(sKeys_->IsUnder());
+	spKeyD_.Update(sKeys_->IsRight());
 
 	// SPACE 押したか更新
 	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));

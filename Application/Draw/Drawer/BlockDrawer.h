@@ -29,7 +29,7 @@ protected:
 	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
 
 	// 殻失敗色
-	static std::unique_ptr<YGame::Color> sFailShellColor_;
+	static std::unique_ptr<YGame::CBColor> sFailShellColor_;
 
 
 	// ----- グリッド ----- //
@@ -38,13 +38,13 @@ protected:
 	static YGame::Model* spGridModel_;
 
 	// グリッド色
-	static std::unique_ptr<YGame::Color> sGridColor_;
+	static std::unique_ptr<YGame::CBColor> sGridColor_;
 	
 	// グリッド失敗色
-	static std::unique_ptr<YGame::Color> sFailGridColor_;
+	static std::unique_ptr<YGame::CBColor> sFailGridColor_;
 
 	// グリッドマテリアル
-	static std::unique_ptr<YGame::Material> sGridMate_;
+	static std::unique_ptr<YGame::CBMaterial> sGridMate_;
 
 
 	// 取得時大きさイージング
