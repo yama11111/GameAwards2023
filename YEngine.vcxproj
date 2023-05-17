@@ -105,7 +105,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BasicBlock.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -180,7 +179,6 @@
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
-    <ClCompile Include="IBlock.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sign.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -215,7 +213,6 @@
     <ClCompile Include="Engine\Utillity\Math\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BasicBlock.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -298,7 +295,6 @@
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
-    <ClInclude Include="IBlock.h" />
     <ClInclude Include="Sign.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="YukiMapchipCollider.h" />

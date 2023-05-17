@@ -5,8 +5,10 @@ YukiMapchipCollider::YukiMapchipCollider(void)
     transform_.Initialize(Transform::Status{});
 }
 
-void YukiMapchipCollider::Update(void)
+void YukiMapchipCollider::UpdatePos(void)
 {
+    transform_.pos_ += velocity_;
+
     // ç∂è„
     point_.TopLeft_.x_ = transform_.pos_.x_ - radius_.x_;
     point_.TopLeft_.y_ = transform_.pos_.y_ + radius_.y_;

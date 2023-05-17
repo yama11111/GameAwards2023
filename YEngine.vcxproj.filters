@@ -142,9 +142,6 @@
     <Filter Include="game">
       <UniqueIdentifier>{f55c61c6-6faa-47c5-aa7f-38a2dc214b25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game\Blocks">
-      <UniqueIdentifier>{888c7ffe-2757-42b4-a522-eb054e197d39}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -464,12 +461,6 @@
     </ClCompile>
     <ClCompile Include="Sign.cpp">
       <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="IBlock.cpp">
-      <Filter>game\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicBlock.cpp">
-      <Filter>game\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -808,12 +799,6 @@
     </ClInclude>
     <ClInclude Include="Sign.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="IBlock.h">
-      <Filter>game\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicBlock.h">
-      <Filter>game\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="YukiMapchipCollider.h">
       <Filter>game</Filter>

@@ -12,6 +12,7 @@ protected:
     using Vector4 = YMath::Vector4;
     using Transform = YGame::Transform;
 
+public:
     struct Point
     {
         Vector2 TopLeft_{};
@@ -25,7 +26,7 @@ public:
     YukiMapchipCollider(void);
     virtual ~YukiMapchipCollider(void) = default;
 
-    void Update(void);
+    void UpdatePos(void);
 
     // ïœêî
     Transform transform_{};
