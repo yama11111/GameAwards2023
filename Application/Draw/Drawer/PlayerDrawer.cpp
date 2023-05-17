@@ -25,7 +25,7 @@ using namespace DrawerConfig::Player;
 
 #pragma region Static
 
-array<Model*, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::spModels_ =
+array<Model*, PlayerDrawerCommon::sPartsNum_> PlayerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr
 };
@@ -123,9 +123,6 @@ void PlayerDrawer::ResetAnimation()
 {
 	// ブヨブヨアニメーション初期化
 	SlimeActor::Initialize();
-
-	// 立ちモーションタイマーリセット
-	idleTim_.Reset(true);
 
 	// 移動タイマーリセット
 	moveEmitTimer_.Reset(false);
@@ -388,8 +385,4 @@ void PlayerDrawer::GoalAnimation()
 
 	// ゴールアニメーション開始
 	isGoal_ = true;
-}
-
-void PlayerDrawer::IdleAnimation()
-{
 }

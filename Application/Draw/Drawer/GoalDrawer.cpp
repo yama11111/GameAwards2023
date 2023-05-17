@@ -25,7 +25,7 @@ using namespace DrawerConfig::Goal;
 
 #pragma region Static
 
-array<Model*, GoalDrawerCommon::PartsNum_> GoalDrawerCommon::spModels_ =
+array<Model*, GoalDrawerCommon::sPartsNum_> GoalDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr, nullptr,
 };
@@ -120,9 +120,9 @@ void GoalDrawer::Reset()
 	}
 
 	// 核の色設定
-	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
-	modelObjs_[InsideCoreIdx] ->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
-	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::Blue));
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
+	modelObjs_[InsideCoreIdx] ->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
+	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
 
 	// ----- アニメーション初期化 ----- //
 	
@@ -324,10 +324,6 @@ void GoalDrawer::Update()
 	{
 		modelObjs_[i]->UpdateMatrix();
 	}
-}
-
-void GoalDrawer::IdleAnimation()
-{
 }
 
 void GoalDrawer::Draw()

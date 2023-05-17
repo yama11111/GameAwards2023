@@ -105,6 +105,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -210,6 +212,8 @@
     <ClCompile Include="Engine\Utillity\Math\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />

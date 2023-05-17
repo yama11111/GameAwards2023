@@ -436,17 +436,17 @@ namespace DrawerConfig
 		// 色
 		namespace Color
 		{
-			// 通常
-			const YMath::Vector3 Normal = { 0.30f, 0.30f, 0.30f };
+			// グレー
+			const YMath::Vector3 Gray	 = { 0.30f, 0.30f, 0.30f };
 
-			// 可動
-			const YMath::Vector3 Movable = { 0.60f, 0.00f, 0.00f };
+			// 赤
+			const YMath::Vector3 Red	 = { 0.60f, 0.00f, 0.00f };
 
-			// ばね
-			const YMath::Vector3 Spring = { 0.00f, 0.60f, 0.00f };
+			// 緑
+			const YMath::Vector3 Green	 = { 0.00f, 0.60f, 0.00f };
 
-			// クリア
-			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
+			// 青
+			const YMath::Vector3 Blue	 = { 0.05f, 0.20f, 0.90f };
 		}
 
 		// アンビエント
@@ -455,8 +455,8 @@ namespace DrawerConfig
 			// 通常
 			const YMath::Vector3 Normal = { 0.5f, 0.5f, 0.5f };
 
-			// クリア
-			const YMath::Vector3 Clear = { 0.7f, 0.7f, 0.8f };
+			// 青
+			const YMath::Vector3 Blue = { 0.7f, 0.7f, 0.8f };
 		}
 
 

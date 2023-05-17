@@ -2,8 +2,8 @@
 #include "IDrawer.h"
 #include <array>
 
-// ブロック描画用コモンクラス
-class BlockDrawerCommon
+// ばね描画用コモンクラス
+class SpringDrawerCommon
 {
 
 public:
@@ -19,8 +19,7 @@ public:
 	// 種類
 	enum class Type
 	{
-		eBlack, // 白
-		eWhite, // 黒
+		eGreen, // 緑
 		eEnd, // リサイズ用
 	};
 
@@ -48,13 +47,13 @@ public:
 
 public:
 
-	virtual ~BlockDrawerCommon() = default;
+	virtual ~SpringDrawerCommon() = default;
 };
 
-// ブロック描画用クラス
-class BlockDrawer :
+// ばね描画用クラス
+class SpringDrawer :
 	private IDrawer,
-	private BlockDrawerCommon
+	private SpringDrawerCommon
 {
 
 private:
@@ -65,7 +64,7 @@ private:
 	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
 
 	// 種類
-	Type type_ = Type::eBlack;
+	Type type_ = Type::eGreen;
 
 	// 種類インデックス
 	size_t typeIndex_ = 0;
@@ -103,6 +102,6 @@ public:
 
 public:
 
-	~BlockDrawer() = default;
+	~SpringDrawer() = default;
 };
 

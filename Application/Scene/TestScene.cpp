@@ -69,7 +69,7 @@ void TestScene::Initialize()
 	isDrawPlayer_ = false;
 	
 	// ブロック描画用クラス初期化
-	blockDra_.Initialize(&core_, IMode::Type::Normal);
+	blockDra_.Initialize(&core_, BlockDrawerCommon::Type::eWhite);
 	// ブロック描画するか
 	isDrawBlock_ = false;
 
@@ -175,50 +175,14 @@ void TestScene::Update()
 		
 		ImGui::Text("---------------");
 		
-		if (ImGui::Button("Reset (Normal)"))
+		if (ImGui::Button("Reset (White)"))
 		{
-			blockDra_.Reset(IMode::Type::Normal);
+			blockDra_.Reset(BlockDrawerCommon::Type::eWhite);
 		}
-		if (ImGui::Button("Reset (Movable)"))
+		if (ImGui::Button("Reset (Red)"))
 		{
-			blockDra_.Reset(IMode::Type::Movable);
+			blockDra_.Reset(BlockDrawerCommon::Type::eBlack);
 		}
-		if (ImGui::Button("Reset (Spring)"))
-		{
-			blockDra_.Reset(IMode::Type::Spring);
-		}
-		if (ImGui::Button("Reset (Junction)"))
-		{
-			blockDra_.Reset(IMode::Type::Junction);
-		}
-
-		ImGui::Text("---------------");
-
-		if (ImGui::Button("Catch"))
-		{
-			blockDra_.CatchAnimation();
-		}
-		if (ImGui::Button("FailToCatch"))
-		{
-			blockDra_.FailToCatchAnimation();
-		}
-
-		ImGui::Checkbox("IsCanCatch", &isCanCatch_);
-		blockDra_.SetIsCanCatch(isCanCatch_);
-
-		ImGui::Text("---------------");
-
-		if (ImGui::Button("Place"))
-		{
-			blockDra_.PlaceAnimation();
-		}
-		if (ImGui::Button("FailToPlace"))
-		{
-			blockDra_.FailToPlaceAnimation();
-		}
-
-		ImGui::Checkbox("IsCanPlace", &isCanPlace_);
-		blockDra_.SetIsCanPlace(isCanPlace_);
 
 		ImGui::End();
 	}

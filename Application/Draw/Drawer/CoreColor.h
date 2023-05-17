@@ -15,15 +15,15 @@ public:
 	// 種類
 	enum class ColorType
 	{
-		Gray	 = 0, // 灰色
-		Red		 = 1, // 赤色
-		Green	 = 2, // 緑色
-		Blue	 = 3, // 青色
-		End, // リサイズ用
+		eGray	 = 0, // 灰色
+		eRed	 = 1, // 赤色
+		eGreen	 = 2, // 緑色
+		eBlue	 = 3, // 青色
+		eEnd, // リサイズ用
 	};
 
 	// 種類の数
-	static const size_t sTypeNum_ = static_cast<size_t>(ColorType::End);
+	static const size_t sTypeNum_ = static_cast<size_t>(ColorType::eEnd);
 
 private:
 	

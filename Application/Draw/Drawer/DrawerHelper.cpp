@@ -55,7 +55,7 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	// ----- 静的初期化 ----- // 
 	{
 		// 基底クラス
-		IDrawer::StaticInitialize(pVP, sDefMate_.get(), pCamera, pParticleMan);
+		IDrawer::StaticInitialize(pVP, sDefMate_.get(), nullptr, pCamera, pParticleMan);
 
 		// 核色
 		CoreColor::StaticInitialize(true);
@@ -108,7 +108,7 @@ void DrawerHelper::StaticUpdate()
 	if (sIsClear_ && sIsElderClear_ == false)
 	{
 		// 色統一
-		CoreColor::StaticClearAnimation(CoreColor::ColorType::Blue);
+		CoreColor::StaticClearAnimation(CoreColor::ColorType::eBlue);
 
 		// 背景のマテリアル統一
 		BackgroundDrawerCommon::StaticUnify();

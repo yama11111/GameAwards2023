@@ -1,4 +1,4 @@
-#include "BlockDrawer.h"
+#include "JunctionDrawer.h"
 #include "CalcTransform.h"
 #include "DrawerConfig.h"
 #include "CoreColor.h"
@@ -27,44 +27,40 @@ using namespace DrawerConfig::Block;
 
 #pragma region Static
 
-array<array<Model*, BlockDrawerCommon::sPartsNum_>, BlockDrawerCommon::sTypeNum_> BlockDrawerCommon::spModels_ =
+array<array<Model*, JunctionDrawerCommon::sPartsNum_>, JunctionDrawerCommon::sTypeNum_> JunctionDrawerCommon::spModels_ =
 {
 	nullptr, nullptr,
-	nullptr, nullptr,
+	//nullptr, nullptr,
 };
 
 #pragma endregion
 
 #pragma region インデックス
 
-static const size_t CoreIdx = static_cast<size_t>(BlockDrawerCommon::Parts::eCore); // 核
-static const size_t ShellIdx = static_cast<size_t>(BlockDrawerCommon::Parts::eShell); // 殻
+static const size_t CoreIdx = static_cast<size_t>(JunctionDrawerCommon::Parts::eCore); // 核
+static const size_t ShellIdx = static_cast<size_t>(JunctionDrawerCommon::Parts::eShell); // 殻
 
-static const size_t BlackIdx = static_cast<size_t>(BlockDrawerCommon::Type::eBlack); // 黒
-static const size_t WhiteIdx = static_cast<size_t>(BlockDrawerCommon::Type::eWhite); // 白
+static const size_t GreenIdx = static_cast<size_t>(JunctionDrawerCommon::Type::eGreen); // 緑
+//static const size_t WhiteIdx = static_cast<size_t>(JunctionDrawerCommon::Type::); // 赤
 
 #pragma endregion
 
 #pragma region Common
 
-void BlockDrawerCommon::StaticInitialize()
+void JunctionDrawerCommon::StaticInitialize()
 {
 	// ----- モデル読み込み ----- //
 
 	// ブロック (黒)
-	spModels_[BlackIdx][CoreIdx] = Model::LoadObj("block/black/core", true); // 核
-	spModels_[BlackIdx][ShellIdx] = Model::LoadObj("block/black/shell", true); // 殻
-
-	// ブロック (白)
-	spModels_[WhiteIdx][CoreIdx] = Model::LoadObj("block/white/core", true); // 核
-	spModels_[WhiteIdx][ShellIdx] = Model::LoadObj("block/white/shell", true); // 殻
+	spModels_[GreenIdx][CoreIdx] = Model::LoadObj("junction/core", true); // 核
+	spModels_[GreenIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // 殻
 }
 
 #pragma endregion
 
 #pragma region Drawer
 
-void BlockDrawer::Initialize(Transform* pParent, const Type& type)
+void JunctionDrawer::Initialize(Transform* pParent, const Type& type)
 {
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, Idle::IntervalTime);
@@ -83,7 +79,7 @@ void BlockDrawer::Initialize(Transform* pParent, const Type& type)
 	Reset(type);
 }
 
-void BlockDrawer::Reset(const Type& type)
+void JunctionDrawer::Reset(const Type& type)
 {
 	// リセット
 	IDrawer::Reset();
@@ -95,25 +91,25 @@ void BlockDrawer::Reset(const Type& type)
 	typeIndex_ = static_cast<size_t>(type);
 
 	// 核の色とマテリアル設定
-	CBColor * pColor = nullptr;
+	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	if (type == Type::eWhite)
+	if (type == Type::eGreen)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
 		pMaterial = CoreColor::MaterialPtr();
 	}
-	else if (type == Type::eBlack)
-	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
-		pMaterial = CoreColor::MaterialPtr();
-	}
+	//else if (type == Type::eRed)
+	//{
+	//	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
+	//	pMaterial = CoreColor::MaterialPtr();
+	//}
 
 	modelObjs_[CoreIdx]->SetColor(pColor);
 	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
 }
 
-void BlockDrawer::Update()
+void JunctionDrawer::Update()
 {
 	// 基底クラス更新 
 	IDrawer::Update({});
@@ -125,7 +121,7 @@ void BlockDrawer::Update()
 	}
 }
 
-void BlockDrawer::Draw()
+void JunctionDrawer::Draw()
 {
 	// モデルの数描画
 	for (size_t i = 0; i < spModels_[typeIndex_].size(); i++)

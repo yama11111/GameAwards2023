@@ -23,7 +23,7 @@ using namespace DrawerConfig::Gate;
 
 #pragma region Static
 
-array<Model*, GateDrawerCommon::PartsNum_> GateDrawerCommon::spModels_ =
+array<Model*, GateDrawerCommon::sPartsNum_> GateDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr,
 };
@@ -106,8 +106,4 @@ void GateDrawer::Draw()
 	{
 		spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}
-}
-
-void GateDrawer::IdleAnimation()
-{
 }

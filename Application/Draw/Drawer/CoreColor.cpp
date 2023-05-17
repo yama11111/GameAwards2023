@@ -47,7 +47,7 @@ void CoreColor::StaticInitialize(const bool isPlay)
 	}
 
 	// 色値
-	sColorValues_ = { Color::Normal, Color::Movable, Color::Spring, Color::Clear };
+	sColorValues_ = { Color::Gray, Color::Red, Color::Green, Color::Blue };
 
 	// マテリアル
 	sMate_.reset(CBMaterial::Create(Ambient::Normal));
@@ -190,7 +190,7 @@ void CoreColor::StaticClearAnimation(const ColorType& colorType)
 	}
 
 	// マテリアル統一用イージング初期化
-	sUnifyMaterialEas_.Initialize(Ambient::Normal, Ambient::Clear, Unify::Exponent);
+	sUnifyMaterialEas_.Initialize(Ambient::Normal, Ambient::Blue, Unify::Exponent);
 
 	// タイマーリセット + 開始
 	sUnifyTim_.Reset(true);

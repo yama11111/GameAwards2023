@@ -26,7 +26,7 @@ using namespace DrawerConfig::Tower;
 
 #pragma region Static
 
-array<array<Model*, TowerDrawerCommon::PartsNum_>, IMode::sTypeNum_> TowerDrawerCommon::spModels_ =
+array<array<Model*, TowerDrawerCommon::sPartsNum_>, IMode::sTypeNum_> TowerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, 
 	nullptr, nullptr, 

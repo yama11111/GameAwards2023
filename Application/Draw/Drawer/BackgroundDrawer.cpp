@@ -71,7 +71,7 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get(), sBackLight_.get());
 
 	// “V‹…
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::Red));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eRed));
 }
 
 void BackgroundDrawerCommon::StaticReset()

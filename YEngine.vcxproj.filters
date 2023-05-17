@@ -450,6 +450,12 @@
     <ClCompile Include="Engine\GameUtillity\Object\Light\CBLightGroup.cpp">
       <Filter>Engine\GameUtil\Object\CB</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -781,6 +787,12 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\Light\CBLightGroup.h">
       <Filter>Engine\GameUtil\Object\CB</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,12 +18,12 @@ public:
 protected:
 	
 	// パーツの総数
-	static const size_t PartsNum_ = 2;
+	static const size_t sPartsNum_ = 2;
 
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, PartsNum_>, IMode::sTypeNum_> spModels_;
+	static std::array<std::array<YGame::Model*, sPartsNum_>, IMode::sTypeNum_> spModels_;
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
@@ -65,7 +65,7 @@ private:
 	std::unique_ptr<YGame::Transform> core_;
 	
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
 
 public:
 	
