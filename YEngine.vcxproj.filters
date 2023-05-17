@@ -270,9 +270,6 @@
     <ClCompile Include="Application\Draw\Drawer\SkydomeDrawer.cpp">
       <Filter>Application\Draw\Drawer\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Draw\Drawer\GateDrawer.cpp">
-      <Filter>Application\Draw\Drawer\Obj</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\GoalDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
@@ -456,6 +453,21 @@
     <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\GateDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj\Ex</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\KeyDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\PlatformDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\LaserDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\SwitchDrawer.cpp">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -586,9 +598,6 @@
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\SkydomeDrawer.h">
       <Filter>Application\Draw\Drawer\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Draw\Drawer\GateDrawer.h">
-      <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\GoalDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
@@ -792,6 +801,21 @@
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\GateDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj\Ex</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\KeyDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\PlatformDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\LaserDrawer.h">
+      <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\SwitchDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
   </ItemGroup>

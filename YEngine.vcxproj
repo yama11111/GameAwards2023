@@ -106,7 +106,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\KeyDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\LaserDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\PlatformDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\SwitchDrawer.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -213,7 +217,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\KeyDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\LaserDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\PlatformDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\SwitchDrawer.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />

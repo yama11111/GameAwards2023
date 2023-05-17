@@ -47,51 +47,62 @@ void TestScene::Initialize()
 {
 	// パーティクル初期化
 	particleMan_.Initialize();
-	// パーティクル描画するか
-	isDrawParticle_ = true;
 
 	// エフェクト初期化
 	effectMan_.Initialize();
-	// エフェクト描画するか
-	isDrawEffect_ = true;
-
+	
 	// 核初期化
 	core_.Initialize({ {}, {}, {3.0f,3.0f,3.0f} });
 
-	// プレイヤーで操作開始
-	isPlayer_ = true;
 
 	// プレイヤー描画用クラス初期化
 	playerDra_.Initialize(&core_, &direction_);
 	// 向き
 	direction_ = { +1.0f,0.0f,0.0f };
-	// プレイヤー描画するか
-	isDrawPlayer_ = false;
 	
 	// ブロック描画用クラス初期化
 	blockDra_.Initialize(&core_, BlockDrawerCommon::Type::eWhite);
-	// ブロック描画するか
-	isDrawBlock_ = false;
+
+	// ばね描画用クラス初期化
+	springDra_.Initialize(&core_, SpringDrawerCommon::Type::eGreen);
+	
+	// 接続部描画用クラス初期化
+	junctionDra_.Initialize(&core_, Vector3(+1, +1, 0), JunctionDrawerCommon::Type::eGreen);
 
 	// ゲート描画用クラス初期化
 	gateDra_.Initialize(&core_);
-	// ゲート描画するか
-	isDrawGate_ = false;
 
 	// ゴール描画用クラス初期化
 	goalDra_.Initialize(&core_);
-	// ゴール描画するか
-	isDrawGoal_ = true;
 
 
 	// 背景初期化
 	background_.Initialize();
-	// 背景描画するか
-	isDrawBackground_ = true;
 
 	// HUD初期化
 	hud_.Initialize();
-	// HUD描画するか
+
+	
+	// パーティクル
+	isDrawParticle_ = true;
+	// エフェクト
+	isDrawEffect_ = true;
+	
+	// プレイヤー
+	isDrawPlayer_ = false;
+	// ブロック
+	isDrawBlock_ = false;
+	// ばね
+	isDrawSpring_ = false;
+	// 接合部
+	isDrawJunction_ = true;
+	// ゲート
+	isDrawGate_ = false;
+	// ゴール
+	isDrawGoal_ = true;
+	// 背景
+	isDrawBackground_ = true;
+	// HUD
 	isDrawHUD_ = false;
 
 
@@ -106,7 +117,6 @@ void TestScene::Initialize()
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
-
 }
 
 #pragma endregion

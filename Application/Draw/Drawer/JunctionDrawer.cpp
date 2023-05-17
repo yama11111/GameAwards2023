@@ -60,7 +60,7 @@ void JunctionDrawerCommon::StaticInitialize()
 
 #pragma region Drawer
 
-void JunctionDrawer::Initialize(Transform* pParent, const Type& type)
+void JunctionDrawer::Initialize(Transform* pParent, const YMath::Vector3& direction, const Type& type)
 {
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent, Idle::IntervalTime);
@@ -76,13 +76,16 @@ void JunctionDrawer::Initialize(Transform* pParent, const Type& type)
 	}
 
 	// リセット
-	Reset(type);
+	Reset(direction, type);
 }
 
-void JunctionDrawer::Reset(const Type& type)
+void JunctionDrawer::Reset(const YMath::Vector3& direction, const Type& type)
 {
 	// リセット
 	IDrawer::Reset();
+
+	// 向き代入
+	direction_ = direction.Normalized();
 
 	// 代入
 	type_ = type;
@@ -128,6 +131,31 @@ void JunctionDrawer::Draw()
 	{
 		spModels_[typeIndex_][i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}
+}
+
+void JunctionDrawer::SetPartner(JunctionDrawer* pPartner)
+{
+	// nullチェック
+	assert(pPartner);
+	// 代入
+	pPartner_ = pPartner;
+}
+
+Vector3 JunctionDrawer::GetDirection()
+{
+	// 向き返す
+	return direction_;
+}
+
+void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
+{
+	// パートナー設定
+	SetPartner(pPartner);
+	
+	// 接続先にもパートナー設定
+	pPartner->SetPartner(this);
+
+
 }
 
 #pragma endregion
