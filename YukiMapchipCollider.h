@@ -13,6 +13,13 @@ protected:
     using Transform = YGame::Transform;
 
 public:
+    enum class EntityType
+    {
+        PLAYER,
+        WOODENBOX,
+        LASOR,
+    };
+
     struct Point
     {
         Vector2 TopLeft_{};
@@ -34,5 +41,7 @@ public:
     Vector3 velocity_{};
 
     Point point_{};
+
+    EntityType entityType_{};
 };
 

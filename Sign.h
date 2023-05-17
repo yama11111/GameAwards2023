@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <vector>
 #include <memory>
 #include "Vector2.h"
@@ -17,13 +18,50 @@ protected:
     using Vector4 = YMath::Vector4;
     using Transform = YGame::Transform;
 
-    static constexpr float pushOut_{ 0.2f };
-    static constexpr float blockRadius_{ 16.f };
+    static constexpr float blockRadius_{ 16.f }; // ブロックの半径
 
-    enum class BlockType
+    static constexpr float pushOut_{ 0.2f }; // 定期的押し出し時の移動量
+    static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
+    static constexpr float springFall_{ 0.5f }; // バネブロック時の落下速度
+
+    enum class BlockType // ブロックの種類
     {
         NONE,
         BASIC,
+
+        SPRING,
+
+        WARP1,
+        WARP2,
+    };
+
+    enum class Direction
+    {
+        TOP,
+        RIGHT,
+        LEFT,
+        BOTTOM,
+    };
+
+    struct Vec2Int
+    {
+        size_t x_{};
+        size_t y_{};
+    };
+
+    struct WarpIdx
+    {
+        // 自分が接続済みか - 可変
+        bool isConnected_{};
+        // 自分側の出現位置 - 不変
+        Direction dirMe_{};
+
+        // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
+        Vec2Int mapchipElemPartner_{};
+        // 相手の"看板"の配列要素数（stageに帰属） - 不変
+        size_t IdxSign_{};
+        // 相手側の出現位置 - 不変
+        Direction dirPartner_{};
     };
 
 public:
@@ -41,6 +79,7 @@ public:
     // 変数
     //std::vector<std::vector<std::unique_ptr<IBlock>>> mapchip2_{};
     std::vector<std::vector<int>> mapchip_{};
+    std::map<WarpIdx, Vec2Int> warpInfos_{};
     
     // 基点（左上）座標
     Vector3 topLeftPos_{}; // zは常に0

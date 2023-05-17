@@ -43,26 +43,57 @@ void Sign::Draw(void)
 
 void Sign::PPC(YukiMapchipCollider* ptr)
 {
+    bool isStuck{ false };
+    // 値を静的保持 [ばね関連]
+    static bool isSpring{};
+    static float springValue{}; 
+
     Vector2 TL{}, TR{}, BL{}, BR{};
     Vector2 vec2Vel{ ptr->velocity_.x_,ptr->velocity_.y_ };
 
-    size_t elemX{}, elemY{}; // pointの座標をマップチップ単位に変換
-    // 左上
+    // pointの座標をマップチップ単位に変換
+    size_t elemX{}, elemY{};
+    //<<<<<<<<<<<<<<<<<<<<<< 左上 >>>>>>>>>>>>>>>>>>>>>>>>>>//
     elemX = (int)(ptr->point_.TopLeft_.x_ / blockRadius_ * 2);
     elemY = (int)(ptr->point_.TopLeft_.y_ / blockRadius_ * 2);
-    if (mapchip_[elemY][elemX] != 0) TL = CalcVelMove(ptr->point_.TopLeft_, vec2Vel); // 左上
-    // 右上
+    if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::BASIC) // 通常ブロック
+    {
+        isStuck = true;
+    }
+
+    //<<<<<<<<<<<<<<<<<<<<<< 右上 >>>>>>>>>>>>>>>>>>>>>>>>>>//
     elemX = (int)(ptr->point_.TopRight_.x_ / blockRadius_ * 2);
     elemY = (int)(ptr->point_.TopRight_.y_ / blockRadius_ * 2);
-    if (mapchip_[elemY][elemX] != 0) TR = CalcVelMove(ptr->point_.TopRight_, vec2Vel); // 右上
-    // 左下
+    if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::BASIC) // 通常ブロック
+    {
+        isStuck = true;
+    }
+
+    //<<<<<<<<<<<<<<<<<<<<<< 左下 >>>>>>>>>>>>>>>>>>>>>>>>>>//
     elemX = (int)(ptr->point_.BottomLeft_.x_ / blockRadius_ * 2);
     elemY = (int)(ptr->point_.BottomLeft_.y_ / blockRadius_ * 2);
-    if (mapchip_[elemY][elemX] != 0) BL = CalcVelMove(ptr->point_.BottomLeft_, vec2Vel); // 左下
-    // 右下
+    if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::BASIC) // 通常ブロック
+    {
+        isStuck = true;
+    }
+    else if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::SPRING) // ばねブロック
+    {
+        isSpring = true;
+        springValue = springPower_; // 値を設定された値に変更
+    }
+
+    //<<<<<<<<<<<<<<<<<<<<<< 右下 >>>>>>>>>>>>>>>>>>>>>>>>>>//
     elemX = (int)(ptr->point_.BottomRight_.x_ / blockRadius_ * 2);
     elemY = (int)(ptr->point_.BottomRight_.y_ / blockRadius_ * 2);
-    if (mapchip_[elemY][elemX] != 0) BR = CalcVelMove(ptr->point_.BottomRight_, vec2Vel); // 右下
+    if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::BASIC) // 通常ブロック
+    {
+        isStuck = true;
+    }
+    else if (static_cast<BlockType>(mapchip_[elemY][elemX]) == BlockType::SPRING) // ばねブロック
+    {
+        isSpring = true;
+        springValue = springPower_; // 値を設定された値に変更
+    }
 
     //// CalcVelStuck用
     //{
@@ -76,13 +107,33 @@ void Sign::PPC(YukiMapchipCollider* ptr)
     //    BR = CalcVelStuck(ptr->point_.BottomRight_); // 右下
     //}
 
-    //// 算出された値の中で最小値を移動量として適用
-    //ptr->velocity_.x_ = (std::min)({ TL.x_,TR.x_,BL.x_,BR.x_ });
-    //ptr->velocity_.y_ = (std::min)({ TL.y_,TR.y_,BL.y_,BR.y_ });
+    // 一般的なブロック
+    if (isStuck) { 
+        TL = CalcVelMove(ptr->point_.TopLeft_, vec2Vel); // 左上
+        TR = CalcVelMove(ptr->point_.TopRight_, vec2Vel); // 右上
+        BL = CalcVelMove(ptr->point_.BottomLeft_, vec2Vel); // 左下
+        BR = CalcVelMove(ptr->point_.BottomRight_, vec2Vel); // 右下
 
-    // 算出された値の中で最大値を移動量として適用
-    ptr->velocity_.x_ = (std::max)({ TL.x_,TR.x_,BL.x_,BR.x_ });
-    ptr->velocity_.y_ = (std::max)({ TL.y_,TR.y_,BL.y_,BR.y_ });
+        // 算出された値の中で最小値を移動量として適用
+        ptr->velocity_.x_ = (std::min)({ TL.x_,TR.x_,BL.x_,BR.x_ });
+        ptr->velocity_.y_ = (std::min)({ TL.y_,TR.y_,BL.y_,BR.y_ });
+        //// 算出された値の中で最大値を移動量として適用
+        //ptr->velocity_.x_ = (std::max)({ TL.x_,TR.x_,BL.x_,BR.x_ });
+        //ptr->velocity_.y_ = (std::max)({ TL.y_,TR.y_,BL.y_,BR.y_ });
+    }
+    // ばね
+    if (isSpring && ptr->entityType_ == YukiMapchipCollider::EntityType::PLAYER) { // フラグがtrue && 対象がPlayerであること
+        // どんだけ跳ねるか
+        springValue -= springFall_; // 跳躍力は徐々に減衰する
+
+        // 跳躍力が既に0になっている場合はフラグOFF
+        if (springValue < 0.f) isSpring = false;
+        // 跳躍力は決して0未満にはならない
+        springValue = (std::max)(springValue, 0.f);
+
+        // 移動量として代入
+        ptr->velocity_.y_ += springValue;
+    }
 
     // <summary>
     //## この構造の場合、コライダーを継承した子クラスたちのUpdate()関数は、
