@@ -1,4 +1,6 @@
 #include "MapChipCollider.h"
+#include "mapchipCollider.h"
+#include "mapchipCollider.h"
 
 using YGame::MapChipCollider;
 
