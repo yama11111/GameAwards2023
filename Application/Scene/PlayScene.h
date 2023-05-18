@@ -12,13 +12,14 @@
 #include "StageConfig.h"
 
 #include "Sign.h"
+#include "Player.h"
 
 namespace YScene
 {
 	// ゲームシーン
 	class PlayScene : public BaseScene
 	{
-	
+
 	public:
 
 #pragma region リソース
@@ -31,9 +32,9 @@ namespace YScene
 #pragma region ゲームオブジェクト
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
-        maruyama::Sign sign_;
+		maruyama::Sign sign_;
 
-		
+		Player player_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 
 
