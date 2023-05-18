@@ -46,25 +46,21 @@ namespace maruyama {
             BOTTOM,
         };
 
-        // 要素数用のInt型Vec2
-        struct Vec2Int_t
-        {
-            size_t x_{};
-            size_t y_{};
-        };
-
         // ワープブロックの情報体
         struct WarpIdx_t
         {
-            WarpIdx_t(Direction dirSelf) : dirSelf_(dirSelf) {}
+        public:
+            WarpIdx_t(Direction dirSelf,const std::pair<size_t,size_t>& mces) : dirSelf_(dirSelf),mapchipElemSelf_(mces) {}
 
             // 自分が接続済みか - 可変
             bool isConnected_{};
+            // 自分の"ブロック"の配列要素数（看板に帰属） - 不変
+            std::pair<size_t, size_t> mapchipElemSelf_{};
             // 自分側の出現方向 - 不変
             Direction dirSelf_{};
 
             // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
-            Vec2Int_t mapchipElemPartner_{};
+            std::pair<size_t,size_t> mapchipElemPartner_{};
             // 相手の"看板"の配列要素数（stageに帰属） - 不変
             size_t IdxSign_{};
             // 相手側の出現方向 - 不変
@@ -124,7 +120,7 @@ namespace maruyama {
         //std::vector<std::vector<std::unique_ptr<IBlock>>> mapchip2_{};
         std::vector<std::vector<int>> mapchip_{};
         std::list<std::unique_ptr<Info_t>> BDrawerList_{};
-        std::map<WarpIdx_t, Vec2Int_t> warpInfos_{};
+        std::vector<WarpIdx_t> warpInfos_{};
 
         // 基点（左上）座標
         Vector3 topLeftPos_{}; // zは常に0

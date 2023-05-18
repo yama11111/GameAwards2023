@@ -182,8 +182,8 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 
-    // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の
-    //warpInfos_.emplace(WarpIdx_t{ dirSelf }, Vec2Int_t{X,Y});
+    // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の配列要素数
+    warpInfos_.emplace_back(WarpIdx_t{ dirSelf,{X,Y} });
 }
 
 Sign::Vector2 Sign::CalcVelStuck(const Vector2& pointPos)
