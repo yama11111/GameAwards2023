@@ -26,13 +26,18 @@ void Player::Initialize(const YMath::Vector3& pos)
 void Player::Reset(const YMath::Vector3& pos)
 {
 	transform_->pos_ = pos;
+
+	// 描画クラスリセット
+	drawer_.Reset();
 }
 
 void Player::Update()
 {
-	int spd = 2;
+	int spd = 0.2f;
 
 	transform_->pos_.x_ += spKeys_->Horizontal() * spd;
+
+	transform_->UpdateMatrix();
 
 	drawer_.Update();
 }
