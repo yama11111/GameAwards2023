@@ -11,6 +11,8 @@
 #include "ScrollCamera.h"
 #include "StageConfig.h"
 
+#include "Sign.h"
+
 namespace YScene
 {
 	// ゲームシーン
@@ -29,7 +31,7 @@ namespace YScene
 #pragma region ゲームオブジェクト
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
-		
+        maruyama::Sign sign_;
 
 		
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//

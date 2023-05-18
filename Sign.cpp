@@ -2,42 +2,49 @@
 #include <algorithm>
 #include <cmath>
 
-Sign::Sign(const Vector2& mapchipSize)
+using namespace maruyama;
+
+void Sign::Initialize(const Vector2& mapchipSize)
 {
     //for (int y{}; y < (int)mapchipSize.y_; y++) {
-    //    mapchip2_.emplace_back(std::vector<std::unique_ptr<IBlock>>{});
-    //    for (int x{}; x < (int)mapchipSize.y_; x++) {
-    //        mapchip2_.emplace_back(new IBlock{});
-    //    }
-    //}
+//    mapchip2_.emplace_back(std::vector<std::unique_ptr<IBlock>>{});
+//    for (int x{}; x < (int)mapchipSize.y_; x++) {
+//        mapchip2_.emplace_back(new IBlock{});
+//    }
+//}
 
     for (int y{}; y < (int)mapchipSize.y_; y++) {
+        // とりま矩形にする
         mapchip_.emplace_back(std::vector<int>{});
-        for (int x{}; x < (int)mapchipSize.y_; x++) {
-            mapchip_.emplace_back(int{ 0 });
+        for (int x{}; x < (int)mapchipSize.x_; x++) {
+            if (y == 0 || y == (int)(mapchipSize.y_ - 1)) {
+                mapchip_[y].emplace_back(1);
+                BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
+                BDrawerList_.back()->Initialize(1);
+            }
+            else if (x == 0 || x == (int)(mapchipSize.x_ - 1)) {
+                mapchip_[y].emplace_back(1);
+                BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
+                BDrawerList_.back()->Initialize(1);
+            }
+            else {
+                mapchip_[y].emplace_back(0);
+            }
         }
     }
 }
 
 void Sign::Update(void)
 {
+    for (auto& bd : BDrawerList_) {
+        bd->Update();
+    }
 }
 
 void Sign::Draw(void)
 {
-    for (size_t y{}; y < (int)mapchip_.size(); y++) {
-        for (size_t x{}; x < (int)mapchip_[0].size(); x++) {
-            switch (static_cast<BlockType>(mapchip_[y][x]))
-            {
-            case BlockType::NONE:
-                break;
-            case BlockType::BASIC:
-                break;
-
-            default:
-                break;
-            }
-        }
+    for (auto& bd : BDrawerList_) {
+        bd->Draw();
     }
 }
 
@@ -46,7 +53,7 @@ void Sign::PPC(YukiMapchipCollider* ptr)
     bool isStuck{ false };
     // 値を静的保持 [ばね関連]
     static bool isSpring{};
-    static float springValue{}; 
+    static float springValue{};
 
     Vector2 TL{}, TR{}, BL{}, BR{};
     Vector2 vec2Vel{ ptr->velocity_.x_,ptr->velocity_.y_ };
@@ -108,7 +115,7 @@ void Sign::PPC(YukiMapchipCollider* ptr)
     //}
 
     // 一般的なブロック
-    if (isStuck) { 
+    if (isStuck) {
         TL = CalcVelMove(ptr->point_.TopLeft_, vec2Vel); // 左上
         TR = CalcVelMove(ptr->point_.TopRight_, vec2Vel); // 右上
         BL = CalcVelMove(ptr->point_.BottomLeft_, vec2Vel); // 左下

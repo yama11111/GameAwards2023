@@ -4,6 +4,9 @@
 
 class Stage
 {
+protected:
+    using Sign = maruyama::Sign;
+
 public:
     // ŠÖ”
     Stage(void) {};

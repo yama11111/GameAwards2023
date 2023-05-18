@@ -31,7 +31,7 @@ void PlayScene::Load()
 	// ----- オーディオ ----- //
 
 	// プレイBGM
-	pPlayBGM_ = Audio::Load("vigilante.wav");
+	pPlayBGM_ = Audio::Load("BGM/select.wav");
 
 	// ----- 静的初期化 ----- //
 
@@ -56,7 +56,7 @@ void PlayScene::Initialize()
 	// ステージ番号
 	uint32_t stageIdx = static_cast<uint32_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	
+    sign_.Initialize({ 5,6 });
 
 	// 背景初期化
 	background_.Initialize();
@@ -64,9 +64,8 @@ void PlayScene::Initialize()
 	// HUD初期化
 	hud_.Initialize();
 
-
 	// カメラ
-	camera_.Initialize({ +17.0f,-11.0f,-21.0f }, {});
+	camera_.Initialize({ 0.0f,0.0f,-300.0f }, {});
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize({});
@@ -104,6 +103,15 @@ void PlayScene::Update()
 	if (hud_.IsElderPause()) { return; }
 
 	// ------------ ↓ プレイシーンの処理 ↓ ------------//
+
+    if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
+    if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
+    if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
+    if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
+    if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
+    if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
+
+    sign_.Update();
 
 	//リセット
 	//if (リセットするなら)
@@ -154,6 +162,7 @@ void PlayScene::Draw()
 	// 背景描画
 	background_.Draw();
 
+    sign_.Draw();
 
 	// HUD描画
 	hud_.Draw();
