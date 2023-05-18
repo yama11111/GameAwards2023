@@ -462,6 +462,9 @@
     <ClCompile Include="Sign.cpp">
       <Filter>game</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -802,6 +805,9 @@
     </ClInclude>
     <ClInclude Include="YukiMapchipCollider.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

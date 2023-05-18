@@ -40,6 +40,8 @@ void PlayScene::Load()
 
 	// 描画クラス全て
 	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
+
+	player_.StaticInitialize();
 }
 
 #pragma endregion
@@ -52,11 +54,12 @@ void PlayScene::Initialize()
 	// パーティクル初期化
 	particleMan_.Initialize();
 
+	player_.Initialize(Vector3{ 0.0f,0.0f,0.0f });
 
 	// ステージ番号
 	uint32_t stageIdx = static_cast<uint32_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-    sign_.Initialize({ 5,6 });
+	sign_.Initialize({ 5,6 });
 
 	// 背景初期化
 	background_.Initialize();
@@ -104,14 +107,16 @@ void PlayScene::Update()
 
 	// ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-    if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
-    if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
-    if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
-    if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
-    if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
-    if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
+	if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
+	if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
+	if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
+	if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
+	if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
+	if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
 
-    sign_.Update();
+	sign_.Update();
+
+	player_.Update();
 
 	//リセット
 	//if (リセットするなら)
@@ -127,7 +132,7 @@ void PlayScene::Update()
 	//	// セレクトシーンに行く
 	//	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
 	//}
-	
+
 	// ------------ ↑ プレイシーンの処理 ↑ ------------//
 
 	// 背景更新
@@ -159,10 +164,12 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
+	player_.Draw();
+
 	// 背景描画
 	background_.Draw();
 
-    sign_.Draw();
+	sign_.Draw();
 
 	// HUD描画
 	hud_.Draw();
