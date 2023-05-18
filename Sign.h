@@ -116,8 +116,8 @@ namespace maruyama {
         void ReWriteBlock(size_t X,size_t Y,BlockType bt);
         void ReWriteBlock2Warp(size_t X,size_t Y,BlockType bt, Direction dirSelf);
     private:
-        const Vector2& CalcVelStuck(const Vector2& pointPos); // 移動入力なしの押し出し値計算関数 ※Moveの前に使う =>今使ってない
-        const Vector2& CalcVelMove(const Vector2& pointPos, const Vector2& vel); // 移動入力ありの押し出し値計算関数 ※Stuckの後に使う
+        Vector2 CalcVelStuck(const Vector2& pointPos); // 移動入力なしの押し出し値計算関数 ※Moveの前に使う =>今使ってない
+        Vector2 CalcVelMove(const Vector2& pointPos, const Vector2& vel); // 移動入力ありの押し出し値計算関数 ※Stuckの後に使う
 
     public:
         // 変数

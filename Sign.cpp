@@ -158,8 +158,10 @@ void maruyama::Sign::ReWriteBlock(size_t X, size_t Y, BlockType bt)
 
     // 座標mapchipのint(blockType)書き換え
     mapchip_[Y][X] = static_cast<int>(bt);
+
+    int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ X * blockRadius_ * 2 + blockRadius_, -Y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 }
@@ -173,16 +175,18 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
 
     // 座標mapchipのint(blockType)書き換え
     mapchip_[Y][X] = static_cast<int>(bt);
+
+    int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ X * blockRadius_ * 2 + blockRadius_, -Y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 
     // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の
-    warpInfos_.emplace(WarpIdx_t{ dirSelf }, Vec2Int_t{X,Y});
+    //warpInfos_.emplace(WarpIdx_t{ dirSelf }, Vec2Int_t{X,Y});
 }
 
-const Sign::Vector2& Sign::CalcVelStuck(const Vector2& pointPos)
+Sign::Vector2 Sign::CalcVelStuck(const Vector2& pointPos)
 {
     // velocity が、x|y どちらも0前提 //
 
@@ -201,7 +205,7 @@ const Sign::Vector2& Sign::CalcVelStuck(const Vector2& pointPos)
     return result;
 }
 
-const Sign::Vector2& Sign::CalcVelMove(const Vector2& pointPos, const Vector2& vel)
+Sign::Vector2 Sign::CalcVelMove(const Vector2& pointPos, const Vector2& vel)
 {
     // velocity < blockRadius が前提 //
     // [移動後]　ブロックがある場合 が前提 //
