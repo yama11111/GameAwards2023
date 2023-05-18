@@ -151,6 +151,37 @@ void Sign::PPC(YukiMapchipCollider* ptr)
     ptr->UpdatePos();
 }
 
+void maruyama::Sign::ReWriteBlock(size_t X, size_t Y, BlockType bt)
+{
+    // 対応外のブロック置換はスキップ
+    if (bt == BlockType::WARP1 || bt == BlockType::WARP2) return;
+
+    // 座標mapchipのint(blockType)書き換え
+    mapchip_[Y][X] = static_cast<int>(bt);
+    // ブロックの管理リストへの追加
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ X * blockRadius_ * 2 + blockRadius_, -Y * blockRadius_ * 2 - blockRadius_ } });
+    // 当該ブロックの初期化
+    BDrawerList_.back()->Initialize(static_cast<int>(bt));
+}
+
+void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Direction dirSelf)
+{
+    //<< WARP系ブロック限定が前提 >>//
+
+    // 対応外のブロック置換はスキップ
+    if (bt != BlockType::WARP1 && bt != BlockType::WARP2) return;
+
+    // 座標mapchipのint(blockType)書き換え
+    mapchip_[Y][X] = static_cast<int>(bt);
+    // ブロックの管理リストへの追加
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ X * blockRadius_ * 2 + blockRadius_, -Y * blockRadius_ * 2 - blockRadius_ } });
+    // 当該ブロックの初期化
+    BDrawerList_.back()->Initialize(static_cast<int>(bt));
+
+    // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の
+    warpInfos_.emplace(WarpIdx_t{ dirSelf }, Vec2Int_t{X,Y});
+}
+
 const Sign::Vector2& Sign::CalcVelStuck(const Vector2& pointPos)
 {
     // velocity が、x|y どちらも0前提 //

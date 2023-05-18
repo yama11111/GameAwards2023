@@ -37,6 +37,7 @@ namespace maruyama {
             WARP2,
         };
 
+        // 方向のenum
         enum class Direction
         {
             TOP,
@@ -45,27 +46,32 @@ namespace maruyama {
             BOTTOM,
         };
 
+        // 要素数用のInt型Vec2
         struct Vec2Int_t
         {
             size_t x_{};
             size_t y_{};
         };
 
+        // ワープブロックの情報体
         struct WarpIdx_t
         {
+            WarpIdx_t(Direction dirSelf) : dirSelf_(dirSelf) {}
+
             // 自分が接続済みか - 可変
             bool isConnected_{};
-            // 自分側の出現位置 - 不変
-            Direction dirMe_{};
+            // 自分側の出現方向 - 不変
+            Direction dirSelf_{};
 
             // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
             Vec2Int_t mapchipElemPartner_{};
             // 相手の"看板"の配列要素数（stageに帰属） - 不変
             size_t IdxSign_{};
-            // 相手側の出現位置 - 不変
+            // 相手側の出現方向 - 不変
             Direction dirPartner_{};
         };
 
+        // ブロック全般用情報
         struct Info_t
         {
             Vector3* topLeftPosPtr_{};
@@ -106,9 +112,14 @@ namespace maruyama {
 
         // パーフェクトピクセルコリジョン
         void PPC(YukiMapchipCollider* ptr);
+        // 空気ブロックを他ブロックに置換できる。それ以外は例外スロー
+        void ReWriteBlock(size_t X,size_t Y,BlockType bt);
+        void ReWriteBlock2Warp(size_t X,size_t Y,BlockType bt, Direction dirSelf);
+    private:
         const Vector2& CalcVelStuck(const Vector2& pointPos); // 移動入力なしの押し出し値計算関数 ※Moveの前に使う =>今使ってない
         const Vector2& CalcVelMove(const Vector2& pointPos, const Vector2& vel); // 移動入力ありの押し出し値計算関数 ※Stuckの後に使う
 
+    public:
         // 変数
         //std::vector<std::vector<std::unique_ptr<IBlock>>> mapchip2_{};
         std::vector<std::vector<int>> mapchip_{};
