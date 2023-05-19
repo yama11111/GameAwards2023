@@ -66,6 +66,6 @@ template class ConstBuffer<YGame::Sprite3D::Object::CBData>;
 template class ConstBuffer<YGame::Model::Object::CBData>;
 template class ConstBuffer<YGame::PostEffect::Object::CBData>;
 template class ConstBuffer<YGame::CBColor::CBData>;
-template class ConstBuffer<YGame::CBLightGroup::CBData>;
 template class ConstBuffer<YGame::CBMaterial::CBData>;
+template class ConstBuffer<YGame::CBLightGroup::CBData>;
 template class ConstBuffer<YGame::CBTexConfig::CBData>;

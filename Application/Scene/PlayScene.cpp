@@ -71,11 +71,11 @@ void PlayScene::Initialize()
 	camera_.Initialize({ 0.0f,0.0f,-300.0f }, {});
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 
 	// プレイBGM開始
 	pPlayBGM_->Play(true);
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 }
 
 #pragma endregion

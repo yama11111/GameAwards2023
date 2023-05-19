@@ -3,6 +3,7 @@
 
 using YScene::Blackout;
 using YMath::Vector2;
+using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Texture;
 using YGame::CBColor;
@@ -26,7 +27,7 @@ void Blackout::Initialize()
 {
 	// èâä˙âª
 	color_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
-	obj_.reset(Sprite2D::Object::Create({}, color_.get(), nullptr, false));
+	obj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), color_.get(), nullptr, false));
 
 	Reset();
 }

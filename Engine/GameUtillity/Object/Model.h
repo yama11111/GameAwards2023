@@ -128,31 +128,23 @@ namespace YGame
 	public:
 
 		/// <summary>
-		/// 生成 + 初期化 (デフォルト初期化)
-		/// </summary>
-		/// <param name="status"> : 位置, 回転, 大きさ</param>
-		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
-		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Object* Create(const Status& status, const bool isMutable = true);
-
-		/// <summary>
 		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
 		/// </summary>
 		/// <param name="status"> : 位置, 回転, 大きさ</param>
 		/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 		/// <param name="pColor"> : 色ポインタ</param>
+		/// <param name="pMaterial"> : マテリアルポインタ</param>
 		/// <param name="pLightGroup"> : 光源ポインタ</param>
-		/// <param name="pMaterial"> : 光源ポインタ</param>
 		/// <param name="pTexConfig"> : テクスチャ設定ポインタ</param>
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Object* Create(
-			const Status& status,
-			ViewProjection* pVP,
-			CBColor* pColor,
-			CBLightGroup* pLightGroup,
-			CBMaterial* pMaterial,
-			CBTexConfig* pTexConfig,
+			const Status& status = Status::Default(),
+			ViewProjection* pVP = nullptr,
+			CBColor* pColor = nullptr,
+			CBMaterial* pMaterial = nullptr,
+			CBLightGroup* pLightGroup = nullptr,
+			CBTexConfig* pTexConfig = nullptr,
 			const bool isMutable = true);
 
 	public:
@@ -162,14 +154,14 @@ namespace YGame
 		/// </summary>
 		/// <param name="transformRPIndex"> : トランスフォームルートパラメータ番号</param>
 		/// <param name="colorRPIndex"> : 色ルートパラメータ番号</param>
-		/// <param name="lightRPIndex"> : ライトグループルートパラメータ番号</param>
 		/// <param name="materialRPIndex"> : マテリアルルートパラメータ番号</param>
+		/// <param name="lightRPIndex"> : ライトグループルートパラメータ番号</param>
 		/// <param name="texConfigRPIndex"> : テクスチャ設定ルートパラメータ番号</param>
 		void SetDrawCommand(
 			const UINT transformRPIndex,
 			const UINT colorRPIndex,
-			const UINT lightRPIndex,
 			const UINT materialRPIndex,
+			const UINT lightRPIndex,
 			const UINT texConfigRPIndex);
 
 
@@ -186,16 +178,16 @@ namespace YGame
 		void SetColor(CBColor* pColor);
 
 		/// <summary>
-		/// 光源設定 (null = Default)
-		/// </summary>
-		/// <param name="pLightGroup"> : 光源ポインタ</param>
-		void SetLightGroup(CBLightGroup* pLightGroup);
-
-		/// <summary>
 		/// マテリアル設定 (null = Default)
 		/// </summary>
 		/// <param name="pMaterial"> : マテリアルポインタ</param>
 		void SetMaterial(CBMaterial* pMaterial);
+
+		/// <summary>
+		/// 光源設定 (null = Default)
+		/// </summary>
+		/// <param name="pLightGroup"> : 光源ポインタ</param>
+		void SetLightGroup(CBLightGroup* pLightGroup);
 
 		/// <summary>
 		/// テクスチャ設定 (null = Default)
@@ -234,11 +226,11 @@ namespace YGame
 		// 色ポインタ
 		CBColor* pColor_ = nullptr;
 
-		// 光源ポインタ
-		CBLightGroup* pLightGroup_ = nullptr;
-
 		// マテリアルポインタ
 		CBMaterial* pMaterial_ = nullptr;
+
+		// 光源ポインタ
+		CBLightGroup* pLightGroup_ = nullptr;
 
 		// テクスチャ設定ポインタ
 		CBTexConfig* pTexConfig_ = nullptr;
@@ -254,14 +246,14 @@ namespace YGame
 			// ビュープロジェクションポインタ (デフォルト)
 			static std::unique_ptr<ViewProjection> sVP_;
 
-			// 光源ポインタ (デフォルト)
-			static std::unique_ptr<CBLightGroup> sLightGroup_;
-
 			// 色 (デフォルト)
 			static std::unique_ptr<CBColor> sColor_;
 
 			// マテリアル (デフォルト)
 			static std::unique_ptr<CBMaterial> sMaterial_;
+
+			// 光源ポインタ (デフォルト)
+			static std::unique_ptr<CBLightGroup> sLightGroup_;
 
 			// テクスチャ設定 (デフォルト)
 			static std::unique_ptr<CBTexConfig> sTexConfig_;
@@ -324,8 +316,8 @@ namespace YGame
 		{
 			eTransformCB = 0, // 行列
 			eColorCB	 = 1, // 色
-			eLightCB	 = 2, // 光
-			eMaterialCB	 = 3, // マテリアル
+			eMaterialCB	 = 2, // マテリアル
+			eLightCB	 = 3, // 光
 			eTexConfigCB = 4, // テクスチャ設定
 			eTexDT		 = 5, // テクスチャ
 		};

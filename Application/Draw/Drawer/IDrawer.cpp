@@ -10,31 +10,37 @@ using YMath::Vector3;
 
 #pragma endregion
 
+#pragma region Static
+
 YGame::ViewProjection* IDrawer::spVP_ = nullptr;
 YGame::CBMaterial* IDrawer::spMate_ = nullptr;
+YGame::CBLightGroup* IDrawer::spLightGroup_ = nullptr;
 YGame::Camera* IDrawer::spCamera_ = nullptr;
 YGame::ParticleManager* IDrawer::spParticleMan_ = nullptr;
+
+#pragma endregion
 
 void IDrawer::StaticInitialize(
 	YGame::ViewProjection* pVP,
 	YGame::CBMaterial* pMate,
+	YGame::CBLightGroup* pLightGroup,
 	YGame::Camera* pCamera,
 	YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pVP);
-	assert(pMate);	
 	assert(pCamera);
 	assert(pParticleMan);
 
 	// 代入
 	spVP_ = pVP;
 	spMate_ = pMate;
+	spLightGroup_ = pLightGroup;
 	spCamera_ = pCamera;
 	spParticleMan_ = pParticleMan;
 }
 
-void IDrawer::Initialze(YGame::Transform* pParent, const UINT intervalTime)
+void IDrawer::Initialze(YGame::Transform* pParent)
 {
 	// nullチェック
 	assert(pParent);
@@ -43,11 +49,7 @@ void IDrawer::Initialze(YGame::Transform* pParent, const UINT intervalTime)
 
 	// オブジェクト生成 + 親行列挿入
 	core_.reset(new Transform());
-	core_->Initialize({});
 	core_->parent_ = &pParent->m_;
-
-	// 立ちモーションタイマー初期化
-	idleTim_.Initialize(intervalTime);
 
 	// リセット
 	Reset();
@@ -59,28 +61,13 @@ void IDrawer::Reset()
 	SlimeActor::Initialize();
 
 	// オブジェクト初期化
-	core_->Initialize({});
-
-	// 立ちモーションタイマーリセット
-	idleTim_.Reset(true);
+	core_->Initialize();
 }
 
 void IDrawer::Update(const YGame::Transform::Status& status)
 {
 	// 更新
 	SlimeActor::Update();
-
-	// 立ちモーションタイマー更新
-	idleTim_.Update();
-
-	// タイマーが終わったら
-	if (idleTim_.IsEnd())
-	{
-		// 立ちモーション再生
-		IdleAnimation();
-		// タイマーリセット
-		idleTim_.Reset(true);
-	}
 	
 	// 行列更新 (親)
 	core_->UpdateMatrix(

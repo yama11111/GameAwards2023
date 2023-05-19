@@ -105,19 +105,6 @@ namespace YGame
 	public:
 
 		/// <summary>
-		/// 生成 + 初期化 (デフォルト初期化)
-		/// </summary>
-		/// <param name="status"> : 位置, 回転, 大きさ</param>
-		/// <param name="isXAxisBillboard"> : X軸ビルボードか</param>
-		/// <param name="isYAxisBillboard"> : Y軸ビルボードか</param>
-		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
-		/// <returns>動的インスタンス (newされたもの)</returns>
-		static Object* Create(
-			const Status& status,
-			bool isXAxisBillboard, bool isYAxisBillboard,
-			const bool isMutable = true);
-
-		/// <summary>
 		/// 生成 + 初期化 (Transform以外は nullの時 デフォルトで初期化)
 		/// </summary>
 		/// <param name="status"> : 位置, 回転, 大きさ</param>
@@ -129,11 +116,11 @@ namespace YGame
 		/// <param name="isMutable"> : シーン遷移時に開放するか</param>
 		/// <returns>動的インスタンス (newされたもの)</returns>
 		static Object* Create(
-			const Status& status,
-			bool isXAxisBillboard, bool isYAxisBillboard,
-			ViewProjection* pVP,
-			CBColor* pColor, 
-			CBTexConfig* pTexConfig,
+			const Status& status = Status::Default(),
+			bool isXAxisBillboard = false, bool isYAxisBillboard = false,
+			ViewProjection* pVP = nullptr,
+			CBColor* pColor = nullptr, 
+			CBTexConfig* pTexConfig = nullptr,
 			const bool isMutable = true);
 
 	public:

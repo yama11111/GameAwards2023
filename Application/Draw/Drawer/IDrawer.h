@@ -15,9 +15,6 @@ protected:
 	
 	// 親ポインタ
 	YGame::Transform* pParent_ = nullptr;
-	
-	// 立ちモーション用タイマー
-	YMath::Timer idleTim_;
 
 protected:
 
@@ -25,8 +22,7 @@ protected:
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親トランスフォーム</param>
-	/// <param name="intervalTime"> : 立ちモーションの間隔</param>
-	void Initialze(YGame::Transform* pParent, const UINT intervalTime);
+	void Initialze(YGame::Transform* pParent);
 
 	/// <summary>
 	/// リセット
@@ -40,19 +36,15 @@ protected:
 	void Update(const YGame::Transform::Status& status);
 
 protected:
-
-	/// <summary>
-	/// 立ちモーション
-	/// </summary>
-	virtual void IdleAnimation() = 0;
-
-protected:
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 
 	// マテリアルポインタ
 	static YGame::CBMaterial* spMate_;
+
+	// 光源ポインタ
+	static YGame::CBLightGroup* spLightGroup_;
 
 	// 静的カメラポインタ
 	static YGame::Camera* spCamera_;
@@ -67,11 +59,13 @@ public:
 	/// </summary>
 	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pMate"> : マテリアルポインタ</param>
+	/// <param name="pLightGroup"> : 光源ポインタ</param>
 	/// <param name="pCamera"> : カメラポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
 	static void StaticInitialize(
 		YGame::ViewProjection* pVP, 
 		YGame::CBMaterial* pMate, 
+		YGame::CBLightGroup* pLightGroup, 
 		YGame::Camera* pCamera, 
 		YGame::ParticleManager* pParticleMan);
 

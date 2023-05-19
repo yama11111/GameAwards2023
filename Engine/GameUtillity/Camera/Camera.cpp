@@ -14,8 +14,8 @@ void Camera::Initialize(const Vector3 pos, const Vector3 rota)
 	shake_.Initialize();
 	pos_ = pos;
 	rota_ = rota;
-	transform_.Initialize({ pos_, rota_ });
-	vp_.Initialize({});
+	transform_.Initialize({ pos_, rota_, {1.0f,1.0f,1.0f} });
+	vp_.Initialize();
 
 	pFollowPoint_ = nullptr;
 	SetIsFollow(false);
@@ -35,8 +35,8 @@ void Camera::Initialize(const Vector3 pos, Vector3* pFollowPoint, bool isFollow)
 	shake_.Initialize();
 	pos_ = pos;
 	rota_ = {};
-	transform_.Initialize({ pos_, rota_ });
-	vp_.Initialize({});
+	transform_.Initialize({ pos_, rota_, {1.0f,1.0f,1.0f} });
+	vp_.Initialize();
 	
 	SetIsFollow(isFollow);
 

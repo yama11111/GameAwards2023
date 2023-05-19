@@ -29,8 +29,7 @@ bool MyGame::Initialize()
 
 
 	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
-	//postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {100.0f,100.0f,0.0f} }));
-	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f } }));
+	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {1.0f,1.0f,0.0f} }));
 
 	return true;
 }

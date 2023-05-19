@@ -56,17 +56,17 @@ void TitleDrawer::Initialize()
 
 
 	// ロゴ
-	logoObj_.reset(Sprite2D::Object::Create({}));
+	logoObj_.reset(Sprite2D::Object::Create());
 	logoObj_->parent_ = &core_->m_;
 
 
 	// 影
-	shadowObj_.reset(Sprite2D::Object::Create({}));
+	shadowObj_.reset(Sprite2D::Object::Create());
 	shadowObj_->parent_ = &core_->m_;
 	
 
 	// 背景
-	backObj_.reset(Sprite2D::Object::Create({}));
+	backObj_.reset(Sprite2D::Object::Create());
 	backObj_->parent_ = &core_->m_;
 
 
@@ -74,7 +74,7 @@ void TitleDrawer::Initialize()
 	startColor_.reset(CBColor::Create());
 	
 	// スタート
-	startObj_.reset(Sprite2D::Object::Create({}, startColor_.get()));
+	startObj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), startColor_.get()));
 	startObj_->parent_ = &core_->m_;
 
 
@@ -82,7 +82,7 @@ void TitleDrawer::Initialize()
 	exitColor_.reset(CBColor::Create());
 	
 	// 終了
-	exitObj_.reset(Sprite2D::Object::Create({}, exitColor_.get()));
+	exitObj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), exitColor_.get()));
 	exitObj_->parent_ = &core_->m_;
 
 
@@ -97,7 +97,7 @@ void TitleDrawer::Initialize()
 void TitleDrawer::Reset()
 {
 	// 核
-	core_->Initialize({});
+	core_->Initialize();
 
 	// ロゴ
 	logoObj_->Initialize({ Logo::Pos, {}, Logo::Scale });
@@ -109,11 +109,11 @@ void TitleDrawer::Reset()
 	backObj_->Initialize({ {WinSize.x_ / 2.0f, WinSize.y_ / 2.0f, 0.0f} });
 
 	// スタート
-	startObj_->Initialize({ UI::Start });
+	startObj_->Initialize({ UI::Start, {}, {1.0f,1.0f,0.0f} });
 	startColor_->Initialize();
 
 	// 終了
-	exitObj_->Initialize({ UI::Exit });
+	exitObj_->Initialize({ UI::Exit, {}, {1.0f,1.0f,0.0f} });
 	exitColor_->Initialize();
 
 	// 動作中

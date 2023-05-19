@@ -5,6 +5,11 @@
 #include "CoreColor.h"
 #include "PlayerDrawer.h"
 #include "BlockDrawer.h"
+#include "PlatformDrawer.h"
+#include "JunctionDrawer.h"
+#include "LaserDrawer.h"
+#include "KeyDrawer.h"
+#include "SwitchDrawer.h"
 #include "GateDrawer.h"
 #include "GoalDrawer.h"
 #include "BackgroundDrawer.h"
@@ -50,12 +55,12 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 	assert(pParticleMan);
 
 	// 生成
-	sDefMate_.reset(YGame::CBMaterial::Create());
+	sDefMate_.reset(CBMaterial::Create());
 
 	// ----- 静的初期化 ----- // 
 	{
 		// 基底クラス
-		IDrawer::StaticInitialize(pVP, sDefMate_.get(), pCamera, pParticleMan);
+		IDrawer::StaticInitialize(pVP, sDefMate_.get(), nullptr, pCamera, pParticleMan);
 
 		// 核色
 		CoreColor::StaticInitialize(true);
@@ -67,6 +72,21 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 		// ブロック
 		BlockDrawerCommon::StaticInitialize();
 
+		// 足場
+		PlatformDrawerCommon::StaticInitialize();
+		
+		// 接続部
+		JunctionDrawerCommon::StaticInitialize();
+		
+		// レーザー
+		LaserDrawerCommon::StaticInitialize();
+		
+		// 鍵
+		// KeyDrawerCommon::StaticInitialize();
+		
+		// スイッチ
+		// SwitchDrawerCommon::StaticInitialize();
+
 		// ゲート
 		GateDrawerCommon::StaticInitialize();
 
@@ -75,7 +95,7 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 
 
 		// 背景
-		BackgroundDrawerCommon::StaticInitialize(pVP, pParticleMan);
+		BackgroundDrawerCommon::StaticInitialize(pParticleMan);
 
 
 
@@ -108,7 +128,7 @@ void DrawerHelper::StaticUpdate()
 	if (sIsClear_ && sIsElderClear_ == false)
 	{
 		// 色統一
-		CoreColor::StaticClearAnimation(CoreColor::ColorType::Blue);
+		CoreColor::StaticClearAnimation(CoreColor::ColorType::eBlue);
 
 		// 背景のマテリアル統一
 		BackgroundDrawerCommon::StaticUnify();

@@ -26,74 +26,58 @@ using namespace DrawerConfig::Tower;
 
 #pragma region Static
 
-array<array<Model*, TowerDrawerCommon::PartsNum_>, IMode::sTypeNum_> TowerDrawerCommon::spModels_ =
+array<array<Model*, TowerDrawerCommon::sPartsNum_>, TowerDrawerCommon::sTypeNum_> TowerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, 
-	nullptr, nullptr, 
-	nullptr, nullptr, 
-	nullptr, nullptr, 
+	nullptr, nullptr,
 };
-YGame::ViewProjection* TowerDrawerCommon::spVP_ = nullptr;
-CBMaterial* TowerDrawerCommon::spMate_ = nullptr;
-CBLightGroup* TowerDrawerCommon::spLight_ = nullptr;
+CBMaterial* TowerDrawerCommon::spUniqueMate_ = nullptr;
+CBLightGroup* TowerDrawerCommon::spUniqueLight_ = nullptr;
 
 #pragma endregion
 
 #pragma region インデックス
 
-static const size_t CoreIdx = static_cast<size_t>(TowerDrawerCommon::Parts::Core); // 核
-static const size_t ShellIdx = static_cast<size_t>(TowerDrawerCommon::Parts::Shell); // 殻
+static const size_t CoreIdx = static_cast<size_t>(TowerDrawerCommon::Parts::eCore); // 核
+static const size_t ShellIdx = static_cast<size_t>(TowerDrawerCommon::Parts::eShell); // 殻
+
+static const size_t BlackIdx = static_cast<size_t>(TowerDrawerCommon::Type::eBlack); // 黒
+static const size_t WhiteIdx = static_cast<size_t>(TowerDrawerCommon::Type::eWhite); // 白
 
 #pragma endregion
 
 #pragma region Common
 
 void TowerDrawerCommon::StaticInitialize(
-	YGame::ViewProjection* pVP,
 	YGame::CBMaterial* pMate,
 	YGame::CBLightGroup* pLight)
 {
 	// nullチェック
-	assert(pVP);
 	assert(pMate);
 	assert(pLight);
 	// 代入
-	spVP_ = pVP;
-	spMate_ = pMate;
-	spLight_ = pLight;
+	spUniqueMate_ = pMate;
+	spUniqueLight_ = pLight;
 
 	// ----- モデル読み込み ----- //
 
 	// 通常
-	spModels_[IMode::sNormalIdx][CoreIdx] = Model::LoadObj("tower/normal/core", true); // 核
-	spModels_[IMode::sNormalIdx][ShellIdx] = Model::LoadObj("tower/normal/shell", true); // 殻
+	spModels_[BlackIdx][CoreIdx] = Model::LoadObj("tower/black/core", true); // 核
+	spModels_[BlackIdx][ShellIdx] = Model::LoadObj("tower/black/shell", true); // 殻
 
 	// 赤
-	spModels_[IMode::sMovableIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // 核
-	spModels_[IMode::sMovableIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // 殻
-
-		// 赤
-	spModels_[IMode::sSpringIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // 核
-	spModels_[IMode::sSpringIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // 殻
-
-		// 赤
-	spModels_[IMode::sJunctionIdx][CoreIdx] = Model::LoadObj("tower/red/core", true); // 核
-	spModels_[IMode::sJunctionIdx][ShellIdx] = Model::LoadObj("tower/red/shell", true); // 殻
+	spModels_[WhiteIdx][CoreIdx] = Model::LoadObj("tower/white/core", true); // 核
+	spModels_[WhiteIdx][ShellIdx] = Model::LoadObj("tower/white/shell", true); // 殻
 }
 
 #pragma endregion
 
 #pragma region Drawer
 
-void TowerDrawer::Initialize(YMath::Matrix4* pParent, const IMode::Type& modeType)
+void TowerDrawer::Initialize(Transform* pParent, const Type& type)
 {
-	// nullチェック
-	assert(pParent);
-
-	// オブジェクト生成 + 親行列挿入
-	core_.reset(new Transform());
-	core_->Initialize({});
-	core_->parent_ = pParent;
+	// 基底クラス初期化
+	IDrawer::Initialze(pParent);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -101,41 +85,55 @@ void TowerDrawer::Initialize(YMath::Matrix4* pParent, const IMode::Type& modeTyp
 		CBMaterial* pMate = nullptr;
 
 		if (i == CoreIdx) { pMate = CoreColor::MaterialPtr(); }
-		else if (i == ShellIdx) { pMate = spMate_; }
+		else if (i == ShellIdx) { pMate = spUniqueMate_; }
 
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, spLight_, pMate, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, nullptr, pMate, spUniqueLight_));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// リセット
-	Reset(modeType);
+	Reset(type);
 }
 
-void TowerDrawer::Reset(const IMode::Type& modeType)
+void TowerDrawer::Reset(const Type& type)
 {
-	// 核
-	core_->Initialize({});
+	// リセット
+	IDrawer::Reset();
 
-	// 基底モード初期化
-	IMode::ChangeType(modeType);
+	// 代入
+	type_ = type;
+
+	// インデックスを計算
+	typeIndex_ = static_cast<size_t>(type);
+
+	// 核の色とマテリアル設定
+	CBColor* pColor = nullptr;
+
+	if (type == Type::eBlack)
+	{
+		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+	}
+	else if (type == Type::eWhite)
+	{
+		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
+	}
+
+	modelObjs_[CoreIdx]->SetColor(pColor);
 
 	// オブジェクト初期化(パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->Initialize({});
+		modelObjs_[i]->Initialize();
 	}
-
-	// 核の色とマテリアル設定
-	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CurrentTypeIndex()));
 }
 
 void TowerDrawer::Update()
 {
-	// 行列更新 (親)
-	core_->UpdateMatrix();
+	// 基底クラス更新 
+	IDrawer::Update({});
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -146,10 +144,10 @@ void TowerDrawer::Update()
 
 void TowerDrawer::Draw(const YGame::DrawLocation& location)
 {
-	// 描画
-	for (size_t i = 0; i < spModels_[CurrentTypeIndex()].size(); i++)
+	// モデルの数描画
+	for (size_t i = 0; i < spModels_[typeIndex_].size(); i++)
 	{
-		spModels_[CurrentTypeIndex()][i]->SetDrawCommand(modelObjs_[i].get(), location, Model::ShaderType::eDefault);
+		spModels_[typeIndex_][i]->SetDrawCommand(modelObjs_[i].get(), location);
 	}
 }
 

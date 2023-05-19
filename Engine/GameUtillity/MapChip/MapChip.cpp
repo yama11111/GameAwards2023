@@ -144,22 +144,10 @@ void MapChip::Reset()
 				chip->transform_.reset(new Transform());
 				chip->transform_->Initialize({ {posX,posY,0.0f},{},chipScale_ });
 				chip->transform_->pos_ += leftTop_;
-				
-				// モードタイプ
-				IMode::Type type = IMode::Type::Normal;
-
-				if (nums[y][x] == 1)
-				{
-					type = IMode::Type::Normal;
-				}
-				else if (nums[y][x] == 2)
-				{
-					type = IMode::Type::Movable;
-				}
 
 				// 描画クラス
 				chip->dra_.reset(new BlockDrawer());
-				chip->dra_->Initialize(chip->transform_.get(), type);
+				chip->dra_->Initialize(chip->transform_.get(), BlockDrawerCommon::Type::eBlack);
 
 				// 1番後ろに挿入
 				chips_.push_back(std::move(chip));

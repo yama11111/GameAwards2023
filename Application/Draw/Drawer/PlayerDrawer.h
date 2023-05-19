@@ -17,12 +17,12 @@ public:
 protected:
 	
 	// パーツの総数
-	static const size_t PartsNum_ = 2;
+	static const size_t sPartsNum_ = 2;
 
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<YGame::Model*, PartsNum_> spModels_;
+	static std::array<YGame::Model*, sPartsNum_> spModels_;
 public:
 	
 	/// <summary>
@@ -46,7 +46,7 @@ private:
 	// ----- オブジェクト ----- //
 	
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::Model::Object>, PartsNum_> modelObjs_;
+	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
 	
 	// 色
 	std::unique_ptr<YGame::CBColor> color_;
@@ -147,9 +147,6 @@ private:
 
 	// 煙発生更新
 	void UpdateSmokeEmitter();
-	
-	// 立ちモーション
-	void IdleAnimation() override;
 
 public:
 	

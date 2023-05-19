@@ -184,116 +184,200 @@ namespace DrawerConfig
 			// 間隔
 			const unsigned int IntervalTime = 10;
 		}
+	}
 
-		// グリッド
-		namespace GridColor
+	// 接続部
+	namespace Junction
+	{
+		// 大きさの差
+		static const YMath::Vector3 ScaleDifference = { 0.4f, 0.4f, 0.2f };
+
+		// 立ちモーション
+		namespace Idle
 		{
-			// 色
-			const YMath::Vector4 Success = { 1.0f,1.0f,0.0f,0.75f };
+			// フレーム
+			static unsigned int Frame = 120;
 
-			// 失敗色
-			const YMath::Vector4 Failure = { 1.0f,0.0f,0.0f,1.0f };
-		}
-
-		// 取得アニメーション
-		namespace Catch
-		{
-			// 成功
-			namespace Success
+			// 回転スピード
+			namespace RotaSpeed
 			{
-				// フレーム
-				const unsigned int Frame = 30;
+				// 開始値
+				static const float Start = 0.0f;
 
-
-				// 初期値
-				const float Start = 1.0f;
-				
-				// 最終値
-				const float End = 0.0f;
-				
-				// 指数
-				const float Exponent = 3.0f;
-			}
-
-			// 失敗
-			namespace Failure
-			{
-				// フレーム
-				const unsigned int Frame = 20;
-
-
-				// 初期値
-				const float Start = 1.0f;
-
-				// 最終値
-				const float End = 0.5f;
+				// 終了値
+				static const float End = +PI * 4.0f;
 
 				// 指数
-				const float Exponent = 3.0f;
-
-				// 揺れ
-				namespace Shake
-				{
-					// 揺れ量
-					const float Swing = 0.4f;
-
-					// 収まる量
-					const float Dekey = 0.1f;
-
-					// 扱う位
-					const float Place = 10.0f;
-				}
+				static const float Exponent = 2.0f;
 			}
 		}
 
-		// 設置アニメーション
-		namespace Place
+		// 接続
+		namespace Connect
 		{
-			// 成功
-			namespace Success
+
+			// フレーム
+			static unsigned int Frame = 120;
+
+			// 位置系数
+			namespace PosFactor
 			{
-				// フレーム
-				const unsigned int Frame = 20;
+				// 開始値
+				static const float Start = 0.0f;
 
-
-				// 初期値
-				const float Start = 0.0f;
-
-				// 最終値
-				const float End = 0.5f;
+				// 終了値
+				static const float End = 2.0f;
 
 				// 指数
-				const float Exponent = 3.0f;
+				static const float Exponent = 3.0f;
 			}
 
-			// 失敗
-			namespace Failure
+			// 回転系数
+			namespace RotaFactor
 			{
-				// フレーム
-				const unsigned int Frame = 20;
+				// 開始値
+				static const float Start = 0.0f;
 
-
-				// 初期値
-				const float Start = 0.0f;
-
-				// 最終値
-				const float End = 0.25f;
+				// 終了値
+				static const float End = +PI / 4.0f;
 
 				// 指数
-				const float Exponent = 3.0f;
+				static const float Exponent = 3.0f;
+			}
 
-				// 揺れ
-				namespace Shake
-				{
-					// 揺れ量
-					const float Swing = 0.4f;
+			// 回転スピード
+			namespace RotaSpeed
+			{
+				// 開始値
+				static const float Start = 0.0f;
 
-					// 収まる量
-					const float Dekey = 0.1f;
+				// 終了値
+				static const float End = +PI * 8.0f;
 
-					// 扱う位
-					const float Place = 10.0f;
-				}
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+
+			// 大きさ
+			namespace Scale
+			{
+				// 開始値
+				static const YMath::Vector3 Start = {};
+
+				// 終了値
+				static const YMath::Vector3 End = { 0.4f,0.4f,0.4f };
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+
+			// 向き合わせ
+			namespace AlignDirection
+			{
+				// フレーム
+				static unsigned int Frame = 20;
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+		}
+	}
+
+	// レーザー
+	namespace Laser
+	{
+		// ビームの高さ係数
+		static const float BeamHeightFactor = 1.25f;
+
+		// 立ちモーション
+		namespace Idle
+		{
+			// フレーム
+			static const unsigned int Frame = 80;
+
+			// ビーム回転
+			namespace BeamRota
+			{
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = +PI * 4.0f;
+
+				// 指数
+				static const float Exponent = 1.0f;
+			}
+
+			// ファンネル回転
+			namespace FannelRota
+			{
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = +PI * 2.0f;
+
+				// 指数
+				static const float Exponent = 1.0f;
+			}
+		}
+
+		// 発射
+		namespace Shoot
+		{
+			// フレーム
+			static const unsigned int Frame = 60;
+
+			// 高度
+			namespace Height
+			{
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = -0.4f;
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+
+			// 位置係数
+			namespace PosFactor
+			{
+				// 開始値
+				static const float Start = 0.0f;
+				
+				// 終了値
+				static const float End = 0.4f;
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+
+			// 回転
+			namespace Rota
+			{
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = +PI * 4.0f;
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+
+			// 大きさ
+			namespace Scale
+			{
+				// 開始
+				const float Start = -1.0f;
+
+				// 修了
+				const float End = -0.90f;
+
+				// 指数
+				static const float Exponent = 3.0f;
 			}
 		}
 	}
@@ -436,17 +520,17 @@ namespace DrawerConfig
 		// 色
 		namespace Color
 		{
-			// 通常
-			const YMath::Vector3 Normal = { 0.30f, 0.30f, 0.30f };
+			// グレー
+			const YMath::Vector3 Gray	 = { 0.30f, 0.30f, 0.30f };
 
-			// 可動
-			const YMath::Vector3 Movable = { 0.60f, 0.00f, 0.00f };
+			// 赤
+			const YMath::Vector3 Red	 = { 0.60f, 0.00f, 0.00f };
 
-			// ばね
-			const YMath::Vector3 Spring = { 0.00f, 0.60f, 0.00f };
+			// 緑
+			const YMath::Vector3 Green	 = { 0.00f, 0.60f, 0.00f };
 
-			// クリア
-			const YMath::Vector3 Clear = { 0.05f, 0.20f, 0.90f };
+			// 青
+			const YMath::Vector3 Blue	 = { 0.05f, 0.20f, 0.90f };
 		}
 
 		// アンビエント
@@ -455,8 +539,8 @@ namespace DrawerConfig
 			// 通常
 			const YMath::Vector3 Normal = { 0.5f, 0.5f, 0.5f };
 
-			// クリア
-			const YMath::Vector3 Clear = { 0.7f, 0.7f, 0.8f };
+			// 青
+			const YMath::Vector3 Blue = { 0.7f, 0.7f, 0.8f };
 		}
 
 

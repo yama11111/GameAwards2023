@@ -23,7 +23,7 @@ using namespace DrawerConfig::Gate;
 
 #pragma region Static
 
-array<Model*, GateDrawerCommon::PartsNum_> GateDrawerCommon::spModels_ =
+array<Model*, GateDrawerCommon::sPartsNum_> GateDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr,
 };
@@ -50,7 +50,7 @@ void GateDrawerCommon::StaticInitialize()
 void GateDrawer::Initialize(YGame::Transform* pParent)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// 色生成
 	color_.reset(CBColor::Create());
@@ -59,7 +59,7 @@ void GateDrawer::Initialize(YGame::Transform* pParent)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, spMate_, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, color_.get(), spMate_));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
@@ -106,8 +106,4 @@ void GateDrawer::Draw()
 	{
 		spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}
-}
-
-void GateDrawer::IdleAnimation()
-{
 }

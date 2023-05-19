@@ -105,6 +105,12 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\KeyDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\LaserDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\PlatformDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp" />
+    <ClCompile Include="Application\Draw\Drawer\SwitchDrawer.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -128,7 +134,6 @@
     <ClCompile Include="Application\Draw\Drawer\BackgroundDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\BlockDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\CoreColor.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\IMode.cpp" />
     <ClCompile Include="Application\Draw\Drawer\TowerDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\CardDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\DrawerHelper.cpp" />
@@ -146,8 +151,6 @@
     <ClCompile Include="Application\Draw\Drawer\TitleDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp" />
     <ClCompile Include="Application\Draw\Particle\Bubble.cpp" />
-    <ClCompile Include="Application\Draw\Particle\Effect.cpp" />
-    <ClCompile Include="Application\Draw\Particle\EffectManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\IParticle.cpp" />
     <ClCompile Include="Application\Draw\Particle\ParticleManager.cpp" />
     <ClCompile Include="Application\Draw\Particle\RelayBug.cpp" />
@@ -215,6 +218,12 @@
     <ClCompile Include="Engine\Utillity\Math\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\KeyDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\LaserDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\PlatformDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h" />
+    <ClInclude Include="Application\Draw\Drawer\SwitchDrawer.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -241,7 +250,6 @@
     <ClInclude Include="Application\Draw\Drawer\BackgroundDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\BlockDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\CoreColor.h" />
-    <ClInclude Include="Application\Draw\Drawer\IMode.h" />
     <ClInclude Include="Application\Draw\Drawer\TowerDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\CardDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\DrawerConfig.h" />
@@ -261,8 +269,6 @@
     <ClInclude Include="Application\Draw\Drawer\TitleDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\UIButtonDrawer.h" />
     <ClInclude Include="Application\Draw\Particle\Bubble.h" />
-    <ClInclude Include="Application\Draw\Particle\Effect.h" />
-    <ClInclude Include="Application\Draw\Particle\EffectManager.h" />
     <ClInclude Include="Application\Draw\Particle\IParticle.h" />
     <ClInclude Include="Application\Draw\Particle\ParticleManager.h" />
     <ClInclude Include="Application\Draw\Particle\RelayBug.h" />

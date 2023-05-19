@@ -63,7 +63,7 @@ void IParticleModel::CreateObject()
 {
 	// ê∂ê¨
 	color_.reset(CBColor::Create());
-	obj_.reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, nullptr, nullptr));
+	obj_.reset(Model::Object::Create(Transform::Status::Default(), spVP_, color_.get()));
 }
 
 #pragma endregion
@@ -83,7 +83,7 @@ void IParticleSprite3D::CreateObject(const bool isXAxisBillboard, const bool isY
 {
 	// ê∂ê¨
 	color_.reset(CBColor::Create());
-	obj_.reset(Sprite3D::Object::Create({}, isXAxisBillboard, isYAxisBillboard, spVP_, color_.get(), nullptr));
+	obj_.reset(Sprite3D::Object::Create(Transform::Status::Default(), isXAxisBillboard, isYAxisBillboard, spVP_, color_.get()));
 }
 
 #pragma endregion

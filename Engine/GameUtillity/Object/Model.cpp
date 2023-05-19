@@ -26,8 +26,8 @@ using YGame::DrawLocationNum;
 
 static const UINT TraIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTransformCB); // transform
 static const UINT ColIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eColorCB); // color
-static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eLightCB); // light
 static const UINT MateIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eMaterialCB); // material
+static const UINT LigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eLightCB); // light
 static const UINT TexConfigIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexConfigCB); // texConfig
 static const UINT TexIndex = static_cast<UINT>(Model::Pipeline::RootParameterIndex::eTexDT); // tex
 
@@ -343,19 +343,12 @@ void Model::FbxLoader::ParseNodeRecursive(Model* pModel, FbxNode* fbxNode, const
 
 #pragma region Object
 
-
-Model::Object* Model::Object::Create(const Status& status, const bool isMutable)
-{
-	// インスタンスを返す
-	return Create(status, nullptr, nullptr, nullptr, nullptr, nullptr, isMutable);
-}
-
 Model::Object* Model::Object::Create(
 	const Status& status,
 	ViewProjection* pVP,
 	CBColor* pColor,
-	CBLightGroup* pLightGroup,
 	CBMaterial* pMaterial,
+	CBLightGroup* pLightGroup,
 	CBTexConfig* pTexConfig,
 	const bool isMutable)
 {
@@ -368,9 +361,9 @@ Model::Object* Model::Object::Create(
 	// 初期化(デフォルト)
 	instance->Initialize(status);
 	instance->SetViewProjection(pVP);
+	instance->SetMaterial(pMaterial);
 	instance->SetColor(pColor);
 	instance->SetLightGroup(pLightGroup);
-	instance->SetMaterial(pMaterial);
 	instance->SetTexConfig(pTexConfig);
 
 	// インスタンスを返す
@@ -380,8 +373,8 @@ Model::Object* Model::Object::Create(
 void Model::Object::SetDrawCommand(
 	const UINT transformRPIndex,
 	const UINT colorRPIndex,
-	const UINT lightRPIndex,
 	const UINT materialRPIndex, 
+	const UINT lightRPIndex,
 	const UINT texConfigRPIndex)
 {
 	// 行列
@@ -393,11 +386,11 @@ void Model::Object::SetDrawCommand(
 	// 色
 	pColor_->SetDrawCommand(colorRPIndex);
 
-	// 光
-	pLightGroup_->SetDrawCommand(lightRPIndex);
-
 	// マテリアル
 	pMaterial_->SetDrawCommand(materialRPIndex);
+
+	// 光
+	pLightGroup_->SetDrawCommand(lightRPIndex);
 
 	// テクスチャ設定
 	pTexConfig_->SetDrawCommand(texConfigRPIndex);
@@ -431,20 +424,6 @@ void Model::Object::SetColor(CBColor* pColor)
 	pColor_ = pColor;
 }
 
-void Model::Object::SetLightGroup(CBLightGroup* pLightGroup)
-{
-	// nullなら
-	if (pLightGroup == nullptr)
-	{
-		// デフォルト代入
-		pLightGroup_ = Default::sLightGroup_.get();
-		return;
-	}
-
-	// 代入
-	pLightGroup_ = pLightGroup;
-}
-
 void Model::Object::SetMaterial(CBMaterial* pMaterial)
 {
 	// nullなら
@@ -457,6 +436,20 @@ void Model::Object::SetMaterial(CBMaterial* pMaterial)
 
 	// 代入
 	pMaterial_ = pMaterial;
+}
+
+void Model::Object::SetLightGroup(CBLightGroup* pLightGroup)
+{
+	// nullなら
+	if (pLightGroup == nullptr)
+	{
+		// デフォルト代入
+		pLightGroup_ = Default::sLightGroup_.get();
+		return;
+	}
+
+	// 代入
+	pLightGroup_ = pLightGroup;
 }
 
 void Model::Object::SetTexConfig(CBTexConfig* pTexConfig)
@@ -474,25 +467,25 @@ void Model::Object::SetTexConfig(CBTexConfig* pTexConfig)
 }
 
 unique_ptr<YGame::ViewProjection> Model::Object::Default::sVP_ = nullptr;
-unique_ptr<YGame::CBLightGroup> Model::Object::Default::sLightGroup_ = nullptr;
 unique_ptr<YGame::CBColor> Model::Object::Default::sColor_ = nullptr;
 unique_ptr<YGame::CBMaterial> Model::Object::Default::sMaterial_ = nullptr;
+unique_ptr<YGame::CBLightGroup> Model::Object::Default::sLightGroup_ = nullptr;
 unique_ptr<YGame::CBTexConfig> Model::Object::Default::sTexConfig_ = nullptr;
 
 void Model::Object::Default::StaticInitialize()
 {
 	// 生成 + 初期化 (ビュープロジェクションポインタ)
 	sVP_.reset(new YGame::ViewProjection());
-	sVP_->Initialize({});
+	sVP_->Initialize();
 
 	// 生成 + 初期化 (色)
 	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
 
-	// 生成 + 初期化 (光源ポインタ)
-	sLightGroup_.reset(CBLightGroup::Create({ 1.0f,1.0f,1.0f }, false));
-
 	// 生成 + 初期化 (マテリアル)
 	sMaterial_.reset(CBMaterial::Create({ 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f }, 1.0f, false));
+
+	// 生成 + 初期化 (光源ポインタ)
+	sLightGroup_.reset(CBLightGroup::Create({ 1.0f,1.0f,1.0f }, false));
 
 	// 生成 + 初期化 (テクスチャ設定)
 	sTexConfig_.reset(CBTexConfig::Create({ 1.0f,1.0f }, {}, false));
@@ -830,7 +823,7 @@ void Model::Pipeline::DrawSet::Draw()
 	if (pModel_->isVisible_ == false) { return; }
 
 	// 定数バッファをシェーダーに送る
-	pObj_->SetDrawCommand(TraIndex, ColIndex, LigIndex, MateIndex, TexConfigIndex);
+	pObj_->SetDrawCommand(TraIndex, ColIndex, MateIndex, LigIndex, TexConfigIndex);
 
 	// メッシュ毎に違うバッファ
 	for (size_t i = 0; i < pModel_->meshes_.size(); i++)

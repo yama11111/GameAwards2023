@@ -36,9 +36,8 @@ public:
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pParticleMan"> : パーティクルマネージャーポインタ</param>
-	static void StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan);
+	static void StaticInitialize(YGame::ParticleManager* pParticleMan);
 
 	/// <summary>
 	/// 静的リセット

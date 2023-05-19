@@ -18,7 +18,7 @@ void DemoGoal::Initialize(const YMath::Vector3& pos)
 void DemoGoal::Reset(const YMath::Vector3& pos)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {0.0f,+0.4f,0.0f} });
+	transform_->Initialize({ pos, {0.0f,+0.4f,0.0f}, {1.0f,1.0f,1.0f} });
 
 	// 位置代入
 	center_ = transform_->pos_;

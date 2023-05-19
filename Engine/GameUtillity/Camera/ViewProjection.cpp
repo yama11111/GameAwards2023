@@ -11,7 +11,21 @@ ViewProjection::ViewProjection() :
 	pro_(YMath::MatPerspective())
 {}
 
-void ViewProjection::Initialize(const InitStatus& status)
+ViewProjection::Status ViewProjection::Status::Default()
+{
+	// 戻り値用
+	Status result;
+
+	// デフォルト値を代入
+	result.eye_ = { 0.0f, 0.0f, -100.0f };
+	result.target_ = { 0.0f, 0.0f, 0.0f };
+	result.up_ = { 0.0f, 1.0f, 0.0f };
+
+	// 返す
+	return result;
+}
+
+void ViewProjection::Initialize(const Status& status)
 {
 	eye_ = status.eye_;
 	target_ = status.target_;

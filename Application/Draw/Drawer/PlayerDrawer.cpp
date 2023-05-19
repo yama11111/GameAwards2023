@@ -25,7 +25,7 @@ using namespace DrawerConfig::Player;
 
 #pragma region Static
 
-array<Model*, PlayerDrawerCommon::PartsNum_> PlayerDrawerCommon::spModels_ =
+array<Model*, PlayerDrawerCommon::sPartsNum_> PlayerDrawerCommon::spModels_ =
 {
 	nullptr, nullptr
 };
@@ -50,7 +50,7 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 	assert(pDirection);
 
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// 色生成
 	color_.reset(CBColor::Create());
@@ -59,7 +59,7 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, color_.get(), nullptr, spMate_, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, color_.get(), spMate_));
 
 		// 親行列代入
 		modelObjs_[i]->parent_ = &core_->m_;
@@ -123,9 +123,6 @@ void PlayerDrawer::ResetAnimation()
 {
 	// ブヨブヨアニメーション初期化
 	SlimeActor::Initialize();
-
-	// 立ちモーションタイマーリセット
-	idleTim_.Reset(true);
 
 	// 移動タイマーリセット
 	moveEmitTimer_.Reset(false);
@@ -388,8 +385,4 @@ void PlayerDrawer::GoalAnimation()
 
 	// ゴールアニメーション開始
 	isGoal_ = true;
-}
-
-void PlayerDrawer::IdleAnimation()
-{
 }
