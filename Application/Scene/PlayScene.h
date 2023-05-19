@@ -13,6 +13,7 @@
 
 #include "Sign.h"
 #include "Player.h"
+#include "TestPlayer.h"
 
 namespace YScene
 {
@@ -35,6 +36,8 @@ namespace YScene
 		maruyama::Sign sign_;
 
 		Player player_;
+
+        TestPlayer tp_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 
 

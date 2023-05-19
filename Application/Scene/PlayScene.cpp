@@ -118,6 +118,8 @@ void PlayScene::Update()
 
 	player_.Update();
 
+    sign_.PPC(&tp_);
+
 	//リセット
 	//if (リセットするなら)
 	//{
@@ -165,6 +167,7 @@ void PlayScene::Update()
 void PlayScene::Draw()
 {
 	player_.Draw();
+    tp_.Draw();
 
 	// 背景描画
 	background_.Draw();

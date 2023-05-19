@@ -33,6 +33,7 @@ public:
     YukiMapchipCollider(void);
     virtual ~YukiMapchipCollider(void) = default;
 
+    void Initialize(void);
     void UpdatePos(void);
 
     // •Ï”
