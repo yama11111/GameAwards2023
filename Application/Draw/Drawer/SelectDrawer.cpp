@@ -84,7 +84,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	CoreColor::StaticInitialize(false);
 
 	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sTowerMate_.get(), sTowerLight_.get());
+	TowerDrawerCommon::StaticInitialize(sTowerMate_.get(), sTowerLight_.get());
 
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eRed));
@@ -111,7 +111,13 @@ void SelectDrawer::Initialize()
 	color_.reset(CBColor::Create());
 
 	// 地球
-	earthObj_.reset(YGame::Model::Object::Create({}, spVP_, color_.get(), sEarthLight_.get(), sEarthMate_.get(), nullptr));
+	earthObj_.reset(YGame::Model::Object::Create(
+		Transform::Status::Default(), 
+		spVP_, 
+		color_.get(), 
+		sEarthMate_.get(),
+		sEarthLight_.get()));
+
 	earthObj_->parent_ = &core_->m_;
 
 	// ステージトランスフォーム (使う用)
@@ -134,13 +140,13 @@ void SelectDrawer::Initialize()
 		if (i < aliveStages_.size())
 		{
 			// 使う用のトランスフォームを代入
-			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(aliveStages_[i].get(), static_cast<int>(i + 1), TowerDrawerCommon::Type::eBlack);
 		}
 		// それ以外なら
 		else
 		{
 			// 使わない用のトランスフォームを代入
-			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1));
+			stageDras_[i]->Initialize(deadStage_.get(), static_cast<int>(i + 1), TowerDrawerCommon::Type::eBlack);
 		}
 	}
 	
@@ -166,7 +172,7 @@ void SelectDrawer::Initialize()
 
 
 	// ロゴ初期化
-	logoObj_.reset(Sprite2D::Object::Create({}));
+	logoObj_.reset(Sprite2D::Object::Create());
 
 
 	// 天球
@@ -191,7 +197,7 @@ void SelectDrawer::Reset()
 	// ----- オブジェクト初期化 ----- //
 	
 	// 核
-	core_->Initialize({ {},{0.0f,0.0f,0.0f},{1.0f,1.0f,1.0f} });
+	core_->Initialize();
 
 	// 大きさの量
 	float earthScaleVal = Earth::Scale;
@@ -224,17 +230,18 @@ void SelectDrawer::Reset()
 	}
 	// トランスフォーム (使わない用)
 	deadStage_->Initialize({ {-2000,-2000,-2000}, {}, {} });
+	
 	// 描画クラス
 	for (size_t i = 0; i < stageDras_.size(); i++)
 	{
 		// 種類
-		IMode::Type type = IMode::Type::Normal;
+		TowerDrawerCommon::Type type = TowerDrawerCommon::Type::eBlack;
 
 		// クリアしているなら変更
 		if (spStageConfig_->GetIsClearStage((int)i))
 		{
 			// クリアしているなら変更
-			type = IMode::Type::Junction;
+			type = TowerDrawerCommon::Type::eWhite;
 		}
 
 		stageDras_[i]->Reset(type);
@@ -273,7 +280,7 @@ void SelectDrawer::Reset()
 
 
 	// ロゴ
-	logoObj_->Initialize({ Logo::Pos });
+	logoObj_->Initialize({ Logo::Pos, {}, {1.0f,1.0f,0.0f} });
 
 	// 天球
 	skydomeDra_.Reset(800.0f);

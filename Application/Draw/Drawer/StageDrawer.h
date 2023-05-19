@@ -51,10 +51,10 @@ private:
 public:
 	
 	// 初期化
-	void Initialize(YGame::Transform* pParent, const int number, IMode::Type type = IMode::Type::Normal);
+	void Initialize(YGame::Transform* pParent, const int number, const TowerDrawerCommon::Type type);
 	
 	// リセット
-	void Reset(IMode::Type type = IMode::Type::Normal);
+	void Reset(const TowerDrawerCommon::Type type);
 	
 	// 更新
 	void Update();

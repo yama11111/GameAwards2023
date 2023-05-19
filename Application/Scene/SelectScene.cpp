@@ -41,6 +41,9 @@ void SelectScene::Load()
 	
 	// pause
 	PauseDrawerCommon::StaticInitialize();
+
+	// 基底描画クラス
+	IDrawer::StaticInitialize(&transferVP_, nullptr, nullptr, &camera_, &particleMan_);
 	
 	// ステージセレクト
 	SelectDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
@@ -72,7 +75,7 @@ void SelectScene::Initialize()
 	//camera_.Initialize({ 0,0,-100 }, {});
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 
 	// セレクトシーンBGM開始
 	pSelectBGM_->Play(true);

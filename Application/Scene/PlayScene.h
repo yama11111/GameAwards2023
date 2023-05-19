@@ -7,7 +7,6 @@
 #include "BackgroundDrawer.h"
 #include "HUDDrawer.h"
 
-#include "EffectManager.h"
 #include "ScrollCamera.h"
 #include "StageConfig.h"
 

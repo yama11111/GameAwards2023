@@ -67,13 +67,13 @@ void BlockDrawerCommon::StaticInitialize()
 void BlockDrawer::Initialize(Transform* pParent, const Type& type)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
@@ -98,12 +98,12 @@ void BlockDrawer::Reset(const Type& type)
 	CBColor * pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	if (type == Type::eWhite)
+	if (type == Type::eBlack)
 	{
 		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
 		pMaterial = CoreColor::MaterialPtr();
 	}
-	else if (type == Type::eBlack)
+	else if (type == Type::eWhite)
 	{
 		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
 		pMaterial = CoreColor::MaterialPtr();
@@ -111,6 +111,12 @@ void BlockDrawer::Reset(const Type& type)
 
 	modelObjs_[CoreIdx]->SetColor(pColor);
 	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
+
+	// オブジェクト初期化(パーツの数)
+	for (size_t i = 0; i < modelObjs_.size(); i++)
+	{
+		modelObjs_[i]->Initialize();
+	}
 }
 
 void BlockDrawer::Update()

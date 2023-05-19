@@ -39,7 +39,7 @@ Ease<Vector3> BackgroundDrawerCommon::sUnifyLightColorEas_;
 
 #pragma endregion
 
-void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::ParticleManager* pParticleMan)
+void BackgroundDrawerCommon::StaticInitialize(YGame::ParticleManager* pParticleMan)
 {
 	// nullチェック
 	assert(pParticleMan);
@@ -68,7 +68,7 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame:
 	sUnifyLightColorEas_.Initialize(Light::Direction::Color, Light::Direction::ClearColor, Unify::Exponent);
 
 	// タワー
-	TowerDrawerCommon::StaticInitialize(pVP, sBackMate_.get(), sBackLight_.get());
+	TowerDrawerCommon::StaticInitialize(sBackMate_.get(), sBackLight_.get());
 
 	// 天球
 	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eRed));
@@ -113,7 +113,7 @@ void BackgroundDrawerCommon::StaticUnify()
 void BackgroundDrawer::Initialize()
 {
 	// 天球
-	skydome_.Initialize({});
+	skydome_.Initialize();
 	
 	// 天球描画クラス
 	skydomeDra_.Initialize(&skydome_.m_, SkydomeSize);
@@ -133,7 +133,7 @@ void BackgroundDrawer::Reset()
 	InitializeTowers();
 
 	// 天球
-	skydome_.Initialize({});
+	skydome_.Initialize();
 
 	// 天球描画クラス
 	skydomeDra_.Reset(SkydomeSize);
@@ -144,41 +144,6 @@ void BackgroundDrawer::Reset()
 
 	// 泡グリッド発生
 	EmitBubbleCharacter();
-}
-
-void BackgroundDrawer::Update()
-{
-	// タワー毎に
-	for (std::unique_ptr<Tower>& tower : towers_)
-	{
-		//// 親トランスフォーム更新
-		//tower->transform_.UpdateMatrix();
-
-		// 描画クラス更新
-		tower->drawer_.Update();
-	}
-
-	// 天球
-	skydome_.UpdateMatrix();
-
-	// 天球描画クラス
-	skydomeDra_.Update();
-
-	// エミッター更新
-	UpdateEmitter();
-}
-
-void BackgroundDrawer::Draw()
-{
-	// 天球
-	skydomeDra_.Draw();
-
-	// タワー毎に
-	for (std::unique_ptr<Tower>& tower : towers_)
-	{
-		// 描画
-		tower->drawer_.Draw(YGame::DrawLocation::Center);
-	}
 }
 
 void BackgroundDrawer::InitializeTowers()
@@ -203,13 +168,45 @@ void BackgroundDrawer::InitializeTowers()
 			});
 
 		// 状態
-		IMode::Type type = static_cast<IMode::Type>(Towers::ModeIdx[i]);
+		TowerDrawerCommon::Type type = static_cast<TowerDrawerCommon::Type>(Towers::ModeIdx[i]);
 
 		// 描画クラス初期化
-		newTower->drawer_.Initialize(&newTower->transform_.m_, type);
+		newTower->drawer_.Initialize(&newTower->transform_, type);
 
 		// 挿入
 		towers_.push_back(std::move(newTower));
+	}
+}
+
+void BackgroundDrawer::Update()
+{
+	// タワー毎に
+	for (std::unique_ptr<Tower>& tower : towers_)
+	{
+		// 描画クラス更新
+		tower->drawer_.Update();
+	}
+
+	// 天球
+	skydome_.UpdateMatrix();
+
+	// 天球描画クラス
+	skydomeDra_.Update();
+
+	// エミッター更新
+	UpdateEmitter();
+}
+
+void BackgroundDrawer::Draw()
+{
+	// 天球
+	skydomeDra_.Draw();
+
+	// タワー毎に
+	for (std::unique_ptr<Tower>& tower : towers_)
+	{
+		// 描画
+		tower->drawer_.Draw(YGame::DrawLocation::Center);
 	}
 }
 

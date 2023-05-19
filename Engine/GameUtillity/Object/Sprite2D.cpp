@@ -221,12 +221,6 @@ void Sprite2D::SetIsVisible(const bool isVisible)
 
 #pragma region Object
 
-Sprite2D::Object* Sprite2D::Object::Create(const Status& status, const bool isMutable)
-{
-	// インスタンスを返す
-	return Create(status, nullptr, nullptr, isMutable);
-}
-
 Sprite2D::Object* Sprite2D::Object::Create(
 	const Status& status,
 	CBColor* pColor,

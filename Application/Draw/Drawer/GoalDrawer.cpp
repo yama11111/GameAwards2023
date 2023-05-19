@@ -62,12 +62,12 @@ void GoalDrawerCommon::StaticInitialize()
 void GoalDrawer::Initialize(YGame::Transform* pParent)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, spMate_, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, nullptr, spMate_));
 		modelObjs_[i]->parent_ = &core_->m_;
 	}
 

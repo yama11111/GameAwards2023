@@ -6,6 +6,7 @@
 
 #pragma region 名前空間
 
+using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::CBColor;
 using YGame::Texture;
@@ -58,22 +59,22 @@ void PauseDrawer::Initialize()
 	// ----- 生成 ----- //
 
 	// pause
-	pauseObj_.reset(Sprite2D::Object::Create({}));
+	pauseObj_.reset(Sprite2D::Object::Create());
 	
 	// resumeColor
 	resumeColor_.reset(CBColor::Create());
 	// resume
-	resumeObj_.reset(Sprite2D::Object::Create({}, resumeColor_.get()));
-	
+	resumeObj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), resumeColor_.get()));
+
 	// titleColor
 	changeColor_.reset(CBColor::Create());
 	// title
-	changeObj_.reset(Sprite2D::Object::Create({}, changeColor_.get()));
-	
+	changeObj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), changeColor_.get()));
+
 	// curtenColor
 	curtenColor_.reset(CBColor::Create());
 	// curten
-	curtenObj_.reset(Sprite2D::Object::Create({}, curtenColor_.get(), nullptr));
+	curtenObj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), curtenColor_.get()));
 
 	// 選択スケールイージング
 	selectScaleEas_.Initialize(-0.25f, 0.0f, 3.0f);
@@ -87,9 +88,9 @@ void PauseDrawer::Reset()
 	// ----- Object初期化 ----- //
 
 	// pause
-	pauseObj_->Initialize({Font::Pause, {}, Font::Scale });
+	pauseObj_->Initialize({ Font::Pause, {}, Font::Scale });
 	// resume
-	resumeObj_->Initialize({Font::Resume, {}, Font::Scale });
+	resumeObj_->Initialize({ Font::Resume, {}, Font::Scale });
 	// title
 	changeObj_->Initialize({ Font::Title, {}, Font::Scale });
 

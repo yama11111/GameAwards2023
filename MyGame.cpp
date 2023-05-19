@@ -25,12 +25,11 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize(YGameSceneFactory::Test_, YGameTransitionFactory::Blackout_);
+	sceneExe_->Initialize(YGameSceneFactory::Title_, YGameTransitionFactory::Blackout_);
 
 
 	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
-	//postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {100.0f,100.0f,0.0f} }));
-	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f } }));
+	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {1.0f,1.0f,0.0f} }));
 
 	return true;
 }

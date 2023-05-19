@@ -3,7 +3,7 @@
 
 using YGame::Transform;
 using YMath::Matrix4;
-using YMath::Vector4;
+using YMath::Vector3;
 
 Transform::Transform() :
 	pos_(0.0f, 0.0f, 0.0f),
@@ -13,11 +13,28 @@ Transform::Transform() :
 	parent_(nullptr)
 {}
 
+Transform::Status Transform::Status::Default()
+{
+	// 戻り値用
+	Status result;
+	
+	// 初期化
+	result.pos_ = Vector3(0.0f, 0.0f, 0.0f);
+	result.rota_ = Vector3(0.0f, 0.0f, 0.0f);
+	result.scale_ = Vector3(1.0f, 1.0f, 1.0f);
+
+	// 返す
+	return result;
+}
+
 void Transform::Initialize(const Status& status)
 {
+	// 代入
 	pos_ = status.pos_;
 	rota_ = status.rota_;
 	scale_ = status.scale_;
+	
+	// 行列更新
 	UpdateMatrix();
 }
 
@@ -31,13 +48,16 @@ void Transform::UpdateMatrix()
 
 void Transform::UpdateMatrix(const Status& status)
 {
-	Status s = { pos_,rota_,scale_ };
-	s.pos_ += status.pos_;
-	s.rota_ += status.rota_;
-	s.scale_ += status.scale_;
+	// 計算用
+	Vector3 p, r, s;
+	
+	// 加算して代入
+	p = pos_ + status.pos_;
+	r = rota_ + status.rota_;
+	s = scale_ + status.scale_;
 
 	// アフィン変換
 	m_ = Matrix4::Identity();
-	m_ *= MatScale(s.scale_) * MatRotation(s.rota_) * MatTranslation(s.pos_);
+	m_ *= MatScale(s) * MatRotation(r) * MatTranslation(p);
 	if (parent_) { m_ *= *parent_; }
 }

@@ -63,13 +63,13 @@ void SpringDrawerCommon::StaticInitialize()
 void SpringDrawer::Initialize(Transform* pParent, const Type& type)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr, nullptr));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;

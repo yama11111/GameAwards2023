@@ -31,7 +31,7 @@ void PlayScene::Load()
 	// ----- オーディオ ----- //
 
 	// プレイBGM
-	pPlayBGM_ = Audio::Load("vigilante.wav");
+	pPlayBGM_ = Audio::Load("BGM/select.wav");
 
 	// ----- 静的初期化 ----- //
 
@@ -69,11 +69,11 @@ void PlayScene::Initialize()
 	camera_.Initialize({ +17.0f,-11.0f,-21.0f }, {});
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 
 	// プレイBGM開始
 	pPlayBGM_->Play(true);
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 }
 
 #pragma endregion

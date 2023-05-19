@@ -321,9 +321,6 @@
     <ClCompile Include="Application\Draw\Drawer\SelectDrawer.cpp">
       <Filter>Application\Draw\Drawer\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Draw\Drawer\IMode.cpp">
-      <Filter>Application\Draw\Drawer\Obj\Base</Filter>
-    </ClCompile>
     <ClCompile Include="DemoPlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -389,12 +386,6 @@
     </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp">
       <Filter>Application\Draw\Drawer\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Draw\Particle\Effect.cpp">
-      <Filter>Application\Draw\Particle\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Draw\Particle\EffectManager.cpp">
-      <Filter>Application\Draw\Particle\Base</Filter>
     </ClCompile>
     <ClCompile Include="Application\Draw\Particle\IParticle.cpp">
       <Filter>Application\Draw\Particle\Base</Filter>
@@ -659,9 +650,6 @@
     <ClInclude Include="Application\Draw\Drawer\SelectDrawer.h">
       <Filter>Application\Draw\Drawer\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Draw\Drawer\IMode.h">
-      <Filter>Application\Draw\Drawer\Obj\Base</Filter>
-    </ClInclude>
     <ClInclude Include="DemoPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -736,12 +724,6 @@
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\UIButtonDrawer.h">
       <Filter>Application\Draw\Drawer\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Draw\Particle\Effect.h">
-      <Filter>Application\Draw\Particle\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Draw\Particle\EffectManager.h">
-      <Filter>Application\Draw\Particle\Base</Filter>
     </ClInclude>
     <ClInclude Include="Application\Draw\Particle\IParticle.h">
       <Filter>Application\Draw\Particle\Base</Filter>

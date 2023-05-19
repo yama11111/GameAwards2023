@@ -31,9 +31,6 @@ void TestScene::Load()
 	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
-	// エフェクト
-	EffectManager::StaticInitialize(&particleMan_);
-
 	// 描画クラス全て
 	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 }
@@ -48,11 +45,11 @@ void TestScene::Initialize()
 	// パーティクル初期化
 	particleMan_.Initialize();
 
-	// エフェクト初期化
-	effectMan_.Initialize();
+	// 大きさ
+	Vector3 scale = { 5.0f,5.0f,5.0f };
 	
 	// 核初期化
-	core_.Initialize({ {}, {}, {3.0f,3.0f,3.0f} });
+	core_.Initialize({ {}, {}, scale });
 
 
 	// プレイヤー描画用クラス初期化
@@ -66,8 +63,25 @@ void TestScene::Initialize()
 	// ばね描画用クラス初期化
 	springDra_.Initialize(&core_, SpringDrawerCommon::Type::eGreen);
 	
+	// 足場描画用クラス初期化
+	platform_.Initialize({ {},{},Vector3(26.0f, 2.0f, 2.0f) });
+	platformDra_.Initialize(&platform_);
+	
 	// 接続部描画用クラス初期化
-	junctionDra_.Initialize(&core_, Vector3(+1, +1, 0), JunctionDrawerCommon::Type::eGreen);
+	junctions_[0].Initialize({ {-20.0f,+10.0f,0.0f},{},scale });
+	junctions_[1].Initialize({ {+20.0f,-10.0f,0.0f},{},scale });
+	junctionDras_[0].Initialize(&junctions_[0], Vector3(0, -1, 0), JunctionDrawerCommon::Type::eGreen);
+	junctionDras_[1].Initialize(&junctions_[1], Vector3(-1, 0, 0), JunctionDrawerCommon::Type::eGreen);
+
+	// レーザー描画用クラス初期化
+	length_ = 3.0f;
+	laserDra_.Initialize(&core_, &length_);
+
+	// 鍵描画用クラス初期化
+	//keyDra_.Initialize(&core_);
+
+	// スイッチ描画用クラス初期化
+	//switchDra_.Initialize(&core_);
 
 	// ゲート描画用クラス初期化
 	gateDra_.Initialize(&core_);
@@ -85,21 +99,23 @@ void TestScene::Initialize()
 	
 	// パーティクル
 	isDrawParticle_ = true;
-	// エフェクト
-	isDrawEffect_ = true;
 	
 	// プレイヤー
 	isDrawPlayer_ = false;
 	// ブロック
 	isDrawBlock_ = false;
+	// 足場
+	isDrawPlatform_ = false;
 	// ばね
 	isDrawSpring_ = false;
 	// 接合部
-	isDrawJunction_ = true;
+	isDrawJunction_ = false;
+	// 接合部
+	isDrawLaser_ = true;
 	// ゲート
 	isDrawGate_ = false;
 	// ゴール
-	isDrawGoal_ = true;
+	isDrawGoal_ = false;
 	// 背景
 	isDrawBackground_ = true;
 	// HUD
@@ -107,7 +123,7 @@ void TestScene::Initialize()
 
 
 	// カメラ無し用
-	noneVP_.Initialize({});
+	noneVP_.Initialize();
 
 	// カメラ
 	camera_.Initialize({ 0,0,-50 }, {});
@@ -116,7 +132,7 @@ void TestScene::Initialize()
 	scrollCamera_.Initialize({ 0,+10,-50 }, &core_.pos_, { 0.0f,0.0f,0.0f });
 
 	// ビュープロジェクション初期化
-	transferVP_.Initialize({});
+	transferVP_.Initialize();
 }
 
 #pragma endregion
@@ -138,14 +154,20 @@ void TestScene::Update()
 {
 	// 描画するか
 	ImGui::Begin("isDraw");
+
 	ImGui::Checkbox("Player", &isDrawPlayer_);
 	ImGui::Checkbox("Block", &isDrawBlock_);
+	ImGui::Checkbox("Platform", &isDrawPlatform_);
+	ImGui::Checkbox("Spring", &isDrawSpring_);
+	ImGui::Checkbox("Junction", &isDrawJunction_);
+	ImGui::Checkbox("Laser", &isDrawLaser_);
+	ImGui::Checkbox("Key", &isDrawKey_);
+	ImGui::Checkbox("Switch", &isDrawSwitch_);
 	ImGui::Checkbox("Gate", &isDrawGate_);
 	ImGui::Checkbox("Goal", &isDrawGoal_);
 	ImGui::Checkbox("Background", &isDrawBackground_);
 	ImGui::Checkbox("HUD", &isDrawHUD_);
 	ImGui::Checkbox("Particle", &isDrawParticle_);
-	ImGui::Checkbox("Effect", &isDrawEffect_);
 	ImGui::End();
 
 #pragma region HUD
@@ -161,23 +183,47 @@ void TestScene::Update()
 
 #pragma region Object
 
+
+#pragma region Player
+
 	// プレイヤー
-	if (sKeys_->IsTrigger(DIK_W))
+	if (isDrawPlayer_)
 	{
-		playerDra_.JumpAnimation();
-	}
-	if (sKeys_->IsTrigger(DIK_S))
-	{
-		playerDra_.LandingAnimation();
-	}
-	if (sKeys_->IsTrigger(DIK_N))
-	{
-		playerDra_.RespawnAnimation();
+		ImGui::Begin("Player");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			playerDra_.Reset();
+		}
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Jump"))
+		{
+			playerDra_.JumpAnimation();
+		}
+		if (ImGui::Button("Landing"))
+		{
+			playerDra_.LandingAnimation();
+		}
+		if (ImGui::Button("Respawn"))
+		{
+			playerDra_.RespawnAnimation();
+		}
+
+		ImGui::End();
 	}
 
 	playerDra_.Update();
 
+#pragma endregion
 	
+
+#pragma region Block
+
 	// ブロック
 	if (isDrawBlock_)
 	{
@@ -199,15 +245,201 @@ void TestScene::Update()
 
 	blockDra_.Update();
 
+#pragma endregion
+
+
+#pragma region Spring
+
+	// ばね
+	if (isDrawSpring_)
+	{
+		ImGui::Begin("Spring");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			//springDra_.Reset();
+		}
+		ImGui::End();
+	}
+
+	//springDra_.Update();
+
+#pragma endregion
+
+
+#pragma region Platform
+
+	// 足場
+	if (isDrawPlatform_)
+	{
+		ImGui::Begin("Platform");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			platformDra_.Reset();
+		}
+
+		ImGui::Text("---------------");
+
+		ImGui::SliderFloat("Width", &platform_.scale_.x_, 1.0f, 24.0f);
+
+
+		ImGui::End();
+	}
+
+	platform_.UpdateMatrix();
+	platformDra_.Update();
+
+#pragma endregion
+
+
+#pragma region Junction
+
+	// 接合部
+	if (isDrawJunction_)
+	{
+		ImGui::Begin("Junction");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			junctionDras_[0].Reset(Vector3(0, -1, 0), JunctionDrawerCommon::Type::eGreen);
+			junctionDras_[1].Reset(Vector3(-1, 0, 0), JunctionDrawerCommon::Type::eGreen);
+		}
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Connection"))
+		{
+			// 接続
+			junctionDras_[0].AnimateConnection(&junctionDras_[1]);
+			junctionDras_[1].AnimateConnection(&junctionDras_[0]);
+		}
+
+		ImGui::End();
+	}
+
+	junctionDras_[0].Update();
+	junctionDras_[1].Update();
+
+#pragma endregion
+
+
+#pragma region Laser
+
+	// レーザー
+	if (isDrawLaser_)
+	{
+		ImGui::Begin("Laser");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			laserDra_.Reset();
+		}
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Shoot"))
+		{
+			laserDra_.AnimateShoot();
+		}
+
+		ImGui::End();
+	}
+
+	laserDra_.Update();
+
+#pragma endregion
+
+
+#pragma region Key
+
+	// 鍵
+	if (isDrawKey_)
+	{
+		ImGui::Begin("Key");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			//keyDra_.Reset();
+		}
+
+		ImGui::End();
+	}
+
+	//keyDra_.Update();
+
+#pragma endregion
+
+
+#pragma region Switch
+
+	// スイッチ
+	if (isDrawSwitch_)
+	{
+		ImGui::Begin("Swicth");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			//switchDra_.Reset();
+		}
+
+		ImGui::End();
+	}
+
+	//switchDra_.Update();
+
+#pragma endregion
+
+
+#pragma region Gate
 
 	// ゲート
+	if (isDrawGate_)
+	{
+		ImGui::Begin("Gate");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			gateDra_.Reset();
+		}
+		ImGui::End();
+	}
+
 	gateDra_.Update();
 
+#pragma endregion
+
 	
+#pragma region Goal
+
 	// ゴール
 	if (isDrawGoal_)
 	{
 		ImGui::Begin("Goal");
+
+		ImGui::Text("---------------");
+
 		if (ImGui::Button("Reset"))
 		{
 			// リセット
@@ -223,12 +455,35 @@ void TestScene::Update()
 
 	goalDra_.Update();
 
-	
-	// 背景更新
+#pragma endregion
+
+
+#pragma region Background
+
+	// 背景
+	if (isDrawBackground_)
+	{
+		ImGui::Begin("Background");
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Reset"))
+		{
+			// リセット
+			background_.Reset();
+		}
+		ImGui::End();
+	}
+
 	background_.Update();
+
+#pragma endregion
 
 
 	ImGui::Begin("DrawerHelper");
+
+	ImGui::Text("---------------");
+
 	if (ImGui::Button("Reset"))
 	{
 		// リセット
@@ -244,6 +499,7 @@ void TestScene::Update()
 	// 描画クラス静的更新
 	DrawerHelper::StaticUpdate();
 
+
 #pragma endregion
 
 
@@ -251,9 +507,6 @@ void TestScene::Update()
 
 	// パーティクル更新
 	particleMan_.Update();
-
-	// エフェクト更新
-	effectMan_.Update();
 
 #pragma endregion
 
@@ -343,11 +596,30 @@ void TestScene::Draw()
 	// 背景描画
 	if (isDrawBackground_) { background_.Draw(); }
 
-	// プレイヤー前描画
+	// プレイヤー描画
 	if (isDrawPlayer_) { playerDra_.Draw(); }
 
-	// ブロック前描画
+	// ブロック描画
 	if (isDrawBlock_) { blockDra_.Draw(); }
+
+	// ばね描画
+	if (isDrawSpring_) { springDra_.Draw(); }
+
+	// 接合部描画
+	if (isDrawJunction_) 
+	{
+		junctionDras_[0].Draw();
+		junctionDras_[1].Draw();
+	}
+
+	// レーザー描画
+	if (isDrawLaser_) { laserDra_.Draw(); }
+
+	// 鍵描画
+	//if (isDrawKey_) { keyDra_.Draw(); }
+
+	// スイッチ描画
+	//if (isDrawSwitch_) { switchDra_.Draw(); }
 
 	// ゲート前描画
 	if (isDrawGate_) { gateDra_.Draw(); }
@@ -361,8 +633,8 @@ void TestScene::Draw()
 	// パーティクル
 	if (isDrawParticle_) { particleMan_.Draw(); }
 
-	// エフェクト
-	if (isDrawEffect_) { effectMan_.Draw(); }
+	// 足場描画
+	if (isDrawPlatform_) { platformDra_.Draw(); }
 }
 
 #pragma endregion

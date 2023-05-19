@@ -22,8 +22,7 @@ protected:
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親トランスフォーム</param>
-	/// <param name="intervalTime"> : 立ちモーションの間隔</param>
-	void Initialze(YGame::Transform* pParent, const UINT intervalTime);
+	void Initialze(YGame::Transform* pParent);
 
 	/// <summary>
 	/// リセット

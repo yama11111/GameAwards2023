@@ -21,7 +21,7 @@ using YMath::Power;
 using YMath::Vector3;
 using YMath::Vector4;
 
-using namespace DrawerConfig::Block;
+using namespace DrawerConfig::Junction;
 
 #pragma endregion
 
@@ -32,6 +32,12 @@ array<array<Model*, JunctionDrawerCommon::sPartsNum_>, JunctionDrawerCommon::sTy
 	nullptr, nullptr,
 	//nullptr, nullptr,
 };
+
+Ease<float> JunctionDrawerCommon::sIdleRotaSpeedEase_{};
+Ease<float> JunctionDrawerCommon::sConnectPosFactorEase_{};
+Ease<float> JunctionDrawerCommon::sConnectRotaFactorEase_{};
+Ease<float> JunctionDrawerCommon::sConnectRotaSpeedEase_{};
+Ease<Vector3> JunctionDrawerCommon::sConnectScaleEase_{};
 
 #pragma endregion
 
@@ -54,32 +60,57 @@ void JunctionDrawerCommon::StaticInitialize()
 	// ブロック (黒)
 	spModels_[GreenIdx][CoreIdx] = Model::LoadObj("junction/core", true); // 核
 	spModels_[GreenIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // 殻
+
+	// ----- アニメーション ----- //
+
+	// 立ち回転スピードイージング
+	sIdleRotaSpeedEase_.Initialize(Idle::RotaSpeed::Start, Idle::RotaSpeed::End, Idle::RotaSpeed::Exponent);
+
+	// 接続位置係数イージング
+	sConnectPosFactorEase_.Initialize(Connect::PosFactor::Start, Connect::PosFactor::End, Connect::PosFactor::Exponent);
+
+	// 接続位置係数イージング
+	sConnectRotaFactorEase_.Initialize(Connect::RotaFactor::Start, Connect::RotaFactor::End, Connect::RotaFactor::Exponent);
+	
+	// 接続回転スピードイージング
+	sConnectRotaSpeedEase_.Initialize(Connect::RotaSpeed::Start, Connect::RotaSpeed::End, Connect::RotaSpeed::Exponent);
+
+	// 接続大きさイージング
+	sConnectScaleEase_.Initialize(Connect::Scale::Start, Connect::Scale::End, Connect::Scale::Exponent);
 }
 
 #pragma endregion
 
 #pragma region Drawer
 
-void JunctionDrawer::Initialize(Transform* pParent, const YMath::Vector3& direction, const Type& type)
+void JunctionDrawer::Initialize(Transform* pParent, const Vector3& direction, const Type& type)
 {
 	// 基底クラス初期化
-	IDrawer::Initialze(pParent, Idle::IntervalTime);
+	IDrawer::Initialze(pParent);
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		// 生成
-		modelObjs_[i].reset(Model::Object::Create({}, spVP_, nullptr, nullptr, nullptr, nullptr));
+		// 子供生成
+		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		{
+			// 大きさ
+			Vector3 scale = Vector3(1.0f, 1.0f, 1.0f);
+			scale -= ScaleDifference * static_cast<float>(i);
 
-		// 親行列挿入
-		modelObjs_[i]->parent_ = &core_->m_;
+			// 生成
+			modelObjs_[i][j].reset(Model::Object::Create({ {}, {}, scale }, spVP_));
+
+			// 親行列挿入
+			modelObjs_[i][j]->parent_ = &core_->m_;
+		}
 	}
 
 	// リセット
 	Reset(direction, type);
 }
 
-void JunctionDrawer::Reset(const YMath::Vector3& direction, const Type& type)
+void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 {
 	// リセット
 	IDrawer::Reset();
@@ -108,19 +139,86 @@ void JunctionDrawer::Reset(const YMath::Vector3& direction, const Type& type)
 	//	pMaterial = CoreColor::MaterialPtr();
 	//}
 
-	modelObjs_[CoreIdx]->SetColor(pColor);
-	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
+	// カラーとマテリアル設定
+	for (size_t i = 0; i < modelObjs_.size(); i++)
+	{
+		modelObjs_[i][CoreIdx]->SetColor(pColor);
+		modelObjs_[i][CoreIdx]->SetMaterial(pMaterial);
+	}
+
+	// パートナー解除
+	pPartner_ = nullptr;
+
+
+	// ----- アニメーション ----- //
+
+	// 動く
+	isAct_ = true;
+
+	// アニメ用初期化
+	for (size_t i = 0; i < sFrameNum_; i++)
+	{
+		animePoss_[i] = animeRotas_[i] = animeScales_[i] = {};
+	}
+
+	// 立ちモーションする
+	isIdle_ = true;
+
+	// 立ちタイマー初期化
+	for (size_t i = 0; i < idleTimers_.size(); i++)
+	{
+		idleTimers_[i].Initialize(Idle::Frame);
+		idleTimers_[i].SetActive(true);
+	}
+
+	// 接続しない
+	isConnected_ = false;
+
+	// 接続タイマー初期化
+	connectTimer_.Initialize(Connect::Frame);
+
+	// 向き合わせタイマー初期化
+	alignDirectionTimer_.Initialize(Connect::AlignDirection::Frame);
 }
 
 void JunctionDrawer::Update()
 {
+	// アニメーション用
+	Vector3 pos{}, rota{}, scale{};
+
+	// 向き合わせ
+	rota = YMath::AdjustAngle(direction_);
+
+
 	// 基底クラス更新 
-	IDrawer::Update({});
+	IDrawer::Update({ pos, rota, scale });
+
+
+	// アニメ用初期化
+	for (size_t i = 0; i < sFrameNum_; i++)
+	{
+		animePoss_[i] = animeRotas_[i] = animeScales_[i] = {};
+	}
+
+	// 立ちモーション更新
+	UpdateIdleAnimation();
+
+	// 接続モーション更新
+	UpdateConnectAnimation();
+
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->UpdateMatrix();
+		// 子供生成
+		for (size_t j = 0; j < modelObjs_[i].size(); j++)
+		{
+			modelObjs_[i][j]->UpdateMatrix({animePoss_[i], animeRotas_[i], animeScales_[i]});
+
+			// 回転量調整
+			if (modelObjs_[i][j]->rota_.z_ >= +PI * 4) { modelObjs_[i][j]->rota_.z_ -= PI * 4; }
+			if (modelObjs_[i][j]->rota_.z_ <= -PI * 4) { modelObjs_[i][j]->rota_.z_ += PI * 4; }
+		}
 	}
 }
 
@@ -129,7 +227,10 @@ void JunctionDrawer::Draw()
 	// モデルの数描画
 	for (size_t i = 0; i < spModels_[typeIndex_].size(); i++)
 	{
-		spModels_[typeIndex_][i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
+		for (size_t j = 0; j < modelObjs_.size(); j++)
+		{
+			spModels_[typeIndex_][i]->SetDrawCommand(modelObjs_[j][i].get(), YGame::DrawLocation::Center);
+		}
 	}
 }
 
@@ -151,11 +252,121 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 {
 	// パートナー設定
 	SetPartner(pPartner);
-	
-	// 接続先にもパートナー設定
-	pPartner->SetPartner(this);
+
+	// 向きイージング初期化
+	Vector3 d = Vector3(core_->pos_ - pParent_->pos_);
+	alignDirectionEase_.Initialize(direction_, d.Normalized(), Connect::AlignDirection::Exponent);
+
+	// 向きタイマーリセット
+	alignDirectionTimer_.Reset(true);
+
+	// 接続した
+	isConnected_ = true;
+
+	// 立ちモーションしない
+	isIdle_ = false;
+
+	// タイマー初期化
+	connectTimer_.Reset(true);
+}
+
+void JunctionDrawer::UpdateIdleAnimation()
+{
+	// 動いていないなら弾く
+	if (isAct_ == false) { return; }
+
+	// 立ちモーションじゃないなら弾く
+	if (isIdle_ == false) { return; }
 
 
+	for (size_t i = 0; i < sFrameNum_; i++)
+	{
+		// タイマー更新
+		idleTimers_[i].Update();
+		
+		// 回転
+		animeRotas_[i].z_ += sIdleRotaSpeedEase_.In(idleTimers_[i].Ratio());
+
+		// タイマー終わったら
+		if (idleTimers_[i].IsEnd())
+		{
+			// タイマーリセット
+			idleTimers_[i].Reset(true);
+		}
+
+		// 最後なら通らない
+		if (i + 1 == sFrameNum_) { break; }
+
+		// 接続後
+		if (isConnected_)
+		{
+			// 条件
+			bool b = (idleTimers_[i].Ratio() >= 0.25f);
+			
+			// 動かすか決める
+			idleTimers_[i + 1].SetActive(b);
+		}
+	}
+}
+
+void JunctionDrawer::UpdateConnectAnimation()
+{
+	// 動いていないなら弾く
+	if (isAct_ == false) { return; }
+
+	// 動いていないなら弾く
+	if (isConnected_ == false) { return; }
+
+
+	// 接続タイマー更新
+	connectTimer_.Update();
+
+	// ベクトルの大きさ取得
+	float len = Vector3(core_->pos_ - pParent_->pos_).Length() / 25.0f;
+
+	// アニメ
+	for (size_t i = 0; i < sFrameNum_; i++)
+	{
+		// 位置係数
+		animePoss_[i].z_ += sConnectPosFactorEase_.Out(connectTimer_.Ratio()) * (len * i);
+
+		// 位置係数
+		animeRotas_[i].z_ += sConnectRotaFactorEase_.Out(connectTimer_.Ratio()) * i;
+
+
+		// 回転
+		animeRotas_[i].z_ += sConnectRotaSpeedEase_.Out(connectTimer_.Ratio());
+
+		// 大きさ
+		animeScales_[i] += sConnectScaleEase_.Out(connectTimer_.Ratio());
+	}
+
+
+	// タイマー終わったら
+	if (connectTimer_.IsEnd())
+	{
+		// リセットしてないなら
+		if (isIdle_ == false)
+		{
+			// 立ちタイマーリセット
+			idleTimers_[0].Reset(true);
+			float frame1 = static_cast<float>(Idle::Frame) * 0.75f;
+			float frame2 = static_cast<float>(Idle::Frame) * 0.75f * 0.75f;
+
+			idleTimers_[1].Initialize(static_cast<unsigned int>(frame1));
+			idleTimers_[2].Initialize(static_cast<unsigned int>(frame2));
+		}
+
+		// 立ちモーション開始
+		isIdle_ = true;
+	}
+
+
+	// 向き合わせタイマー更新
+	alignDirectionTimer_.Update();
+
+	// 向き合わせ
+	direction_ = alignDirectionEase_.In(alignDirectionTimer_.Ratio());
 }
 
 #pragma endregion

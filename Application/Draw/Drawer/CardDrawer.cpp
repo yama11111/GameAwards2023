@@ -67,13 +67,13 @@ void CardDrawer::Initialize(YGame::Transform* pParent, const int number, const b
 	clearCharaColor_.reset(CBColor::Create());
 
 	// ステージカードオブジェクト
-	cardObjs_.reset(Sprite2D::Object::Create({}, color_.get(), nullptr));
+	cardObjs_.reset(Sprite2D::Object::Create(Transform::Status::Default(), color_.get()));
 	cardObjs_->parent_ = &core_->m_;
 
 	// 数字用オブジェクト
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
-		numObjs_[i].reset(Sprite2D::Object::Create({}, color_.get(), nullptr));
+		numObjs_[i].reset(Sprite2D::Object::Create(Transform::Status::Default(), color_.get()));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 
@@ -89,7 +89,7 @@ void CardDrawer::Reset(const bool isClear)
 	// ----- オブジェクト初期化 ----- //
 
 	// 核
-	core_->Initialize({});
+	core_->Initialize();
 
 	// 数字
 	{
@@ -111,7 +111,7 @@ void CardDrawer::Reset(const bool isClear)
 	}
 
 	// カード
-	cardObjs_->Initialize({});
+	cardObjs_->Initialize();
 
 	// 色初期化
 	color_->SetRGBA({ 1.0f,1.0f,1.0f,1.0f });

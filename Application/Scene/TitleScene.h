@@ -41,6 +41,9 @@ namespace YScene
 		// パーティクルマネージャー
 		YGame::ParticleManager particleMan_;
 
+		// カメラ
+		YGame::Camera camera_;
+
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
 

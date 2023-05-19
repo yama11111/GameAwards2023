@@ -15,22 +15,22 @@ cbuffer cbuff1 : register(b1)
 	float4 texColorRate_; // 元の色の割合
 }
 
-// 光
-cbuffer cbuff2 : register(b2)
-{
-	float3 ambientColor_; // 環境光色
-	DireLight direLights_[DireLightNum]; // 平行光源
-	PointLight pointLights_[PointLightNum]; // 点光源
-	//SpotLight spotLights[SpotLightNum]; // スポットライト光源
-}
-
 // マテリアル
-cbuffer cbuff3 : register(b3)
+cbuffer cbuff2 : register(b2)
 {
 	float3 mAmbient_  : packoffset(c0); // アンビエント係数
 	float3 mDiffuse_  : packoffset(c1); // ディフューズ係数
 	float3 mSpecular_ : packoffset(c2); // スペキュラー係数
 	float  mAlpha_ : packoffset(c2.w); // アルファ
+}
+
+// 光
+cbuffer cbuff3 : register(b3)
+{
+	float3 ambientColor_; // 環境光色
+	DireLight direLights_[DireLightNum]; // 平行光源
+	PointLight pointLights_[PointLightNum]; // 点光源
+	//SpotLight spotLights[SpotLightNum]; // スポットライト光源
 }
 
 // テクスチャ設定

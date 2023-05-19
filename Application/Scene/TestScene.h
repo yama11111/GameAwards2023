@@ -15,7 +15,6 @@
 #include "BackgroundDrawer.h"
 #include "HUDDrawer.h"
 
-#include "EffectManager.h"
 #include "ScrollCamera.h"
 
 
@@ -76,6 +75,9 @@ namespace YScene
 
 #pragma region Platform
 
+		// 核
+		YGame::Transform platform_;
+
 		// 足場描画クラス
 		PlatformDrawer platformDra_;
 
@@ -87,8 +89,11 @@ namespace YScene
 
 #pragma region Junction
 
+		// 核
+		std::array<YGame::Transform, 2> junctions_;
+
 		// 接合部描画クラス
-		JunctionDrawer junctionDra_;
+		std::array<JunctionDrawer, 2> junctionDras_;
 		
 		// 接続部描画するか
 		bool isDrawJunction_ = false;
@@ -97,6 +102,12 @@ namespace YScene
 
 
 #pragma region Laser
+
+		// 核
+		YGame::Transform laser_;
+		
+		// 長さ
+		float length_ = 0.0f;
 
 		// レーザー描画クラス
 		LaserDrawer laserDra_;
@@ -174,13 +185,6 @@ namespace YScene
 		
 		// パーティクル描画するか
 		bool isDrawParticle_ = false;
-
-
-		// エフェクトマネージャー
-		YGame::EffectManager effectMan_;
-		
-		// エフェクト描画するか
-		bool isDrawEffect_ = false;
 
 
 		// カメラ設定

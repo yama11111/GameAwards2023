@@ -40,7 +40,7 @@ void IDrawer::StaticInitialize(
 	spParticleMan_ = pParticleMan;
 }
 
-void IDrawer::Initialze(YGame::Transform* pParent, const UINT intervalTime)
+void IDrawer::Initialze(YGame::Transform* pParent)
 {
 	// nullチェック
 	assert(pParent);
@@ -49,7 +49,6 @@ void IDrawer::Initialze(YGame::Transform* pParent, const UINT intervalTime)
 
 	// オブジェクト生成 + 親行列挿入
 	core_.reset(new Transform());
-	core_->Initialize({});
 	core_->parent_ = &pParent->m_;
 
 	// リセット
@@ -62,7 +61,7 @@ void IDrawer::Reset()
 	SlimeActor::Initialize();
 
 	// オブジェクト初期化
-	core_->Initialize({});
+	core_->Initialize();
 }
 
 void IDrawer::Update(const YGame::Transform::Status& status)

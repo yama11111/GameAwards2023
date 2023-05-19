@@ -360,12 +360,6 @@ void PostEffect::StaticInitialize(
 
 #pragma region Object
 
-PostEffect::Object* PostEffect::Object::Create(const Status& status, const bool isMutable)
-{
-	// インスタンスを返す
-	return Create(status, nullptr, nullptr, isMutable);
-}
-
 PostEffect::Object* PostEffect::Object::Create(
 	const Status& status,
 	CBColor* pColor,

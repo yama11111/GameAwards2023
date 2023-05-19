@@ -92,15 +92,6 @@ void Sprite3D::SetIsVisible(const bool isVisible)
 
 Sprite3D::Object* Sprite3D::Object::Create(
 	const Status& status, 
-	bool isXAxisBillboard, bool isYAxisBillboard, 
-	const bool isMutable)
-{
-	// インスタンスを返す
-	return Create(status, isXAxisBillboard, isYAxisBillboard, nullptr, nullptr, nullptr, isMutable);
-}
-
-Sprite3D::Object* Sprite3D::Object::Create(
-	const Status& status, 
 	bool isXAxisBillboard, bool isYAxisBillboard,
 	ViewProjection* pVP, 
 	CBColor* pColor,
@@ -197,7 +188,7 @@ void Sprite3D::Object::Default::StaticInitialize()
 {
 	// 生成
 	sVP_.reset(new YGame::ViewProjection());
-	sVP_->Initialize({});
+	sVP_->Initialize();
 
 	// 生成 + 初期化 (色)
 	sColor_.reset(CBColor::Create({ 1.0f,1.0f,1.0f,1.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));

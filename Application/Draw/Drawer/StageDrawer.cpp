@@ -47,7 +47,7 @@ void StageDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP)
 	// ----- モデル読み込み ----- //
 }
 
-void StageDrawer::Initialize(YGame::Transform* pParent, const int number, IMode::Type type)
+void StageDrawer::Initialize(Transform* pParent, const int number, const TowerDrawerCommon::Type type)
 {
 	// 数字
 	// 0以下なら弾く
@@ -68,23 +68,23 @@ void StageDrawer::Initialize(YGame::Transform* pParent, const int number, IMode:
 	for (size_t i = 0; i < numObjs_.size(); i++)
 	{
 		// ビルボード化
-		numObjs_[i].reset(Sprite3D::Object::Create({}, true, true, spVP_, color_.get(), nullptr));
+		numObjs_[i].reset(Sprite3D::Object::Create(Transform::Status::Default(), true, true, spVP_, color_.get(), nullptr));
 		numObjs_[i]->parent_ = &core_->m_;
 	}
 
 	// タワー
-	towerDra_.Initialize(&core_->m_, type);
+	towerDra_.Initialize(core_.get(), type);
 
 	// リセット
 	Reset(type);
 }
 
-void StageDrawer::Reset(IMode::Type type)
+void StageDrawer::Reset(const TowerDrawerCommon::Type type)
 {
 	// ----- オブジェクト初期化 ----- //
 
 	// 核
-	core_->Initialize({});
+	core_->Initialize();
 
 	// 数字
 	{

@@ -38,8 +38,12 @@ void TitleScene::Load()
 
 	// ŠjF
 	CoreColor::StaticInitialize(false);
+	
+	// Šî’ê•`‰æƒNƒ‰ƒX
+	IDrawer::StaticInitialize(&transferVP_, nullptr, nullptr, &camera_, &particleMan_);
+	
 	// ”wŒi
-	BackgroundDrawerCommon::StaticInitialize(&transferVP_, &particleMan_);
+	BackgroundDrawerCommon::StaticInitialize(&particleMan_);
 
 	// “ü—Í
 	InputDrawerCommon::StaticInitialize();

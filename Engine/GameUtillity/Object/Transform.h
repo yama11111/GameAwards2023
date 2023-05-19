@@ -5,8 +5,9 @@
 namespace YGame
 {
 	// トランスフォーム (位置、回転、大きさ)
-	class Transform
+	struct Transform
 	{
+	
 	public:
 		
 		// 位置
@@ -26,12 +27,26 @@ namespace YGame
 	
 	public:
 		
-		// 設定用ステータス(位置、回転、大きさ)
+		// 設定用ステータス
 		struct Status
 		{
-			YMath::Vector3 pos_ = { 0.0f, 0.0f, 0.0f };
-			YMath::Vector3 rota_ = { 0.0f, 0.0f, 0.0f };
-			YMath::Vector3 scale_ = { 1.0f, 1.0f, 1.0f };
+
+		public:
+
+			// 位置
+			YMath::Vector3 pos_;
+			
+			// 回転
+			YMath::Vector3 rota_;
+			
+			// 大きさ
+			YMath::Vector3 scale_;
+
+		public:
+
+			// デフォルト値
+			static Status Default();
+
 		};
 
 	public:
@@ -43,7 +58,7 @@ namespace YGame
 		/// <param name="(Vector3) status.pos_"> : 位置</param>
 		/// <param name="(Vector3) status.rota_"> : 回転</param>
 		/// <param name="(Vector3) status.scale_"> : 大きさ</param>
-		void Initialize(const Status& status);
+		void Initialize(const Status& status = Status::Default());
 		
 		/// <summary>
 		/// アフィン変換

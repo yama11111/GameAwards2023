@@ -1,6 +1,5 @@
 #pragma once
 #include "IDrawer.h"
-#include "IMode.h"
 #include <array>
 
 // ゴール描画用コモンクラス

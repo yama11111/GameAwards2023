@@ -4,6 +4,7 @@
 #include <cassert>
 
 using YScene::InfectionBlocks;
+using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::CBColor;
 using YMath::Vector2;
@@ -53,7 +54,7 @@ void InfectionBlocks::Initialize()
 			blocks_[y][x].reset(new Block());
 
 			blocks_[y][x]->color_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, false));
-			blocks_[y][x]->obj_.reset(Sprite2D::Object::Create({}, blocks_[y][x]->color_.get(), nullptr, false));
+			blocks_[y][x]->obj_.reset(Sprite2D::Object::Create(Transform::Status::Default(), blocks_[y][x]->color_.get(), nullptr, false));
 
 			// 2ƒuƒƒbƒNŠÔ‚Ì‹——£
 			Vector2 dist = { sSize_ * x, sSize_ * y };

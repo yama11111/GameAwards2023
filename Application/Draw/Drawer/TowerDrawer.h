@@ -1,6 +1,6 @@
 #pragma once
-#include "IMode.h"
-#include "Model.h"
+#include "IDrawer.h"
+#include <array>
 
 // タワー描画用コモンクラス
 class TowerDrawerCommon
@@ -11,8 +11,16 @@ public:
 	// パーツの名前
 	enum class Parts
 	{
-		Core, // 核
-		Shell, // 殻
+		eCore, // 核
+		eShell, // 殻
+	};
+
+	// 種類
+	enum class Type
+	{
+		eBlack, // 白
+		eWhite, // 黒
+		eEnd, // リサイズ用
 	};
 
 protected:
@@ -20,30 +28,28 @@ protected:
 	// パーツの総数
 	static const size_t sPartsNum_ = 2;
 
+	// 種類の総数
+	static const size_t sTypeNum_ = static_cast<size_t>(Type::eEnd);
+
 protected:
 	
 	// モデル (パーツの数だけ)
-	static std::array<std::array<YGame::Model*, sPartsNum_>, IMode::sTypeNum_> spModels_;
-	
-	// ビュープロジェクションポインタ
-	static YGame::ViewProjection* spVP_;
+	static std::array<std::array<YGame::Model*, sPartsNum_>, sTypeNum_> spModels_;
 	
 	// マテリアルポインタ
-	static YGame::CBMaterial* spMate_;
+	static YGame::CBMaterial* spUniqueMate_;
 
 	// ライトポインタ
-	static YGame::CBLightGroup* spLight_;
+	static YGame::CBLightGroup* spUniqueLight_;
 
 public:
 
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	/// <param name="pMate"> : マテリアルポインタ</param>
 	/// <param name="pLight"> : ライトポインタ</param>
 	static void StaticInitialize(
-		YGame::ViewProjection* pVP, 
 		YGame::CBMaterial* pMate,
 		YGame::CBLightGroup* pLight);
 
@@ -55,38 +61,43 @@ public:
 
 // タワー描画用クラス
 class TowerDrawer :
-	private IMode,
+	private IDrawer,
 	private TowerDrawerCommon
 {
 
 private:
-	
-	// 核
-	std::unique_ptr<YGame::Transform> core_;
-	
+
+	// ------ オブジェクト ------ // 
+
 	// モデル用オブジェクト (子)
 	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
 
+	// 種類
+	Type type_ = Type::eBlack;
+
+	// 種類インデックス
+	size_t typeIndex_ = 0;
+
 public:
-	
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
-	/// <param name="modeType"> : 状態</param>
+	/// <param name="Type"> : 種類</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
-	/// <param name="IMode::Type::Movable"> : 可動状態</param>
-	void Initialize(YMath::Matrix4* pParent, const IMode::Type& modeType);
+	/// <param name="BlockDrawerCommon::Type::eBlack"> : 白</param>
+	/// <param name="BlockDrawerCommon::Type::eWhite"> : 黒</param>
+	void Initialize(YGame::Transform* pParent, const Type& type);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
-	/// <param name="modeType"> : 状態</param>
+	/// <param name="Type"> : 種類</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="IMode::Type::Noraml"> : 通常状態</param>
-	/// <param name="IMode::Type::Movable"> : 可動状態</param>
-	void Reset(const IMode::Type& modeType);
+	/// <param name="BlockDrawerCommon::Type::eBlack"> : 白</param>
+	/// <param name="BlockDrawerCommon::Type::eWhite"> : 黒</param>
+	void Reset(const Type& type);
 
 	/// <summary>
 	/// 更新
@@ -96,10 +107,11 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="location"> : 描画場所</param>
 	void Draw(const YGame::DrawLocation& location);
 
-private:
+public:
+
+	~TowerDrawer() = default;
 
 };
 

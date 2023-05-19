@@ -31,16 +31,33 @@ protected:
 	// 種類の総数
 	static const size_t sTypeNum_ = static_cast<size_t>(Type::eEnd);
 
+	// 枠の総数
+	static const size_t sFrameNum_ = 3;
+
 protected:
 
-	// ----- ブロック ----- //
+	// ----- 接合部 ----- //
 
 	// モデル (パーツの数だけ)
 	static std::array<std::array<YGame::Model*, sPartsNum_>, sTypeNum_> spModels_;
 
 	// ----- アニメーション ----- //
 
+	// 立ち回転スピードイージング
+	static YMath::Ease<float> sIdleRotaSpeedEase_;
 
+
+	// 接続位置係数イージング
+	static YMath::Ease<float> sConnectPosFactorEase_;
+
+	// 接続位置係数イージング
+	static YMath::Ease<float> sConnectRotaFactorEase_;
+
+	// 接続回転スピードイージング
+	static YMath::Ease<float> sConnectRotaSpeedEase_;
+
+	// 接続大きさイージング
+	static YMath::Ease<YMath::Vector3> sConnectScaleEase_;
 
 public:
 
@@ -65,7 +82,7 @@ private:
 	// ------ オブジェクト ------ // 
 
 	// モデル用オブジェクト (子)
-	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
+	std::array<std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_>, sFrameNum_> modelObjs_;
 
 	// 向き
 	YMath::Vector3 direction_;
@@ -76,10 +93,44 @@ private:
 	// 種類インデックス
 	size_t typeIndex_ = 0;
 
-	// ----- 演出 ----- //
-
 	// 接続先
 	JunctionDrawer* pPartner_ = nullptr;
+
+	// ----- 演出 ----- //
+
+	// 動いているか
+	bool isAct_ = false;
+
+	
+	// 位置 (アニメ用)
+	std::array<YMath::Vector3, sFrameNum_> animePoss_;
+	
+	// 回転 (アニメ用)
+	std::array<YMath::Vector3, sFrameNum_> animeRotas_;
+	
+	// 大きさ (アニメ用)
+	std::array<YMath::Vector3, sFrameNum_> animeScales_;
+
+
+	// 立ちモーションか
+	bool isIdle_ = false;
+
+	// 立ちタイマー
+	std::array<YMath::Timer, sFrameNum_> idleTimers_;
+
+
+	// 接続したか
+	bool isConnected_ = false;
+
+	// 接続タイマー
+	YMath::Timer connectTimer_;
+
+
+	// 向き合わせタイマー
+	YMath::Timer alignDirectionTimer_;
+
+	// 向き合わせイージング
+	YMath::Ease<YMath::Vector3> alignDirectionEase_;
 
 public:
 
@@ -135,6 +186,18 @@ public:
 	/// </summary>
 	/// <param name="pPartner"> : 接続先のポインタ</param>
 	void AnimateConnection(JunctionDrawer* pPartner);
+
+private:
+
+	/// <summary>
+	/// 立ちモーション更新
+	/// </summary>
+	void UpdateIdleAnimation();
+
+	/// <summary>
+	/// 接続モーション更新
+	/// </summary>
+	void UpdateConnectAnimation();
 
 public:
 
