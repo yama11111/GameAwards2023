@@ -47,7 +47,7 @@ static const size_t CoreIdx = static_cast<size_t>(JunctionDrawerCommon::Parts::e
 static const size_t ShellIdx = static_cast<size_t>(JunctionDrawerCommon::Parts::eShell); // 殻
 
 static const size_t GreenIdx = static_cast<size_t>(JunctionDrawerCommon::Type::eGreen); // 緑
-//static const size_t WhiteIdx = static_cast<size_t>(JunctionDrawerCommon::Type::); // 赤
+static const size_t RedIdx = static_cast<size_t>(JunctionDrawerCommon::Type::eRed); // 赤
 
 #pragma endregion
 
@@ -60,6 +60,9 @@ void JunctionDrawerCommon::StaticInitialize()
 	// ブロック (黒)
 	spModels_[GreenIdx][CoreIdx] = Model::LoadObj("junction/core", true); // 核
 	spModels_[GreenIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // 殻
+
+	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/core", true); // 殻
+	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // 殻
 
 	// ----- アニメーション ----- //
 
@@ -133,11 +136,11 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
 		pMaterial = CoreColor::MaterialPtr();
 	}
-	//else if (type == Type::eRed)
-	//{
-	//	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
-	//	pMaterial = CoreColor::MaterialPtr();
-	//}
+	else if (type == Type::eRed)
+	{
+		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
+		pMaterial = CoreColor::MaterialPtr();
+	}
 
 	// カラーとマテリアル設定
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -213,11 +216,11 @@ void JunctionDrawer::Update()
 		// 子供生成
 		for (size_t j = 0; j < modelObjs_[i].size(); j++)
 		{
-			modelObjs_[i][j]->UpdateMatrix({animePoss_[i], animeRotas_[i], animeScales_[i]});
-
 			// 回転量調整
-			if (modelObjs_[i][j]->rota_.z_ >= +PI * 4) { modelObjs_[i][j]->rota_.z_ -= PI * 4; }
-			if (modelObjs_[i][j]->rota_.z_ <= -PI * 4) { modelObjs_[i][j]->rota_.z_ += PI * 4; }
+			if (animeRotas_[i].z_ >= +PI * 4) { animeRotas_[i].z_ -= PI * 4; }
+			else if (animeRotas_[i].z_ <= -PI * 4) { animeRotas_[i].z_ += PI * 4; }
+			
+			modelObjs_[i][j]->UpdateMatrix({animePoss_[i], animeRotas_[i], animeScales_[i]});
 		}
 	}
 }

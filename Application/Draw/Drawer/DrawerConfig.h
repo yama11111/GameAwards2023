@@ -186,6 +186,174 @@ namespace DrawerConfig
 		}
 	}
 
+	// ばね
+	namespace Spring
+	{
+		// 下リング初期回転量
+		static const float BottomRingDefaultRotaValue = +PI / 4.0f;
+
+		// 立ちモーション
+		namespace Idle
+		{
+			// 高さ
+			namespace Height
+			{
+				// フレーム
+				static unsigned int Frame = 60;
+
+				// 上
+				namespace Top
+				{
+					// 開始値
+					static const float Start = 0.0f;
+
+					// 終了値
+					static const float End = 0.25f;
+
+					// 指数
+					static const float Exponent = 2.0f;
+				}
+
+				// 下
+				namespace Bottom
+				{
+					// 開始値
+					static const float Start = 0.0f;
+
+					// 終了値
+					static const float End = 0.2f;
+
+					// 指数
+					static const float Exponent = 2.0f;
+				}
+			}
+
+			// 回転スピード
+			namespace RotaSpeed
+			{
+				// フレーム
+				static unsigned int Frame = 120;
+
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = +PI * 4.0f;
+
+				// 指数
+				static const float Exponent = 1.0f;
+			}
+		}
+
+		// ジャンプアニメーション
+		namespace Jump
+		{
+			// フレーム
+			namespace Frame
+			{
+				// 予備動作
+				static unsigned int Anticipation = 5;
+
+				// 本番
+				static unsigned int Performance = 10;
+			}
+
+			// 高さ
+			namespace Height
+			{
+				// 予備動作
+				namespace Anticipation
+				{
+					// 開始値
+					static const float Start = 0.0f;
+
+					// 終了値
+					static const float End = -0.5f;
+
+					// 指数
+					static const float Exponent = 3.0f;
+				}
+				
+				// 本番
+				namespace Performance
+				{
+					// 上
+					namespace Top
+					{
+						// 開始値
+						static const float Start = 0.0f;
+
+						// 終了値
+						static const float End = 1.5f;
+
+						// 指数
+						static const float Exponent = 3.0f;
+					}
+
+					// 下
+					namespace Bottom
+					{
+						// 開始値
+						static const float Start = 0.0f;
+
+						// 終了値
+						static const float End = 2.0f;
+
+						// 指数
+						static const float Exponent = 3.0f;
+					}
+				}
+			}
+
+			// 大きさ
+			namespace Scale
+			{
+				// 予備動作
+				namespace Anticipation
+				{
+					// 開始値
+					static const YMath::Vector3 Start = {};
+
+					// 終了値
+					static const YMath::Vector3 End = { -0.5f,0.0f,-0.5f };
+
+					// 指数
+					static const float Exponent = 3.0f;
+				}
+
+				// 本番
+				namespace Performance
+				{
+					// 上
+					namespace Top
+					{
+						// 開始値
+						static const YMath::Vector3 Start = {};
+
+						// 終了値
+						static const YMath::Vector3 End = { +0.5f,0.0f,+0.5f };
+
+						// 指数
+						static const float Exponent = 3.0f;
+					}
+
+					// 下
+					namespace Bottom
+					{
+						// 開始値
+						static const YMath::Vector3 Start = {};
+
+						// 終了値
+						static const YMath::Vector3 End = { +0.5f,0.0f,+0.5f };
+
+						// 指数
+						static const float Exponent = 3.0f;
+					}
+				}
+			}
+		}
+	}
+
 	// 接続部
 	namespace Junction
 	{
@@ -379,6 +547,59 @@ namespace DrawerConfig
 				// 指数
 				static const float Exponent = 3.0f;
 			}
+		}
+	}
+
+	// 鍵
+	namespace Key
+	{
+		// リングの高さ
+		static const float RingHeight = +0.5f;
+
+		// 立ちモーション
+		namespace Idle
+		{
+			// フレーム
+			static const unsigned int Frame = 60;
+
+			// 高さ
+			namespace Height
+			{
+				// 開始値
+				static const float Start = 0.0f;
+
+				// 終了値
+				static const float End = +0.25f;
+
+				// 指数
+				static const float Exponent = 3.0f;
+			}
+		}
+	}
+
+	// スイッチ
+	namespace Switch
+	{
+		// 台座位置
+		static const float BaseHeight = -1.0f;
+		
+		// レバー位置
+		static const float LeverHeight = -0.8f;
+
+		// 回転スピード
+		namespace RotaSpeed
+		{
+			// フレーム
+			static const unsigned int Frame = 30;
+			
+			// 開始値
+			static const float Start = 0.0f;
+
+			// 終了値
+			static const float End = -PI / 2.5f;
+
+			// 指数
+			static const float Exponent = 3.0f;
 		}
 	}
 

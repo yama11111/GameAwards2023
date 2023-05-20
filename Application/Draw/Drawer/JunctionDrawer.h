@@ -20,6 +20,7 @@ public:
 	enum class Type
 	{
 		eGreen, // 緑
+		eRed, // 赤
 		eEnd, // リサイズ用
 	};
 
@@ -141,8 +142,8 @@ public:
 	/// <param name="direction"> : 向き</param>
 	/// <param name="Type"> : 種類</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="BlockDrawerCommon::Type::eBlack"> : 白</param>
-	/// <param name="BlockDrawerCommon::Type::eWhite"> : 黒</param>
+	/// <param name="BlockDrawerCommon::Type::eGreen"> : 緑</param>
+	/// <param name="BlockDrawerCommon::Type::eRed"> : 赤</param>
 	void Initialize(YGame::Transform* pParent, const YMath::Vector3& direction, const Type& type);
 
 	/// <summary>
@@ -151,8 +152,8 @@ public:
 	/// <param name="direction"> : 向き</param>
 	/// <param name="Type"> : 種類</param>
 	/// <param name="---------------------------------------------"></param>
-	/// <param name="BlockDrawerCommon::Type::eBlack"> : 白</param>
-	/// <param name="BlockDrawerCommon::Type::eWhite"> : 黒</param>
+	/// <param name="BlockDrawerCommon::Type::eGreen"> : 緑</param>
+	/// <param name="BlockDrawerCommon::Type::eRed"> : 赤</param>
 	void Reset(const YMath::Vector3& direction, const Type& type);
 
 	/// <summary>

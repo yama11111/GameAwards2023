@@ -6,6 +6,7 @@
 #include "PlayerDrawer.h"
 #include "BlockDrawer.h"
 #include "PlatformDrawer.h"
+#include "SpringDrawer.h"
 #include "JunctionDrawer.h"
 #include "LaserDrawer.h"
 #include "KeyDrawer.h"
@@ -77,15 +78,18 @@ void DrawerHelper::StaticInitialize(YGame::ViewProjection* pVP, YGame::Camera* p
 		
 		// 接続部
 		JunctionDrawerCommon::StaticInitialize();
+
+		// ばね
+		SpringDrawerCommon::StaticInitialize();
 		
 		// レーザー
 		LaserDrawerCommon::StaticInitialize();
 		
 		// 鍵
-		// KeyDrawerCommon::StaticInitialize();
+		KeyDrawerCommon::StaticInitialize();
 		
 		// スイッチ
-		// SwitchDrawerCommon::StaticInitialize();
+		SwitchDrawerCommon::StaticInitialize();
 
 		// ゲート
 		GateDrawerCommon::StaticInitialize();
