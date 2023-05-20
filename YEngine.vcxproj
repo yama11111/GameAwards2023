@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -105,12 +105,13 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\KeyDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\LaserDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\PlatformDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\SpringDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\SwitchDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\JunctionDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\KeyDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\LaserDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\PlatformDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\SpringDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\SwitchDrawer.cpp" />
+    <ClCompile Include="Game\Object\Block.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Base\DX\GPUResource.cpp" />
@@ -131,24 +132,24 @@
     <ClCompile Include="DemoPlayer.cpp" />
     <ClCompile Include="Application\Draw\Actor\DeadActor.cpp" />
     <ClCompile Include="Application\Draw\Actor\SlimeActor.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\BackgroundDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\BlockDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\CoreColor.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\TowerDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\CardDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\DrawerHelper.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\GateDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\GoalDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\HUDDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\IDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\InputDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\BackgroundDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\BlockDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\CoreColor.cpp" />
+    <ClCompile Include="Game\Drawer\TowerDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\CardDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\DrawerHelper.cpp" />
+    <ClCompile Include="Game\Drawer\GateDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\GoalDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\HUDDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\IDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\InputDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\LetterBoxDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\PauseDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\PlayerDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\SelectDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\SkydomeDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\StageDrawer.cpp" />
-    <ClCompile Include="Application\Draw\Drawer\TitleDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\PauseDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\PlayerDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\SelectDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\SkydomeDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\StageDrawer.cpp" />
+    <ClCompile Include="Game\Drawer\TitleDrawer.cpp" />
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp" />
     <ClCompile Include="Application\Draw\Particle\Bubble.cpp" />
     <ClCompile Include="Application\Draw\Particle\IParticle.cpp" />
@@ -182,7 +183,10 @@
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
+    <ClCompile Include="Game\Object\Key.cpp" />
+    <ClCompile Include="Game\Object\Laser.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Game\MouseCollider.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Application\Scene\DemoScene.cpp" />
     <ClCompile Include="Application\Scene\PlayScene.cpp" />
@@ -190,7 +194,10 @@
     <ClCompile Include="Application\Scene\TestScene.cpp" />
     <ClCompile Include="Application\Scene\TitleScene.cpp" />
     <ClCompile Include="Application\Scene\YGameSceneFactory.cpp" />
-    <ClCompile Include="StageConfig.cpp" />
+    <ClCompile Include="Game\Object\Platform.cpp" />
+    <ClCompile Include="Game\Object\Player.cpp" />
+    <ClCompile Include="Game\Object\Spring.cpp" />
+    <ClCompile Include="Game\StageConfig.cpp" />
     <ClCompile Include="Application\Transition\Blackout.cpp" />
     <ClCompile Include="Application\Transition\InfectionBlocks.cpp" />
     <ClCompile Include="Application\Transition\YGameTransitionFactory.cpp" />
@@ -211,14 +218,16 @@
     <ClCompile Include="Engine\Utillity\Math\Vector2.cpp" />
     <ClCompile Include="Engine\Utillity\Math\Vector3.cpp" />
     <ClCompile Include="Engine\Utillity\Math\Vector4.cpp" />
+    <ClCompile Include="Game\Object\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\KeyDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\LaserDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\PlatformDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\SpringDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\SwitchDrawer.h" />
+    <ClInclude Include="Game\Drawer\JunctionDrawer.h" />
+    <ClInclude Include="Game\Drawer\KeyDrawer.h" />
+    <ClInclude Include="Game\Drawer\LaserDrawer.h" />
+    <ClInclude Include="Game\Drawer\PlatformDrawer.h" />
+    <ClInclude Include="Game\Drawer\SpringDrawer.h" />
+    <ClInclude Include="Game\Drawer\SwitchDrawer.h" />
+    <ClInclude Include="Game\Object\Block.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
     <ClInclude Include="Engine\Base\DX\GPUResource.h" />
@@ -242,26 +251,26 @@
     <ClInclude Include="DemoPlayer.h" />
     <ClInclude Include="Application\Draw\Actor\DeadActor.h" />
     <ClInclude Include="Application\Draw\Actor\SlimeActor.h" />
-    <ClInclude Include="Application\Draw\Drawer\BackgroundDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\BlockDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\CoreColor.h" />
-    <ClInclude Include="Application\Draw\Drawer\TowerDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\CardDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\DrawerConfig.h" />
-    <ClInclude Include="Application\Draw\Drawer\DrawerHelper.h" />
-    <ClInclude Include="Application\Draw\Drawer\GateDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\GoalDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\HUDConfig.h" />
-    <ClInclude Include="Application\Draw\Drawer\HUDDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\IDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\InputDrawer.h" />
+    <ClInclude Include="Game\Drawer\BackgroundDrawer.h" />
+    <ClInclude Include="Game\Drawer\BlockDrawer.h" />
+    <ClInclude Include="Game\Drawer\CoreColor.h" />
+    <ClInclude Include="Game\Drawer\TowerDrawer.h" />
+    <ClInclude Include="Game\Drawer\CardDrawer.h" />
+    <ClInclude Include="Game\Drawer\DrawerConfig.h" />
+    <ClInclude Include="Game\Drawer\DrawerHelper.h" />
+    <ClInclude Include="Game\Drawer\GateDrawer.h" />
+    <ClInclude Include="Game\Drawer\GoalDrawer.h" />
+    <ClInclude Include="Game\Drawer\HUDConfig.h" />
+    <ClInclude Include="Game\Drawer\HUDDrawer.h" />
+    <ClInclude Include="Game\Drawer\IDrawer.h" />
+    <ClInclude Include="Game\Drawer\InputDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\LetterBoxDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\PauseDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\PlayerDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\SelectDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\SkydomeDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\StageDrawer.h" />
-    <ClInclude Include="Application\Draw\Drawer\TitleDrawer.h" />
+    <ClInclude Include="Game\Drawer\PauseDrawer.h" />
+    <ClInclude Include="Game\Drawer\PlayerDrawer.h" />
+    <ClInclude Include="Game\Drawer\SelectDrawer.h" />
+    <ClInclude Include="Game\Drawer\SkydomeDrawer.h" />
+    <ClInclude Include="Game\Drawer\StageDrawer.h" />
+    <ClInclude Include="Game\Drawer\TitleDrawer.h" />
     <ClInclude Include="Application\Draw\Drawer\UIButtonDrawer.h" />
     <ClInclude Include="Application\Draw\Particle\Bubble.h" />
     <ClInclude Include="Application\Draw\Particle\IParticle.h" />
@@ -298,6 +307,9 @@
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
+    <ClInclude Include="Game\Object\Key.h" />
+    <ClInclude Include="Game\Object\Laser.h" />
+    <ClInclude Include="Game\MouseCollider.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />
     <ClInclude Include="Application\Scene\PlayScene.h" />
@@ -305,7 +317,10 @@
     <ClInclude Include="Application\Scene\TestScene.h" />
     <ClInclude Include="Application\Scene\TitleScene.h" />
     <ClInclude Include="Application\Scene\YGameSceneFactory.h" />
-    <ClInclude Include="StageConfig.h" />
+    <ClInclude Include="Game\Object\Platform.h" />
+    <ClInclude Include="Game\Object\Player.h" />
+    <ClInclude Include="Game\Object\Spring.h" />
+    <ClInclude Include="Game\StageConfig.h" />
     <ClInclude Include="Application\Transition\Blackout.h" />
     <ClInclude Include="Application\Transition\InfectionBlocks.h" />
     <ClInclude Include="Application\Transition\YGameTransitionFactory.h" />
@@ -326,6 +341,7 @@
     <ClInclude Include="Engine\Utillity\Math\Vector2.h" />
     <ClInclude Include="Engine\Utillity\Math\Vector3.h" />
     <ClInclude Include="Engine\Utillity\Math\Vector4.h" />
+    <ClInclude Include="Game\Object\Switch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Light.hlsli" />

@@ -1,5 +1,6 @@
-#include "DemoPlayer.h"
+#include "Player.h"
 #include "MathUtillity.h"
+#include "Keys.h"
 #include <cassert>
 #include <cmath>
 
@@ -7,25 +8,15 @@ using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
 
-YInput::Keys* DemoPlayer::spKeys_ = nullptr;
-YGame::MapChip* DemoPlayer::spMapChip_ = nullptr;
+YInput::Keys* Player::spKeys_ = nullptr;
 
-void DemoPlayer::StaticInitialize()
+void Player::StaticInitialize()
 {
 	// キーインスタンス取得
 	spKeys_ = YInput::Keys::GetInstance();
 }
 
-void DemoPlayer::StaticSetMapChip(YGame::MapChip* pMapChip)
-{
-	// nullチェック
-	assert(pMapChip);
-
-	// 代入
-	spMapChip_ = pMapChip;
-}
-
-void DemoPlayer::Initialize(const YMath::Vector3& pos)
+void Player::Initialize(const YMath::Vector3& pos)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -37,19 +28,10 @@ void DemoPlayer::Initialize(const YMath::Vector3& pos)
 	Reset(pos);
 }
 
-void DemoPlayer::Reset(const YMath::Vector3& pos)
+void Player::Reset(const YMath::Vector3& pos)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos, {}, {1.0f,1.5f,1.0f} });
-
-	//// 位置代入
-	//center_ = transform_->pos_;
-
-	//// 半径設定
-	//SafeSetRadius(1.5f);
-
-	// コライダー初期化
-	YGame::MapChipCollider::Initialize({ {1.5f,2.0f,1.5f} });
 
 	// 向き (右)
 	direction_ = Vector3(+1, 0, 0);
@@ -57,14 +39,14 @@ void DemoPlayer::Reset(const YMath::Vector3& pos)
 	// ジャンプカウントリセット
 	jumpCount_ = 0;
 
-	// ゴールフラグリセット
-	isGoal_ = false;
+	// コライダーサイズ初期化
+	Box2D::SetBox2DRadSize({ transform_->scale_.x_, transform_->scale_.y_ });
 
 	// 描画クラスリセット
 	drawer_.Reset();
 }
 
-void DemoPlayer::Move()
+void Player::Move()
 {
 	// x軸移動
 	speed_.x_ += spKeys_->Horizontal();
@@ -85,12 +67,12 @@ void DemoPlayer::Move()
 		if (speed_.x_ > 0) { direction_.x_ = +1.0f; }
 		if (speed_.x_ < 0) { direction_.x_ = -1.0f; }
 	}
-	
+
 	// 移動アニメーション
 	drawer_.SetActMoveAnimation(isMove);
 }
 
-void DemoPlayer::Jump()
+void Player::Jump()
 {
 	// ジャンプ回数が最大なら弾く
 	if (1 <= jumpCount_) { return; }
@@ -109,10 +91,10 @@ void DemoPlayer::Jump()
 	}
 }
 
-void DemoPlayer::UpdatePhysics()
+void Player::UpdatePhysics()
 {
 	// ゴールした後は無視
-	if (isGoal_) { return; }
+	//if (isGoal_) { return; }
 
 	// 移動
 	Move();
@@ -133,35 +115,23 @@ void DemoPlayer::UpdatePhysics()
 	}
 
 	// 重力
-	speed_.y_ -= 0.1f;
-
-	// マップチップとのアタリ判定
-	spMapChip_->PerfectPixelCollision(*this);
-
+	//speed_.y_ -= 0.1f;
+	
 	// 着地時
-	if (IsLanding() && IsElderLanding() == false)
-	{
-		// 着地アニメーション
-		drawer_.LandingAnimation();
+	//if (IsLanding() && IsElderLanding() == false)
+	//{
+	//	// 着地アニメーション
+	//	drawer_.LandingAnimation();
 
-		// ジャンプカウントリセット
-		jumpCount_ = 0;
-	}
+	//	// ジャンプカウントリセット
+	//	jumpCount_ = 0;
+	//}
 
 	// 移動
 	transform_->pos_ += speed_;
 }
 
-void DemoPlayer::Goal()
-{
-	// ゴールアニメーション
-	drawer_.GoalAnimation();
-
-	// ゴール
-	isGoal_ = true;
-}
-
-void DemoPlayer::Update()
+void Player::Update()
 {
 	// 物理挙動更新
 	UpdatePhysics();
@@ -169,14 +139,14 @@ void DemoPlayer::Update()
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
-	// 位置代入
-	//center_ = transform_->pos_;
-
 	// 描画クラス更新
 	drawer_.Update();
+
+	// コライダー位置更新
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 }
 
-void DemoPlayer::Draw()
+void Player::Draw()
 {
 	// 描画
 	drawer_.Draw();

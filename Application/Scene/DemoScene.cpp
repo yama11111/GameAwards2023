@@ -147,7 +147,7 @@ void DemoScene::Update()
 			player_.Goal();
 
 			// ゴール
-			goal_.Goal(player_.center_);
+			//goal_.Goal(player_.center_);
 
 			// ゴールフラグをtrueに
 			isGoal_ = true;

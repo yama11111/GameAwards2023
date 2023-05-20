@@ -377,11 +377,26 @@ bool YMath::CollisionTriangleSphere(
 #pragma endregion
 
 
-bool YMath::CollisionSphereSphere(const Vector3& sphereCenter1, const float sphereRad1, const Vector3& sphereCenter2, const float sphereRad2)
+bool YMath::CollisionSphereSphere(
+	const Vector3& sphereCenter1, const float sphereRad1, 
+	const Vector3& sphereCenter2, const float sphereRad2)
 {
 	Vector3 dist = sphereCenter2 - sphereCenter1;
 
 	if (dist.Length() > sphereRad1 + sphereRad2) { return false; }
 
 	return true;
+}
+
+bool YMath::CollisionBoxBox2D(
+	const Vector2& boxCenter1, const Vector2& boxRadSize1, 
+	const Vector2& boxCenter2, const Vector2& boxRadSize2)
+{
+	// ‚¨ŒÝ‚¢‚Ì—¼’[‚Å“àŠO”»’è
+	bool xColl1 = boxCenter1.x_ - boxRadSize1.x_ <= boxCenter2.x_ + boxRadSize2.x_;
+	bool xColl2 = boxCenter1.x_ + boxRadSize1.x_ >= boxCenter2.x_ - boxRadSize2.x_;
+	bool yColl1 = boxCenter1.y_ - boxRadSize1.y_ <= boxCenter2.y_ + boxRadSize2.y_;
+	bool yColl2 = boxCenter1.y_ + boxRadSize1.y_ >= boxCenter2.y_ - boxRadSize2.y_;
+
+	return  xColl1 && xColl2 && yColl1 && yColl2;
 }
