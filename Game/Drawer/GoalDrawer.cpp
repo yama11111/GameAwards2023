@@ -116,7 +116,7 @@ void GoalDrawer::Reset()
 	// ƒ‚ƒfƒ‹‚²‚Æ‚É‰Šú‰»
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->Initialize({});
+		modelObjs_[i]->Initialize(Transform::Status::Default());
 	}
 
 	// Šj‚ÌFİ’è

@@ -126,6 +126,5 @@ public:
 	/// </summary>
 	static void StaticInitialize();
 
-
 };
 

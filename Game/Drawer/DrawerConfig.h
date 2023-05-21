@@ -462,7 +462,7 @@ namespace DrawerConfig
 	namespace Laser
 	{
 		// ビームの高さ係数
-		static const float BeamHeightFactor = 1.25f;
+		static const float BeamHeight = 0.25f;
 
 		// 立ちモーション
 		namespace Idle

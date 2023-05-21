@@ -55,6 +55,9 @@ void Switch::PostUpdate()
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
+	// 動作アニメ
+	drawer_.AnimateSwitch(isAct_);
+
 	// 描画クラス更新
 	drawer_.Update();
 }

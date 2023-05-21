@@ -22,7 +22,7 @@ Vector3& ObjectCollider::SpeedRef()
 	return sSpeed;
 }
 
-void ObjectCollider::PerfectPixelCollision(const YGame::Box2D& pairObjectBox)
+bool ObjectCollider::PerfectPixelCollision(const YGame::Box2D& pairObjectBox)
 {
 	// 代入
 	Vector3& posRef = PosRef();
@@ -36,7 +36,7 @@ void ObjectCollider::PerfectPixelCollision(const YGame::Box2D& pairObjectBox)
 	isLanding_ = isLanding_ || isCollY;
 
 	// ぶつかっていないならスキップ
-	if (isCollX == false && isCollY == false) { return; }
+	if (isCollX == false && isCollY == false) { return false; }
 
 	// 近づく移動量
 	YMath::Vector3 approach = speedRef / 100.0f;
@@ -62,6 +62,9 @@ void ObjectCollider::PerfectPixelCollision(const YGame::Box2D& pairObjectBox)
 	// 速度リセット
 	if (isCollX) { speedRef.x_ = 0.0f; }
 	if (isCollY) { speedRef.y_ = 0.0f; }
+
+
+	return true;
 }
 
 bool ObjectCollider::CollisionTemporaryBox2D(const YMath::Vector2& speed, const YGame::Box2D& pair)
@@ -74,14 +77,17 @@ bool ObjectCollider::CollisionTemporaryBox2D(const YMath::Vector2& speed, const 
 	return YGame::CollisionBoxBox2D(tempBox, pair);
 }
 
-void ObjectCollider::PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObjectBox)
+bool ObjectCollider::PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObjectBox)
 {
 	// 降りるなら弾く
-	if (isGetOff_) { return; }
+	if (isGetOff_) { return false; }
 
 	// 代入
 	Vector3& posRef = PosRef();
 	Vector3& speedRef = SpeedRef();
+
+	// 上昇時は弾く
+	if (speedRef.y_ >= 0.0f) { return false; }
 
 	// ぶつかっているか
 	bool isCollY = CollisionTemporaryBox2D({ 0,speedRef.y_ }, pairObjectBox); // y
@@ -90,7 +96,7 @@ void ObjectCollider::PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObje
 	isLanding_ = isLanding_ || isCollY;
 
 	// ぶつかっていないならスキップ
-	if (isCollY == false) { return; }
+	if (isCollY == false) { return false; }
 
 	// 近づく移動量
 	YMath::Vector3 approach = speedRef / 100.0f;
@@ -113,6 +119,8 @@ void ObjectCollider::PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObje
 
 	// 速度リセット
 	if (isCollY) { speedRef.y_ = 0.0f; }
+
+	return true;
 }
 
 bool ObjectCollider::CollisionTemporaryBox2DUpperSide(const YMath::Vector2& speed, const YGame::Box2D& pair)

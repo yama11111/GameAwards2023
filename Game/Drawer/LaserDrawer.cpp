@@ -180,7 +180,7 @@ void LaserDrawer::Update()
 
 
 	// ビーム位置
-	animeBeamPos_.y_ = *pLength_ * BeamHeightFactor;
+	animeBeamPos_.y_ = *pLength_ + BeamHeight;
 
 	// 立ちモーション更新
 	UpdateIdleAnimation();
@@ -262,6 +262,12 @@ void LaserDrawer::UpdateShootAnimation()
 
 	// タイマー更新
 	shootTimer_.Update();
+
+	// 大きさイージング初期化
+	shootBeamScaEase_.Initialize(
+		{ Shoot::Scale::Start,*pLength_,Shoot::Scale::Start },
+		{ Shoot::Scale::End,*pLength_,Shoot::Scale::End },
+		Shoot::Scale::Exponent);
 
 	// 大きさ
 	animeBeamSca_ = shootBeamScaEase_.Out(shootTimer_.Ratio());

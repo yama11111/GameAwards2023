@@ -153,7 +153,7 @@ void Player::UpdatePhysics()
 	}
 
 	// èdóÕ
-	speed_.y_ -= 0.1f;
+	//speed_.y_ -= 0.1f;
 }
 
 Vector3& Player::PosRef()

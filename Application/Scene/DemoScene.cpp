@@ -48,6 +48,9 @@ void DemoScene::Load()
 
 	// プレイヤー
 	Player::StaticInitialize();
+	
+	// ブロック
+	Block::StaticInitialize();
 }
 
 #pragma endregion
@@ -259,7 +262,7 @@ void DemoScene::Initialize()
 
 	
 	// カメラ
-	camera_.Initialize({ 0.0f,0.0f,-50.0f }, {});
+	camera_.Initialize({ 0.0f,0.0f,-20.0f }, {});
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize();

@@ -57,32 +57,61 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		// プレイヤー × ブロック
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{
-			pColliderA->PerfectPixelCollision(*pColliderB);
+			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
 		}
 		// プレイヤー × ばね
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
-			pColliderA->PerfectPixelCollision(*pColliderB);
+			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
 		}
 		// プレイヤー × 足場
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
 		{
-			pColliderA->PerfectPixelCollisionUpperSide(*pColliderB);
+			if (pColliderA->PerfectPixelCollisionUpperSide(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
 		}
 	}
 
 	// ブロック
 	if (pColliderA->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
+		// ブロック × ブロック
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
+		{
+			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
+		}
 		// ブロック × ばね
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
-			pColliderA->PerfectPixelCollision(*pColliderB);
+			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
 		}
 		// ブロック × 足場
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
 		{
-			pColliderA->PerfectPixelCollisionUpperSide(*pColliderB);
+			if (pColliderA->PerfectPixelCollisionUpperSide(*pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
 		}
 	}
 

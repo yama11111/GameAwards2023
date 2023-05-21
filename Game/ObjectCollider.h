@@ -101,13 +101,15 @@ public:
 	/// アタリ判定
 	/// </summary>
 	/// <param name="pairObjectBox"> : オブジェクト</param>
-	void PerfectPixelCollision(const YGame::Box2D& pairObjectBox);
+	/// <returns>当たったか</returns>
+	bool PerfectPixelCollision(const YGame::Box2D& pairObjectBox);
 
 	/// <summary>
 	/// アタリ判定 (上側のみ)
 	/// </summary>
 	/// <param name="pairObjectBox"> : オブジェクト</param>
-	void PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObjectBox);
+	/// <returns>当たったか</returns>
+	bool PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObjectBox);
 
 private:
 

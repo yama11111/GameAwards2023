@@ -2,6 +2,9 @@
 #include "BlockDrawer.h"
 #include "IObject.h"
 
+// インクルード回避用
+namespace YInput { class Keys; }
+
 class Block :
 	public IObject
 {
@@ -62,6 +65,23 @@ public:
 	/// <returns>スピード (参照渡し)</returns>
 	YMath::Vector3& SpeedRef() override;
 
+private:
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+
+	/// <summary>
+	/// 着地
+	/// </summary>
+	void Landing();
+
+	/// <summary>
+	/// 物理挙動更新
+	/// </summary>
+	void UpdatePhysics();
+
 public:
 
 	/// <summary>
@@ -69,6 +89,18 @@ public:
 	/// </summary>
 	/// <param name="pPair"> : 相手コライダーポインタ</param>
 	void OnCollision(ObjectCollider* pPair) override;
+
+private:
+
+	// キー
+	static YInput::Keys* spKeys_;
+
+public:
+
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	static void StaticInitialize();
 
 };
 

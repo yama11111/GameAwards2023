@@ -13,9 +13,12 @@ private:
 
 	// 向き
 	YMath::Vector3 direction_;
-
+	
 	// ビームの長さ
 	float beamLength_ = 0.0f;
+
+	// 当たりフラグ
+	bool isColl_ = false;
 
 	// 描画クラス
 	LaserDrawer drawer_;
@@ -61,5 +64,11 @@ public:
 	/// <param name="pPair"> : 相手コライダーポインタ</param>
 	void OnCollision(ObjectCollider* pPair) override;
 
+private:
+
+	/// <summary>
+	/// ビームの長さ計算
+	/// </summary>
+	void CalcBeamLength();
 };
 

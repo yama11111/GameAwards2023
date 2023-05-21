@@ -13,7 +13,7 @@ private:
 
 	// •`‰æƒNƒ‰ƒX
 	SwitchDrawer drawer_;
-
+	
 	// “®‚¢‚Ä‚¢‚é‚©
 	bool isAct_ = false;
 
