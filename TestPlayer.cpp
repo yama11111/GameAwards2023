@@ -39,12 +39,6 @@ void TestPlayer::DrawDebug(void)
 
 void TestPlayer::Move(void)
 {
-    if (keys_->IsTrigger(DIK_O)) {
-        int a{};
-    }
-    if (keys_->IsTrigger(DIK_P)) {
-        int a{};
-    }
     velocity_.x_ = (keys_->IsDown(DIK_D) - keys_->IsDown(DIK_A)) * speed_;
     velocity_.x_ += (keys_->IsTrigger(DIK_P) - keys_->IsTrigger(DIK_O)) * speed_;
     Jump();
