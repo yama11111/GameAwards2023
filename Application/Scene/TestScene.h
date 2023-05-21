@@ -17,9 +17,6 @@
 
 #include "ScrollCamera.h"
 
-#include "Player.h"
-#include "Block.h"
-
 
 namespace YScene
 {
@@ -34,14 +31,7 @@ namespace YScene
 #pragma endregion
 
 
-#pragma region ゲームオブジェクト		
-
-		// プレイヤー
-		Player player_;
-
-		// ブロック
-		Block block_;
-
+#pragma region ゲームオブジェクト
 
 		// 核
 		YGame::Transform core_;

@@ -3,8 +3,10 @@
 #include "Keys.h"
 #include <cassert>
 #include <cmath>
+#include <imgui.h>
 
 using YGame::Transform;
+using YMath::Vector2;
 using YMath::Vector3;
 using YMath::Clamp;
 
@@ -16,7 +18,7 @@ void Player::StaticInitialize()
 	spKeys_ = YInput::Keys::GetInstance();
 }
 
-void Player::Initialize(const YMath::Vector3& pos)
+void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -25,13 +27,16 @@ void Player::Initialize(const YMath::Vector3& pos)
 	drawer_.Initialize(transform_.get(), &direction_);
 
 	// リセット
-	Reset(pos);
+	Reset(signIndex, pos);
 }
 
-void Player::Reset(const YMath::Vector3& pos)
+void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.5f,1.0f} });
+	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+
+	// スピード初期化
+	speed_ = {};
 
 	// 向き (右)
 	direction_ = Vector3(+1, 0, 0);
@@ -39,8 +44,25 @@ void Player::Reset(const YMath::Vector3& pos)
 	// ジャンプカウントリセット
 	jumpCount_ = 0;
 
+	// コライダー位置初期化
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+
 	// コライダーサイズ初期化
 	Box2D::SetBox2DRadSize({ transform_->scale_.x_, transform_->scale_.y_ });
+
+	// コライダータイプ設定
+	ObjectCollider::SetColliderType(ObjectCollider::Type::ePlayer);
+
+	// コライダー看板番号設定
+	ObjectCollider::SetSignIndex(signIndex);
+
+
+	// 落下フラグをうごかすか
+	isGetOffAct_ = false;
+
+	// 落下フラグタイマー
+	isGetOffTimer_.Initialize(5);
+	isGetOffTimer_.SetActive(false);
 
 	// 描画クラスリセット
 	drawer_.Reset();
@@ -91,6 +113,22 @@ void Player::Jump()
 	}
 }
 
+void Player::Landing()
+{
+	// 重力をなくす
+	speed_.y_ = 0.0f;
+
+	// ジャンプカウントリセット
+	jumpCount_ = 0;
+
+	// 着地した瞬間なら
+	if (IsLandingMoment())
+	{
+		// 着地アニメーション
+		drawer_.LandingAnimation();
+	}
+}
+
 void Player::UpdatePhysics()
 {
 	// ゴールした後は無視
@@ -115,40 +153,113 @@ void Player::UpdatePhysics()
 	}
 
 	// 重力
-	//speed_.y_ -= 0.1f;
-	
-	// 着地時
-	//if (IsLanding() && IsElderLanding() == false)
-	//{
-	//	// 着地アニメーション
-	//	drawer_.LandingAnimation();
-
-	//	// ジャンプカウントリセット
-	//	jumpCount_ = 0;
-	//}
-
-	// 移動
-	transform_->pos_ += speed_;
+	speed_.y_ -= 0.1f;
 }
 
-void Player::Update()
+Vector3& Player::PosRef()
 {
-	// 物理挙動更新
-	UpdatePhysics();
+	return transform_->pos_;
+}
 
-	// トランスフォーム行列更新
-	transform_->UpdateMatrix();
+Vector3& Player::SpeedRef()
+{
+	return speed_;
+}
 
-	// 描画クラス更新
-	drawer_.Update();
+void Player::OnCollision(ObjectCollider* pPair)
+{
+	// ブロックなら
+	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
+	{
+		// E でアクション
+		pPair->SetIsActSkill(spKeys_->IsDown(DIK_E));
+	}
+	// ばねなら
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eSpring)
+	{
+		// ジャンプ
+		speed_.y_ = 3.0f;
 
-	// コライダー位置更新
-	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+		// アクション
+		pPair->SetIsActSkill(true);
+	}
+	// レーザーなら
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eLaser)
+	{
+		// 死ぬ
+		isAlive_ = false;
+
+		// アニメーション
+		drawer_.DeadAnimation();
+	}
+	// スイッチなら
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eSwitch)
+	{
+		// E でアクション
+		if (spKeys_->IsTrigger(DIK_E))
+		{
+			pPair->SetIsActSkill(true);
+		}
+	}
+	// ゴールなら
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)
+	{
+		// アクション
+		pPair->SetIsActSkill(true);
+	}
 }
 
 void Player::Draw()
 {
 	// 描画
 	drawer_.Draw();
+}
+
+void Player::PreUpdate()
+{
+	// 物理挙動更新
+	UpdatePhysics();
+	
+
+	// 下入力 から タイマー終了まで降りる
+	if (spKeys_->IsUnder())
+	{
+		isGetOffAct_ = true;
+		isGetOffTimer_.Reset(true);
+	}
+	isGetOffTimer_.Update();
+	if (isGetOffTimer_.IsEnd())
+	{
+		isGetOffAct_ = false;
+	}
+
+	// 降りるか
+	SetIsGetOff(isGetOffAct_);
+
+
+	// 着地フラグ初期化
+	ResetIsLanding();
+
+	// コライダー位置更新
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+}
+
+void Player::PostUpdate()
+{
+	// 着地時
+	if (IsLanding())
+	{
+		// 着地
+ 		Landing();
+	}
+
+	// 移動
+	transform_->pos_ += speed_;
+
+	// トランスフォーム行列更新
+	transform_->UpdateMatrix();
+
+	// 描画クラス更新
+	drawer_.Update();
 }
 

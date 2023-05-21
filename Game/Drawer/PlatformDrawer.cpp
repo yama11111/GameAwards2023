@@ -21,7 +21,7 @@ using YMath::Power;
 using YMath::Vector3;
 using YMath::Vector4;
 
-using namespace DrawerConfig::Block;
+using namespace DrawerConfig::Platform;
 
 #pragma endregion
 
@@ -109,7 +109,7 @@ void PlatformDrawer::Update()
 	// 行列更新 (子)
 	modelObjs_[HologramIdx]->UpdateMatrix();
 
-	float pos = 1.0f - (1.6f / pParent_->scale_.x_);
+	float pos = 1.0f - (EdgePosFactor / pParent_->scale_.x_);
 	float sca = pParent_->scale_.y_ / pParent_->scale_.x_;
 	
 	modelObjs_[LeftIdx]->pos_.x_ = -pos;

@@ -1,8 +1,8 @@
 #pragma once
-#include "PlatformDrawer.h"
+#include "GoalDrawer.h"
 #include "IObject.h"
 
-class Platform :
+class Goal :
 	public IObject
 {
 
@@ -12,7 +12,10 @@ private:
 	std::unique_ptr<YGame::Transform> transform_;
 
 	// 描画クラス
-	PlatformDrawer drawer_;
+	GoalDrawer drawer_;
+
+	// ロックフラグ
+	bool isRock_ = false;
 
 public:
 
@@ -21,16 +24,16 @@ public:
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	/// <param name="length"> : 長さ</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length);
+	/// <param name="isRock"> : ロックフラグ</param>
+	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isRock);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	/// <param name="length"> : 長さ</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos, const float length);
+	/// <param name="isRock"> : ロックフラグ</param>
+	void Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isRock);
 
 	/// <summary>
 	/// 判定前更新

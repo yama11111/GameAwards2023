@@ -148,6 +148,9 @@
     <Filter Include="Game\Drawer\UI">
       <UniqueIdentifier>{5763683f-f3c1-46f0-8183-9a71a100d6a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Object\Base">
+      <UniqueIdentifier>{fd4cc771-a870-445d-988f-e0d859bba509}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -492,6 +495,21 @@
     <ClCompile Include="Game\StageConfig.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\ObjectCollider.cpp">
+      <Filter>Game\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ObjectCollisionManager.cpp">
+      <Filter>Game\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object\Goal.cpp">
+      <Filter>Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object\IObject.cpp">
+      <Filter>Game\Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object\ObjectManager.cpp">
+      <Filter>Game\Object\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -716,9 +734,6 @@
     <ClInclude Include="Application\Transition\YGameTransitionFactory.h">
       <Filter>Application\Transition</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h">
-      <Filter>Engine\GameUtil\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Drawer\TowerDrawer.h">
       <Filter>Game\Drawer\Obj\Ex</Filter>
     </ClInclude>
@@ -856,6 +871,27 @@
     </ClInclude>
     <ClInclude Include="Game\StageConfig.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ObjectCollider.h">
+      <Filter>Game\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ObjectCollisionManager.h">
+      <Filter>Game\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\Goal.h">
+      <Filter>Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\IObject.h">
+      <Filter>Game\Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\ObjectManager.h">
+      <Filter>Game\Object\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\LevelData.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h">
+      <Filter>Engine\GameUtil\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

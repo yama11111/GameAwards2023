@@ -354,6 +354,13 @@ namespace DrawerConfig
 		}
 	}
 
+	// ‘«ê
+	namespace Platform
+	{
+		// ’[ˆÊ’uŒW”
+		static const float EdgePosFactor = 0.8f;
+	}
+
 	// Ú‘±•”
 	namespace Junction
 	{

@@ -346,6 +346,11 @@ void PlayerDrawer::LandingAnimation()
 	);
 }
 
+void PlayerDrawer::DeadAnimation()
+{
+
+}
+
 void PlayerDrawer::RespawnAnimation()
 {
 	// アニメーションリセット

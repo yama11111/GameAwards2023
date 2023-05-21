@@ -29,18 +29,6 @@ using namespace YGame;
 
 void TestScene::Load()
 {
-	// マウスコライダー静的初期化
-	MouseColliderCommon::StaticInitialize();
-
-	// マウスコライダーにビュープロジェクション設定
-	MouseColliderCommon::StaticSetViewProjectionPointer(&transferVP_);
-
-	// プレイヤー静的初期化
-	Player::StaticInitialize();
-
-
-
-	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
 	// 描画クラス全て
@@ -56,13 +44,6 @@ void TestScene::Initialize()
 {
 	// パーティクル初期化
 	particleMan_.Initialize();
-
-
-	// プレイヤー初期化
-	player_.Initialize({ -5.0f,0.0f,0.0f });
-	
-	// ブロック初期化
-	block_.Initialize({ +5.0f,0.0f,0.0f });
 
 
 	// 大きさ
@@ -176,16 +157,6 @@ void TestScene::Finalize()
 
 void TestScene::Update()
 {
-	// マウスコライダー静的更新
-	MouseColliderCommon::StaticUpdate();
-
-	// プレイヤー更新
-	player_.Update();
-
-	// ブロック更新
-	block_.Update();
-
-
 	// 描画するか
 	ImGui::Begin("isDraw");
 
@@ -202,6 +173,7 @@ void TestScene::Update()
 	ImGui::Checkbox("Background", &isDrawBackground_);
 	ImGui::Checkbox("HUD", &isDrawHUD_);
 	ImGui::Checkbox("Particle", &isDrawParticle_);
+	
 	ImGui::End();
 
 #pragma region HUD
@@ -655,12 +627,6 @@ void TestScene::Update()
 
 void TestScene::Draw()
 {
-	// プレイヤー描画
-	player_.Draw();
-
-	// ブロック描画
-	block_.Draw();
-
 	// 背景描画
 	if (isDrawBackground_) { background_.Draw(); }
 

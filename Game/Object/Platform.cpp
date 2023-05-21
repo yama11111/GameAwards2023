@@ -7,7 +7,7 @@ using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
 
-void Platform::Initialize(const YMath::Vector3& pos)
+void Platform::Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -16,35 +16,48 @@ void Platform::Initialize(const YMath::Vector3& pos)
 	drawer_.Initialize(transform_.get());
 
 	// リセット
-	Reset(pos);
+	Reset(signIndex, pos, length);
 }
 
-void Platform::Reset(const YMath::Vector3& pos)
+void Platform::Reset(const size_t signIndex, const YMath::Vector3& pos, const float length)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos, {}, {length,1.0f,1.0f} });
+
+	// コライダー位置初期化
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ transform_->scale_.x_, transform_->scale_.y_ });
+	Box2D::SetBox2DRadSize({ transform_->scale_.x_, 0.1f });
+
+	// コライダータイプ設定
+	ObjectCollider::SetColliderType(ObjectCollider::Type::ePlatform);
 
 	// 描画クラスリセット
 	drawer_.Reset();
 }
 
-void Platform::Update()
+void Platform::PreUpdate()
+{
+	// コライダー位置更新
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+}
+
+void Platform::PostUpdate()
 {
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
 	// 描画クラス更新
 	drawer_.Update();
-
-	// コライダー位置更新
-	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 }
 
 void Platform::Draw()
 {
 	// 描画
 	drawer_.Draw();
+}
+
+void Platform::OnCollision(ObjectCollider* pPair)
+{
 }

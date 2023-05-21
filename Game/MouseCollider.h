@@ -51,7 +51,7 @@ public:
 
 public:
 
-	~MouseColliderCommon() = default;
+	virtual ~MouseColliderCommon() = default;
 
 };
 
@@ -70,6 +70,6 @@ public:
 
 public:
 
-	~MouseCollider() = default;
+	virtual ~MouseCollider() = default;
 
 };

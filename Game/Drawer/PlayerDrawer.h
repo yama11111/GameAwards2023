@@ -133,6 +133,9 @@ public:
 	// 着地モーション
 	void LandingAnimation();
 
+
+	// 死亡アニメーション
+	void DeadAnimation();
 	
 	// リスポーンアニメーション
 	void RespawnAnimation();

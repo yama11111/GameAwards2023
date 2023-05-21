@@ -111,6 +111,8 @@
     <ClCompile Include="Game\Drawer\PlatformDrawer.cpp" />
     <ClCompile Include="Game\Drawer\SpringDrawer.cpp" />
     <ClCompile Include="Game\Drawer\SwitchDrawer.cpp" />
+    <ClCompile Include="Game\ObjectCollider.cpp" />
+    <ClCompile Include="Game\ObjectCollisionManager.cpp" />
     <ClCompile Include="Game\Object\Block.cpp" />
     <ClCompile Include="Engine\Base\DX\ConstBuffer.cpp" />
     <ClCompile Include="Engine\Base\DX\DescriptorHeap.cpp" />
@@ -183,8 +185,11 @@
     <ClCompile Include="Engine\GameUtillity\Object\Transform.cpp" />
     <ClCompile Include="Engine\GameUtillity\Texture.cpp" />
     <ClCompile Include="Engine\GameUtillity\WorldRuler.cpp" />
+    <ClCompile Include="Game\Object\Goal.cpp" />
+    <ClCompile Include="Game\Object\IObject.cpp" />
     <ClCompile Include="Game\Object\Key.cpp" />
     <ClCompile Include="Game\Object\Laser.cpp" />
+    <ClCompile Include="Game\Object\ObjectManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game\MouseCollider.cpp" />
     <ClCompile Include="MyGame.cpp" />
@@ -221,12 +226,15 @@
     <ClCompile Include="Game\Object\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
     <ClInclude Include="Game\Drawer\JunctionDrawer.h" />
     <ClInclude Include="Game\Drawer\KeyDrawer.h" />
     <ClInclude Include="Game\Drawer\LaserDrawer.h" />
     <ClInclude Include="Game\Drawer\PlatformDrawer.h" />
     <ClInclude Include="Game\Drawer\SpringDrawer.h" />
     <ClInclude Include="Game\Drawer\SwitchDrawer.h" />
+    <ClInclude Include="Game\ObjectCollider.h" />
+    <ClInclude Include="Game\ObjectCollisionManager.h" />
     <ClInclude Include="Game\Object\Block.h" />
     <ClInclude Include="Engine\Base\DX\ConstBuffer.h" />
     <ClInclude Include="Engine\Base\DX\DescriptorHeap.h" />
@@ -301,15 +309,18 @@
     <ClInclude Include="Engine\GameUtillity\Object\CBMaterial.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Mesh.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Model.h" />
-    <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Sprite2D.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Sprite3D.h" />
     <ClInclude Include="Engine\GameUtillity\Object\Transform.h" />
     <ClInclude Include="Engine\GameUtillity\Texture.h" />
     <ClInclude Include="Engine\GameUtillity\WorldRuler.h" />
+    <ClInclude Include="Game\Object\Goal.h" />
+    <ClInclude Include="Game\Object\IObject.h" />
     <ClInclude Include="Game\Object\Key.h" />
     <ClInclude Include="Game\Object\Laser.h" />
     <ClInclude Include="Game\MouseCollider.h" />
+    <ClInclude Include="Game\Object\LevelData.h" />
+    <ClInclude Include="Game\Object\ObjectManager.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />
     <ClInclude Include="Application\Scene\PlayScene.h" />
