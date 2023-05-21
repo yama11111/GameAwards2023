@@ -45,7 +45,7 @@ void TestPlayer::Move(void)
     if (keys_->IsTrigger(DIK_P)) {
         int a{};
     }
-    velocity_.x_ = (keys_->IsTrigger(DIK_D) - keys_->IsTrigger(DIK_A)) * speed_;
+    velocity_.x_ = (keys_->IsDown(DIK_D) - keys_->IsDown(DIK_A)) * speed_;
     velocity_.x_ += (keys_->IsTrigger(DIK_P) - keys_->IsTrigger(DIK_O)) * speed_;
     Jump();
 
@@ -60,7 +60,7 @@ void TestPlayer::Jump(void)
     static float jumpValue{};
 
     // ƒWƒƒƒ“ƒv“ü—Í
-    if (keys_->IsDown(DIK_SPACE))
+    if (keys_->IsTrigger(DIK_SPACE))
         jumpValue = jumpPower_; // ’µ–ô—Ê‚É’µ–ô—Í‚ğ‘ã“ü
 
     // ’µ–ô—Ê‚Íí‚ÉŒ¸­‚·‚é

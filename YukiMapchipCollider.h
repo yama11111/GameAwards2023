@@ -12,9 +12,11 @@ protected:
     using Vector4 = YMath::Vector4;
     using Transform = YGame::Transform;
 
-    static constexpr int decimalPlace_{ 3 };
 
 public:
+    static constexpr int decimalPlace_{ 3 };
+    static constexpr float gravity_{ 0.2f };
+
     enum class EntityType
     {
         PLAYER,

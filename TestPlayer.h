@@ -7,8 +7,7 @@ class TestPlayer :
     public YukiMapchipCollider
 {
 public:
-    static constexpr float gravity_{ 0.2f };
-    static constexpr float jumpPower_{ 7.f };
+    static constexpr float jumpPower_{ 1.f };
     static constexpr float jumpFall_{ 0.2f };
     static constexpr float speed_{ 0.4f };
 

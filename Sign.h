@@ -121,11 +121,11 @@ namespace maruyama {
         // 距離 / ブロックの直径 でマップチップ配列の要素数では何番目に相当する位置か算出 ->CalcElem()で処理
         inline int CalcElemX(float pointX) { return static_cast<int>((pointX - topLeftPos_.x_) / (blockRadius_ * 2)); }
         inline int CalcElemY(float pointY) { return static_cast<int>((pointY - topLeftPos_.y_) / (blockRadius_ * 2) * -1); }
-        inline int CalcMovedElemX(float pointX, float velX) { return static_cast<int>((pointX + velX - topLeftPos_.x_) / (blockRadius_ * 2)); }
-        inline int CalcMovedElemY(float pointY, float velY) { return static_cast<int>((pointY + velY - topLeftPos_.y_) / (blockRadius_ * 2) * -1); }
+        inline int CalcMovedElemX(float pointX, float velX) { return static_cast<int>(std::fabs(pointX + velX - topLeftPos_.x_) / (blockRadius_ * 2)); }
+        inline int CalcMovedElemY(float pointY, float velY) { return static_cast<int>(std::fabs(pointY + velY - topLeftPos_.y_) / (blockRadius_ * 2)); }
         float roundToDecimal(float value, int decimalPlaces); // 丸め誤差を修正する関数
-        bool SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX, const Vector2& approach, int mElemX, int mElemY);
-        bool SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY, const Vector2& approach, int mElemX, int mElemY);
+        bool SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX, const Vector2& approach, int mElemX, int elemY);
+        bool SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY, const Vector2& approach, int elemX, int mElemY/*, bool gravity*/);
     public:
         // 変数
         //std::vector<std::vector<std::unique_ptr<IBlock>>> mapchip2_{};
