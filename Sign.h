@@ -45,7 +45,7 @@ namespace maruyama {
             RIGHT,
             LEFT,
             BOTTOM,
-        };
+        }; 
 
         // ワープブロックの情報体
         struct WarpIdx_t
