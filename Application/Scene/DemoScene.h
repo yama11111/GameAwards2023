@@ -1,9 +1,16 @@
 #pragma once
 #include "BaseScene.h"
 
-#include "DemoPlayer.h"
-#include "DemoGoal.h"
-#include "MapChipManager.h"
+#include "Player.h"
+#include "Block.h"
+#include "Spring.h"
+#include "Platform.h"
+#include "Laser.h"
+#include "Switch.h"
+#include "Key.h"
+#include "Goal.h"
+
+#include "ObjectManager.h"
 
 #include "BackGroundDrawer.h"
 #include "HUDDrawer.h"
@@ -25,34 +32,33 @@ namespace YScene
 #pragma region ゲームオブジェクト
 
 		// プレイヤー
-		DemoPlayer player_;
+		std::unique_ptr<Player> player_;
 
+		// ブロック
+		std::list<std::unique_ptr<Block>> blocks_;
+
+		// ばね
+		std::list<std::unique_ptr<Spring>> springs_;
+		
+		// 足場
+		std::list<std::unique_ptr<Platform>> platforms_;
+		
+		// レーザー
+		std::list<std::unique_ptr<Laser>> lasers_;
+		
+		// スイッチ
+		std::list<std::unique_ptr<Switch>> switches_;
+		
+		// 鍵
+		std::unique_ptr<Key> key_;
+		
 		// ゴール
-		DemoGoal goal_;
+		std::unique_ptr<Goal> goal_;
 
-		// マップチップマネージャー
-		YGame::MapChipManager mapChipMan_;
 
-		
-		// ゴールフラグ
-		bool isGoal_ = false;
 
-		bool isAfterglow_ = false;
-
-		YMath::Timer goalTim_;
-
-		YMath::Timer fontScaleTim_;
-
-		YMath::Timer afterglowTim_;
-		
-		YMath::Ease<YMath::Vector3> fontScaleEas_;
-
-		YMath::Ease<float> fontAlphaEas_;
-
-		std::unique_ptr<YGame::Sprite2D::Object> fontObj_;
-		std::unique_ptr<YGame::CBColor> fontColor_;
-
-		YGame::Sprite2D* fontSpr_ = nullptr;
+		// オブジェクトマネージャー
+		ObjectManager objMan_;
 
 
 		// 背景

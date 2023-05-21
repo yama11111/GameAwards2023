@@ -31,7 +31,7 @@ namespace YScene
 #pragma endregion
 
 
-#pragma region ゲームオブジェクト		
+#pragma region ゲームオブジェクト
 
 		// 核
 		YGame::Transform core_;

@@ -42,11 +42,11 @@ void DemoPlayer::Reset(const YMath::Vector3& pos)
 	// トランスフォーム初期化
 	transform_->Initialize({ pos, {}, {1.0f,1.5f,1.0f} });
 
-	// 位置代入
-	center_ = transform_->pos_;
+	//// 位置代入
+	//center_ = transform_->pos_;
 
-	// 半径設定
-	SafeSetRadius(1.5f);
+	//// 半径設定
+	//SafeSetRadius(1.5f);
 
 	// コライダー初期化
 	YGame::MapChipCollider::Initialize({ {1.5f,2.0f,1.5f} });
@@ -170,7 +170,7 @@ void DemoPlayer::Update()
 	transform_->UpdateMatrix();
 
 	// 位置代入
-	center_ = transform_->pos_;
+	//center_ = transform_->pos_;
 
 	// 描画クラス更新
 	drawer_.Update();
