@@ -11,7 +11,6 @@
 #include "StageConfig.h"
 
 #include "Sign.h"
-#include "Player.h"
 #include "TestPlayer.h"
 
 namespace YScene
@@ -33,8 +32,6 @@ namespace YScene
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
 		maruyama::Sign sign_;
-
-		Player player_;
 
         TestPlayer tp_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
