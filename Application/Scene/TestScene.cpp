@@ -7,6 +7,7 @@
 #include <imgui.h>
 
 #include "DrawerHelper.h"
+#include "MouseCollider.h"
 
 #pragma region 名前空間宣言
 
@@ -28,7 +29,6 @@ using namespace YGame;
 
 void TestScene::Load()
 {
-	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
 
 	// 描画クラス全て
@@ -44,6 +44,7 @@ void TestScene::Initialize()
 {
 	// パーティクル初期化
 	particleMan_.Initialize();
+
 
 	// 大きさ
 	Vector3 scale = { 5.0f,5.0f,5.0f };
@@ -61,7 +62,7 @@ void TestScene::Initialize()
 	blockDra_.Initialize(&core_, BlockDrawerCommon::Type::eWhite);
 
 	// ばね描画用クラス初期化
-	springDra_.Initialize(&core_, SpringDrawerCommon::Type::eGreen);
+	springDra_.Initialize(&core_);
 	
 	// 足場描画用クラス初期化
 	platform_.Initialize({ {},{},Vector3(26.0f, 2.0f, 2.0f) });
@@ -78,10 +79,10 @@ void TestScene::Initialize()
 	laserDra_.Initialize(&core_, &length_);
 
 	// 鍵描画用クラス初期化
-	//keyDra_.Initialize(&core_);
+	keyDra_.Initialize(&core_);
 
 	// スイッチ描画用クラス初期化
-	//switchDra_.Initialize(&core_);
+	switchDra_.Initialize(&core_, SwitchDrawerCommon::Type::eGreen);
 
 	// ゲート描画用クラス初期化
 	gateDra_.Initialize(&core_);
@@ -98,7 +99,7 @@ void TestScene::Initialize()
 
 	
 	// パーティクル
-	isDrawParticle_ = true;
+	isDrawParticle_ = false;
 	
 	// プレイヤー
 	isDrawPlayer_ = false;
@@ -111,13 +112,17 @@ void TestScene::Initialize()
 	// 接合部
 	isDrawJunction_ = false;
 	// 接合部
-	isDrawLaser_ = true;
+	isDrawLaser_ = false;
 	// ゲート
 	isDrawGate_ = false;
+	// 鍵
+	isDrawKey_ = false;
+	// スイッチ
+	isDrawSwitch_ = false;
 	// ゴール
 	isDrawGoal_ = false;
 	// 背景
-	isDrawBackground_ = true;
+	isDrawBackground_ = false;
 	// HUD
 	isDrawHUD_ = false;
 
@@ -168,6 +173,7 @@ void TestScene::Update()
 	ImGui::Checkbox("Background", &isDrawBackground_);
 	ImGui::Checkbox("HUD", &isDrawHUD_);
 	ImGui::Checkbox("Particle", &isDrawParticle_);
+	
 	ImGui::End();
 
 #pragma region HUD
@@ -260,12 +266,21 @@ void TestScene::Update()
 		if (ImGui::Button("Reset"))
 		{
 			// リセット
-			//springDra_.Reset();
+			springDra_.Reset();
 		}
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("Jump"))
+		{
+			// ジャンプアニメーション
+			springDra_.AnimateJump();
+		}
+
 		ImGui::End();
 	}
 
-	//springDra_.Update();
+	springDra_.Update();
 
 #pragma endregion
 
@@ -375,13 +390,13 @@ void TestScene::Update()
 		if (ImGui::Button("Reset"))
 		{
 			// リセット
-			//keyDra_.Reset();
+			keyDra_.Reset();
 		}
 
 		ImGui::End();
 	}
 
-	//keyDra_.Update();
+	keyDra_.Update();
 
 #pragma endregion
 
@@ -395,16 +410,35 @@ void TestScene::Update()
 
 		ImGui::Text("---------------");
 
-		if (ImGui::Button("Reset"))
+		if (ImGui::Button("Reset (Green)"))
 		{
 			// リセット
-			//switchDra_.Reset();
+			switchDra_.Reset(SwitchDrawerCommon::Type::eGreen);
+		}
+
+		if (ImGui::Button("Reset (Red)"))
+		{
+			// リセット
+			switchDra_.Reset(SwitchDrawerCommon::Type::eRed);
+		}
+
+		ImGui::Text("---------------");
+
+		if (ImGui::Button("SwitchOn"))
+		{
+			// スイッチオン
+			switchDra_.AnimateSwitch(true);
+		}
+		if (ImGui::Button("SwitchOff"))
+		{
+			// スイッチオフ
+			switchDra_.AnimateSwitch(false);
 		}
 
 		ImGui::End();
 	}
 
-	//switchDra_.Update();
+	switchDra_.Update();
 
 #pragma endregion
 
@@ -616,10 +650,10 @@ void TestScene::Draw()
 	if (isDrawLaser_) { laserDra_.Draw(); }
 
 	// 鍵描画
-	//if (isDrawKey_) { keyDra_.Draw(); }
+	if (isDrawKey_) { keyDra_.Draw(); }
 
 	// スイッチ描画
-	//if (isDrawSwitch_) { switchDra_.Draw(); }
+	if (isDrawSwitch_) { switchDra_.Draw(); }
 
 	// ゲート前描画
 	if (isDrawGate_) { gateDra_.Draw(); }
