@@ -27,6 +27,7 @@ namespace maruyama {
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
         static constexpr float springFall_{ 0.5f }; // バネブロック時の落下速度
 
+    public:
         enum class BlockType // ブロックの種類
         {
             NONE,

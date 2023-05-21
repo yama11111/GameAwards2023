@@ -15,7 +15,7 @@ protected:
 
 public:
     static constexpr int decimalPlace_{ 3 };
-    static constexpr float gravity_{ 0.2f };
+    static constexpr float gravity_{ 0.15f };
 
     enum class EntityType
     {

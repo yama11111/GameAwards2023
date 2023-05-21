@@ -12,6 +12,6 @@ public:
     Stage(void) {};
 
     // •Ï”
-    std::list<Sign> list_;
+    std::vector<Sign> signList_;
 };
 

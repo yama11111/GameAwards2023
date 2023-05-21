@@ -5,6 +5,7 @@
 #include "Def.h"
 #include <cassert>
 #include <imgui.h>
+#include "Sign.h"
 
 #include "DrawerHelper.h"
 
@@ -15,6 +16,7 @@ using namespace YDX;
 using namespace YInput;
 using namespace YMath;
 using namespace YGame;
+using Sign = maruyama::Sign;
 
 #pragma endregion 
 
@@ -62,7 +64,9 @@ void PlayScene::Initialize()
 	// ステージ番号
 	uint32_t stageIdx = static_cast<uint32_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	sign_.Initialize({ 12,12 });
+	sign_.Initialize({ 10,10 });
+    sign_.ReWriteBlock(7, 8, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(8, 7, Sign::BlockType::BASIC);
 
 	// 背景初期化
 	background_.Initialize();
