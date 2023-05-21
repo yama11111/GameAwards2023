@@ -56,10 +56,13 @@ void PlayScene::Initialize()
 
 	player_.Initialize(Vector3{ 0.0f,0.0f,0.0f });
 
+    tp_.Initialize();
+    tp_.transform_.pos_ = { 4,-4,0 };
+
 	// ステージ番号
 	uint32_t stageIdx = static_cast<uint32_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	sign_.Initialize({ 5,6 });
+	sign_.Initialize({ 12,12 });
 
 	// 背景初期化
 	background_.Initialize();
@@ -107,16 +110,19 @@ void PlayScene::Update()
 
 	// ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-	if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
-	if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
-	if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
-	if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
-	if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
-	if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
+    if (sKeys_->IsDown(DIK_LSHIFT)) {
+        if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
+        if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
+        if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
+        if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
+        if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
+        if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
+    }
 
 	sign_.Update();
 
 	player_.Update();
+    tp_.Update();
 
     sign_.PPC(&tp_);
 

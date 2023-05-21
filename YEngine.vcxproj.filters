@@ -453,9 +453,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TestPlayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
@@ -476,6 +473,9 @@
     </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\SwitchDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlayer.cpp">
+      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -809,9 +809,6 @@
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="TestPlayer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
@@ -832,6 +829,9 @@
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\SwitchDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlayer.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

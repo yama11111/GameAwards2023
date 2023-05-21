@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include "Keys.h"
 #include <vector>
 #include <memory>
 #include "Vector2.h"
@@ -20,7 +21,7 @@ namespace maruyama {
         using Vector4 = YMath::Vector4;
         using Transform = YGame::Transform;
 
-        static constexpr float blockRadius_{ 2.f }; // ブロックの半径
+        static constexpr float blockRadius_{ 1.f }; // ブロックの半径
 
         static constexpr float pushOut_{ 0.2f }; // 定期的押し出し時の移動量
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
@@ -83,8 +84,8 @@ namespace maruyama {
                 transform_.Initialize(status);
             }
 
-            void Initialize(int bt) {
-                bd_.Initialize(&transform_, static_cast<IMode::Type>(bt));
+            void Initialize(int bt) { // int 0 = 空気判定だが、enum とずれるので対応　差分　-1
+                bd_.Initialize(&transform_, static_cast<BlockDrawerCommon::Type>(bt - 1));
             }
 
             void Update(void) {
@@ -106,15 +107,25 @@ namespace maruyama {
         void Update(void);
         void Draw(void);
 
+        void DrawDebug(void);
+
         // パーフェクトピクセルコリジョン
         void PPC(YukiMapchipCollider* ptr);
         // 空気ブロックを他ブロックに置換できる。それ以外は例外スロー
         void ReWriteBlock(size_t X,size_t Y,BlockType bt);
         void ReWriteBlock2Warp(size_t X,size_t Y,BlockType bt, Direction dirSelf);
-    private:
-        Vector2 CalcVelStuck(const Vector2& pointPos); // 移動入力なしの押し出し値計算関数 ※Moveの前に使う =>今使ってない
-        Vector2 CalcVelMove(const Vector2& pointPos, const Vector2& vel); // 移動入力ありの押し出し値計算関数 ※Stuckの後に使う
 
+        inline Vector3 GetCenterPos(void);
+    private:
+        // (現在地 + vel) - 基準点 で距離算出 ※プレイヤーは看板の基準点より必ず右にいる想定
+        // 距離 / ブロックの直径 でマップチップ配列の要素数では何番目に相当する位置か算出 ->CalcElem()で処理
+        inline int CalcElemX(float pointX) { return static_cast<int>((pointX - topLeftPos_.x_) / (blockRadius_ * 2)); }
+        inline int CalcElemY(float pointY) { return static_cast<int>((pointY - topLeftPos_.y_) / (blockRadius_ * 2) * -1); }
+        inline int CalcMovedElemX(float pointX, float velX) { return static_cast<int>((pointX + velX - topLeftPos_.x_) / (blockRadius_ * 2)); }
+        inline int CalcMovedElemY(float pointY, float velY) { return static_cast<int>((pointY + velY - topLeftPos_.y_) / (blockRadius_ * 2) * -1); }
+        float roundToDecimal(float value, int decimalPlaces); // 丸め誤差を修正する関数
+        bool SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX, const Vector2& approach, int mElemX, int mElemY);
+        bool SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY, const Vector2& approach, int mElemX, int mElemY);
     public:
         // 変数
         //std::vector<std::vector<std::unique_ptr<IBlock>>> mapchip2_{};
@@ -124,6 +135,8 @@ namespace maruyama {
 
         // 基点（左上）座標
         Vector3 topLeftPos_{}; // zは常に0
+
+        YInput::Keys* keys_{ YInput::Keys::GetInstance() };
     };
 }
 

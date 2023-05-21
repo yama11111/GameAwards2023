@@ -12,6 +12,8 @@ protected:
     using Vector4 = YMath::Vector4;
     using Transform = YGame::Transform;
 
+    static constexpr int decimalPlace_{ 3 };
+
 public:
     enum class EntityType
     {
@@ -35,7 +37,12 @@ public:
 
     void Initialize(void);
     void UpdatePos(void);
+    void UpdatePoint(void);
 
+protected:
+    float roundToDecimal(float value, int decimalPlaces);
+
+public:
     // ïœêî
     Transform transform_{};
     Vector3 radius_{};
