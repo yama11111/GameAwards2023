@@ -61,6 +61,7 @@ void Mouse::Update(const HWND hwnd)
 	ScreenToClient(hwnd, &pos);
 
 	mouse_->pos_ = { static_cast<float>(pos.x), static_cast<float>(pos.y) };
+	mouse_->scroll_ = static_cast<float>(mouse_->state_.lZ);
 }
 
 bool Mouse::IsDown(const MouseClick& button)
@@ -81,4 +82,18 @@ bool Mouse::IsRelease(const MouseClick& button)
 {
 	return	(mouse_->state_.rgbButtons[static_cast<size_t>(button)]) == false &&
 			(elderMouse_->state_.rgbButtons[static_cast<size_t>(button)]);
+}
+
+YMath::Vector2 YInput::Mouse::Pos(const When& when)
+{
+	if (when == When::Current) { return mouse_->pos_; }
+	if (when == When::Elder) { return elderMouse_->pos_; }
+	return YMath::Vector2();
+}
+
+float YInput::Mouse::ScrollValue(const When& when)
+{
+	if (when == When::Current) { return mouse_->scroll_; }
+	if (when == When::Elder) { return elderMouse_->scroll_; }
+	return 0.0f;
 }

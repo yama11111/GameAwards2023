@@ -127,7 +127,8 @@ void DemoScene::Initialize()
 					LevelData::Spring::InitStatuses[stageIdx][i].pos_.x_,
 					LevelData::Spring::InitStatuses[stageIdx][i].pos_.y_,
 					0.0f,
-				});
+				}, 
+				LevelData::Spring::InitStatuses[stageIdx][i].jumpPowar_);
 
 			// ‘}“ü
 			objMan_.PushBack(newSpring.get());
@@ -181,7 +182,8 @@ void DemoScene::Initialize()
 					LevelData::Laser::InitStatuses[stageIdx][i].direction_.x_,
 					LevelData::Laser::InitStatuses[stageIdx][i].direction_.y_,
 					0.0f,
-				});
+				},
+				LevelData::Laser::InitStatuses[stageIdx][i].length_);
 
 			// ‘}“ü
 			objMan_.PushBack(newLaser.get());

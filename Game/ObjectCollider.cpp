@@ -88,6 +88,13 @@ bool ObjectCollider::PerfectPixelCollisionUpperSide(const YGame::Box2D& pairObje
 
 	// ã¸Žž‚Í’e‚­
 	if (speedRef.y_ >= 0.0f) { return false; }
+	
+	// ‰º‚É‚¢‚é‚È‚ç’e‚­
+	if (this->GetBox2DCenter().y_ - this->GetBox2DRadSize().y_ <= 
+		pairObjectBox.GetBox2DCenter().y_ + pairObjectBox.GetBox2DRadSize().y_)
+	{
+		return false; 
+	}
 
 	// ‚Ô‚Â‚©‚Á‚Ä‚¢‚é‚©
 	bool isCollY = CollisionTemporaryBox2D({ 0,speedRef.y_ }, pairObjectBox); // y
