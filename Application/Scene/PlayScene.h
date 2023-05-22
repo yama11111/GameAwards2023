@@ -34,8 +34,6 @@ namespace YScene
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
 		maruyama::Sign sign_;
 
-		Player player_;
-
         TestPlayer tp_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 

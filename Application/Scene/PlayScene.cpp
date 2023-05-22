@@ -42,8 +42,6 @@ void PlayScene::Load()
 
 	// 描画クラス全て
 	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
-
-	player_.StaticInitialize();
 }
 
 #pragma endregion
@@ -55,8 +53,6 @@ void PlayScene::Initialize()
 {
 	// パーティクル初期化
 	particleMan_.Initialize();
-
-	player_.Initialize(Vector3{ 0.0f,0.0f,0.0f });
 
     tp_.Initialize();
     tp_.transform_.pos_ = { 4,-4,0 };
@@ -174,7 +170,6 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
-	player_.Draw();
     tp_.Draw();
 
 	// 背景描画
