@@ -5,12 +5,14 @@ using YMath::Vector2;
 using YMath::Vector3;
 using YGame::Box2D;
 
-maruyama::Sign* IObject::spSignMan_ = nullptr;
+//maruyama::Stage* IObject::spStageMan_ = nullptr;
+maruyama::Sign* IObject::spStageMan_ = nullptr;
 
-void IObject::StaticInitialize(maruyama::Sign* pSignMan)
+//void IObject::StaticInitialize(maruyama::Stage* pStageMan)
+void IObject::StaticInitialize(maruyama::Sign* pStageMan)
 {
 	// null チェック
-	assert(pSignMan);
+	assert(pStageMan);
 	// 代入
-	spSignMan_ = pSignMan;
+	spStageMan_ = pStageMan;
 }

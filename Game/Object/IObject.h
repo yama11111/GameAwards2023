@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include <memory>
 
+//namespace maruyama { class Stage; }
 namespace maruyama { class Sign; }
 
 class IObject :
@@ -37,16 +38,18 @@ public:
 
 protected:
 
-	// 静的看板マネージャーポインタ
-	static maruyama::Sign* spSignMan_;
+	// 静的ステージマネージャーポインタ
+	//static maruyama::Stage* spStageMan_;
+	static maruyama::Sign* spStageMan_;
 
 public:
 	
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	/// <param name="pSignMan"> : 静的看板マネージャーポインタ</param>
-	static void StaticInitialize(maruyama::Sign* pSignMan);
+	/// <param name="pStageMan"> : ステージマネージャーポインタ</param>
+	//static void StaticInitialize(maruyama::Stage* pStageMan);
+	static void StaticInitialize(maruyama::Sign* pStageMan);
 
 };
 

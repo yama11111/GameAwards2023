@@ -5,7 +5,7 @@
 #include <cmath>
 #include <imgui.h>
 
-#include "Sign.h"
+#include "Stage.h"
 
 using YGame::Transform;
 using YMath::Vector2;
@@ -240,7 +240,7 @@ void Player::Update()
 	velocity_ = speed_;
 	
 	// ”»’è
-	spSignMan_->PPC(this);
+	spStageMan_->PPC(this);
 	
 	// –ß‚·
 	transform_->pos_ = trfm_.pos_;

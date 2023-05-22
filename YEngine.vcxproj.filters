@@ -154,6 +154,9 @@
     <Filter Include="game">
       <UniqueIdentifier>{f55c61c6-6faa-47c5-aa7f-38a2dc214b25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Stage">
+      <UniqueIdentifier>{c7b97f4e-978f-4ad3-b01e-fadddb48d1cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -456,9 +459,6 @@
     <ClCompile Include="DemoGoal.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="DemoPlayer.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Object\Block.cpp">
       <Filter>Game\Object</Filter>
     </ClCompile>
@@ -495,18 +495,6 @@
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp">
       <Filter>Application\Draw\Drawer</Filter>
     </ClCompile>
-    <ClCompile Include="YukiMapchipCollider.cpp">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="Sign.cpp">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\StageConfig.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\ObjectCollider.cpp">
       <Filter>Game\Collider</Filter>
     </ClCompile>
@@ -521,6 +509,18 @@
     </ClCompile>
     <ClCompile Include="Game\Object\ObjectManager.cpp">
       <Filter>Game\Object\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Sign.cpp">
+      <Filter>Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="YukiMapchipCollider.cpp">
+      <Filter>Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\StageConfig.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -836,9 +836,6 @@
     <ClInclude Include="Game\Drawer\SwitchDrawer.h">
       <Filter>Game\Drawer\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="DemoPlayer.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="DemoGoal.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -881,20 +878,8 @@
     <ClInclude Include="Application\Draw\Drawer\UIButtonDrawer.h">
       <Filter>Application\Draw\Drawer</Filter>
     </ClInclude>
-    <ClInclude Include="Game\StageConfig.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\ObjectCollider.h">
       <Filter>Game\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="Sign.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="YukiMapchipCollider.h">
-      <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="Game\ObjectCollisionManager.h">
       <Filter>Game\Collider</Filter>
@@ -913,6 +898,18 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h">
       <Filter>Engine\GameUtil\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Sign.h">
+      <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="YukiMapchipCollider.h">
+      <Filter>Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\StageConfig.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

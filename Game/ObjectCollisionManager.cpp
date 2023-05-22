@@ -73,6 +73,7 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 
 			// ‰Ÿ‚µ–ß‚µ
 			pColliderA->PerfectPixelCollision(*pColliderB);
+			pColliderB->PerfectPixelCollision(*pColliderA);
 		}
 		// ƒvƒŒƒCƒ„[ ~ ‚Î‚Ë
 		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)

@@ -131,7 +131,6 @@
     <ClCompile Include="Engine\Base\YFramework.cpp" />
     <ClCompile Include="Engine\Base\YWindowsApp.cpp" />
     <ClCompile Include="DemoGoal.cpp" />
-    <ClCompile Include="DemoPlayer.cpp" />
     <ClCompile Include="Application\Draw\Actor\DeadActor.cpp" />
     <ClCompile Include="Application\Draw\Actor\SlimeActor.cpp" />
     <ClCompile Include="Game\Drawer\BackgroundDrawer.cpp" />
@@ -259,7 +258,6 @@
     <ClInclude Include="Engine\Base\YWindowsApp.h" />
     <ClInclude Include="Def.h" />
     <ClInclude Include="DemoGoal.h" />
-    <ClInclude Include="DemoPlayer.h" />
     <ClInclude Include="Application\Draw\Actor\DeadActor.h" />
     <ClInclude Include="Application\Draw\Actor\SlimeActor.h" />
     <ClInclude Include="Game\Drawer\BackgroundDrawer.h" />

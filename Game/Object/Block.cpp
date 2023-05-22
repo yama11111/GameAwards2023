@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "Sign.h"
+#include "Stage.h"
 
 using YGame::Transform;
 using YMath::Vector3;
@@ -146,7 +146,7 @@ void Block::Update()
 	velocity_ = speed_;
 
 	// ”»’è
-	spSignMan_->PPC(this);
+	spStageMan_->PPC(this);
 
 	// –ß‚·
 	*transform_ = trfm_;
