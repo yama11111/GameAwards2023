@@ -494,6 +494,7 @@
     </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp">
       <Filter>Application\Draw\Drawer</Filter>
+	</ClCompile>
     <ClCompile Include="YukiMapchipCollider.cpp">
       <Filter>game</Filter>
     </ClCompile>
@@ -891,6 +892,7 @@
     </ClInclude>
     <ClInclude Include="Game\ObjectCollider.h">
       <Filter>Game\Collider</Filter>
+	</ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>game</Filter>
     </ClInclude>
