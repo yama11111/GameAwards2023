@@ -218,20 +218,26 @@ void DemoScene::Initialize()
 
 	// 鍵
 	{
-		// インスタンス生成
-		key_ = std::make_unique<Key>();
+		for (size_t i = 0; i < LevelData::Key::InitStatuses[stageIdx].size(); i++)
+		{
+			// インスタンス生成
+			std::unique_ptr<Key> newKey = std::make_unique<Key>();
 
-		// 初期化
-		key_->Initialize(
-			LevelData::Key::InitStatuses[stageIdx].signIndex_,
-			{
-				LevelData::Key::InitStatuses[stageIdx].pos_.x_,
-				LevelData::Key::InitStatuses[stageIdx].pos_.y_,
-				0.0f,
-			});
+			// 初期化
+			newKey->Initialize(
+				LevelData::Key::InitStatuses[stageIdx][i].signIndex_,
+				{
+					LevelData::Key::InitStatuses[stageIdx][i].pos_.x_,
+					LevelData::Key::InitStatuses[stageIdx][i].pos_.y_,
+					0.0f,
+				});
 
-		// 挿入
-		objMan_.PushBack(key_.get());
+			// 挿入
+			objMan_.PushBack(newKey.get());
+
+			// 挿入
+			keys_.push_back(std::move(newKey));
+		}
 	}
 
 	// ゴール

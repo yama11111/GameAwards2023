@@ -1,14 +1,19 @@
 #pragma once
 #include "BaseScene.h"
 
-#include "GateDrawer.h"
-#include "GoalDrawer.h"
+#include "Player.h"
+#include "Block.h"
+#include "Spring.h"
+#include "Platform.h"
+#include "Laser.h"
+#include "Switch.h"
+#include "Key.h"
+#include "Goal.h"
 
-#include "BackgroundDrawer.h"
+#include "ObjectManager.h"
+
+#include "BackGroundDrawer.h"
 #include "HUDDrawer.h"
-
-#include "ScrollCamera.h"
-#include "StageConfig.h"
 
 #include "Sign.h"
 #include "Player.h"
@@ -37,9 +42,33 @@ namespace YScene
         TestPlayer tp_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 
+		// プレイヤー
+		std::unique_ptr<Player> player_;
 
-		// ステージ設定
-		StageConfig* stageConfig_ = nullptr;
+		// ブロック
+		std::list<std::unique_ptr<Block>> blocks_;
+
+		// ばね
+		std::list<std::unique_ptr<Spring>> springs_;
+
+		// 足場
+		std::list<std::unique_ptr<Platform>> platforms_;
+
+		// レーザー
+		std::list<std::unique_ptr<Laser>> lasers_;
+
+		// スイッチ
+		std::list<std::unique_ptr<Switch>> switches_;
+
+		// 鍵
+		std::list<std::unique_ptr<Key>> keys_;
+
+		// ゴール
+		std::unique_ptr<Goal> goal_;
+
+
+		// オブジェクトマネージャー
+		ObjectManager objMan_;
 
 
 		// 背景

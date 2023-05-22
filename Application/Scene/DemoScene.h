@@ -50,7 +50,7 @@ namespace YScene
 		std::list<std::unique_ptr<Switch>> switches_;
 		
 		// Œ®
-		std::unique_ptr<Key> key_;
+		std::list<std::unique_ptr<Key>> keys_;
 		
 		// ƒS[ƒ‹
 		std::unique_ptr<Goal> goal_;
