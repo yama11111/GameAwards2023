@@ -16,9 +16,10 @@ public:
     void Draw(void);
 
     void RegisterSign(Sign* ptr);
+    void RegisterEntity(YukiMapchipCollider* ptr);
 
     // •Ï”
-    std::vector<Sign> signVector_;
+    std::vector<std::unique_ptr<Sign>> signVector_;
     std::list<YukiMapchipCollider*> colliderPtrList_;
 };
 
