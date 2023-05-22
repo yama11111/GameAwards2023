@@ -450,9 +450,6 @@
     <ClCompile Include="Sign.cpp">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp">
       <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
@@ -805,9 +802,6 @@
     </ClInclude>
     <ClInclude Include="YukiMapchipCollider.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h">
       <Filter>Application\Draw\Drawer\Obj</Filter>
