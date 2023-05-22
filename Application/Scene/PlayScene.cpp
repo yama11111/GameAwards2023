@@ -75,7 +75,7 @@ void PlayScene::Initialize()
 	size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
 	sign_.Initialize({ 10,20 });
-    sign_.ReWriteBlock(7, 18, Sign::BlockType::SPRING);
+    sign_.ReWriteBlock(7, 18, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
 
 	// オブジェクト
