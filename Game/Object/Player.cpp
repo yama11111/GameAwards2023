@@ -110,6 +110,9 @@ void Player::Jump()
 	// ジャンプ回数が最大なら弾く
 	if (1 <= jumpCount_) { return; }
 
+	// 特殊アクション中なら弾く
+	if (spKeys_->IsDown(DIK_E)) { return; }
+
 	// SPACEキー押したら
 	if (spKeys_->IsTrigger(DIK_SPACE))
 	{
