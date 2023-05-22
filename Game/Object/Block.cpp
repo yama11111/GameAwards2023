@@ -42,7 +42,7 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ transform_->scale_.x_, transform_->scale_.y_ });
+	Box2D::SetBox2DRadSize({ transform_->scale_.x_ - 0.1f, transform_->scale_.y_ - 0.1f });
 
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::eBlock);
@@ -56,7 +56,7 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	trfm_ = *transform_;
 
 	// マップチップコライダー半径設定
-	radius_ = { transform_->scale_.x_, transform_->scale_.y_, 0.0f };
+	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f};
 
 
 	// 描画クラスリセット

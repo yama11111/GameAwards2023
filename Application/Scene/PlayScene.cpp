@@ -407,19 +407,24 @@ void PlayScene::Draw()
 
 void PlayScene::CameraUpdate()
 {
-	if (sMouse_->IsTrigger(MouseClick::DIM_LEFT))
+	static const float sCameraMoveSpeed = 1.0f;
+	static const float sCameraMoveValue = 5.0f;
+
+	if (sMouse_->IsDown(MouseClick::DIM_MIDDLE))
 	{
+		bool isMoveR = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) >= +sCameraMoveValue;
+		bool isMoveL = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) <= -sCameraMoveValue;
+		bool isMoveT = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) >= +sCameraMoveValue;
+		bool isMoveB = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) <= -sCameraMoveValue;
 
+		camera_.pos_.x_ += sCameraMoveSpeed * static_cast<float>(isMoveL - isMoveR);
+		camera_.pos_.y_ += sCameraMoveSpeed * static_cast<float>(isMoveT - isMoveB);
 	}
 
-	if (sKeys_->IsDown(DIK_LSHIFT)) {
-		if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
-		if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
-		if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
-		if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
-		if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
-		if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
-	}
+	static const float sCameraScrollSpeed = 3.0f;
+
+	if (sMouse_->ScrollValue() > 0.0f) { camera_.pos_.z_ += sCameraScrollSpeed; }
+	if (sMouse_->ScrollValue() < 0.0f) { camera_.pos_.z_ -= sCameraScrollSpeed; }
 }
 
 #pragma endregion

@@ -20,6 +20,14 @@ namespace YInput
 		DIM_MIDDLE,
 	};
 
+	enum class When
+	{
+		// 現在
+		Current,
+		// 前
+		Elder,
+	};
+
 	class Mouse
 	{
 	private:
@@ -30,6 +38,8 @@ namespace YInput
 			DIMOUSESTATE state_{};
 			// 位置
 			YMath::Vector2 pos_;
+			// スクロール量
+			float scroll_;
 			// 初期化
 			void Initialize();
 		};
@@ -57,7 +67,9 @@ namespace YInput
 		// 離した瞬間
 		bool IsRelease(const MouseClick& button);
 		// 位置
-		YMath::Vector2 Pos() { return mouse_->pos_; }
+		YMath::Vector2 Pos(const When& when = When::Current);
+		// ホイールスクロール量 (1F の 移動量)
+		float ScrollValue(const When& when = When::Current);
 	public:
 		static Mouse* GetInstance();
 	private:

@@ -63,7 +63,7 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		collA.SetBox2DRadSize(rad + Vector2(rad.x_ / 2.0f, -(rad.y_ / 2.0f)));
 
 		// プレイヤー × ブロック
-		if		(pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
@@ -75,9 +75,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 			// 押し戻し
 			pColliderA->PerfectPixelCollision(*pColliderB);
 			pColliderB->PerfectPixelCollision(*pColliderA);
+
+			return;
 		}
 		// プレイヤー × ばね
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
 			// アタリ + 押し戻し
 			if (pColliderA->PerfectPixelCollision(*pColliderB))
@@ -85,9 +87,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// プレイヤー × 足場
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
 		{
 			// アタリ + 押し戻し
 			if (pColliderA->PerfectPixelCollisionUpperSide(*pColliderB))
@@ -95,9 +99,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// プレイヤー × レーザー
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eLaser)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eLaser)
 		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(*pColliderA, *pColliderB))
@@ -105,9 +111,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// プレイヤー × スイッチ
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eSwitch)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSwitch)
 		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
@@ -115,9 +123,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// プレイヤー × 鍵
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eKey)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eKey)
 		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
@@ -125,16 +135,16 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
-		}
 
-		return;
+			return;
+		}
 	}
 
 	// ブロック
 	if (pColliderA->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
 		// ブロック × ブロック
-		if		(pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{
 			// アタリ + 押し戻し
 			if (pColliderA->PerfectPixelCollision(*pColliderB))
@@ -142,9 +152,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// ブロック × ばね
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
 			// アタリ + 押し戻し
 			if (pColliderA->PerfectPixelCollision(*pColliderB))
@@ -152,9 +164,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// ブロック × 足場
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::ePlatform)
 		{
 			// アタリ + 押し戻し
 			if (pColliderA->PerfectPixelCollisionUpperSide(*pColliderB))
@@ -162,9 +176,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			return;
 		}
 		// ブロック × レーザー
-		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eLaser)
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eLaser)
 		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(*pColliderA, *pColliderB))
@@ -172,9 +188,9 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
-		}
 
-		return;
+			return;
+		}
 	}
 
 	// 全オブジェクト

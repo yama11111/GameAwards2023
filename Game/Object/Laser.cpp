@@ -82,7 +82,9 @@ void Laser::Draw()
 void Laser::OnCollision(ObjectCollider* pPair)
 {
 	// ブロックなら
-	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
+	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock ||
+		pPair->GetColliderType() == ObjectCollider::Type::eSpring ||
+		pPair->GetColliderType() == ObjectCollider::Type::ePlatform)
 	{
 		// 中心座標とサイズ取得
 		Vector2 center = pPair->GetBox2DCenter();

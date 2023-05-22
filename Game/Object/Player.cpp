@@ -65,7 +65,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	trfm_ = *transform_;
 	
 	// マップチップコライダー半径設定
-	radius_ = { transform_->scale_.x_, transform_->scale_.y_, 0.0f };
+	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f };
 
 
 	// 落下フラグをうごかすか
