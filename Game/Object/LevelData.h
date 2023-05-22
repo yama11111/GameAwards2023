@@ -10,6 +10,27 @@ namespace LevelData
 	// プレイヤー
 	namespace Player
 	{
+		// 加速力 (1F毎に加算)
+		static const float Acceleration = 0.5f;
+		
+		// 摩擦力 (1F毎に減算)
+		static const float Friction = 0.1f;
+		
+		// ジャンプ力
+		static const float JumpPower = 1.5f;
+
+		// 重力
+		static const float Gravity = 0.1f;
+
+		// 最大重力
+		static const float MaxGravity = 1.5f;
+		
+		// 最大速度
+		static const YMath::Vector2 MaxSpeed = { 0.5f, 3.0f };
+
+		// アタリ判定用半径
+		static const YMath::Vector2 CollRadSize = { 1.0f, 1.0f };
+
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -42,6 +63,9 @@ namespace LevelData
 	// ブロック
 	namespace Block
 	{
+		// アタリ判定用半径
+		static const YMath::Vector2 CollRadSize = { 0.9f, 0.9f };
+
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -123,6 +147,9 @@ namespace LevelData
 	// ばね
 	namespace Spring
 	{
+		// アタリ判定用半径
+		static const YMath::Vector2 CollRadSize = { 1.0f, 0.5f };
+
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -131,6 +158,9 @@ namespace LevelData
 
 			// 座標
 			YMath::Vector2 pos_;
+
+			// ジャンプ力
+			float jumpPowar_;
 		};
 
 		// 初期化ステータス
@@ -140,61 +170,34 @@ namespace LevelData
 			{
 				//  1
 				{
-					{0, { +30.0f,-37.0f }},
+					{0, { +30.0f,-37.0f }, 3.0f},
 				},
 				//  2
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  3
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  4
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  5
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  6
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  7
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  8
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  9
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 				//  10
 				{
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
-					{0, { 0.0f,0.0f }},
 				},
 			},
 		};
@@ -286,6 +289,9 @@ namespace LevelData
 	// レーザー
 	namespace Laser
 	{
+		// 伸びるスピード
+		static const float GrowSpeed = 0.2f;
+
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -297,6 +303,9 @@ namespace LevelData
 
 			// 向き (+ : 右と上, - :左と下)
 			YMath::Vector2 direction_;
+
+			// 長さ
+			float length_;
 		};
 
 		// 初期化ステータス
@@ -306,61 +315,34 @@ namespace LevelData
 			{
 				//  1
 				{
-					{0, { +24.0f,+2.0f }, { 0.0f,-1.0f }},
+					{0, { +24.0f,-3.0f }, { 0.0f,-1.0f }, 36.0f},
 				},
 				//  2
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  3
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  4
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  5
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  6
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  7
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  8
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  9
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 				//  10
 				{
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
-					{0, { 0.0f,0.0f }, { +1.0f,+0.0f }},
 				},
 			},
 		};

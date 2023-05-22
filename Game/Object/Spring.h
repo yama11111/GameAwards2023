@@ -8,6 +8,9 @@ class Spring :
 
 private:
 
+	// ジャンプ力
+	float jumpPower_;
+
 	// 描画クラス
 	SpringDrawer drawer_;
 
@@ -18,14 +21,16 @@ public:
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos);
+	/// <param name="jumpPower"> : ジャンプ力</param>
+	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const float jumpPower);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos);
+	/// <param name="jumpPower"> : ジャンプ力</param>
+	void Reset(const size_t signIndex, const YMath::Vector3& pos, const float jumpPower);
 
 	/// <summary>
 	/// 判定前更新

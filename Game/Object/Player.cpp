@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 #include "Stage.h"
+#include "LevelData.h"
 
 using YGame::Transform;
 using YMath::Vector2;
@@ -39,7 +40,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 	// スピード初期化
 	speed_ = {};
-
+	
 	// 向き (右)
 	direction_ = Vector3(+1, 0, 0);
 
@@ -51,7 +52,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ transform_->scale_.x_, transform_->scale_.y_ });
+	Box2D::SetBox2DRadSize({ LevelData::Player::CollRadSize });
 
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::ePlayer);
@@ -82,10 +83,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 void Player::Move()
 {
 	// x軸移動
-	speed_.x_ += spKeys_->Horizontal();
-
-	// クランプ
-	speed_.x_ = Clamp(speed_.x_, -0.5f, +0.5f);
+	speed_.x_ += spKeys_->Horizontal() * LevelData::Player::Acceleration;
 
 	// 保存用フラグ
 	bool isMove = false;
@@ -117,7 +115,7 @@ void Player::Jump()
 	if (spKeys_->IsTrigger(DIK_SPACE))
 	{
 		// ジャンプ
-		speed_.y_ = 1.0f;
+		speed_.y_ = LevelData::Player::JumpPower;
 
 		// ジャンプアニメーション
 		drawer_.JumpAnimation();
@@ -155,23 +153,23 @@ void Player::UpdatePhysics()
 	Jump();
 
 	// 摩擦力
-	if (speed_.x_ > 0)
+	if (speed_.x_ > 0.0f)
 	{
-		speed_.x_ -= 0.1f;
+		speed_.x_ -= LevelData::Player::Friction;
 		speed_.x_ = (std::max)(0.0f, speed_.x_);
 	}
-	if (speed_.x_ < 0)
+	if (speed_.x_ < 0.0f)
 	{
-		speed_.x_ += 0.1f;
+		speed_.x_ += LevelData::Player::Friction;
 		speed_.x_ = (std::min)(0.0f, speed_.x_);
 	}
 
 	// 重力
-	speed_.y_ -= 0.1f;
+	speed_.y_ -= gravity_;
 
 	// クランプ
-	speed_.x_ = Clamp(speed_.x_, -1.5f, +1.5f);
-	speed_.y_ = Clamp(speed_.y_, -1.5f, +1.5f);
+	speed_.x_ = Clamp(speed_.x_, -LevelData::Player::MaxSpeed.x_, +LevelData::Player::MaxSpeed.x_);
+	speed_.y_ = Clamp(speed_.y_, -LevelData::Player::MaxGravity, +LevelData::Player::MaxSpeed.y_);
 }
 
 Vector3& Player::PosRef()
@@ -195,11 +193,21 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// ばねなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eSpring)
 	{
+		// 上側か
+		bool isUp = transform_->pos_.y_ >= (pPair->GetBox2DCenter().y_ + pPair->GetBox2DRadSize().y_);
+
+		// 上側じゃないなら弾く
+		if (isUp == false || speed_.y_ > 0.0f) { return; }
+
 		// ジャンプ
 		speed_.y_ = 3.0f;
 
 		// アクション
 		pPair->SetIsActSkill(true);
+
+		// 着地フラグ初期化
+		ResetIsLanding();
+		isGrounded_ = false;
 	}
 	// レーザーなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eLaser)

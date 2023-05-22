@@ -1,6 +1,7 @@
 #include "Laser.h"
 #include "MathUtillity.h"
 #include "CalcTransform.h"
+#include "LevelData.h"
 #include <cassert>
 #include <cmath>
 
@@ -12,7 +13,7 @@ using YMath::Clamp;
 // デフォルト回転量
 static Vector3 defRota = YMath::AdjustAngle(Vector3(0.0f, -1.0f, 0.0f).Normalized());
 
-void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction)
+void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -21,10 +22,10 @@ void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const 
 	drawer_.Initialize(transform_.get(), &beamLength_);
 
 	// リセット
-	Reset(signIndex, pos, direction);
+	Reset(signIndex, pos, direction, length);
 }
 
-void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction)
+void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
@@ -34,6 +35,9 @@ void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath
 	
 	// ビームの長さ
 	beamLength_ = 0.0f;
+
+	// ビームの最大の長さ
+	beamMaxLength_ = length / 2.0f;
 
 	// ビームの長さ計算
 	CalcBeamLength();
@@ -53,7 +57,11 @@ void Laser::PreUpdate()
 	// ビーム長さ変更
 	if (isColl_ == false) 
 	{
+		// ビーム伸ばす
 		beamLength_ += 0.2f;
+		
+		// ビーム調整
+		beamLength_ = (std::min)(beamLength_, beamMaxLength_);
 	}
 	isColl_ = false;
 }

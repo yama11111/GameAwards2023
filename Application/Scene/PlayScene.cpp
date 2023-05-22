@@ -149,7 +149,8 @@ void PlayScene::Initialize()
 						LevelData::Spring::InitStatuses[index][i].pos_.x_,
 						LevelData::Spring::InitStatuses[index][i].pos_.y_,
 						0.0f,
-					});
+					},
+					LevelData::Spring::InitStatuses[index][i].jumpPowar_);
 
 				// ‘}“ü
 				objMan_.PushBack(newSpring.get());
@@ -199,11 +200,12 @@ void PlayScene::Initialize()
 						LevelData::Laser::InitStatuses[index][i].pos_.y_,
 						0.0f,
 					},
-				{
-					LevelData::Laser::InitStatuses[index][i].direction_.x_,
-					LevelData::Laser::InitStatuses[index][i].direction_.y_,
-					0.0f,
-				});
+					{
+						LevelData::Laser::InitStatuses[index][i].direction_.x_,
+						LevelData::Laser::InitStatuses[index][i].direction_.y_,
+						0.0f,
+					},
+					LevelData::Laser::InitStatuses[index][i].length_);
 
 				// ‘}“ü
 				objMan_.PushBack(newLaser.get());

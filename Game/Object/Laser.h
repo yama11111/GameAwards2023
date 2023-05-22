@@ -14,6 +14,9 @@ private:
 	// ビームの長さ
 	float beamLength_ = 0.0f;
 
+	// ビームの最大の長さ
+	float beamMaxLength_ = 0.0f;
+
 	// 当たりフラグ
 	bool isColl_ = false;
 
@@ -28,7 +31,8 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="direction"> : 向き</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction);
+	/// <param name="length"> : 長さ</param>
+	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
@@ -36,7 +40,8 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="direction"> : 向き</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction);
+	/// <param name="length"> : 長さ</param>
+	void Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length);
 
 	/// <summary>
 	/// 判定前更新

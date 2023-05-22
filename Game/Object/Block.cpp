@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "Stage.h"
+#include "LevelData.h"
 
 using YGame::Transform;
 using YMath::Vector3;
@@ -42,7 +43,7 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ transform_->scale_.x_ - 0.1f, transform_->scale_.y_ - 0.1f });
+	Box2D::SetBox2DRadSize({ LevelData::Block::CollRadSize });
 
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::eBlock);
@@ -79,13 +80,10 @@ void Block::Move()
 	if (GetIsActSkill() == false) { return; }
 
 	// x軸移動
-	speed_.x_ += spKeys_->Horizontal();
+	speed_.x_ += spKeys_->Horizontal() * LevelData::Player::Acceleration;
 
-	// クランプ
-	speed_.x_ = Clamp(speed_.x_, -0.5f, +0.5f);
-
-	// 続けるか
-	SetIsActSkill(spKeys_->IsDown(DIK_E));
+	// スキル終了
+	SetIsActSkill(false);
 }
 
 void Block::Landing()
@@ -109,23 +107,23 @@ void Block::UpdatePhysics()
 	Move();
 
 	// 摩擦力
-	if (speed_.x_ > 0)
+	if (speed_.x_ > 0.0f)
 	{
-		speed_.x_ -= 0.1f;
-		speed_.x_ = (std::max)(0.0f, speed_.x_);;
+		speed_.x_ -= LevelData::Player::Friction * 0.1f;
+		speed_.x_ = (std::max)(0.0f, speed_.x_);
 	}
-	if (speed_.x_ < 0)
+	if (speed_.x_ < 0.0f)
 	{
-		speed_.x_ += 0.1f;
+		speed_.x_ += LevelData::Player::Friction * 0.1f;
 		speed_.x_ = (std::min)(0.0f, speed_.x_);
 	}
 
 	// 重力
-	speed_.y_ -= 0.1f;
+	speed_.y_ -= LevelData::Player::Gravity;
 
 	// クランプ
-	speed_.x_ = Clamp(speed_.x_, -1.5f, +1.5f);
-	speed_.y_ = Clamp(speed_.y_, -1.5f, +1.5f);
+	speed_.x_ = Clamp(speed_.x_, -LevelData::Player::MaxSpeed.x_, +LevelData::Player::MaxSpeed.x_);
+	speed_.y_ = Clamp(speed_.y_, -LevelData::Player::MaxGravity, +LevelData::Player::MaxSpeed.y_);
 }
 
 void Block::OnCollision(ObjectCollider* pPair)

@@ -60,11 +60,11 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
 		// 大きさに幅を持たせる
 		Vector2 rad = pColliderA->GetBox2DRadSize();
-		collA.SetBox2DRadSize(rad + Vector2(rad.x_ / 2.0f, -(rad.y_ / 2.0f)));
+		collA.SetBox2DRadSize(rad + Vector2(rad.x_ * 0.5f, -(rad.y_ * 0.75f)));
 
 		// プレイヤー × ブロック
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
-		{
+		{		
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
