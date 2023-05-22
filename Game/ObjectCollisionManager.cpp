@@ -55,16 +55,16 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 	// プレイヤー
 	if (pColliderA->GetColliderType() == ObjectCollider::Type::ePlayer)
 	{
+		// 調整用コライダー
+		Box2D collA;
+		collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+		// 大きさに幅を持たせる
+		Vector2 rad = pColliderA->GetBox2DRadSize();
+		collA.SetBox2DRadSize(rad + Vector2(rad.x_ / 2.0f, -(rad.y_ / 2.0f)));
+
 		// プレイヤー × ブロック
 		if		(pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{
-			// 調整用コライダー
-			Box2D collA;
-			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
-			// 大きさに幅を持たせる
-			Vector2 rad = pColliderA->GetBox2DRadSize();
-			collA.SetBox2DRadSize(rad + Vector2(rad.x_ / 2.0f, -(rad.y_ / 2.0f)));
-
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
@@ -109,12 +109,16 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		// プレイヤー × スイッチ
 		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eSwitch)
 		{
-			// 調整用コライダー
-			Box2D collA;
-			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
-			// 大きさに幅を持たせる
-			collA.SetBox2DRadSize(pColliderA->GetBox2DRadSize() + Vector2(2.0f, 0.0f));
-
+			// アタリ
+			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
+		}
+		// プレイヤー × 鍵
+		else if (pColliderB->GetColliderType() == ObjectCollider::Type::eKey)
+		{
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
