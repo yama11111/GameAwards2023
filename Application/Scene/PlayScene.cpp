@@ -64,9 +64,9 @@ void PlayScene::Initialize()
 	// ステージ番号
 	uint32_t stageIdx = static_cast<uint32_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	sign_.Initialize({ 10,10 });
-    sign_.ReWriteBlock(7, 8, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(8, 7, Sign::BlockType::BASIC);
+	sign_.Initialize({ 10,20 });
+    sign_.ReWriteBlock(7, 18, Sign::BlockType::SPRING);
+    sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
 
 	// 背景初期化
 	background_.Initialize();
@@ -124,8 +124,6 @@ void PlayScene::Update()
     }
 
 	sign_.Update();
-
-	player_.Update();
     tp_.Update();
 
     sign_.PPC(&tp_);

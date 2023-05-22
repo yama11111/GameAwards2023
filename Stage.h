@@ -1,4 +1,5 @@
 #pragma once
+#include "YukiMapchipCollider.h"
 #include "Sign.h"
 #include <list>
 
@@ -11,7 +12,13 @@ public:
     // ŠÖ”
     Stage(void) {};
 
+    void Update(void);
+    void Draw(void);
+
+    void RegisterSign(Sign* ptr);
+
     // •Ï”
-    std::vector<Sign> signList_;
+    std::vector<Sign> signVector_;
+    std::list<YukiMapchipCollider*> colliderPtrList_;
 };
 

@@ -215,16 +215,31 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
     if (mElemX == -1 || mElemX == mapchip_[0].size()) return isExecuted;
     if (elemY == -1 || elemY == mapchip_.size()) return isExecuted;
 
-    while (static_cast<BlockType>(mapchip_[elemY][mElemX]) == BlockType::BASIC)
-    {
-        // 仮移動後の座標でマップチップ配列の位置
-        int checkElemX = CalcMovedElemX(pointX, approach.x_);
-        isExecuted = true;
-        if (checkElemX == mElemX) break;
+    if (static_cast<BlockType>(mapchip_[elemY][mElemX]) == BlockType::BASIC) {
+        while (1)
+        {
+            // 仮移動後の座標でマップチップ配列の位置
+            int checkElemX = CalcMovedElemX(pointX, approach.x_);
+            isExecuted = true;
+            if (checkElemX == mElemX) break;
 
-        ptr->transform_.pos_.x_ += approach.x_;
-        ptr->UpdatePos();
-        ptr->UpdatePoint();
+            ptr->transform_.pos_.x_ += approach.x_;
+            ptr->UpdatePos();
+            ptr->UpdatePoint();
+        }
+    }
+    else if (static_cast<BlockType>(mapchip_[elemY][mElemX]) == BlockType::SPRING) {
+        while (1)
+        {
+            // 仮移動後の座標でマップチップ配列の位置
+            int checkElemX = CalcMovedElemX(pointX, approach.x_);
+            isExecuted = true;
+            if (checkElemX == mElemX) break;
+
+            ptr->transform_.pos_.x_ += approach.x_;
+            ptr->UpdatePos();
+            ptr->UpdatePoint();
+        }
     }
 
     //if (!approach.x_)isExecuted = false;
@@ -237,19 +252,47 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
     if (elemX <= -1 || elemX >= mapchip_[0].size()) return isExecuted;
     if (mElemY <= -1 || mElemY >= mapchip_.size()) return isExecuted;
 
-    while (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::BASIC)
-    {
-        // 仮移動後の座標でマップチップ配列の位置
-        int checkElemY = CalcMovedElemX(pointY, approach.y_);
-        //if(checkElemY )
-        isExecuted = true;
-        if (checkElemY == mElemY) break;
+    if (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::BASIC) {
+        while (1)
+        {
+            // 仮移動後の座標でマップチップ配列の位置
+            int checkElemY = CalcMovedElemX(pointY, approach.y_);
+            //if(checkElemY )
+            isExecuted = true;
+            if (checkElemY == mElemY) break;
 
-        ptr->transform_.pos_.y_ += approach.y_;
-        ptr->UpdatePos();
-        ptr->UpdatePoint();
+            ptr->transform_.pos_.y_ += approach.y_;
+            ptr->UpdatePos();
+            ptr->UpdatePoint();
+        }
     }
-    
+    else if (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::SPRING) {
+        if (approach.y_ > 0)
+            while (1)
+            {
+                // 仮移動後の座標でマップチップ配列の位置
+                int checkElemY = CalcMovedElemX(pointY, approach.y_);
+                //if(checkElemY )
+                isExecuted = true;
+                if (checkElemY == mElemY) break;
+
+                ptr->transform_.pos_.y_ += approach.y_;
+                ptr->UpdatePos();
+                ptr->UpdatePoint();
+            }
+        else {
+            while (1)
+            {
+                isExecuted = true;
+                if (pointY <= -((mElemY)*blockRadius_ * 2)) break;
+
+                ptr->transform_.pos_.y_ += approach.y_;
+                ptr->UpdatePos();
+                ptr->UpdatePoint();
+            }
+            ptr->isSpring_ = true;
+        }
+    }
     // 関数実行が、重力の為だけに実行された場合は関数実行はなかったものとする
     //if (gravity) isExecuted = false;
     return isExecuted;

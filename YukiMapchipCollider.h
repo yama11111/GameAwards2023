@@ -38,6 +38,7 @@ public:
     virtual ~YukiMapchipCollider(void) = default;
 
     void Initialize(void);
+    virtual void Update(void) = 0;
     void UpdatePos(void);
     void UpdatePoint(void);
 
@@ -53,5 +54,9 @@ public:
     Point point_{};
 
     EntityType entityType_{};
+
+    size_t idxSign_{};
+
+    bool isSpring_{};
 };
 

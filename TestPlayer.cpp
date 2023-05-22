@@ -45,6 +45,9 @@ void TestPlayer::Move(void)
 
     velocity_.y_ -= gravity_;
 
+    // 落下終端速度
+    velocity_.y_ = (std::max)(velocity_.y_, -1.75f);
+
     velocity_.Normalized();
 }
 
@@ -56,6 +59,12 @@ void TestPlayer::Jump(void)
     // ジャンプ入力
     if (keys_->IsTrigger(DIK_SPACE))
         jumpValue = jumpPower_; // 跳躍量に跳躍力を代入
+
+    // ばね
+    if (isSpring_) {
+        isSpring_ = false;
+        jumpValue = springPower_;
+    }
 
     // 跳躍量は常に減少する
     jumpValue -= jumpFall_;
