@@ -8,19 +8,19 @@ YukiMapchipCollider::YukiMapchipCollider(void)
 
 void YukiMapchipCollider::Initialize(void)
 {
-    transform_.Initialize();
+    trfm_.Initialize();
 }
 
 void YukiMapchipCollider::UpdatePos(void)
 {
     // 丸め誤差処理 - transform.pos
-    transform_.pos_ = { roundToDecimal(transform_.pos_.x_, decimalPlace_),roundToDecimal(transform_.pos_.y_,  decimalPlace_),roundToDecimal(transform_.pos_.z_,  decimalPlace_) };
+    trfm_.pos_ = { roundToDecimal(trfm_.pos_.x_, decimalPlace_),roundToDecimal(trfm_.pos_.y_,  decimalPlace_),roundToDecimal(trfm_.pos_.z_,  decimalPlace_) };
     // 丸め誤差処理 - velocity
      velocity_ = { roundToDecimal(velocity_.x_, decimalPlace_),roundToDecimal(velocity_.y_, decimalPlace_), roundToDecimal(velocity_.z_, decimalPlace_) };
 
     // 加算
-    transform_.pos_ += velocity_;
-    transform_.UpdateMatrix();
+    trfm_.pos_ += velocity_;
+    trfm_.UpdateMatrix();
 
     UpdatePoint();
 }
@@ -28,23 +28,23 @@ void YukiMapchipCollider::UpdatePos(void)
 void YukiMapchipCollider::UpdatePoint(void)
 {
     // 左上の座標算出と丸め誤差処理
-    point_.TopLeft_.x_ = transform_.pos_.x_ - radius_.x_;
-    point_.TopLeft_.y_ = transform_.pos_.y_ + radius_.y_;
+    point_.TopLeft_.x_ = trfm_.pos_.x_ - radius_.x_;
+    point_.TopLeft_.y_ = trfm_.pos_.y_ + radius_.y_;
     point_.TopLeft_.x_ = roundToDecimal(point_.TopLeft_.x_, decimalPlace_);
     point_.TopLeft_.y_ = roundToDecimal(point_.TopLeft_.y_, decimalPlace_);
     // 右上の座標算出と丸め誤差処理
-    point_.TopRight_.x_ = transform_.pos_.x_ + radius_.x_;
-    point_.TopRight_.y_ = transform_.pos_.y_ + radius_.y_;
+    point_.TopRight_.x_ = trfm_.pos_.x_ + radius_.x_;
+    point_.TopRight_.y_ = trfm_.pos_.y_ + radius_.y_;
     point_.TopRight_.x_ = roundToDecimal(point_.TopRight_.x_, decimalPlace_);
     point_.TopRight_.y_ = roundToDecimal(point_.TopRight_.y_, decimalPlace_);
     // 左下の座標算出と丸め誤差処理
-    point_.BottomLeft_.x_ = transform_.pos_.x_ - radius_.x_;
-    point_.BottomLeft_.y_ = transform_.pos_.y_ - radius_.y_;
+    point_.BottomLeft_.x_ = trfm_.pos_.x_ - radius_.x_;
+    point_.BottomLeft_.y_ = trfm_.pos_.y_ - radius_.y_;
     point_.BottomLeft_.x_ = roundToDecimal(point_.BottomLeft_.x_, decimalPlace_);
     point_.BottomLeft_.y_ = roundToDecimal(point_.BottomLeft_.y_, decimalPlace_);
     // 右下の座標算出と丸め誤差処理
-    point_.BottomRight_.x_ = transform_.pos_.x_ + radius_.x_;
-    point_.BottomRight_.y_ = transform_.pos_.y_ - radius_.y_;
+    point_.BottomRight_.x_ = trfm_.pos_.x_ + radius_.x_;
+    point_.BottomRight_.y_ = trfm_.pos_.y_ - radius_.y_;
     point_.BottomRight_.x_ = roundToDecimal(point_.BottomRight_.x_, decimalPlace_);
     point_.BottomRight_.y_ = roundToDecimal(point_.BottomRight_.y_, decimalPlace_);
 }

@@ -17,7 +17,6 @@
 
 #include "Sign.h"
 #include "Player.h"
-#include "TestPlayer.h"
 
 namespace YScene
 {
@@ -37,9 +36,9 @@ namespace YScene
 #pragma region ゲームオブジェクト
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
+		
 		maruyama::Sign sign_;
 
-        TestPlayer tp_;
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 
 		// プレイヤー
@@ -87,6 +86,8 @@ namespace YScene
 		// 転送用ビュープロジェクション
 		YGame::ViewProjection transferVP_;
 
+
+
 #pragma endregion
 
 	public:
@@ -115,6 +116,13 @@ namespace YScene
 		/// 描画
 		/// </summary>
 		void Draw() override;
+
+	public:
+
+		/// <summary>
+		/// カメラ位置
+		/// </summary>
+		void CameraUpdate();
 
 	public:
 

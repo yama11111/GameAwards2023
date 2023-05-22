@@ -223,7 +223,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
             isExecuted = true;
             if (checkElemX == mElemX) break;
 
-            ptr->transform_.pos_.x_ += approach.x_;
+            ptr->trfm_.pos_.x_ += approach.x_;
             ptr->UpdatePos();
             ptr->UpdatePoint();
         }
@@ -236,7 +236,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
             isExecuted = true;
             if (checkElemX == mElemX) break;
 
-            ptr->transform_.pos_.x_ += approach.x_;
+            ptr->trfm_.pos_.x_ += approach.x_;
             ptr->UpdatePos();
             ptr->UpdatePoint();
         }
@@ -261,7 +261,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             isExecuted = true;
             if (checkElemY == mElemY) break;
 
-            ptr->transform_.pos_.y_ += approach.y_;
+            ptr->trfm_.pos_.y_ += approach.y_;
             ptr->UpdatePos();
             ptr->UpdatePoint();
         }
@@ -276,7 +276,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 isExecuted = true;
                 if (checkElemY == mElemY) break;
 
-                ptr->transform_.pos_.y_ += approach.y_;
+                ptr->trfm_.pos_.y_ += approach.y_;
                 ptr->UpdatePos();
                 ptr->UpdatePoint();
             }
@@ -286,7 +286,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 isExecuted = true;
                 if (pointY <= -((mElemY)*blockRadius_ * 2)) break;
 
-                ptr->transform_.pos_.y_ += approach.y_;
+                ptr->trfm_.pos_.y_ += approach.y_;
                 ptr->UpdatePos();
                 ptr->UpdatePoint();
             }

@@ -5,6 +5,8 @@
 #include <cmath>
 #include <imgui.h>
 
+#include "Sign.h"
+
 using YGame::Transform;
 using YMath::Vector2;
 using YMath::Vector3;
@@ -44,6 +46,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// ジャンプカウントリセット
 	jumpCount_ = 0;
 
+
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
@@ -55,6 +58,14 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 	// コライダー看板番号設定
 	ObjectCollider::SetSignIndex(signIndex);
+
+
+	// マップチップコライダー初期化
+	YukiMapchipCollider::Initialize();
+	trfm_ = *transform_;
+	
+	// マップチップコライダー半径設定
+	radius_ = { transform_->scale_.x_, transform_->scale_.y_, 0.0f };
 
 
 	// 落下フラグをうごかすか
@@ -132,7 +143,7 @@ void Player::Landing()
 void Player::UpdatePhysics()
 {
 	// ゴールした後は無視
-	//if (isGoal_) { return; }
+	if (isGameClear_) { return; }
 
 	// 移動
 	Move();
@@ -154,6 +165,7 @@ void Player::UpdatePhysics()
 
 	// 重力
 	//speed_.y_ -= 0.1f;
+	speed_.y_ = 0.2f * (spKeys_->IsDown(DIK_N) - spKeys_->IsDown(DIK_M));
 }
 
 Vector3& Player::PosRef()
@@ -215,6 +227,22 @@ void Player::Draw()
 	drawer_.Draw();
 }
 
+void Player::Update()
+{
+	// 代入
+	trfm_ = *transform_;
+	velocity_ = speed_;
+
+	YukiMapchipCollider::UpdatePos();
+
+	// 判定
+	spSignMan_->PPC(this);
+	
+	// 戻す
+	transform_->pos_ = trfm_.pos_;
+	speed_ = velocity_;
+}
+
 void Player::PreUpdate()
 {
 	// 物理挙動更新
@@ -240,6 +268,10 @@ void Player::PreUpdate()
 	// 着地フラグ初期化
 	ResetIsLanding();
 
+	// マップチップコライダー更新
+	Update();
+	
+	
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 }

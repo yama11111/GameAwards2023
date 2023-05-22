@@ -47,7 +47,7 @@ protected:
 
 public:
     // •Ï”
-    Transform transform_{};
+    Transform trfm_{};
     Vector3 radius_{};
     Vector3 velocity_{};
 
