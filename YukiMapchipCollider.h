@@ -58,5 +58,7 @@ public:
     size_t idxSign_{};
 
     bool isSpring_{};
+    bool isGrounded_{};
+    bool isOldGrounded_{};
 };
 

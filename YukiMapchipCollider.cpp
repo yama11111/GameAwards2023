@@ -22,6 +22,8 @@ void YukiMapchipCollider::UpdatePos(void)
     transform_.pos_ += velocity_;
     transform_.UpdateMatrix();
 
+    isOldGrounded_ = isGrounded_;
+
     UpdatePoint();
 }
 

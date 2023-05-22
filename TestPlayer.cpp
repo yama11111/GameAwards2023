@@ -34,6 +34,8 @@ void TestPlayer::DrawDebug(void)
     ImGui::Text("point[TR]: %f,%f", point_.TopRight_.x_, point_.TopRight_.y_);
     ImGui::Text("point[BL]: %f,%f", point_.BottomLeft_.x_, point_.BottomLeft_.y_);
     ImGui::Text("point[BR]: %f,%f", point_.BottomRight_.x_, point_.BottomRight_.y_);
+    ImGui::Text("isG: %d", isGrounded_);
+    ImGui::Text("isOldG: %d", isOldGrounded_);
     ImGui::End();
 }
 

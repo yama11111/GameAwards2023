@@ -212,8 +212,8 @@ float maruyama::Sign::roundToDecimal(float value, int decimalPlaces)
 bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX, const Vector2& approach, int mElemX, int elemY)
 {
     bool isExecuted = false;
-    if (mElemX == -1 || mElemX == mapchip_[0].size()) return isExecuted;
-    if (elemY == -1 || elemY == mapchip_.size()) return isExecuted;
+    if (mElemX <= -1 || mElemX >= mapchip_[0].size()) return isExecuted;
+    if (elemY <= -1 || elemY >= mapchip_.size()) return isExecuted;
 
     if (static_cast<BlockType>(mapchip_[elemY][mElemX]) == BlockType::BASIC) {
         while (1)
@@ -255,10 +255,13 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
     if (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::BASIC) {
         while (1)
         {
+            ptr->velocity_.y_ = 0;
             // 仮移動後の座標でマップチップ配列の位置
             int checkElemY = CalcMovedElemX(pointY, approach.y_);
             //if(checkElemY )
             isExecuted = true;
+            // 着地フラグtrue
+            ptr->isGrounded_ = true;
             if (checkElemY == mElemY) break;
 
             ptr->transform_.pos_.y_ += approach.y_;
@@ -284,6 +287,8 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             while (1)
             {
                 isExecuted = true;
+                // 着地フラグtrue
+                ptr->isGrounded_ = true;
                 if (pointY <= -((mElemY)*blockRadius_ * 2)) break;
 
                 ptr->transform_.pos_.y_ += approach.y_;
@@ -292,6 +297,9 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             }
             ptr->isSpring_ = true;
         }
+    }
+    else {
+        ptr->isGrounded_ = false;
     }
     // 関数実行が、重力の為だけに実行された場合は関数実行はなかったものとする
     //if (gravity) isExecuted = false;
