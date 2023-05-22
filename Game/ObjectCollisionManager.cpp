@@ -62,7 +62,8 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 			Box2D collA;
 			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
 			// ëÂÇ´Ç≥Ç…ïùÇéùÇΩÇπÇÈ
-			collA.SetBox2DRadSize(pColliderA->GetBox2DRadSize() + Vector2(2.0f, 0.0f));
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ / 2.0f, -(rad.y_ / 2.0f)));
 
 			// ÉAÉ^Éä
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
