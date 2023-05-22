@@ -45,7 +45,10 @@ void TestPlayer::Move(void)
 
     velocity_.y_ -= gravity_;
 
-    // 落下終端速度
+    // 上下左右の終端速度
+    velocity_.x_ = (std::min)(velocity_.x_, 1.75f);
+    velocity_.x_ = (std::max)(velocity_.x_, -1.75f);
+    velocity_.y_ = (std::min)(velocity_.y_, 1.9f);
     velocity_.y_ = (std::max)(velocity_.y_, -1.75f);
 
     velocity_.Normalized();

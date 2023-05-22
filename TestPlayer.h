@@ -9,7 +9,7 @@ class TestPlayer :
 public:
     static constexpr float jumpPower_{ 0.8f };
     static constexpr float jumpFall_{ 0.15f };
-    static constexpr float springPower_{ 1.0f };
+    static constexpr float springPower_{ 1.2f };
     static constexpr float speed_{ 0.4f };
 
     TestPlayer(void) = default;
