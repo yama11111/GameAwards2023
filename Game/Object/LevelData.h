@@ -388,7 +388,7 @@ namespace LevelData
 			{
 				//  1
 				{
-					{0, { 2.0f,-2.0f }, true},
+					{0, { -4.0f,0.0f }, true},
 				},
 				//  2
 				{
@@ -501,7 +501,7 @@ namespace LevelData
 		{
 			// 看板、座標、鍵フラグ
 			{
-				{0, { 5.0f,10.0f }, false},  //  1
+				{0, { 5.0f,5.0f }, false},  //  1
 				{0, { 0.0f,0.0f }, false},  //  2
 				{0, { 0.0f,0.0f }, false},  //  3
 				{0, { 0.0f,0.0f }, false},  //  4

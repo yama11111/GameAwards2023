@@ -8,9 +8,6 @@ class Laser :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// 向き
 	YMath::Vector3 direction_;
 	

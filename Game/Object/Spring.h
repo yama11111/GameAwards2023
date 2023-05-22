@@ -8,9 +8,6 @@ class Spring :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// 描画クラス
 	SpringDrawer drawer_;
 

@@ -8,9 +8,6 @@ class Goal :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// 描画クラス
 	GoalDrawer drawer_;
 

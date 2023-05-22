@@ -8,9 +8,6 @@ class Platform :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// 描画クラス
 	PlatformDrawer drawer_;
 

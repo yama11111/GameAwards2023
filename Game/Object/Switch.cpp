@@ -55,6 +55,16 @@ void Switch::PostUpdate()
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
+	// スキル発動時
+	if (GetIsActSkill())
+	{
+		// スイッチ切り替え
+		isAct_ = !isAct_;
+		
+		// スキル終了
+		SetIsActSkill(false);
+	}
+
 	// 動作アニメ
 	drawer_.AnimateSwitch(isAct_);
 

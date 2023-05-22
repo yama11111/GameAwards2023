@@ -11,9 +11,6 @@ class Block :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// スピード
 	YMath::Vector3 speed_;
 	

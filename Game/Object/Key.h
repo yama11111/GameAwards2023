@@ -8,9 +8,6 @@ class Key :
 
 private:
 
-	// トランスフォーム
-	std::unique_ptr<YGame::Transform> transform_;
-
 	// 描画クラス
 	KeyDrawer drawer_;
 

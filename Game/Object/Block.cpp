@@ -108,6 +108,9 @@ void Block::Move()
 
 	// ƒNƒ‰ƒ“ƒv
 	speed_.x_ = Clamp(speed_.x_, -0.5f, +0.5f);
+
+	// ‘±‚¯‚é‚©
+	SetIsActSkill(spKeys_->IsDown(DIK_E));
 }
 
 void Block::Landing()
