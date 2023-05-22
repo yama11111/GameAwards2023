@@ -59,5 +59,11 @@ namespace YMath
 		const Vector3& sphereCenter1, const float sphereRad1,
 		const Vector3& sphereCenter2, const float sphereRad2
 	);
+
+	// アタリ判定 (四角形×四角形) [2D]
+	bool CollisionBoxBox2D(
+		const Vector2& boxCenter1, const Vector2& boxRadSize1,
+		const Vector2& boxCenter2, const Vector2& boxRadSize2
+	);
 }
 
