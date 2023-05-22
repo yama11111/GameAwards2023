@@ -194,7 +194,6 @@
     <ClCompile Include="Game\MouseCollider.cpp" />
     <ClCompile Include="Sign.cpp" />
     <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="TestPlayer.cpp" />
     <ClCompile Include="YukiMapchipCollider.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Application\Scene\DemoScene.cpp" />
@@ -327,7 +326,6 @@
     <ClInclude Include="Game\Object\ObjectManager.h" />
     <ClInclude Include="Sign.h" />
     <ClInclude Include="Stage.h" />
-    <ClInclude Include="TestPlayer.h" />
     <ClInclude Include="YukiMapchipCollider.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="Application\Scene\DemoScene.h" />

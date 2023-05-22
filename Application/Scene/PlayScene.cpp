@@ -368,7 +368,7 @@ void PlayScene::Update()
 	// ƒŠƒZƒbƒg
 	if (sKeys_->IsTrigger(DIK_R))
 	{
-		SceneManager::GetInstance()->Change("DEMO");
+		SceneManager::GetInstance()->Change("PLAY");
 	}
 
 }

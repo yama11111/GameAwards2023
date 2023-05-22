@@ -494,7 +494,7 @@
     </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\UIButtonDrawer.cpp">
       <Filter>Application\Draw\Drawer</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="YukiMapchipCollider.cpp">
       <Filter>game</Filter>
     </ClCompile>
@@ -503,9 +503,6 @@
     </ClCompile>
     <ClCompile Include="Sign.cpp">
       <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="Application\Draw\Drawer\JunctionDrawer.cpp">
-      <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClCompile>
     <ClCompile Include="Game\StageConfig.cpp">
       <Filter>Game</Filter>
@@ -524,9 +521,6 @@
     </ClCompile>
     <ClCompile Include="Game\Object\ObjectManager.cpp">
       <Filter>Game\Object\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="TestPlayer.cpp">
-      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -892,7 +886,7 @@
     </ClInclude>
     <ClInclude Include="Game\ObjectCollider.h">
       <Filter>Game\Collider</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>game</Filter>
     </ClInclude>
@@ -901,9 +895,6 @@
     </ClInclude>
     <ClInclude Include="YukiMapchipCollider.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="Application\Draw\Drawer\JunctionDrawer.h">
-      <Filter>Application\Draw\Drawer\Obj</Filter>
     </ClInclude>
     <ClInclude Include="Game\ObjectCollisionManager.h">
       <Filter>Game\Collider</Filter>
@@ -922,9 +913,6 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h">
       <Filter>Engine\GameUtil\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="TestPlayer.h">
-      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

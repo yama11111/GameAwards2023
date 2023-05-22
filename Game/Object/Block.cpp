@@ -121,8 +121,11 @@ void Block::UpdatePhysics()
 	}
 
 	// 重力
-	//speed_.y_ -= 0.1f;
+	speed_.y_ -= 0.1f;
 
+	// クランプ
+	speed_.x_ = Clamp(speed_.x_, -1.5f, +1.5f);
+	speed_.y_ = Clamp(speed_.y_, -1.5f, +1.5f);
 }
 
 void Block::OnCollision(ObjectCollider* pPair)
@@ -141,9 +144,6 @@ void Block::Update()
 	// 代入
 	trfm_ = *transform_;
 	velocity_ = speed_;
-	velocity_ = velocity_.Normalized();
-
-	YukiMapchipCollider::UpdatePos();
 
 	// 判定
 	spSignMan_->PPC(this);
@@ -155,6 +155,9 @@ void Block::Update()
 
 void Block::PreUpdate()
 {
+	// 座標更新
+	YukiMapchipCollider::UpdatePos();
+
 	// 物理挙動更新
 	UpdatePhysics();
 	

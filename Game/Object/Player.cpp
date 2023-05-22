@@ -133,7 +133,7 @@ void Player::Landing()
 	jumpCount_ = 0;
 
 	// 着地した瞬間なら
-	if (IsLandingMoment())
+	if (IsLandingMoment() || (isGrounded_ && isOldGrounded_ == false))
 	{
 		// 着地アニメーション
 		drawer_.LandingAnimation();
@@ -155,7 +155,7 @@ void Player::UpdatePhysics()
 	if (speed_.x_ > 0)
 	{
 		speed_.x_ -= 0.1f;
-		speed_.x_ = (std::max)(0.0f, speed_.x_);;
+		speed_.x_ = (std::max)(0.0f, speed_.x_);
 	}
 	if (speed_.x_ < 0)
 	{
@@ -164,8 +164,11 @@ void Player::UpdatePhysics()
 	}
 
 	// 重力
-	//speed_.y_ -= 0.1f;
-	speed_.y_ = 0.2f * (spKeys_->IsDown(DIK_N) - spKeys_->IsDown(DIK_M));
+	speed_.y_ -= 0.1f;
+
+	// クランプ
+	speed_.x_ = Clamp(speed_.x_, -1.5f, +1.5f);
+	speed_.y_ = Clamp(speed_.y_, -1.5f, +1.5f);
 }
 
 Vector3& Player::PosRef()
@@ -232,9 +235,7 @@ void Player::Update()
 	// 代入
 	trfm_ = *transform_;
 	velocity_ = speed_;
-
-	YukiMapchipCollider::UpdatePos();
-
+	
 	// 判定
 	spSignMan_->PPC(this);
 	
@@ -245,6 +246,9 @@ void Player::Update()
 
 void Player::PreUpdate()
 {
+	// 座標更新
+	YukiMapchipCollider::UpdatePos();
+
 	// 物理挙動更新
 	UpdatePhysics();
 	
@@ -279,7 +283,7 @@ void Player::PreUpdate()
 void Player::PostUpdate()
 {
 	// 着地時
-	if (IsLanding())
+	if (IsLanding() || isGrounded_)
 	{
 		// 着地
  		Landing();
