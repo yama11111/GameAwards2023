@@ -74,9 +74,16 @@ void PlayScene::Initialize()
 	// ステージ番号
 	size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	sign_.Initialize({ 10,20 });
+	sign_.Initialize({ 20,20 });
+    sign_.ReWriteBlock(1, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(2, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(3, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(4, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(5, 14, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(7, 18, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(9, 16, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(10, 15, Sign::BlockType::BASIC);
 
 	// オブジェクト
 	{
