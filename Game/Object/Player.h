@@ -1,12 +1,14 @@
 #pragma once
 #include "PlayerDrawer.h"
 #include "IObject.h"
+#include "YukiMapchipCollider.h"
 
 // インクルード回避用
 namespace YInput { class Keys; }
 
 class Player :
-	public IObject
+	public IObject,
+	public YukiMapchipCollider
 {
 
 private:
@@ -69,6 +71,13 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw() override;
+
+public:
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Update() override;
 
 private:
 

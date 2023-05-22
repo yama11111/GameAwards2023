@@ -51,6 +51,9 @@ void PlayScene::Load()
 	// 描画クラス全て
 	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
+	// オブジェクト
+	IObject::StaticInitialize(&sign_);
+
 	// プレイヤー
 	Player::StaticInitialize();
 
@@ -70,9 +73,6 @@ void PlayScene::Initialize()
 
 	// ステージ番号
 	size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
-
-    tp_.Initialize();
-    tp_.transform_.pos_ = { 4,-4,0 };
 
 	sign_.Initialize({ 10,20 });
     sign_.ReWriteBlock(7, 18, Sign::BlockType::SPRING);
@@ -283,7 +283,7 @@ void PlayScene::Initialize()
 
 
 	// カメラ
-	camera_.Initialize({ 0.0f,0.0f,-300.0f }, {});
+	camera_.Initialize({ +10.0f,-20.0f,-80.0f }, {});
 
 	// ビュープロジェクション初期化
 	transferVP_.Initialize();
@@ -320,6 +320,9 @@ void PlayScene::Update()
 	// 入力描画静的更新
 	InputDrawerCommon::StaticUpdate();
 
+	// カメラ位置更新
+	CameraUpdate();
+
 	// HUD更新
 	hud_.Update();
 
@@ -328,19 +331,7 @@ void PlayScene::Update()
 
 	// ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-	if (sKeys_->IsDown(DIK_LSHIFT)) {
-		if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
-		if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
-		if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
-		if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
-		if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
-		if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
-	}
-
 	sign_.Update();
-	tp_.Update();
-
-	sign_.PPC(&tp_);
 
 	// ------------ ↑ プレイシーンの処理 ↑ ------------//
 	
@@ -393,8 +384,6 @@ void PlayScene::Draw()
 
 	// ------------ ↓ プレイシーンの描画 ↓ ------------//
 
-	tp_.Draw();
-
 	sign_.Draw();
 	
 	// ------------ ↑ プレイシーンの描画 ↑ ------------//
@@ -407,6 +396,23 @@ void PlayScene::Draw()
 
 	// パーティクル描画
 	particleMan_.Draw();
+}
+
+void PlayScene::CameraUpdate()
+{
+	if (sMouse_->IsTrigger(MouseClick::DIM_LEFT))
+	{
+
+	}
+
+	if (sKeys_->IsDown(DIK_LSHIFT)) {
+		if (sKeys_->IsDown(DIK_W)) camera_.pos_.y_ += 5;
+		if (sKeys_->IsDown(DIK_S)) camera_.pos_.y_ -= 5;
+		if (sKeys_->IsDown(DIK_A)) camera_.pos_.x_ -= 5;
+		if (sKeys_->IsDown(DIK_D)) camera_.pos_.x_ += 5;
+		if (sKeys_->IsDown(DIK_UP)) camera_.pos_.z_ += 5;
+		if (sKeys_->IsDown(DIK_DOWN)) camera_.pos_.z_ -= 5;
+	}
 }
 
 #pragma endregion

@@ -3,6 +3,8 @@
 #include "Transform.h"
 #include <memory>
 
+namespace maruyama { class Sign; }
+
 class IObject :
 	public ObjectCollider
 {
@@ -32,6 +34,19 @@ public:
 public:
 
 	virtual ~IObject() = default;
+
+protected:
+
+	// 静的看板マネージャーポインタ
+	static maruyama::Sign* spSignMan_;
+
+public:
+	
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="pSignMan"> : 静的看板マネージャーポインタ</param>
+	static void StaticInitialize(maruyama::Sign* pSignMan);
 
 };
 

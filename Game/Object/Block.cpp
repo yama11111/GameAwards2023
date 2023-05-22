@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cmath>
 
+#include "Sign.h"
+
 using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -35,6 +37,7 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// スピード初期化
 	speed_ = {};
 
+
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
@@ -47,45 +50,17 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// コライダー看板番号設定
 	ObjectCollider::SetSignIndex(signIndex);
 
+
+	// マップチップコライダー初期化
+	YukiMapchipCollider::Initialize();
+	trfm_ = *transform_;
+
+	// マップチップコライダー半径設定
+	radius_ = { transform_->scale_.x_, transform_->scale_.y_, 0.0f };
+
+
 	// 描画クラスリセット
 	drawer_.Reset(BlockDrawerCommon::Type::eWhite);
-}
-
-void Block::PreUpdate()
-{
-	// 物理挙動更新
-	UpdatePhysics();
-	
-	// 着地フラグ初期化
-	ResetIsLanding();
-
-	// コライダー位置更新
-	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
-}
-
-void Block::PostUpdate()
-{
-	// 着地時
-	if (IsLanding())
-	{
-		// 着地
-		Landing();
-	}
-
-	// 移動
-	transform_->pos_ += speed_;
-
-	// トランスフォーム行列更新
-	transform_->UpdateMatrix();
-
-	// 描画クラス更新
-	drawer_.Update();
-}
-
-void Block::Draw()
-{
-	// 描画
-	drawer_.Draw();
 }
 
 Vector3& Block::PosRef()
@@ -153,4 +128,63 @@ void Block::UpdatePhysics()
 void Block::OnCollision(ObjectCollider* pPair)
 {
 
+}
+
+void Block::Draw()
+{
+	// 描画
+	drawer_.Draw();
+}
+
+void Block::Update()
+{
+	// 代入
+	trfm_ = *transform_;
+	velocity_ = speed_;
+	velocity_ = velocity_.Normalized();
+
+	YukiMapchipCollider::UpdatePos();
+
+	// 判定
+	spSignMan_->PPC(this);
+
+	// 戻す
+	*transform_ = trfm_;
+	speed_ = velocity_;
+}
+
+void Block::PreUpdate()
+{
+	// 物理挙動更新
+	UpdatePhysics();
+	
+
+	// 着地フラグ初期化
+	ResetIsLanding();
+
+	// マップチップコライダー更新
+	Update();
+
+
+	// コライダー位置更新
+	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+}
+
+void Block::PostUpdate()
+{
+	// 着地時
+	if (IsLanding())
+	{
+		// 着地
+		Landing();
+	}
+
+	// 移動
+	transform_->pos_ += speed_;
+
+	// トランスフォーム行列更新
+	transform_->UpdateMatrix();
+
+	// 描画クラス更新
+	drawer_.Update();
 }
