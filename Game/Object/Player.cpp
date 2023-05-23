@@ -38,6 +38,9 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
+	// 前回左上位置初期化
+	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
+
 	// スピード初期化
 	speed_ = {};
 	
@@ -178,7 +181,7 @@ void Player::UpdatePhysics()
 	}
 
 	// 重力
-	speed_.y_ -= gravity_;
+	speed_.y_ -= LevelData::Player::Gravity;
 
 	// クランプ
 	speed_.x_ = Clamp(speed_.x_, -LevelData::Player::MaxSpeed.x_, +LevelData::Player::MaxSpeed.x_);
@@ -296,6 +299,12 @@ void Player::Update()
 
 void Player::PreUpdate()
 {
+	// 看板インデックス更新
+	SetSignIndex(idxSign_);
+
+	// 左上更新
+	UpdateLeftTop();
+
 	// 座標更新
 	YukiMapchipCollider::UpdatePos();
 

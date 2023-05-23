@@ -14,7 +14,15 @@ protected:
 	// トランスフォーム
 	std::unique_ptr<YGame::Transform> transform_;
 
+	// 1F前の左上
+	YMath::Vector3 elderLeftTop_;
+
 public:
+
+	/// <summary>
+	/// 左上更新
+	/// </summary>
+	void UpdateLeftTop();
 
 	/// <summary>
 	/// 判定前更新

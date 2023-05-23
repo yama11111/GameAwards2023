@@ -33,6 +33,9 @@ void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
+	// 前回左上位置初期化
+	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
+
 	// 向き初期化
 	direction_ = direction;
 	
@@ -57,6 +60,9 @@ void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath
 
 void Laser::PreUpdate()
 {
+	// 左上更新
+	UpdateLeftTop();
+
 	// ビーム長さ変更
 	if (isColl_ == false) 
 	{
@@ -67,6 +73,9 @@ void Laser::PreUpdate()
 		beamLength_ = (std::min)(beamLength_, beamMaxLength_);
 	}
 	isColl_ = false;
+
+	// ビームの長さ計算
+	CalcBeamLength();
 }
 
 void Laser::PostUpdate()

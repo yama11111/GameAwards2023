@@ -27,6 +27,9 @@ void Key::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 	
+	// 前回左上位置初期化
+	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
+
 	// プレイヤーポインタ
 	pPlayerPos_ = nullptr;
 
@@ -49,6 +52,9 @@ void Key::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 void Key::PreUpdate()
 {
+	// 左上更新
+	UpdateLeftTop();
+
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 }
