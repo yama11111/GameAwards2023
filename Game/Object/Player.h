@@ -24,7 +24,6 @@ private:
 
 	// ジャンプ回数
 	int jumpCount_ = 0;
-	
 
 
 	// 落下フラグをうごかすか
@@ -33,6 +32,9 @@ private:
 	// 落下フラグタイマー
 	YMath::Timer isGetOffTimer_;
 
+
+	// 鍵を持っているか
+	bool isKeyHolder_ = false;
 
 	// クリアか
 	bool isGameClear_ = false;
@@ -114,6 +116,12 @@ public:
 	/// </summary>
 	/// <returns>スピード (参照渡し)</returns>
 	YMath::Vector3& SpeedRef() override;
+
+	/// <summary>
+	/// 座標 (ポインタ渡し)
+	/// </summary>
+	/// <returns>座標 (ポインタ渡し)</returns>
+	YMath::Vector3* PosPointer() override;
 
 public:
 

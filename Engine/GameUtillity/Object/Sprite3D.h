@@ -75,9 +75,6 @@ namespace YGame
 
 	private:
 
-		// 頂点データ
-		YDX::Vertices<VData> vt_;
-
 		// テクスチャ
 		Texture* pTex_ = nullptr;
 
@@ -85,6 +82,12 @@ namespace YGame
 		bool isVisible_ = true;
 
 	private:
+
+		// 頂点データ
+		static YDX::Vertices<VData> vt_;
+
+		// 初期化フラグ
+		static bool isInitVertices_;
 
 		// 静的スプライト3D格納用vector配列
 		static std::vector<std::unique_ptr<Sprite3D>> sSprites_;

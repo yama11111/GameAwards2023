@@ -24,6 +24,9 @@ void Key::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// トランスフォーム初期化
 	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
 	
+	// プレイヤーポインタ
+	pPlayerPos_ = nullptr;
+
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
@@ -49,6 +52,9 @@ void Key::PreUpdate()
 
 void Key::PostUpdate()
 {
+	// プレイヤー追従
+	UpdateFollowPlayer();
+
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
@@ -62,6 +68,20 @@ void Key::Draw()
 	drawer_.Draw();
 }
 
+void Key::UpdateFollowPlayer()
+{
+	// nullなら弾く
+	if (pPlayerPos_ == nullptr) { return; }
+
+	transform_->pos_ = *pPlayerPos_ + Vector3(0, 1.5f, 0);
+}
+
 void Key::OnCollision(ObjectCollider* pPair)
 {
+	// ブロックなら
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer)
+	{
+		// 座標ポインタに代入
+		pPlayerPos_ = pPair->PosPointer();
+	}
 }

@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cmath>
 
+#include "LevelData.h"
+
 using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -28,7 +30,7 @@ void Platform::Reset(const size_t signIndex, const YMath::Vector3& pos, const fl
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ transform_->scale_.x_, 0.1f });
+	Box2D::SetBox2DRadSize({ transform_->scale_.x_, LevelData::Platform::Thickness_ });
 
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::ePlatform);
