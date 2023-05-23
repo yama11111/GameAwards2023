@@ -22,6 +22,12 @@ Vector3& ObjectCollider::SpeedRef()
 	return sSpeed;
 }
 
+Vector3* ObjectCollider::PosPointer()
+{
+	static Vector3 sPos;
+	return &sPos;
+}
+
 bool ObjectCollider::PerfectPixelCollision(const YGame::Box2D& pairObjectBox)
 {
 	// ‘ã“ü

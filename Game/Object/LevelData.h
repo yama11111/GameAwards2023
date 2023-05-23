@@ -85,6 +85,8 @@ namespace LevelData
 				{ 
 					{0, { 4.0f,-8.0f }},
 					{0, { +24.0f,-6.0f }},
+					{0, { +24.0f,-8.0f }},
+					{0, { +22.0f,-8.0f }},
 				}, 
 				//  2
 				{ 
@@ -206,6 +208,9 @@ namespace LevelData
 	// 足場
 	namespace Platform
 	{
+		// 分厚さ
+		static const float Thickness_ = 0.5f;
+
 		// 初期化ステータス
 		struct InitStatus
 		{
@@ -290,7 +295,7 @@ namespace LevelData
 	namespace Laser
 	{
 		// 伸びるスピード
-		static const float GrowSpeed = 0.2f;
+		static const float GrowSpeed = 0.4f;
 
 		// 初期化ステータス
 		struct InitStatus

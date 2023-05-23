@@ -95,6 +95,9 @@ public:
 	// スピード (参照渡し)
 	virtual YMath::Vector3& SpeedRef();
 
+	// 座標 (ポインタ渡し)
+	virtual YMath::Vector3* PosPointer();
+
 public:
 
 	/// <summary>

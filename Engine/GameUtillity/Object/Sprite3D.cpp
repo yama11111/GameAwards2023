@@ -32,6 +32,8 @@ std::vector<std::unique_ptr<Sprite3D>> Sprite3D::sSprites_{};
 array<PipelineSet, Sprite3D::Pipeline::sShaderNum_> Sprite3D::Pipeline::sPipelineSets_{};
 array<array<list<unique_ptr<Sprite3D::Pipeline::DrawSet>>, 
 	Sprite3D::Pipeline::sShaderNum_>, DrawLocationNum> Sprite3D::Pipeline::sDrawSets_;
+YDX::Vertices<Sprite3D::VData> Sprite3D::vt_{};
+bool Sprite3D::isInitVertices_ = false;
 
 #pragma endregion
 
@@ -40,12 +42,15 @@ array<array<list<unique_ptr<Sprite3D::Pipeline::DrawSet>>,
 
 Sprite3D* Sprite3D::Create(Texture* pTex)
 {
+	// 初期化
+	if (isInitVertices_ == false) 
+	{
+		vt_.Initialize({ {} }); 
+		isInitVertices_ = true;
+	}
+	
 	// スプライト生成
 	unique_ptr<Sprite3D> newSprite = std::make_unique<Sprite3D>();
-
-
-	// 初期化
-	newSprite->vt_.Initialize({ {} });
 
 	// テクスチャ番号
 	newSprite->pTex_ = pTex;

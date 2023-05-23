@@ -76,6 +76,14 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	isGetOffTimer_.Initialize(5);
 	isGetOffTimer_.SetActive(false);
 
+
+	// 鍵を持っているか
+	isKeyHolder_ = false;
+
+	// クリアか
+	isGameClear_ = false;
+
+
 	// 描画クラスリセット
 	drawer_.Reset();
 }
@@ -182,6 +190,11 @@ Vector3& Player::SpeedRef()
 	return speed_;
 }
 
+Vector3* Player::PosPointer()
+{
+	return &transform_->pos_;
+}
+
 void Player::OnCollision(ObjectCollider* pPair)
 {
 	// ブロックなら
@@ -226,6 +239,15 @@ void Player::OnCollision(ObjectCollider* pPair)
 		{
 			pPair->SetIsActSkill(true);
 		}
+	}
+	// 鍵なら
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eKey)
+	{
+		// アクション
+		pPair->SetIsActSkill(true);
+		
+		// 鍵を所持する
+		isKeyHolder_ = true;
 	}
 	// ゴールなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)

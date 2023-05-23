@@ -11,6 +11,9 @@ private:
 	// 描画クラス
 	KeyDrawer drawer_;
 
+	// プレイヤー座標ポインタ
+	YMath::Vector3* pPlayerPos_ = nullptr;
+
 public:
 
 	/// <summary>
@@ -41,6 +44,13 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw() override;
+
+private:
+
+	/// <summary>
+	/// プレイヤー追従更新
+	/// </summary>
+	void UpdateFollowPlayer();
 
 public:
 
