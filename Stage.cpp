@@ -27,3 +27,8 @@ void Stage::RegisterEntity(YukiMapchipCollider* ptr)
 {
     colliderPtrList_.emplace_back(ptr);
 }
+
+const Stage::Vector3& Stage::GetTopLeftPos(size_t idx)
+{
+    return signVector_[idx]->topLeftPos_;
+}

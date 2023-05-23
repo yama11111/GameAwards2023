@@ -6,6 +6,11 @@
 class Stage
 {
 protected:
+    // íËã`
+    using Vector2 = YMath::Vector2;
+    using Vector3 = YMath::Vector3;
+    using Vector4 = YMath::Vector4;
+    using Transform = YGame::Transform;
     using Sign = maruyama::Sign;
 
 public:
@@ -17,6 +22,8 @@ public:
 
     void RegisterSign(Sign* ptr);
     void RegisterEntity(YukiMapchipCollider* ptr);
+
+    const Vector3& GetTopLeftPos(size_t idx);
 
     // ïœêî
     std::vector<std::unique_ptr<Sign>> signVector_;
