@@ -127,9 +127,6 @@
     <Filter Include="Game\Object">
       <UniqueIdentifier>{e8b1375d-d64a-4c6b-bd77-cb2d5d67618e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Collider">
-      <UniqueIdentifier>{d3ad97c5-cb94-4a07-b20a-30e2917f2dba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Drawer">
       <UniqueIdentifier>{c55c29f3-d4d7-427b-9120-f5d49150b98d}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,9 @@
     </Filter>
     <Filter Include="Game\Stage">
       <UniqueIdentifier>{c7b97f4e-978f-4ad3-b01e-fadddb48d1cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Collider">
+      <UniqueIdentifier>{d3ad97c5-cb94-4a07-b20a-30e2917f2dba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

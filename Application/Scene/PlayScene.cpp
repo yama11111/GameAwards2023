@@ -327,7 +327,7 @@ void PlayScene::Initialize()
                     LevelData::Goal::InitStatuses[index].pos_.y_,
                     0.0f
                 },
-                LevelData::Goal::InitStatuses[index].isRock_);
+                LevelData::Key::InitStatuses[index].size() > 0);
 
             // 挿入
             objMan_.PushBack(goal_.get());
@@ -352,7 +352,7 @@ void PlayScene::Initialize()
 
 
     // プレイBGM開始
-    //pPlayBGM_->Play(true);
+    pPlayBGM_->Play(true);
 }
 
 #pragma endregion
