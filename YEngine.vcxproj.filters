@@ -456,9 +456,6 @@
     <ClCompile Include="Game\Drawer\SwitchDrawer.cpp">
       <Filter>Game\Drawer\Obj</Filter>
     </ClCompile>
-    <ClCompile Include="DemoGoal.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Object\Block.cpp">
       <Filter>Game\Object</Filter>
     </ClCompile>
@@ -836,9 +833,6 @@
     <ClInclude Include="Game\Drawer\SwitchDrawer.h">
       <Filter>Game\Drawer\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="DemoGoal.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Object\Block.h">
       <Filter>Game\Object</Filter>
     </ClInclude>
@@ -909,6 +903,9 @@
       <Filter>Game\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Game\StageConfig.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\StageData.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
