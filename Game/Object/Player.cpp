@@ -21,7 +21,7 @@ void Player::StaticInitialize()
 	spKeys_ = YInput::Keys::GetInstance();
 }
 
-void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
+void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -30,10 +30,10 @@ void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 	drawer_.Initialize(transform_.get(), &direction_);
 
 	// リセット
-	Reset(signIndex, pos);
+	Reset(signIndex, pos, isExistKey);
 }
 
-void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
+void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
@@ -80,7 +80,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 
 	// 鍵を持っているか
-	isKeyHolder_ = false;
+	isKeyHolder_ = !isExistKey;
 
 	// クリアか
 	isGameClear_ = false;
@@ -92,6 +92,9 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 void Player::Move()
 {
+	// ゴールした後は無視
+	if (isGameClear_) { return; }
+
 	// x軸移動
 	speed_.x_ += spKeys_->Horizontal() * LevelData::Player::Acceleration;
 
@@ -115,6 +118,9 @@ void Player::Move()
 
 void Player::Jump()
 {
+	// ゴールした後は無視
+	if (isGameClear_) { return; }
+
 	// ジャンプ回数が最大なら弾く
 	if (1 <= jumpCount_) { return; }
 
@@ -153,9 +159,6 @@ void Player::Landing()
 
 void Player::UpdatePhysics()
 {
-	// ゴールした後は無視
-	if (isGameClear_) { return; }
-
 	// 移動
 	Move();
 
@@ -199,6 +202,9 @@ Vector3* Player::PosPointer()
 
 void Player::OnCollision(ObjectCollider* pPair)
 {
+	// ゲームクリア時弾く
+	if (isGameClear_) { return; }
+
 	// ブロックなら
 	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
@@ -254,8 +260,17 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// ゴールなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)
 	{
+		// 鍵持ってないなら
+		if (isKeyHolder_ == false) { return; }
+
 		// アクション
 		pPair->SetIsActSkill(true);
+
+		// ゴール
+		drawer_.GoalAnimation();
+
+		// ゲームクリア
+		isGameClear_ = true;
 	}
 }
 
@@ -267,10 +282,6 @@ void Player::Draw()
 
 void Player::Update()
 {
-	ImGui::Begin("Player");
-	ImGui::Text("pos (%f, %f)", transform_->pos_.x_, transform_->pos_.y_);
-	ImGui::End();
-
 	// 代入
 	trfm_.pos_ = transform_->pos_;
 	velocity_ = speed_;

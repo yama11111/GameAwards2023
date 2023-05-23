@@ -83,7 +83,8 @@ void DemoScene::Initialize()
 				LevelData::Player::InitStatuses[stageIdx].pos_.x_,
 				LevelData::Player::InitStatuses[stageIdx].pos_.y_,
 				0.0f
-			});
+			},
+			LevelData::Key::InitStatuses[stageIdx].size());
 
 		// ‘}“ü
 		objMan_.PushBack(player_.get());

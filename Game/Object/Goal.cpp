@@ -69,4 +69,20 @@ void Goal::Draw()
 
 void Goal::OnCollision(ObjectCollider* pPair)
 {
+	// ゲームクリア時弾く
+	if (isGameClear_) { return; }
+
+	// プレイヤーなら
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer)
+	{
+		// スキル発動時
+		if (GetIsActSkill())
+		{
+			// クリア
+			drawer_.ActivateClearAnimation(pPair->PosRef());
+
+			// ゲームクリア
+			isGameClear_ = true;
+		}
+	}
 }

@@ -50,14 +50,16 @@ public:
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos);
+	/// <param name="isExistKey"> : 鍵がある</param>
+	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos);
+	/// <param name="isExistKey"> : 鍵がある</param>
+	void Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey);
 
 	/// <summary>
 	/// 判定前更新

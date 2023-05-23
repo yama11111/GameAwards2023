@@ -96,7 +96,7 @@ void PlayScene::Initialize()
     sign1ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
     sign1ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
     sign1ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    sign1ptr->topLeftPos_ = { -30,0,0 };
+    sign1ptr->topLeftPos_ = { -0,0,0 };
     stage_.RegisterSign(sign1ptr);
 
     maruyama::Sign* sign2ptr = new maruyama::Sign;
@@ -133,7 +133,8 @@ void PlayScene::Initialize()
                     LevelData::Player::InitStatuses[index].pos_.x_,
                     LevelData::Player::InitStatuses[index].pos_.y_,
                     0.0f
-                });
+                },
+                LevelData::Key::InitStatuses[index].size() > 0);
 
             // ‘}“ü
             objMan_.PushBack(player_.get());
