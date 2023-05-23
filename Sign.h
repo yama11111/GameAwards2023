@@ -65,7 +65,7 @@ namespace maruyama {
             // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
             std::pair<size_t,size_t> mapchipElemPartner_{};
             // 相手の"看板"の配列要素数（stageに帰属） - 不変
-            size_t IdxSign_{};
+            size_t IdxPartnerSign_{};
             // 相手側の出現方向 - 不変
             Direction dirPartner_{};
             // 相手側のptr - 可変

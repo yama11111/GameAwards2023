@@ -265,7 +265,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 + offset,
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2,
                 0 };
-            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxSign_;
+            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
         }
     }
 
@@ -361,7 +361,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2,
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
                 0 };
-            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxSign_;
+            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
         }
     }
     else {
