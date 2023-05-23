@@ -40,6 +40,10 @@ void Platform::Reset(const size_t signIndex, const YMath::Vector3& pos, const fl
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::ePlatform);
 
+	// コライダー看板番号設定
+	ObjectCollider::SetSignIndex(signIndex);
+
+
 	// 描画クラスリセット
 	drawer_.Reset();
 }
