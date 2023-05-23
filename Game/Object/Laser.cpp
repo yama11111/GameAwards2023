@@ -5,6 +5,9 @@
 #include <cassert>
 #include <cmath>
 
+#include "Stage.h"
+#include "LevelData.h"
+
 using YGame::Transform;
 using YMath::Vector2;
 using YMath::Vector3;
@@ -28,7 +31,7 @@ void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const 
 void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
 	// 向き初期化
 	direction_ = direction;

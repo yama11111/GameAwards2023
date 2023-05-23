@@ -3,6 +3,9 @@
 #include <cassert>
 #include <cmath>
 
+#include "Stage.h"
+#include "LevelData.h"
+
 using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -22,7 +25,7 @@ void Goal::Initialize(const size_t signIndex, const YMath::Vector3& pos, const b
 void Goal::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isRock)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 	
 	// ロックフラグ設定
 	isRock_ = isRock;

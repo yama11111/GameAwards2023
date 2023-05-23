@@ -52,7 +52,6 @@ void PlayScene::Load()
     DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
     // オブジェクト
-    //IObject::StaticInitialize(&sign_);
     IObject::StaticInitialize(&stage_);
 
     // プレイヤー

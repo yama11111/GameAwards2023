@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cmath>
 
+#include "Stage.h"
 #include "LevelData.h"
 
 using YGame::Transform;
@@ -24,7 +25,7 @@ void Spring::Initialize(const size_t signIndex, const YMath::Vector3& pos, const
 void Spring::Reset(const size_t signIndex, const YMath::Vector3& pos, const float jumpPower)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
 	// ジャンプ力
 	jumpPower_ = jumpPower;

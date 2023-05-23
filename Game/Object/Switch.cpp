@@ -3,6 +3,9 @@
 #include <cassert>
 #include <cmath>
 
+#include "Stage.h"
+#include "LevelData.h"
+
 using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -22,7 +25,7 @@ void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const
 void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isAct)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
 	// 動作フラグ設定
 	isAct_ = isAct;

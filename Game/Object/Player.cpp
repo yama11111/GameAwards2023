@@ -36,7 +36,7 @@ void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 
 	// スピード初期化
 	speed_ = {};
@@ -68,6 +68,8 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// マップチップコライダー半径設定
 	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f };
 
+	// マップチップコライダーインデックス設定
+	idxSign_ = signIndex;
 
 	// 落下フラグをうごかすか
 	isGetOffAct_ = false;
@@ -265,12 +267,16 @@ void Player::Draw()
 
 void Player::Update()
 {
+	ImGui::Begin("Player");
+	ImGui::Text("pos (%f, %f)", transform_->pos_.x_, transform_->pos_.y_);
+	ImGui::End();
+
 	// 代入
-	trfm_ = *transform_;
+	trfm_.pos_ = transform_->pos_;
 	velocity_ = speed_;
 	
 	// 判定
-	spStageMan_->PPC(this);
+	spStageMan_->CallPPC(this);
 	
 	// 戻す
 	transform_->pos_ = trfm_.pos_;
@@ -280,7 +286,6 @@ void Player::Update()
 void Player::PreUpdate()
 {
 	// 座標更新
-
 	YukiMapchipCollider::UpdatePos();
 
 	// 物理挙動更新

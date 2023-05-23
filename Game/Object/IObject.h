@@ -3,8 +3,7 @@
 #include "Transform.h"
 #include <memory>
 
-//namespace maruyama { class Stage; }
-namespace maruyama { class Sign; }
+class Stage;
 
 class IObject :
 	public ObjectCollider
@@ -39,8 +38,7 @@ public:
 protected:
 
 	// 静的ステージマネージャーポインタ
-	//static maruyama::Stage* spStageMan_;
-	static maruyama::Sign* spStageMan_;
+	static Stage* spStageMan_;
 
 public:
 	
@@ -48,8 +46,7 @@ public:
 	/// 静的初期化
 	/// </summary>
 	/// <param name="pStageMan"> : ステージマネージャーポインタ</param>
-	//static void StaticInitialize(maruyama::Stage* pStageMan);
-	static void StaticInitialize(maruyama::Sign* pStageMan);
+	static void StaticInitialize(Stage* pStageMan);
 
 };
 
