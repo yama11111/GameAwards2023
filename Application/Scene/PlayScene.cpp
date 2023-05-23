@@ -32,33 +32,33 @@ using Sign = maruyama::Sign;
 
 void PlayScene::Load()
 {
-	// ----- オーディオ ----- //
+    // ----- オーディオ ----- //
 
-	// プレイBGM
-	pPlayBGM_ = Audio::Load("BGM/select.wav");
+    // プレイBGM
+    pPlayBGM_ = Audio::Load("BGM/select.wav");
 
-	// ----- 静的初期化 ----- //
+    // ----- 静的初期化 ----- //
 
-	// マウスコライダー静的初期化
-	MouseColliderCommon::StaticInitialize();
+    // マウスコライダー静的初期化
+    MouseColliderCommon::StaticInitialize();
 
-	// マウスコライダーにビュープロジェクション設定
-	MouseColliderCommon::StaticSetViewProjectionPointer(&transferVP_);
+    // マウスコライダーにビュープロジェクション設定
+    MouseColliderCommon::StaticSetViewProjectionPointer(&transferVP_);
 
-	// パーティクル
-	ParticleManager::StaticInitialize(&transferVP_);
+    // パーティクル
+    ParticleManager::StaticInitialize(&transferVP_);
 
-	// 描画クラス全て
-	DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
+    // 描画クラス全て
+    DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
-	// オブジェクト
-	IObject::StaticInitialize(&sign_);
+    // オブジェクト
+    IObject::StaticInitialize(&sign_);
 
-	// プレイヤー
-	Player::StaticInitialize();
+    // プレイヤー
+    Player::StaticInitialize();
 
-	// ブロック
-	Block::StaticInitialize();
+    // ブロック
+    Block::StaticInitialize();
 }
 
 #pragma endregion
@@ -68,13 +68,13 @@ void PlayScene::Load()
 
 void PlayScene::Initialize()
 {
-	// パーティクル初期化
-	particleMan_.Initialize();
+    // パーティクル初期化
+    particleMan_.Initialize();
 
-	// ステージ番号
-	size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
+    // ステージ番号
+    size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-	sign_.Initialize({ 20,20 });
+    sign_.Initialize({ 20,20 });
     sign_.ReWriteBlock(1, 14, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(2, 14, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(3, 14, Sign::BlockType::BASIC);
@@ -85,224 +85,238 @@ void PlayScene::Initialize()
     sign_.ReWriteBlock(9, 16, Sign::BlockType::BASIC);
     sign_.ReWriteBlock(10, 15, Sign::BlockType::BASIC);
 
-	// オブジェクト
-	{
-		// オブジェクトマネージャー初期化
-		objMan_.Initialize();
+    //stage_.RegisterEntity(player_.get());
+    //maruyama::Sign* sign1ptr = new maruyama::Sign;
+    //sign1ptr->Initialize({ 20,20 });
+    //sign1ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
+    //stage_.RegisterSign(sign1ptr);
 
-		// インデックス
-		size_t index = stageIdx - 1;
+    // オブジェクト
+    {
+        // オブジェクトマネージャー初期化
+        objMan_.Initialize();
 
-		// プレイヤー
-		{
-			// プレイヤー生成
-			player_ = std::make_unique<Player>();
+        // インデックス
+        size_t index = stageIdx - 1;
 
-			// プレイヤー初期化
-			player_->Initialize(
-				LevelData::Player::InitStatuses[index].signIndex_,
-				{
-					LevelData::Player::InitStatuses[index].pos_.x_,
-					LevelData::Player::InitStatuses[index].pos_.y_,
-					0.0f
-				});
+        // プレイヤー
+        {
+            // プレイヤー生成
+            player_ = std::make_unique<Player>();
 
-			// 挿入
-			objMan_.PushBack(player_.get());
-		}
+            // プレイヤー初期化
+            player_->Initialize(
+                LevelData::Player::InitStatuses[index].signIndex_,
+                {
+                    LevelData::Player::InitStatuses[index].pos_.x_,
+                    LevelData::Player::InitStatuses[index].pos_.y_,
+                    0.0f
+                });
 
-		// ブロック
-		{
-			for (size_t i = 0; i < LevelData::Block::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Block> newBlock = std::make_unique<Block>();
+            // 挿入
+            objMan_.PushBack(player_.get());
+        }
 
-				// 初期化
-				newBlock->Initialize(
-					LevelData::Block::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Block::InitStatuses[index][i].pos_.x_,
-						LevelData::Block::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					});
+        // ブロック
+        {
+            for (size_t i = 0; i < LevelData::Block::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Block> newBlock = std::make_unique<Block>();
 
-				// 挿入
-				objMan_.PushBack(newBlock.get());
+                // 初期化
+                newBlock->Initialize(
+                    LevelData::Block::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Block::InitStatuses[index][i].pos_.x_,
+                        LevelData::Block::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    });
 
-				// 挿入
-				blocks_.push_back(std::move(newBlock));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newBlock.get());
 
-		// ばね
-		{
-			for (size_t i = 0; i < LevelData::Spring::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Spring> newSpring = std::make_unique<Spring>();
+                // 挿入
+                blocks_.push_back(std::move(newBlock));
+            }
+        }
 
-				// 初期化
-				newSpring->Initialize(
-					LevelData::Spring::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Spring::InitStatuses[index][i].pos_.x_,
-						LevelData::Spring::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					},
-					LevelData::Spring::InitStatuses[index][i].jumpPowar_);
+        // ばね
+        {
+            for (size_t i = 0; i < LevelData::Spring::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Spring> newSpring = std::make_unique<Spring>();
 
-				// 挿入
-				objMan_.PushBack(newSpring.get());
+                // 初期化
+                newSpring->Initialize(
+                    LevelData::Spring::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Spring::InitStatuses[index][i].pos_.x_,
+                        LevelData::Spring::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    },
+                    LevelData::Spring::InitStatuses[index][i].jumpPowar_);
 
-				// 挿入
-				springs_.push_back(std::move(newSpring));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newSpring.get());
 
-		// 足場
-		{
-			for (size_t i = 0; i < LevelData::Platform::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Platform> newPlatform = std::make_unique<Platform>();
+                // 挿入
+                springs_.push_back(std::move(newSpring));
+            }
+        }
 
-				// 初期化
-				newPlatform->Initialize(
-					LevelData::Platform::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Platform::InitStatuses[index][i].pos_.x_,
-						LevelData::Platform::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					},
-					LevelData::Platform::InitStatuses[index][i].length_);
+        // 足場
+        {
+            for (size_t i = 0; i < LevelData::Platform::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Platform> newPlatform = std::make_unique<Platform>();
 
-				// 挿入
-				objMan_.PushBack(newPlatform.get());
+                // 初期化
+                newPlatform->Initialize(
+                    LevelData::Platform::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Platform::InitStatuses[index][i].pos_.x_,
+                        LevelData::Platform::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    },
+                    LevelData::Platform::InitStatuses[index][i].length_);
 
-				// 挿入
-				platforms_.push_back(std::move(newPlatform));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newPlatform.get());
 
-		// レーザー
-		{
-			for (size_t i = 0; i < LevelData::Laser::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Laser> newLaser = std::make_unique<Laser>();
+                // 挿入
+                platforms_.push_back(std::move(newPlatform));
+            }
+        }
 
-				// 初期化
-				newLaser->Initialize(
-					LevelData::Laser::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Laser::InitStatuses[index][i].pos_.x_,
-						LevelData::Laser::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					},
-					{
-						LevelData::Laser::InitStatuses[index][i].direction_.x_,
-						LevelData::Laser::InitStatuses[index][i].direction_.y_,
-						0.0f,
-					},
-					LevelData::Laser::InitStatuses[index][i].length_);
+        // レーザー
+        {
+            for (size_t i = 0; i < LevelData::Laser::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Laser> newLaser = std::make_unique<Laser>();
 
-				// 挿入
-				objMan_.PushBack(newLaser.get());
+                // 初期化
+                newLaser->Initialize(
+                    LevelData::Laser::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Laser::InitStatuses[index][i].pos_.x_,
+                        LevelData::Laser::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    },
+                    {
+                        LevelData::Laser::InitStatuses[index][i].direction_.x_,
+                        LevelData::Laser::InitStatuses[index][i].direction_.y_,
+                        0.0f,
+                    },
+                    LevelData::Laser::InitStatuses[index][i].length_);
 
-				// 挿入
-				lasers_.push_back(std::move(newLaser));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newLaser.get());
 
-		// スイッチ
-		{
-			for (size_t i = 0; i < LevelData::Switch::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Switch> newSwitch = std::make_unique<Switch>();
+                // 挿入
+                lasers_.push_back(std::move(newLaser));
+            }
+        }
 
-				// 初期化
-				newSwitch->Initialize(
-					LevelData::Switch::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Switch::InitStatuses[index][i].pos_.x_,
-						LevelData::Switch::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					},
-					LevelData::Switch::InitStatuses[index][i].isAct_);
+        // スイッチ
+        {
+            for (size_t i = 0; i < LevelData::Switch::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Switch> newSwitch = std::make_unique<Switch>();
 
-				// 挿入
-				objMan_.PushBack(newSwitch.get());
+                // 初期化
+                newSwitch->Initialize(
+                    LevelData::Switch::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Switch::InitStatuses[index][i].pos_.x_,
+                        LevelData::Switch::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    },
+                    LevelData::Switch::InitStatuses[index][i].isAct_);
 
-				// 挿入
-				switches_.push_back(std::move(newSwitch));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newSwitch.get());
 
-		// 鍵
-		{
-			for (size_t i = 0; i < LevelData::Key::InitStatuses[index].size(); i++)
-			{
-				// インスタンス生成
-				std::unique_ptr<Key> newKey= std::make_unique<Key>();
+                // 挿入
+                switches_.push_back(std::move(newSwitch));
+            }
+        }
 
-				// 初期化
-				newKey->Initialize(
-					LevelData::Key::InitStatuses[index][i].signIndex_,
-					{
-						LevelData::Key::InitStatuses[index][i].pos_.x_,
-						LevelData::Key::InitStatuses[index][i].pos_.y_,
-						0.0f,
-					});
+        // 鍵
+        {
+            for (size_t i = 0; i < LevelData::Key::InitStatuses[index].size(); i++)
+            {
+                // インスタンス生成
+                std::unique_ptr<Key> newKey = std::make_unique<Key>();
 
-				// 挿入
-				objMan_.PushBack(newKey.get());
+                // 初期化
+                newKey->Initialize(
+                    LevelData::Key::InitStatuses[index][i].signIndex_,
+                    {
+                        LevelData::Key::InitStatuses[index][i].pos_.x_,
+                        LevelData::Key::InitStatuses[index][i].pos_.y_,
+                        0.0f,
+                    });
 
-				// 挿入
-				keys_.push_back(std::move(newKey));
-			}
-		}
+                // 挿入
+                objMan_.PushBack(newKey.get());
 
-		// ゴール
-		{
-			// ゴール生成
-			goal_ = std::make_unique<Goal>();
+                // 挿入
+                keys_.push_back(std::move(newKey));
+            }
+        }
 
-			// ゴール初期化
-			goal_->Initialize(
-				LevelData::Goal::InitStatuses[index].signIndex_,
-				{
-					LevelData::Goal::InitStatuses[index].pos_.x_,
-					LevelData::Goal::InitStatuses[index].pos_.y_,
-					0.0f
-				},
-				LevelData::Goal::InitStatuses[index].isRock_);
+        // ゴール
+        {
+            // ゴール生成
+            goal_ = std::make_unique<Goal>();
 
-			// 挿入
-			objMan_.PushBack(goal_.get());
-		}
-	}
+            // ゴール初期化
+            goal_->Initialize(
+                LevelData::Goal::InitStatuses[index].signIndex_,
+                {
+                    LevelData::Goal::InitStatuses[index].pos_.x_,
+                    LevelData::Goal::InitStatuses[index].pos_.y_,
+                    0.0f
+                },
+                LevelData::Goal::InitStatuses[index].isRock_);
 
-	// 背景初期化
-	background_.Initialize();
+            // 挿入
+            objMan_.PushBack(goal_.get());
+        }
+    }
 
-	// HUD初期化
-	hud_.Initialize();
+    // 背景初期化
+    background_.Initialize();
 
-
-	// カメラ
-	camera_.Initialize({ +10.0f,-20.0f,-80.0f }, {});
-
-	// ビュープロジェクション初期化
-	transferVP_.Initialize();
-
-	// ビュープロジェクションにカメラ代入
-	transferVP_ = camera_.GetViewProjection();
+    // HUD初期化
+    hud_.Initialize();
 
 
-	// プレイBGM開始
-	//pPlayBGM_->Play(true);
+    // カメラ
+    camera_.Initialize({ +10.0f,-20.0f,-80.0f }, {});
+
+    // ビュープロジェクション初期化
+    transferVP_.Initialize();
+
+    // ビュープロジェクションにカメラ代入
+    transferVP_ = camera_.GetViewProjection();
+
+
+    // プレイBGM開始
+    //pPlayBGM_->Play(true);
 }
 
 #pragma endregion
@@ -312,8 +326,8 @@ void PlayScene::Initialize()
 
 void PlayScene::Finalize()
 {
-	// プレイBGM停止
-	pPlayBGM_->Stop();
+    // プレイBGM停止
+    pPlayBGM_->Stop();
 }
 
 #pragma endregion
@@ -323,62 +337,63 @@ void PlayScene::Finalize()
 
 void PlayScene::Update()
 {
-	// マウスコライダー静的更新
-	MouseColliderCommon::StaticUpdate();
+    // マウスコライダー静的更新
+    MouseColliderCommon::StaticUpdate();
 
-	// 入力描画静的更新
-	InputDrawerCommon::StaticUpdate();
+    // 入力描画静的更新
+    InputDrawerCommon::StaticUpdate();
 
-	// カメラ位置更新
-	CameraUpdate();
+    // カメラ位置更新
+    CameraUpdate();
 
-	// HUD更新
-	hud_.Update();
+    // HUD更新
+    hud_.Update();
 
-	// ポーズ中なら弾く
-	if (hud_.IsElderPause()) { return; }
+    // ポーズ中なら弾く
+    if (hud_.IsElderPause()) { return; }
 
-	// ------------ ↓ プレイシーンの処理 ↓ ------------//
+    // ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-	sign_.Update();
+    sign_.Update();
+    //stage_.Update();
 
-	// ------------ ↑ プレイシーンの処理 ↑ ------------//
-	
-	// オブジェクトマネージャー更新
-	objMan_.Update();
+    // ------------ ↑ プレイシーンの処理 ↑ ------------//
 
-	// 背景更新
-	background_.Update();
+    // オブジェクトマネージャー更新
+    objMan_.Update();
 
-	// DrawerHelper更新
-	DrawerHelper::StaticUpdate();
+    // 背景更新
+    background_.Update();
 
-
-	// パーティクル更新
-	particleMan_.Update();
+    // DrawerHelper更新
+    DrawerHelper::StaticUpdate();
 
 
-	// カメラ更新
-	camera_.Update();
+    // パーティクル更新
+    particleMan_.Update();
 
-	// ビュープロジェクションにカメラ代入
-	transferVP_ = camera_.GetViewProjection();
 
-	// ビュープロジェクション
-	transferVP_.UpdateMatrix();
+    // カメラ更新
+    camera_.Update();
 
-	//ゴール判定
-	//if ()
-	//{
-	//	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
-	//	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
-	//}
+    // ビュープロジェクションにカメラ代入
+    transferVP_ = camera_.GetViewProjection();
 
-	// リセット
-	if (sKeys_->IsTrigger(DIK_R))
-	{
-		SceneManager::GetInstance()->Change("PLAY");
-	}
+    // ビュープロジェクション
+    transferVP_.UpdateMatrix();
+
+    //ゴール判定
+    //if ()
+    //{
+    //	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
+    //	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
+    //}
+
+    // リセット
+    if (sKeys_->IsTrigger(DIK_R))
+    {
+        SceneManager::GetInstance()->Change("PLAY");
+    }
 
 }
 #pragma endregion
@@ -388,45 +403,46 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
-	// 背景描画
-	background_.Draw();
+    // 背景描画
+    background_.Draw();
 
-	// ------------ ↓ プレイシーンの描画 ↓ ------------//
+    // ------------ ↓ プレイシーンの描画 ↓ ------------//
 
-	sign_.Draw();
-	
-	// ------------ ↑ プレイシーンの描画 ↑ ------------//
+    sign_.Draw();
+    //stage_.Draw();
 
-	// オブジェクト描画
-	objMan_.Draw();
+    // ------------ ↑ プレイシーンの描画 ↑ ------------//
 
-	// HUD描画
-	hud_.Draw();
+    // オブジェクト描画
+    objMan_.Draw();
 
-	// パーティクル描画
-	particleMan_.Draw();
+    // HUD描画
+    hud_.Draw();
+
+    // パーティクル描画
+    particleMan_.Draw();
 }
 
 void PlayScene::CameraUpdate()
 {
-	static const float sCameraMoveSpeed = 1.0f;
-	static const float sCameraMoveValue = 5.0f;
+    static const float sCameraMoveSpeed = 1.0f;
+    static const float sCameraMoveValue = 5.0f;
 
-	if (sMouse_->IsDown(MouseClick::DIM_MIDDLE))
-	{
-		bool isMoveR = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) >= +sCameraMoveValue;
-		bool isMoveL = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) <= -sCameraMoveValue;
-		bool isMoveT = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) >= +sCameraMoveValue;
-		bool isMoveB = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) <= -sCameraMoveValue;
+    if (sMouse_->IsDown(MouseClick::DIM_MIDDLE))
+    {
+        bool isMoveR = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) >= +sCameraMoveValue;
+        bool isMoveL = (sMouse_->Pos().x_ - sMouse_->Pos(When::Elder).x_) <= -sCameraMoveValue;
+        bool isMoveT = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) >= +sCameraMoveValue;
+        bool isMoveB = (sMouse_->Pos().y_ - sMouse_->Pos(When::Elder).y_) <= -sCameraMoveValue;
 
-		camera_.pos_.x_ += sCameraMoveSpeed * static_cast<float>(isMoveL - isMoveR);
-		camera_.pos_.y_ += sCameraMoveSpeed * static_cast<float>(isMoveT - isMoveB);
-	}
+        camera_.pos_.x_ += sCameraMoveSpeed * static_cast<float>(isMoveL - isMoveR);
+        camera_.pos_.y_ += sCameraMoveSpeed * static_cast<float>(isMoveT - isMoveB);
+    }
 
-	static const float sCameraScrollSpeed = 3.0f;
+    static const float sCameraScrollSpeed = 3.0f;
 
-	if (sMouse_->ScrollValue() > 0.0f) { camera_.pos_.z_ += sCameraScrollSpeed; }
-	if (sMouse_->ScrollValue() < 0.0f) { camera_.pos_.z_ -= sCameraScrollSpeed; }
+    if (sMouse_->ScrollValue() > 0.0f) { camera_.pos_.z_ += sCameraScrollSpeed; }
+    if (sMouse_->ScrollValue() < 0.0f) { camera_.pos_.z_ -= sCameraScrollSpeed; }
 }
 
 #pragma endregion

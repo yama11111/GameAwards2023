@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <imgui.h>
+#include "Stage.h"
 
 using namespace maruyama;
 
@@ -18,19 +19,7 @@ void Sign::Initialize(const Vector2& mapchipSize)
         // とりま矩形にする
         mapchip_.emplace_back(std::vector<int>{});
         for (int x{}; x < (int)mapchipSize.x_; x++) {
-            if (y == 0 || y == (int)(mapchipSize.y_ - 1)) {
-                mapchip_[y].emplace_back(1);
-                BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } }); // yがマイナスなのは、yの正方向が上だから。
-                BDrawerList_.back()->Initialize(1);
-            }
-            else if (x == 0 || x == (int)(mapchipSize.x_ - 1)) {
-                mapchip_[y].emplace_back(1);
-                BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
-                BDrawerList_.back()->Initialize(1);
-            }
-            else {
-                mapchip_[y].emplace_back(0);
-            }
+            mapchip_[y].emplace_back(0);
         }
     }
 }
@@ -241,6 +230,44 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
             ptr->UpdatePoint();
         }
     }
+    else if (static_cast<BlockType>(mapchip_[elemY][mElemX]) == BlockType::WARP1) {
+        size_t idxWarpInfos_{};
+        for (size_t i = 0; i < warpInfos_.size(); i++)
+        {
+            if (mElemX == warpInfos_[i].mapchipElemSelf_.first && elemY == warpInfos_[i].mapchipElemSelf_.second) {
+                idxWarpInfos_ = i;
+                break;
+            }
+        }
+        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::RIGHT || warpInfos_[idxWarpInfos_].dirPartner_ != Direction::LEFT) return isExecuted;
+
+        if (warpInfos_[idxWarpInfos_].isConnected_) {
+            while (1)
+            {
+                isExecuted = true;
+                // 着地フラグtrue
+                ptr->isGrounded_ = true;
+                // 該当pointのy軸座標が、ワープブロックの上辺もしくは底辺に触れたら
+                if (pointX <= topLeftPos_.y_ - (mElemX * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
+                if (pointX >= topLeftPos_.y_ - ((mElemX + 1) * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
+
+                ptr->trfm_.pos_.y_ += approach.y_;
+                ptr->UpdatePos();
+                ptr->UpdatePoint();
+            }
+            ptr->isTeleport_ = true;
+            Vector3 TLP = warpInfos_[idxWarpInfos_].partnerPtr_->topLeftPos_;
+            float offset{};
+            warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT ?
+                offset = +teleportDistance_ :
+                offset = -teleportDistance_;
+            ptr->teleportedPos_ = {
+                TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 + offset,
+                TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2,
+                0 };
+            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxSign_;
+        }
+    }
 
     //if (!approach.x_)isExecuted = false;
     return isExecuted;
@@ -289,13 +316,52 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 isExecuted = true;
                 // 着地フラグtrue
                 ptr->isGrounded_ = true;
-                if (pointY <= -((mElemY)*blockRadius_ * 2)) break;
+                // 基準点からひく
+                if (pointY <= topLeftPos_.y_ - (mElemY * blockRadius_ * 2)) break;
 
                 ptr->trfm_.pos_.y_ += approach.y_;
                 ptr->UpdatePos();
                 ptr->UpdatePoint();
             }
             ptr->isSpring_ = true;
+        }
+    }
+    else if (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::WARP2) {
+        size_t idxWarpInfos_{};
+        for (size_t i = 0; i < warpInfos_.size(); i++)
+        {
+            if (elemX == warpInfos_[i].mapchipElemSelf_.first && mElemY == warpInfos_[i].mapchipElemSelf_.second) {
+                idxWarpInfos_ = i;
+                break;
+            }
+        }
+        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::TOP || warpInfos_[idxWarpInfos_].dirPartner_ != Direction::BOTTOM) return isExecuted;
+
+        if (warpInfos_[idxWarpInfos_].isConnected_) {
+            while (1)
+            {
+                isExecuted = true;
+                // 着地フラグtrue
+                ptr->isGrounded_ = true;
+                // 該当pointのy軸座標が、ワープブロックの上辺もしくは底辺に触れたら
+                if (pointY <= topLeftPos_.y_ - (mElemY * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::TOP) break;
+                if (pointY >= topLeftPos_.y_ - ((mElemY + 1) * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::BOTTOM) break;
+
+                ptr->trfm_.pos_.y_ += approach.y_;
+                ptr->UpdatePos();
+                ptr->UpdatePoint();
+            }
+            ptr->isTeleport_ = true;
+            Vector3 TLP = warpInfos_[idxWarpInfos_].partnerPtr_->topLeftPos_;
+            float offset{};
+            warpInfos_[idxWarpInfos_].dirSelf_ == Direction::TOP ?
+                offset = +teleportDistance_ :
+                offset = -teleportDistance_;
+            ptr->teleportedPos_ = {
+                TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2,
+                TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
+                0 };
+            ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxSign_;
         }
     }
     else {

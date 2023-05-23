@@ -2,11 +2,9 @@
 
 void Stage::Update(void)
 {
-    for (YukiMapchipCollider* entity : colliderPtrList_)
+    for (size_t i = 0; i < signVector_.size(); i++)
     {
-        signVector_[entity->idxSign_]->Update();
-        entity->Update();
-        signVector_[entity->idxSign_]->PPC(entity);
+        signVector_[i]->Update();
     }
 }
 
@@ -23,9 +21,9 @@ void Stage::RegisterSign(Sign* ptr)
     signVector_.emplace_back(ptr);
 }
 
-void Stage::RegisterEntity(YukiMapchipCollider* ptr)
+void Stage::CallPPC(YukiMapchipCollider* ptr)
 {
-    colliderPtrList_.emplace_back(ptr);
+    signVector_[ptr->idxSign_]->PPC(ptr);
 }
 
 const Stage::Vector3& Stage::GetTopLeftPos(size_t idx)

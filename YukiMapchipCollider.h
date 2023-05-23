@@ -60,5 +60,9 @@ public:
     bool isSpring_{};
     bool isGrounded_{};
     bool isOldGrounded_{};
+
+    bool isTeleport_{};
+    Vector3 teleportedPos_{};
+    size_t teleportedIdxSign_{};
 };
 

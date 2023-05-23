@@ -16,7 +16,7 @@ void YukiMapchipCollider::UpdatePos(void)
     // ä€ÇﬂåÎç∑èàóù - transform.pos
     trfm_.pos_ = { roundToDecimal(trfm_.pos_.x_, decimalPlace_),roundToDecimal(trfm_.pos_.y_,  decimalPlace_),roundToDecimal(trfm_.pos_.z_,  decimalPlace_) };
     // ä€ÇﬂåÎç∑èàóù - velocity
-     velocity_ = { roundToDecimal(velocity_.x_, decimalPlace_),roundToDecimal(velocity_.y_, decimalPlace_), roundToDecimal(velocity_.z_, decimalPlace_) };
+    velocity_ = { roundToDecimal(velocity_.x_, decimalPlace_),roundToDecimal(velocity_.y_, decimalPlace_), roundToDecimal(velocity_.z_, decimalPlace_) };
 
     // â¡éZ
     trfm_.pos_ += velocity_;

@@ -16,6 +16,7 @@
 #include "HUDDrawer.h"
 
 #include "Sign.h"
+#include "Stage.h"
 #include "Player.h"
 
 namespace YScene
@@ -37,7 +38,8 @@ namespace YScene
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
 		
-		maruyama::Sign sign_;
+        maruyama::Sign sign_;
+        //Stage stage_;
 
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 

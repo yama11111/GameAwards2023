@@ -22,6 +22,7 @@ namespace maruyama {
         using Transform = YGame::Transform;
 
         static constexpr float blockRadius_{ 1.f }; // ブロックの半径
+        static constexpr float teleportDistance_{ blockRadius_ * 3 }; // Warpブロックから出る際に当ブロックからどの程度離れるか、デフォルトはブロック1.5個分
 
         static constexpr float pushOut_{ 0.2f }; // 定期的押し出し時の移動量
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
@@ -67,6 +68,8 @@ namespace maruyama {
             size_t IdxSign_{};
             // 相手側の出現方向 - 不変
             Direction dirPartner_{};
+            // 相手側のptr - 可変
+            Sign* partnerPtr_{};
         };
 
         // ブロック全般用情報
@@ -116,7 +119,8 @@ namespace maruyama {
         void ReWriteBlock(size_t X,size_t Y,BlockType bt);
         void ReWriteBlock2Warp(size_t X,size_t Y,BlockType bt, Direction dirSelf);
 
-        inline Vector3 GetCenterPos(void);
+        inline const Vector3& GetTopLeftPos(void) { return topLeftPos_; }
+        Vector3 GetCenterPos(void);
     private:
         // (現在地 + vel) - 基準点 で距離算出 ※プレイヤーは看板の基準点より必ず右にいる想定
         // 距離 / ブロックの直径 でマップチップ配列の要素数では何番目に相当する位置か算出 ->CalcElem()で処理

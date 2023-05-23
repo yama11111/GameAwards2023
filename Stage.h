@@ -21,12 +21,11 @@ public:
     void Draw(void);
 
     void RegisterSign(Sign* ptr);
-    void RegisterEntity(YukiMapchipCollider* ptr);
+    void CallPPC(YukiMapchipCollider* ptr);
 
     const Vector3& GetTopLeftPos(size_t idx);
 
     // ïœêî
     std::vector<std::unique_ptr<Sign>> signVector_;
-    std::list<YukiMapchipCollider*> colliderPtrList_;
 };
 

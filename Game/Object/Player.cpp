@@ -258,6 +258,7 @@ void Player::Update()
 void Player::PreUpdate()
 {
 	// 座標更新
+
 	YukiMapchipCollider::UpdatePos();
 
 	// 物理挙動更新
