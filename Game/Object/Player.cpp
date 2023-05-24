@@ -263,6 +263,13 @@ void Player::Draw()
 	drawer_.Draw();
 }
 
+void Player::DrawDebug(void)
+{
+    ImGui::Begin("p");
+    ImGui::Text("trfm:%f,%f,%f", trfm_.pos_.x_, trfm_.pos_.y_, trfm_.pos_.z_);
+    ImGui::End();
+}
+
 void Player::Update()
 {
 	// 代入
@@ -282,6 +289,7 @@ void Player::PreUpdate()
 	// 座標更新
 
 	YukiMapchipCollider::UpdatePos();
+    DrawDebug();
 
 	// 物理挙動更新
 	UpdatePhysics();

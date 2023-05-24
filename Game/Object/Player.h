@@ -74,6 +74,8 @@ public:
 	/// </summary>
 	void Draw() override;
 
+    void DrawDebug(void);
+
 public:
 
 	/// <summary>

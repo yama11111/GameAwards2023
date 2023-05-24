@@ -30,6 +30,10 @@ void Sign::Update(void)
         bd->Update();
     }
 
+    if (keys_->IsTrigger(DIK_U)) {
+        topLeftPos_.x_ -= 2;
+    }
+
     DrawDebug();
 }
 
@@ -154,7 +158,7 @@ void maruyama::Sign::ReWriteBlock(size_t X, size_t Y, BlockType bt)
 
     int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ + -y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 }
@@ -171,7 +175,7 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
 
     int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{ x * blockRadius_ * 2 + blockRadius_, -y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ + -y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 
@@ -282,9 +286,9 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
     if (static_cast<BlockType>(mapchip_[mElemY][elemX]) == BlockType::BASIC) {
         while (1)
         {
-            ptr->velocity_.y_ = 0;
+            //ptr->velocity_.y_ = 0;
             // 仮移動後の座標でマップチップ配列の位置
-            int checkElemY = CalcMovedElemX(pointY, approach.y_);
+            int checkElemY = CalcMovedElemY(pointY, approach.y_);
             //if(checkElemY )
             isExecuted = true;
             // 着地フラグtrue
@@ -301,7 +305,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             while (1)
             {
                 // 仮移動後の座標でマップチップ配列の位置
-                int checkElemY = CalcMovedElemX(pointY, approach.y_);
+                int checkElemY = CalcMovedElemY(pointY, approach.y_);
                 //if(checkElemY )
                 isExecuted = true;
                 if (checkElemY == mElemY) break;

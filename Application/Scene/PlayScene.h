@@ -38,8 +38,8 @@ namespace YScene
 
 		// ------------ ↓ プレイシーンの変数 ↓ ------------//
 		
-        //maruyama::Sign sign_;
-        Stage stage_;
+        maruyama::Sign sign_;
+        //Stage stage_;
 
 		// ------------ ↑ プレイシーンの変数 ↑ ------------//
 

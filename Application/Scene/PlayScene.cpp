@@ -52,8 +52,8 @@ void PlayScene::Load()
     DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
     // オブジェクト
-    //IObject::StaticInitialize(&sign_);
-    IObject::StaticInitialize(&stage_);
+    IObject::StaticInitialize(&sign_);
+    //IObject::StaticInitialize(&stage_);
 
     // プレイヤー
     Player::StaticInitialize();
@@ -75,44 +75,46 @@ void PlayScene::Initialize()
     // ステージ番号
     size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-    //sign_.Initialize({ 20,20 });
-    //sign_.ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    //sign_.ReWriteBlock(10, 15, Sign::BlockType::BASIC);
+    sign_.topLeftPos_ = { -10,0,0 };
+    sign_.Initialize({ 20,20 });
+    sign_.ReWriteBlock(1, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(2, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(3, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(4, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(5, 14, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(7, 18, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(9, 16, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(10, 15, Sign::BlockType::BASIC);
+    sign_.ReWriteBlock(11, 15, Sign::BlockType::BASIC);
 
-    maruyama::Sign* sign1ptr = new maruyama::Sign;
-    sign1ptr->Initialize({ 20,20 });
-    sign1ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    sign1ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    sign1ptr->topLeftPos_ = { -30,0,0 };
-    stage_.RegisterSign(sign1ptr);
+    //maruyama::Sign* sign1ptr = new maruyama::Sign;
+    //sign1ptr->Initialize({ 20,20 });
+    //sign1ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
+    //sign1ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
+    //sign1ptr->topLeftPos_ = { -30,0,0 };
+    //stage_.RegisterSign(sign1ptr);
 
-    maruyama::Sign* sign2ptr = new maruyama::Sign;
-    sign2ptr->Initialize({ 20,20 });
-    sign2ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    sign2ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    sign2ptr->topLeftPos_ = { +30,0,0 };
-    stage_.RegisterSign(sign2ptr);
+    //maruyama::Sign* sign2ptr = new maruyama::Sign;
+    //sign2ptr->Initialize({ 20,20 });
+    //sign2ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
+    //sign2ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
+    //sign2ptr->topLeftPos_ = { +30,0,0 };
+    //stage_.RegisterSign(sign2ptr);
 
     // オブジェクト
     {
@@ -369,8 +371,8 @@ void PlayScene::Update()
 
     // ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-    //sign_.Update();
-    stage_.Update();
+    sign_.Update();
+    //stage_.Update();
 
     // ------------ ↑ プレイシーンの処理 ↑ ------------//
 
@@ -423,8 +425,8 @@ void PlayScene::Draw()
 
     // ------------ ↓ プレイシーンの描画 ↓ ------------//
 
-    //sign_.Draw();
-    stage_.Draw();
+    sign_.Draw();
+    //stage_.Draw();
 
     // ------------ ↑ プレイシーンの描画 ↑ ------------//
 
