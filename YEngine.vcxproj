@@ -45,12 +45,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\nlohmann;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\DirectXTex;$(SolutionDir)External\imgui;$(SolutionDir)External\nlohmann;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Engine\GameUtillity\Level;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Base\DX;$(ProjectDir)Engine\Base\Scene;$(ProjectDir)Engine\Utillity;$(ProjectDir)Engine\Utillity\Math;$(ProjectDir)Engine\Utillity\Input;$(ProjectDir)Engine\Utillity\DebugText;$(ProjectDir)Engine\GameUtillity;$(ProjectDir)Engine\GameUtillity\Object;$(ProjectDir)Engine\GameUtillity\Object\Light;$(ProjectDir)Engine\GameUtillity\Camera;$(ProjectDir)Engine\GameUtillity\Collision;$(ProjectDir)Engine\GameUtillity\Scene;$(ProjectDir)Engine\GameUtillity\MapChip;$(ProjectDir)Engine\GameUtillity\Level;$(ProjectDir)Application\Draw\Actor;$(ProjectDir)Application\Draw\Drawer;$(ProjectDir)Application\Draw\Particle;$(ProjectDir)Application\Scene;$(ProjectDir)Application\Transition;$(ProjectDir)Game;$(ProjectDir)Game\Object;$(ProjectDir)Game\Drawer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -105,6 +105,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\GameUtillity\Level\Level.cpp" />
     <ClCompile Include="Game\Drawer\JunctionDrawer.cpp" />
     <ClCompile Include="Game\Drawer\KeyDrawer.cpp" />
     <ClCompile Include="Game\Drawer\LaserDrawer.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Game\Object\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\GameUtillity\Level\Level.h" />
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
     <ClInclude Include="Game\Drawer\JunctionDrawer.h" />
     <ClInclude Include="Game\Drawer\KeyDrawer.h" />
