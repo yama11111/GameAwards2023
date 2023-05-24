@@ -158,7 +158,7 @@ void maruyama::Sign::ReWriteBlock(size_t X, size_t Y, BlockType bt)
 
     int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ + -y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{x * blockRadius_ * 2 + blockRadius_,-y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 }
@@ -175,7 +175,7 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
 
     int x{ (int)X }, y{ (int)Y };
     // ブロックの管理リストへの追加
-    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ + -y * blockRadius_ * 2 - blockRadius_ } });
+    BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{x * blockRadius_ * 2 + blockRadius_,-y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 
