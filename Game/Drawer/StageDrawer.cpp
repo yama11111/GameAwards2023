@@ -91,13 +91,13 @@ void StageDrawer::Reset(const TowerDrawerCommon::Type type)
 		// ˆÊ’u
 		Vector3 pos = Vector3(0.0f, +1.5f, 0.0f);
 
-		numObjs_[0]->Initialize({ pos });
+		numObjs_[0]->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
 
 		// •
 		float x = 0.4f;
 
-		numObjs_[1]->Initialize({ pos + Vector3(+x,0.0f,0.0f) });
-		numObjs_[2]->Initialize({ pos + Vector3(-x,0.0f,0.0f) });
+		numObjs_[1]->Initialize({ pos + Vector3(+x,0.0f,0.0f), {}, {1.0f,1.0f,1.0f} });
+		numObjs_[2]->Initialize({ pos + Vector3(-x,0.0f,0.0f), {}, {1.0f,1.0f,1.0f} });
 	}
 
 	// ƒrƒ‹

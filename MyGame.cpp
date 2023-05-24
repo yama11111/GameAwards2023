@@ -25,7 +25,7 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize(YGameSceneFactory::Play_, YGameTransitionFactory::Blackout_);
+	sceneExe_->Initialize(YGameSceneFactory::Title_, YGameTransitionFactory::Blackout_);
 
 
 	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
@@ -101,23 +101,23 @@ void MyGame::DrawGameScene()
 		DrawLocation location = static_cast<DrawLocation>(i);
 
 
-		// スプライト2D描画
-		Sprite2D::Pipeline::StaticDraw(location);
-
 		// モデル描画
 		Model::Pipeline::StaticDraw(location);
 
 		// スプライト3D描画
 		Sprite3D::Pipeline::StaticDraw(location);
 
+		// スプライト2D描画
+		Sprite2D::Pipeline::StaticDraw(location);
 
-		// スプライト2D描画セットクリア
-		Sprite2D::Pipeline::StaticClearDrawSet(location);
 
 		// モデル描画セットクリア
 		Model::Pipeline::StaticClearDrawSet(location);
 
 		// スプライト3D描画セットクリア
 		Sprite3D::Pipeline::StaticClearDrawSet(location);
+
+		// スプライト2D描画セットクリア
+		Sprite2D::Pipeline::StaticClearDrawSet(location);
 	}
 }

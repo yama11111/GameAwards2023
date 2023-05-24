@@ -3,6 +3,9 @@
 #include <cassert>
 #include <cmath>
 
+#include "Stage.h"
+#include "LevelData.h"
+
 using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
@@ -22,8 +25,11 @@ void Goal::Initialize(const size_t signIndex, const YMath::Vector3& pos, const b
 void Goal::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isRock)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
 	
+	// 前回左上位置初期化
+	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
+
 	// ロックフラグ設定
 	isRock_ = isRock;
 
@@ -45,6 +51,9 @@ void Goal::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool i
 
 void Goal::PreUpdate()
 {
+	// 左上更新
+	UpdateLeftTop();
+
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 }
@@ -66,4 +75,20 @@ void Goal::Draw()
 
 void Goal::OnCollision(ObjectCollider* pPair)
 {
+	// ゲームクリア時弾く
+	if (isGameClear_) { return; }
+
+	// プレイヤーなら
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer)
+	{
+		// スキル発動時
+		if (GetIsActSkill())
+		{
+			// クリア
+			drawer_.ActivateClearAnimation(pPair->PosRef());
+
+			// ゲームクリア
+			isGameClear_ = true;
+		}
+	}
 }

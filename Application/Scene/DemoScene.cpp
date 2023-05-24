@@ -83,7 +83,8 @@ void DemoScene::Initialize()
 				LevelData::Player::InitStatuses[stageIdx].pos_.x_,
 				LevelData::Player::InitStatuses[stageIdx].pos_.y_,
 				0.0f
-			});
+			},
+			LevelData::Key::InitStatuses[stageIdx].size() > 0);
 
 		// ‘}“ü
 		objMan_.PushBack(player_.get());
@@ -255,7 +256,7 @@ void DemoScene::Initialize()
 				LevelData::Goal::InitStatuses[stageIdx].pos_.y_,
 				0.0f
 			},
-			LevelData::Goal::InitStatuses[stageIdx].isRock_);
+			LevelData::Key::InitStatuses[stageIdx].size() > 0);
 
 		// ‘}“ü
 		objMan_.PushBack(goal_.get());

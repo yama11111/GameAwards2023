@@ -14,6 +14,9 @@ private:
 	// ロックフラグ
 	bool isRock_ = false;
 
+	// ゲームクリアか
+	bool isGameClear_ = false;
+
 public:
 
 	/// <summary>

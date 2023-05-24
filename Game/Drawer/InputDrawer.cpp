@@ -21,14 +21,13 @@ using namespace HUDConfig::Operation;
 #pragma region Static
 
 YInput::Keys* InputDrawerCommon::sKeys_ = nullptr;
-
 UIButtonDrawer InputDrawerCommon::spKeyW_;
 UIButtonDrawer InputDrawerCommon::spKeyA_;
 UIButtonDrawer InputDrawerCommon::spKeyS_;
 UIButtonDrawer InputDrawerCommon::spKeyD_;
-
+UIButtonDrawer InputDrawerCommon::spKeyE_;
+UIButtonDrawer InputDrawerCommon::spKeyF_;
 UIButtonDrawer InputDrawerCommon::spKeySpace_;
-
 UIButtonDrawer InputDrawerCommon::spKeyEsc_;
 
 #pragma endregion
@@ -45,6 +44,10 @@ void InputDrawerCommon::StaticInitialize()
 	spKeyA_.Initialize(Texture::Load("UI/key_A.png"), Texture::Load("UI/key_A_PUSH.png"));
 	spKeyS_.Initialize(Texture::Load("UI/key_S.png"), Texture::Load("UI/key_S_PUSH.png"));
 	spKeyD_.Initialize(Texture::Load("UI/key_D.png"), Texture::Load("UI/key_D_PUSH.png"));
+
+	// EF
+	spKeyE_.Initialize(Texture::Load("UI/key_E.png"), Texture::Load("UI/key_E_PUSH.png"));
+	spKeyF_.Initialize(Texture::Load("UI/key_F.png"), Texture::Load("UI/key_F_PUSH.png"));
 	
 	// SPACE
 	spKeySpace_.Initialize(Texture::Load("UI/key_SPACE.png"), Texture::Load("UI/key_SPACE_PUSH.png"));
@@ -60,6 +63,10 @@ void InputDrawerCommon::StaticUpdate()
 	spKeyA_.Update(sKeys_->IsLeft());
 	spKeyS_.Update(sKeys_->IsUnder());
 	spKeyD_.Update(sKeys_->IsRight());
+	
+	// EF 押したか更新
+	spKeyE_.Update(sKeys_->IsDown(DIK_E));
+	spKeyF_.Update(sKeys_->IsDown(DIK_F));
 
 	// SPACE 押したか更新
 	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));
@@ -81,6 +88,10 @@ void InputDrawer::Initialize()
 	keyAObj_.reset(Sprite2D::Object::Create());
 	keySObj_.reset(Sprite2D::Object::Create());
 	keyDObj_.reset(Sprite2D::Object::Create());
+
+	// EF
+	keyEObj_.reset(Sprite2D::Object::Create());
+	keyFObj_.reset(Sprite2D::Object::Create());
 	
 	// SPACE
 	keySpaceObj_.reset(Sprite2D::Object::Create());
@@ -98,7 +109,7 @@ void InputDrawer::Reset()
 	// ----- Object初期化 ----- //
 
 	// 位置保存用
-	Vector3 w, a, s, d, space, esc;
+	Vector3 w, a, s, d, e, f, space, esc;
 
 	// 大きさ
 	Vector3 scale;
@@ -110,6 +121,9 @@ void InputDrawer::Reset()
 		a = Key::Title::A;
 		s = Key::Title::S;
 		d = Key::Title::D;
+
+		e = Key::Title::E;
+		f = Key::Title::F;
 
 		space = Key::Title::Space;
 
@@ -124,6 +138,9 @@ void InputDrawer::Reset()
 		s = Key::Select::S;
 		d = Key::Select::D;
 
+		e = Key::Select::E;
+		f = Key::Select::F;
+
 		space = Key::Select::Space;
 
 		esc = Key::Select::Esc;
@@ -137,6 +154,9 @@ void InputDrawer::Reset()
 		s = Key::Play::S;
 		d = Key::Play::D;
 
+		e = Key::Play::E;
+		f = Key::Play::F;
+
 		space = Key::Play::Space;
 
 		esc = Key::Play::Esc;
@@ -149,6 +169,10 @@ void InputDrawer::Reset()
 	keyAObj_->Initialize({ a, {}, scale });
 	keySObj_->Initialize({ s, {}, scale });
 	keyDObj_->Initialize({ d, {}, scale });
+
+	// EF
+	keyEObj_->Initialize({ e, {}, scale });
+	keyFObj_->Initialize({ f, {}, scale });
 
 	// SPACE
 	keySpaceObj_->Initialize({ space, {}, scale });
@@ -166,6 +190,10 @@ void InputDrawer::Update()
 	keySObj_->UpdateMatrix();
 	keyDObj_->UpdateMatrix();
 
+	// EF
+	keyEObj_->UpdateMatrix();
+	keyFObj_->UpdateMatrix();
+
 	// SPACE
 	keySpaceObj_->UpdateMatrix();
 
@@ -180,6 +208,10 @@ void InputDrawer::Draw()
 	spKeyA_.Draw(keyAObj_.get());
 	spKeyS_.Draw(keySObj_.get());
 	spKeyD_.Draw(keyDObj_.get());
+
+	// EF
+	spKeyE_.Draw(keyEObj_.get());
+	spKeyF_.Draw(keyFObj_.get());
 	
 	// SPACE
 	spKeySpace_.Draw(keySpaceObj_.get());

@@ -10,23 +10,23 @@ namespace YDX
 	private:
 
 		// ïsïœ SRV êî
-		static const UINT ImmutableSRVCount_ = 2056;
+		static const UINT ImmutableSRVCount_ = 10000;
 
 		// ïsïœ UAV êî
-		static const UINT ImmutableUAVCount_ = 2056;
+		static const UINT ImmutableUAVCount_ = 0;
 
 		// ïsïœ CBV êî
-		static const UINT ImmutableCBVCount_ = 2056;
+		static const UINT ImmutableCBVCount_ = 10000;
 
 
 		// ç≈ëÂ SRV êî
-		static const UINT MaxSRVCount_ = 262144;
+		static const UINT MaxSRVCount_ = 100000;
 
 		// ç≈ëÂ UAV êî
-		static const UINT MaxUAVCount_ = 262144;
+		static const UINT MaxUAVCount_ = 0;
 
 		// ç≈ëÂ CBV êî
-		static const UINT MaxCBVCount_ = 262144;
+		static const UINT MaxCBVCount_ = 900000;
 
 	public:
 

@@ -3,8 +3,7 @@
 #include "Transform.h"
 #include <memory>
 
-//namespace maruyama { class Stage; }
-namespace maruyama { class Sign; }
+class Stage;
 
 class IObject :
 	public ObjectCollider
@@ -15,7 +14,15 @@ protected:
 	// トランスフォーム
 	std::unique_ptr<YGame::Transform> transform_;
 
+	// 1F前の左上
+	YMath::Vector3 elderLeftTop_;
+
 public:
+
+	/// <summary>
+	/// 左上更新
+	/// </summary>
+	void UpdateLeftTop();
 
 	/// <summary>
 	/// 判定前更新
@@ -39,8 +46,7 @@ public:
 protected:
 
 	// 静的ステージマネージャーポインタ
-	//static maruyama::Stage* spStageMan_;
-	static maruyama::Sign* spStageMan_;
+	static Stage* spStageMan_;
 
 public:
 	
@@ -48,8 +54,7 @@ public:
 	/// 静的初期化
 	/// </summary>
 	/// <param name="pStageMan"> : ステージマネージャーポインタ</param>
-	//static void StaticInitialize(maruyama::Stage* pStageMan);
-	static void StaticInitialize(maruyama::Sign* pStageMan);
+	static void StaticInitialize(Stage* pStageMan);
 
 };
 

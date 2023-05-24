@@ -10,6 +10,7 @@
 #include "DrawerHelper.h"
 #include "MouseCollider.h"
 #include "LevelData.h"
+#include "StageData.h"
 
 #pragma region 名前空間宣言
 
@@ -52,8 +53,7 @@ void PlayScene::Load()
     DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
     // オブジェクト
-    IObject::StaticInitialize(&sign_);
-    //IObject::StaticInitialize(&stage_);
+    IObject::StaticInitialize(&stage_);
 
     // プレイヤー
     Player::StaticInitialize();
@@ -75,54 +75,72 @@ void PlayScene::Initialize()
     // ステージ番号
     size_t stageIdx = static_cast<size_t>(StageConfig::GetInstance()->GetCurrentStageIndex());
 
-    sign_.topLeftPos_ = { -10,0,0 };
-    sign_.Initialize({ 20,20 });
-    sign_.ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    sign_.ReWriteBlock(11, 15, Sign::BlockType::BASIC);
+    // インデックス
+    size_t index = stageIdx - 1;
 
-    //maruyama::Sign* sign1ptr = new maruyama::Sign;
-    //sign1ptr->Initialize({ 20,20 });
-    //sign1ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    //sign1ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    //sign1ptr->topLeftPos_ = { -30,0,0 };
-    //stage_.RegisterSign(sign1ptr);
 
-    //maruyama::Sign* sign2ptr = new maruyama::Sign;
-    //sign2ptr->Initialize({ 20,20 });
-    //sign2ptr->ReWriteBlock(1, 14, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(2, 14, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(3, 14, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(4, 14, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(5, 14, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(7, 18, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(8, 17, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(9, 16, Sign::BlockType::BASIC);
-    //sign2ptr->ReWriteBlock(10, 15, Sign::BlockType::BASIC);
-    //sign2ptr->topLeftPos_ = { +30,0,0 };
-    //stage_.RegisterSign(sign2ptr);
+    // ステージ
+    {
+        // 看板の数だけ
+        for (size_t i = 0; i < StageData::Datas[index].size(); i++)
+        {
+            // 看板生成
+            maruyama::Sign* newSign = new maruyama::Sign;
+
+            // 大きさ初期化
+            newSign->Initialize(
+                { 
+                    static_cast<float>(StageData::Datas[index][i].numbers[0].size()), // X
+                    static_cast<float>(StageData::Datas[index][i].numbers.size()) // Y
+                });
+
+            // 左上設定
+            newSign->topLeftPos_ = StageData::Datas[index][i].leftTop_;
+
+            // Y
+            for (size_t y = 0; y < StageData::Datas[index][i].numbers.size(); y++)
+            {
+                // X
+                for (size_t x = 0; x < StageData::Datas[index][i].numbers[y].size(); x++)
+                {
+                    // 無し
+                    if (StageData::Datas[index][i].numbers[y][x] == 0)
+                    {
+                        continue;
+                    }
+
+                    // BASIC
+                    if (StageData::Datas[index][i].numbers[y][x] == 1)
+                    {
+                        newSign->ReWriteBlock(x, y, Sign::BlockType::BASIC);
+                        continue;
+                    }
+
+                    // WARP1
+                    if (StageData::Datas[index][i].numbers[y][x] == 2)
+                    {
+                        newSign->ReWriteBlock(x, y, Sign::BlockType::WARP1);
+                        continue;
+                    }
+
+                    // WARP2
+                    if (StageData::Datas[index][i].numbers[y][x] == 3)
+                    {
+                        newSign->ReWriteBlock(x, y, Sign::BlockType::WARP2);
+                        continue;
+                    }
+                }
+            }
+
+            // 挿入
+            stage_.RegisterSign(newSign);
+        }
+    }
 
     // オブジェクト
     {
         // オブジェクトマネージャー初期化
         objMan_.Initialize();
-
-        // インデックス
-        size_t index = stageIdx - 1;
 
         // プレイヤー
         {
@@ -136,7 +154,8 @@ void PlayScene::Initialize()
                     LevelData::Player::InitStatuses[index].pos_.x_,
                     LevelData::Player::InitStatuses[index].pos_.y_,
                     0.0f
-                });
+                },
+                LevelData::Key::InitStatuses[index].size() > 0);
 
             // 挿入
             objMan_.PushBack(player_.get());
@@ -308,7 +327,7 @@ void PlayScene::Initialize()
                     LevelData::Goal::InitStatuses[index].pos_.y_,
                     0.0f
                 },
-                LevelData::Goal::InitStatuses[index].isRock_);
+                LevelData::Key::InitStatuses[index].size() > 0);
 
             // 挿入
             objMan_.PushBack(goal_.get());
@@ -333,7 +352,7 @@ void PlayScene::Initialize()
 
 
     // プレイBGM開始
-    //pPlayBGM_->Play(true);
+    pPlayBGM_->Play(true);
 }
 
 #pragma endregion

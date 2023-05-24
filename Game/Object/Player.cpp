@@ -21,7 +21,7 @@ void Player::StaticInitialize()
 	spKeys_ = YInput::Keys::GetInstance();
 }
 
-void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
+void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -30,13 +30,16 @@ void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 	drawer_.Initialize(transform_.get(), &direction_);
 
 	// リセット
-	Reset(signIndex, pos);
+	Reset(signIndex, pos, isExistKey);
 }
 
-void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
+void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos, {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
+
+	// 前回左上位置初期化
+	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
 
 	// スピード初期化
 	speed_ = {};
@@ -68,6 +71,8 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// マップチップコライダー半径設定
 	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f };
 
+	// マップチップコライダーインデックス設定
+	idxSign_ = signIndex;
 
 	// 落下フラグをうごかすか
 	isGetOffAct_ = false;
@@ -78,7 +83,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 
 	// 鍵を持っているか
-	isKeyHolder_ = false;
+	isKeyHolder_ = !isExistKey;
 
 	// クリアか
 	isGameClear_ = false;
@@ -90,6 +95,9 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos)
 
 void Player::Move()
 {
+	// ゴールした後は無視
+	if (isGameClear_) { return; }
+
 	// x軸移動
 	speed_.x_ += spKeys_->Horizontal() * LevelData::Player::Acceleration;
 
@@ -113,6 +121,9 @@ void Player::Move()
 
 void Player::Jump()
 {
+	// ゴールした後は無視
+	if (isGameClear_) { return; }
+
 	// ジャンプ回数が最大なら弾く
 	if (1 <= jumpCount_) { return; }
 
@@ -151,9 +162,6 @@ void Player::Landing()
 
 void Player::UpdatePhysics()
 {
-	// ゴールした後は無視
-	if (isGameClear_) { return; }
-
 	// 移動
 	Move();
 
@@ -173,7 +181,7 @@ void Player::UpdatePhysics()
 	}
 
 	// 重力
-	speed_.y_ -= gravity_;
+	speed_.y_ -= LevelData::Player::Gravity;
 
 	// クランプ
 	speed_.x_ = Clamp(speed_.x_, -LevelData::Player::MaxSpeed.x_, +LevelData::Player::MaxSpeed.x_);
@@ -197,6 +205,9 @@ Vector3* Player::PosPointer()
 
 void Player::OnCollision(ObjectCollider* pPair)
 {
+	// ゲームクリア時弾く
+	if (isGameClear_) { return; }
+
 	// ブロックなら
 	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
@@ -252,8 +263,17 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// ゴールなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)
 	{
+		// 鍵持ってないなら
+		if (isKeyHolder_ == false) { return; }
+
 		// アクション
 		pPair->SetIsActSkill(true);
+
+		// ゴール
+		drawer_.GoalAnimation();
+
+		// ゲームクリア
+		isGameClear_ = true;
 	}
 }
 
@@ -273,11 +293,11 @@ void Player::DrawDebug(void)
 void Player::Update()
 {
 	// 代入
-	trfm_ = *transform_;
+	trfm_.pos_ = transform_->pos_;
 	velocity_ = speed_;
 	
 	// 判定
-	spStageMan_->PPC(this);
+	spStageMan_->CallPPC(this);
 	
 	// 戻す
 	transform_->pos_ = trfm_.pos_;
@@ -286,8 +306,13 @@ void Player::Update()
 
 void Player::PreUpdate()
 {
-	// 座標更新
+	// 看板インデックス更新
+	SetSignIndex(idxSign_);
 
+	// 左上更新
+	UpdateLeftTop();
+
+	// 座標更新
 	YukiMapchipCollider::UpdatePos();
     DrawDebug();
 

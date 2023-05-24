@@ -2,6 +2,8 @@
 #include "DrawerConfig.h"
 #include <cassert>
 
+#include "SceneExecutive.h"
+
 #pragma region 名前空間
 
 using std::array;
@@ -165,6 +167,11 @@ void CoreColor::StaticUpdate()
 	{
 		// イーズイン
 		sMate_->SetAmbient(sUnifyMaterialEas_.In(sUnifyTim_.Ratio()));
+	}
+
+	if (sUnifyTim_.IsEnd())
+	{
+		YScene::SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 10, 10);
 	}
 }
 

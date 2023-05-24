@@ -19,6 +19,10 @@ protected:
 	static YGame::UIButtonDrawer spKeyA_;
 	static YGame::UIButtonDrawer spKeyS_;
 	static YGame::UIButtonDrawer spKeyD_;
+
+	// EF
+	static YGame::UIButtonDrawer spKeyE_;
+	static YGame::UIButtonDrawer spKeyF_;
 	
 	// SPACE
 	static YGame::UIButtonDrawer spKeySpace_;
@@ -54,6 +58,10 @@ private:
 	std::unique_ptr<YGame::Sprite2D::Object> keyAObj_;
 	std::unique_ptr<YGame::Sprite2D::Object> keySObj_;
 	std::unique_ptr<YGame::Sprite2D::Object> keyDObj_;
+	
+	// EF
+	std::unique_ptr<YGame::Sprite2D::Object> keyEObj_;
+	std::unique_ptr<YGame::Sprite2D::Object> keyFObj_;
 	
 	// SPACE
 	std::unique_ptr<YGame::Sprite2D::Object> keySpaceObj_;

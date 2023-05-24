@@ -466,7 +466,7 @@ void SelectDrawer::Draw()
 	}
 
 	// 地球
-	spEarthModel_->SetDrawCommand(earthObj_.get(), YGame::DrawLocation::Center);
+	spEarthModel_->SetDrawCommand(earthObj_.get(), YGame::DrawLocation::Front);
 	
 	// レターボックス描画
 	lbDra_->Draw(YGame::DrawLocation::Front);
