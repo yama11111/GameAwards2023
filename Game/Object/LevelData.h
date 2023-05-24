@@ -20,8 +20,8 @@ namespace LevelData
 		static const float JumpPower = 1.5f;
 
 		// d—Í
-		//static const float Gravity = 0.1f;
-		static const float Gravity = 0.0f;
+		static const float Gravity = 0.1f;
+		//static const float Gravity = 0.0f;
 
 		// Å‘åd—Í
 		static const float MaxGravity = 1.5f;
