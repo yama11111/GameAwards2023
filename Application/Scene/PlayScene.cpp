@@ -390,8 +390,8 @@ void PlayScene::Update()
 
     // ------------ ↓ プレイシーンの処理 ↓ ------------//
 
-    sign_.Update();
-    //stage_.Update();
+    //sign_.Update();
+    stage_.Update();
 
     // ------------ ↑ プレイシーンの処理 ↑ ------------//
 
@@ -444,8 +444,8 @@ void PlayScene::Draw()
 
     // ------------ ↓ プレイシーンの描画 ↓ ------------//
 
-    sign_.Draw();
-    //stage_.Draw();
+    //sign_.Draw();
+    stage_.Draw();
 
     // ------------ ↑ プレイシーンの描画 ↑ ------------//
 
