@@ -8,7 +8,7 @@ class StageConfig
 public:
 	
 	// ステージ数
-	static const int StageNum_ = 4;
+	static const int StageNum_ = 8;
 
 private:
 	
