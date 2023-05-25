@@ -252,10 +252,10 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 // 着地フラグtrue
                 ptr->isGrounded_ = true;
                 // 該当pointのy軸座標が、ワープブロックの上辺もしくは底辺に触れたら
-                if (pointX <= topLeftPos_.y_ - (mElemX * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
-                if (pointX >= topLeftPos_.y_ - ((mElemX + 1) * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
+                if (pointX <= topLeftPos_.x_ - (mElemX * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
+                if (pointX >= topLeftPos_.x_ - ((mElemX + 1) * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
 
-                ptr->trfm_.pos_.y_ += approach.y_;
+                ptr->trfm_.pos_.x_ += approach.x_;
                 ptr->UpdatePos();
                 ptr->UpdatePoint();
             }
@@ -348,8 +348,8 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 // 着地フラグtrue
                 ptr->isGrounded_ = true;
                 // 該当pointのy軸座標が、ワープブロックの上辺もしくは底辺に触れたら
-                if (pointY <= topLeftPos_.y_ - (mElemY * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::TOP) break;
-                if (pointY >= topLeftPos_.y_ - ((mElemY + 1) * blockRadius_ * 2) || warpInfos_[idxWarpInfos_].dirSelf_ == Direction::BOTTOM) break;
+                if (pointY <= topLeftPos_.y_ - (mElemY * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::TOP) break;
+                if (pointY >= topLeftPos_.y_ - ((mElemY + 1) * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::BOTTOM) break;
 
                 ptr->trfm_.pos_.y_ += approach.y_;
                 ptr->UpdatePos();

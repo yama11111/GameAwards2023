@@ -36,8 +36,8 @@ namespace maruyama {
 
             SPRING,
 
-            WARP1,
-            WARP2,
+            WARP1, // â°
+            WARP2, // èc
         };
 
         // ï˚å¸ÇÃenum
