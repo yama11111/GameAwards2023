@@ -69,7 +69,7 @@ namespace YGame
 
 
 		// モデルポインタ
-		Model* pModel_;
+		Model* pModel_ = nullptr;
 
 	public:
 
@@ -126,7 +126,7 @@ namespace YGame
 
 
 		// スプライト3Dポインタ
-		Sprite3D* pSprite3D_;
+		Sprite3D* pSprite3D_ = nullptr;
 	
 	public:
 

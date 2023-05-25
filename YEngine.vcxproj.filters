@@ -157,6 +157,9 @@
     <Filter Include="Game\Collider">
       <UniqueIdentifier>{d3ad97c5-cb94-4a07-b20a-30e2917f2dba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameUtil\Level">
+      <UniqueIdentifier>{4eba86e2-5c39-46a2-9a0d-cd7530b4250a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -518,6 +521,9 @@
     </ClCompile>
     <ClCompile Include="Game\StageConfig.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameUtillity\Level\Level.cpp">
+      <Filter>Engine\GameUtil\Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -907,6 +913,9 @@
     </ClInclude>
     <ClInclude Include="Game\StageData.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameUtillity\Level\Level.h">
+      <Filter>Engine\GameUtil\Level</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
