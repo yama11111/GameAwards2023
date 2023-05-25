@@ -39,6 +39,15 @@ void MouseColliderCommon::StaticInitialize()
 
 void MouseColliderCommon::StaticUpdate()
 {
+	// ワールド座標
+	Vector3 worldPos = StaticGetMouseWorldPos();
+
+	// マウス位置設定
+	sMouseBox_.SetBox2DCenter(Vector2(worldPos.x_, worldPos.y_));
+}
+
+Vector3 MouseColliderCommon::StaticGetMouseWorldPos()
+{
 	// マウスワールド座標取得
 	Vector3 nearPos = YMath::WorldPos(spMouse_->Pos(), 0.0f, spVP_->view_, spVP_->pro_);
 	Vector3 farPos = YMath::WorldPos(spMouse_->Pos(), 1.0f, spVP_->view_, spVP_->pro_);
@@ -57,8 +66,7 @@ void MouseColliderCommon::StaticUpdate()
 	// アタリ判定を取って接点を取得
 	YGame::CollisionRayPlane(sMouseRay_, sDisplayPlane_, distance, inter);
 
-	// マウス位置設定
-	sMouseBox_.SetBox2DCenter(Vector2(inter.x_, inter.y_));
+	return inter;
 }
 
 void MouseColliderCommon::StaticSetMouseCollisionRadSize(const Vector2& size)

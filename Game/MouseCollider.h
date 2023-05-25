@@ -38,6 +38,12 @@ public:
 	static void StaticUpdate();
 
 	/// <summary>
+	/// マウスカーソルワールド座標取得
+	/// </summary>
+	/// <returns>マウスカーソルワールド座標</returns>
+	static YMath::Vector3 StaticGetMouseWorldPos();
+
+	/// <summary>
 	/// 静的マウスアタリ判定サイズ設定
 	/// </summary>
 	/// <param name="size"> : アタリ判定サイズ</param>
