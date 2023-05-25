@@ -142,19 +142,16 @@ void PlayScene::Initialize()
         // オブジェクトマネージャー初期化
         objMan_.Initialize();
 
-        // ギミックフラグポインタ
-        std::vector<bool*> pGimmickFlags;
-
         for (size_t i = 0; i < LevelData::Switch::InitStatuses[index].size(); i++)
         {
             // ギミックフラグ生成
-            bool gimmickFlag = false;
-            
-            // ギミックフラグポインタ挿入
-            pGimmickFlags.push_back(&gimmickFlag);
+            std::unique_ptr<bool> gimmickFlag = std::make_unique<bool>();
+
+            // 初期化
+            *gimmickFlag = false;
 
             // ギミックフラグ挿入
-            gimmickFlags_.push_back(gimmickFlag);
+            gimmickFlags_.push_back(std::move(gimmickFlag));
         }
 
         // プレイヤー
@@ -242,7 +239,7 @@ void PlayScene::Initialize()
                     size_t switchIndex = static_cast<size_t>(LevelData::Platform::InitStatuses[index][i].switchIdx_);
 
                     // ギミックフラグポインタに代入
-                    pGimmickFlag = pGimmickFlags[switchIndex];
+                    pGimmickFlag = gimmickFlags_[switchIndex].get();
                 }
 
                 // 初期化
@@ -275,13 +272,13 @@ void PlayScene::Initialize()
                 bool* pGimmickFlag = nullptr;
 
                 // スイッチ番号
-                if (LevelData::Platform::InitStatuses[index][i].switchIdx_ >= 0)
+                if (LevelData::Laser::InitStatuses[index][i].switchIdx_ >= 0)
                 {
                     // インデックス
-                    size_t switchIndex = static_cast<size_t>(LevelData::Platform::InitStatuses[index][i].switchIdx_);
+                    size_t switchIndex = static_cast<size_t>(LevelData::Laser::InitStatuses[index][i].switchIdx_);
 
                     // ギミックフラグポインタに代入
-                    pGimmickFlag = pGimmickFlags[switchIndex];
+                    pGimmickFlag = gimmickFlags_[switchIndex].get();
                 }
 
                 // 初期化
@@ -298,6 +295,7 @@ void PlayScene::Initialize()
                         0.0f,
                     },
                     LevelData::Laser::InitStatuses[index][i].length_,
+                    //&gimmickFlags_);
                     pGimmickFlag);
 
                 // 挿入
@@ -324,7 +322,7 @@ void PlayScene::Initialize()
                         0.0f,
                     },
                     LevelData::Switch::InitStatuses[index][i].isAct_,
-                    pGimmickFlags[i]);
+                    gimmickFlags_[i].get());
 
                 // 挿入
                 objMan_.PushBack(newSwitch.get());

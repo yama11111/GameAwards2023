@@ -49,6 +49,9 @@ void ObjectCollisionManager::CheckAllCollision()
 
 void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, ObjectCollider* pColliderB)
 {
+	// ƒAƒ^ƒŠ”»’è–³Ž‹‚·‚é‚©
+	if (pColliderA->GetIsExist() == false || pColliderB->GetIsExist() == false) { return; }
+
 	// ŠÅ”Â‚ªˆá‚¤‚È‚ç’e‚­
 	if (pColliderA->GetSignIndex() != pColliderB->GetSignIndex()) { return; }
 

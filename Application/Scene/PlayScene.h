@@ -68,7 +68,7 @@ namespace YScene
 		std::unique_ptr<Goal> goal_;
 		
 		// ギミックフラグ
-		std::list<bool> gimmickFlags_;
+		std::vector<std::unique_ptr<bool>> gimmickFlags_;
 
 		// オブジェクトマネージャー
 		ObjectManager objMan_;

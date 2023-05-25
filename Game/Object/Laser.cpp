@@ -4,6 +4,7 @@
 #include "LevelData.h"
 #include <cassert>
 #include <cmath>
+#include <imgui.h>
 
 #include "Stage.h"
 #include "LevelData.h"
@@ -107,6 +108,12 @@ void Laser::PostUpdate()
 
 	// 描画クラス更新
 	drawer_.Update();
+
+	
+	ImGui::Begin("Laser");
+	ImGui::Text("%d", pIsSwitchOn_);
+	if (pIsSwitchOn_) { ImGui::Text("%d", *pIsSwitchOn_); }
+	ImGui::End();
 }
 
 void Laser::Draw()
