@@ -2,6 +2,7 @@
 #include "YukiMapchipCollider.h"
 #include "Sign.h"
 #include <list>
+#include "Mouse.h"
 
 class Stage
 {
@@ -20,6 +21,7 @@ public:
     void Update(void);
     void Draw(void);
 
+    void MouseCol4Warp(void);
     void RegisterSign(Sign* ptr);
     void CallPPC(YukiMapchipCollider* ptr);
 
@@ -27,5 +29,6 @@ public:
 
     // ïœêî
     std::vector<std::unique_ptr<Sign>> signVector_;
+    std::vector<bool> isHoldSignVector_;
 };
 

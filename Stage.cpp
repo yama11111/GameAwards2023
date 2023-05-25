@@ -1,5 +1,7 @@
 #include "Stage.h"
 
+using namespace YInput;
+
 void Stage::Update(void)
 {
     for (size_t i = 0; i < signVector_.size(); i++)
@@ -13,6 +15,21 @@ void Stage::Draw(void)
     for (size_t i = 0; i < signVector_.size(); i++)
     {
         signVector_[i]->Draw();
+    }
+}
+
+void Stage::MouseCol4Warp(void)
+{
+    for (size_t i = 0; i < signVector_.size(); i++)
+    {
+        signVector_[i]->mCollider_.CollisionMousePointer() &&
+            Mouse::GetInstance()->IsTrigger(MouseClick::DIM_LEFT) ?
+            isHoldSignVector_[i] = true :
+            isHoldSignVector_[i] = false;
+
+        if (isHoldSignVector_[i]) {
+
+        }
     }
 }
 

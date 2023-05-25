@@ -10,6 +10,7 @@
 #include "BlockDrawer.h"
 
 #include "YukiMapchipCollider.h"
+#include "MouseCollider.h"
 
 namespace maruyama {
     class Sign
@@ -70,6 +71,8 @@ namespace maruyama {
             Direction dirPartner_{};
             // 相手側のptr - 可変
             Sign* partnerPtr_{};
+
+            MouseCollider mCollider_{};
         };
 
         // ブロック全般用情報
@@ -140,6 +143,7 @@ namespace maruyama {
 
         // 基点（左上）座標
         Vector3 topLeftPos_{}; // zは常に0
+        MouseCollider mCollider_{};
 
         YInput::Keys* keys_{ YInput::Keys::GetInstance() };
     };

@@ -22,6 +22,9 @@ void Sign::Initialize(const Vector2& mapchipSize)
             mapchip_[y].emplace_back(0);
         }
     }
+
+    mCollider_.SetBox2DCenter({ GetCenterPos().x_,GetCenterPos().y_ });
+    mCollider_.SetBox2DRadSize({ mapchipSize.x_ / 2 * blockRadius_ * 2,mapchipSize.y_ / 2 * blockRadius_ * 2 });
 }
 
 void Sign::Update(void)
@@ -180,6 +183,9 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
     BDrawerList_.back()->Initialize(static_cast<int>(bt));
 
     // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の配列要素数
+    WarpIdx_t tempWarpIdx{ dirSelf,{X,Y} };
+    tempWarpIdx.mCollider_.SetBox2DCenter({ topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ - y * blockRadius_ * 2 - blockRadius_ });
+    tempWarpIdx.mCollider_.SetBox2DRadSize({ blockRadius_ / 2,blockRadius_ });
     warpInfos_.emplace_back(WarpIdx_t{ dirSelf,{X,Y} });
 }
 
