@@ -23,8 +23,8 @@ void Sign::Initialize(const Vector2& mapchipSize)
         }
     }
 
-    mCollider_.SetBox2DCenter({ topLeftPos_.x_,topLeftPos_.y_ });
-    mCollider_.SetBox2DRadSize({ mapchipSize.x_ / 2 * blockRadius_ * 2,mapchipSize.y_ / 2 * blockRadius_ * 2 });
+    mCollider_.SetBox2DCenter({ GetCenterPos().x_,GetCenterPos().y_ });
+    mCollider_.SetBox2DRadSize({ (mapchipSize.x_ / 2 - 2) * blockRadius_ * 2,(mapchipSize.y_ / 2 - 1) * blockRadius_ * 2 });
 }
 
 void Sign::Update(void)
@@ -68,7 +68,7 @@ void maruyama::Sign::DrawDebug(void)
     ImGui::End();
 
     ImGui::Begin("mcollider");
-    ImGui::Text("c (%f,%f), r (%f,%f)", mCollider_.GetBox2DCenter().x_, mCollider_.GetBox2DCenter().y_,mCollider_.GetBox2DRadSize().x_,mCollider_.GetBox2DRadSize().y_);
+    ImGui::Text("c (%f,%f), r (%f,%f)", mCollider_.GetBox2DCenter().x_, mCollider_.GetBox2DCenter().y_, mCollider_.GetBox2DRadSize().x_, mCollider_.GetBox2DRadSize().y_);
     ImGui::End();
 }
 
