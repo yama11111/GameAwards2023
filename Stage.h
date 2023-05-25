@@ -21,6 +21,8 @@ public:
     void Update(void);
     void Draw(void);
 
+    void DrawDebug(void);
+
     void MouseCol4Warp(void);
     void RegisterSign(Sign* ptr);
     void CallPPC(YukiMapchipCollider* ptr);

@@ -1,4 +1,5 @@
 #include "Stage.h"
+#include <imgui.h>
 
 using namespace YInput;
 
@@ -8,6 +9,10 @@ void Stage::Update(void)
     {
         signVector_[i]->Update();
     }
+
+    MouseCol4Warp();
+
+    DrawDebug();
 }
 
 void Stage::Draw(void)
@@ -18,17 +23,47 @@ void Stage::Draw(void)
     }
 }
 
+void Stage::DrawDebug(void)
+{
+    ImGui::Begin("Stage");
+    ImGui::Text("Cursor:%f,%f,%f", MouseColliderCommon::StaticGetMouseWorldPos().x_, MouseColliderCommon::StaticGetMouseWorldPos().y_, MouseColliderCommon::StaticGetMouseWorldPos().z_);
+    for (size_t i = 0; i < isHoldSignVector_.size(); i++)
+    {
+        ImGui::Text(isHoldSignVector_[i] ? "isHold : true" : "isHold : false");
+    }
+    ImGui::End();
+}
+
 void Stage::MouseCol4Warp(void)
 {
     for (size_t i = 0; i < signVector_.size(); i++)
     {
-        signVector_[i]->mCollider_.CollisionMousePointer() &&
-            Mouse::GetInstance()->IsTrigger(MouseClick::DIM_LEFT) ?
-            isHoldSignVector_[i] = true :
+        // オフセット
+        Vector2 offset{};
+
+        // 看板とマウスが重なっているとき && 左クリックを押したとき
+        if (signVector_[i]->mCollider_.CollisionMousePointer() /*&&
+            Mouse::GetInstance()->IsTrigger(MouseClick::DIM_LEFT)*/) {
+            // 看板をつかんでいるかをtrue
+            isHoldSignVector_[i] = true;
+            // 看板を掴んでいるカーソル
+            //offset.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ - signVector_[i]->topLeftPos_.x_;
+            //offset.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ - signVector_[i]->topLeftPos_.y_;
+        }
+        else {
             isHoldSignVector_[i] = false;
+        }
 
         if (isHoldSignVector_[i]) {
+            //signVector_[i]->topLeftPos_.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ + offset.x_;
+            //signVector_[i]->topLeftPos_.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ + offset.y_;
+        }
 
+        // 看板とマウスが重なっているとき && 左クリックを離したとき
+        if (signVector_[i]->mCollider_.CollisionMousePointer() &&
+            Mouse::GetInstance()->IsRelease(MouseClick::DIM_LEFT)) {
+            // 看板をつかんでいるかをfalse
+            isHoldSignVector_[i] = false;
         }
     }
 }
@@ -36,6 +71,7 @@ void Stage::MouseCol4Warp(void)
 void Stage::RegisterSign(Sign* ptr)
 {
     signVector_.emplace_back(ptr);
+    isHoldSignVector_.emplace_back(false);
 }
 
 void Stage::CallPPC(YukiMapchipCollider* ptr)
