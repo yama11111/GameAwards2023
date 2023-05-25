@@ -21,6 +21,7 @@ using namespace DrawerConfig::Title;
 #pragma region Static
 
 YInput::Keys* TitleDrawerCommon::sKeys_ = nullptr;
+YInput::Mouse* TitleDrawerCommon::sMouse_ = nullptr;
 Sprite2D* TitleDrawerCommon::spLogoSpr_ = nullptr;
 Sprite2D* TitleDrawerCommon::spShadowSpr_ = nullptr;
 Sprite2D* TitleDrawerCommon::spStartSpr_ = nullptr;

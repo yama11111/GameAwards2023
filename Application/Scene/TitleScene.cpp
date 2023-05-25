@@ -4,6 +4,8 @@
 #include "Def.h"
 #include <cassert>
 
+#include "MouseCollider.h"
+
 #pragma region 名前空間宣言
 
 using YScene::TitleScene;
@@ -32,6 +34,12 @@ void TitleScene::Load()
 	//pDecisionSE_ = Audio::Load("SE/decision.wav");
 
 	// ----- 静的初期化 ----- //
+
+	// マウスコライダー静的初期化
+	MouseColliderCommon::StaticInitialize();
+
+	// マウスコライダーにビュープロジェクション設定
+	MouseColliderCommon::StaticSetViewProjectionPointer(&transferVP_);
 
 	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
@@ -85,6 +93,9 @@ void TitleScene::Finalize()
 #pragma region 更新
 void TitleScene::Update()
 {
+	// マウスコライダー静的更新
+	MouseColliderCommon::StaticUpdate();
+
 	// 入力描画静的更新
 	InputDrawerCommon::StaticUpdate();
 

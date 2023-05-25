@@ -3,6 +3,7 @@
 
 // 多重定義回避用
 namespace YInput { class Keys; }
+namespace YInput { class Mouse; }
 
 class InputDrawerCommon
 {
@@ -11,6 +12,9 @@ protected:
 	
 	// キー
 	static YInput::Keys* sKeys_;
+	
+	// マウス
+	static YInput::Mouse* sMouse_;
 	
 	// ----- Button ----- //
 
@@ -26,6 +30,9 @@ protected:
 	
 	// SPACE
 	static YGame::UIButtonDrawer spKeySpace_;
+	
+	// LEFT
+	static YGame::UIButtonDrawer spMouseL_;
 	
 	// ESC
 	static YGame::UIButtonDrawer spKeyEsc_;
@@ -65,6 +72,9 @@ private:
 	
 	// SPACE
 	std::unique_ptr<YGame::Sprite2D::Object> keySpaceObj_;
+
+	// SPACE
+	std::unique_ptr<YGame::Sprite2D::Object> mouseLObj_;
 	
 	// ESC
 	std::unique_ptr<YGame::Sprite2D::Object> keyEscObj_;

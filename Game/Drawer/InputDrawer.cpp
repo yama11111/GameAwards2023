@@ -1,6 +1,5 @@
 #include "InputDrawer.h"
 #include "HUDConfig.h"
-//#include "Keys.h"
 
 #include "SceneManager.h"
 #include "YGameSceneFactory.h"
@@ -21,6 +20,7 @@ using namespace HUDConfig::Operation;
 #pragma region Static
 
 YInput::Keys* InputDrawerCommon::sKeys_ = nullptr;
+YInput::Mouse* InputDrawerCommon::sMouse_ = nullptr;
 UIButtonDrawer InputDrawerCommon::spKeyW_;
 UIButtonDrawer InputDrawerCommon::spKeyA_;
 UIButtonDrawer InputDrawerCommon::spKeyS_;
@@ -28,6 +28,7 @@ UIButtonDrawer InputDrawerCommon::spKeyD_;
 UIButtonDrawer InputDrawerCommon::spKeyE_;
 UIButtonDrawer InputDrawerCommon::spKeyF_;
 UIButtonDrawer InputDrawerCommon::spKeySpace_;
+UIButtonDrawer InputDrawerCommon::spMouseL_;
 UIButtonDrawer InputDrawerCommon::spKeyEsc_;
 
 #pragma endregion
@@ -38,6 +39,9 @@ void InputDrawerCommon::StaticInitialize()
 {
 	// キー
 	sKeys_ = YInput::Keys::GetInstance();
+
+	// マウス
+	sMouse_ = YInput::Mouse::GetInstance();
 	
 	// WASD
 	spKeyW_.Initialize(Texture::Load("UI/key_W.png"), Texture::Load("UI/key_W_PUSH.png"));
@@ -48,6 +52,9 @@ void InputDrawerCommon::StaticInitialize()
 	// EF
 	spKeyE_.Initialize(Texture::Load("UI/key_E.png"), Texture::Load("UI/key_E_PUSH.png"));
 	spKeyF_.Initialize(Texture::Load("UI/key_F.png"), Texture::Load("UI/key_F_PUSH.png"));
+
+	// LEFT
+	spMouseL_.Initialize(Texture::Load("UI/mouse_LEFT.png"), Texture::Load("UI/mouse_LEFT_PUSH.png"));
 	
 	// SPACE
 	spKeySpace_.Initialize(Texture::Load("UI/key_SPACE.png"), Texture::Load("UI/key_SPACE_PUSH.png"));
@@ -67,6 +74,9 @@ void InputDrawerCommon::StaticUpdate()
 	// EF 押したか更新
 	spKeyE_.Update(sKeys_->IsDown(DIK_E));
 	spKeyF_.Update(sKeys_->IsDown(DIK_F));
+	
+	// Mouse 押したか更新
+	spMouseL_.Update(sMouse_->IsDown(YInput::MouseClick::DIM_LEFT));
 
 	// SPACE 押したか更新
 	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));
@@ -96,6 +106,9 @@ void InputDrawer::Initialize()
 	// SPACE
 	keySpaceObj_.reset(Sprite2D::Object::Create());
 	
+	// LEFT
+	mouseLObj_.reset(Sprite2D::Object::Create());
+	
 	// ESC
 	keyEscObj_.reset(Sprite2D::Object::Create());
 
@@ -109,59 +122,65 @@ void InputDrawer::Reset()
 	// ----- Object初期化 ----- //
 
 	// 位置保存用
-	Vector3 w, a, s, d, e, f, space, esc;
+	Vector3 w, a, s, d, e, f, space, left, esc;
 
 	// 大きさ
 	Vector3 scale;
 
 	// シーンの種類によって変える
-	if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Title_)
+	if		(SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Title_)
 	{
-		w = Key::Title::W;
-		a = Key::Title::A;
-		s = Key::Title::S;
-		d = Key::Title::D;
+		w = Title::Key::W;
+		a = Title::Key::A;
+		s = Title::Key::S;
+		d = Title::Key::D;
 
-		e = Key::Title::E;
-		f = Key::Title::F;
+		e = Title::Key::E;
+		f = Title::Key::F;
 
-		space = Key::Title::Space;
+		space = Title::Key::Space;
 
-		esc = Key::Title::Esc;
+		left = Title::Mouse::Left;
 
-		scale = Key::Title::Scale;
+		esc = Title::Key::Esc;
+
+		scale = Title::Key::Scale;
 	}
 	else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Select_)
 	{
-		w = Key::Select::W;
-		a = Key::Select::A;
-		s = Key::Select::S;
-		d = Key::Select::D;
+		w = Select::Key::W;
+		a = Select::Key::A;
+		s = Select::Key::S;
+		d = Select::Key::D;
 
-		e = Key::Select::E;
-		f = Key::Select::F;
+		e = Select::Key::E;
+		f = Select::Key::F;
 
-		space = Key::Select::Space;
+		space = Select::Key::Space;
 
-		esc = Key::Select::Esc;
+		left = Select::Mouse::Left;
 
-		scale = Key::Select::Scale;
+		esc = Select::Key::Esc;
+
+		scale = Select::Key::Scale;
 	}
 	else if (SceneManager::GetInstance()->CurrentSceneName() == YGameSceneFactory::Play_)
 	{
-		w = Key::Play::W;
-		a = Key::Play::A;
-		s = Key::Play::S;
-		d = Key::Play::D;
+		w = Play::Key::W;
+		a = Play::Key::A;
+		s = Play::Key::S;
+		d = Play::Key::D;
 
-		e = Key::Play::E;
-		f = Key::Play::F;
+		e = Play::Key::E;
+		f = Play::Key::F;
 
-		space = Key::Play::Space;
+		space = Play::Key::Space;
 
-		esc = Key::Play::Esc;
+		left = Play::Mouse::Left;
 
-		scale = Key::Play::Scale;
+		esc = Play::Key::Esc;
+
+		scale = Play::Key::Scale;
 	}
 
 	// WASD
@@ -176,6 +195,9 @@ void InputDrawer::Reset()
 
 	// SPACE
 	keySpaceObj_->Initialize({ space, {}, scale });
+	
+	// LEFT
+	mouseLObj_->Initialize({ left, {}, scale });
 
 	//ESC
 	keyEscObj_->Initialize({ esc, {}, scale });
@@ -196,6 +218,9 @@ void InputDrawer::Update()
 
 	// SPACE
 	keySpaceObj_->UpdateMatrix();
+	
+	// LEFT
+	mouseLObj_->UpdateMatrix();
 
 	// TAB
 	keyEscObj_->UpdateMatrix();
@@ -215,6 +240,9 @@ void InputDrawer::Draw()
 	
 	// SPACE
 	spKeySpace_.Draw(keySpaceObj_.get());
+	
+	// LEFT
+	spMouseL_.Draw(mouseLObj_.get());
 	
 	// TAB
 	spKeyEsc_.Draw(keyEscObj_.get());
