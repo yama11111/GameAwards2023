@@ -53,23 +53,32 @@ void Stage::MouseCol4Warp(void)
             isHoldOther = true;
 
             // 看板を掴んでいるカーソル
-            offset.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ - signVector_[i]->topLeftPos_.x_;
-            offset.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ - signVector_[i]->topLeftPos_.y_;
+            //offset.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ - signVector_[i]->topLeftPos_.x_;
+            //offset.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ - signVector_[i]->topLeftPos_.y_;
         }
 
-        if (isHoldSignVector_[i]) {
-            signVector_[i]->topLeftPos_.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ + offset.x_;
-            signVector_[i]->topLeftPos_.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ + offset.y_;
+        if (Mouse::GetInstance()->IsDown(MouseClick::DIM_LEFT)) {
+            if (isHoldSignVector_[i]) {
+                signVector_[i]->topLeftPos_.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ + offset.x_;
+                signVector_[i]->topLeftPos_.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ + offset.y_;
+                signVector_[i]->mCollider_.SetBox2DCenter({ signVector_[i]->GetCenterPos().x_,signVector_[i]->GetCenterPos().y_ });
+            }
         }
-
-        // 看板とマウスが重なっているとき && 左クリックを離したとき
-        if (signVector_[i]->mCollider_.CollisionMousePointer() &&
-            Mouse::GetInstance()->IsRelease(MouseClick::DIM_LEFT)) {
+        else {
             // 看板をつかんでいるかをfalse
             isHoldSignVector_[i] = false;
             isHoldOther = false;
             offset = { 0,0 };
         }
+
+        //// 看板とマウスが重なっているとき && 左クリックを離したとき
+        //if (signVector_[i]->mCollider_.CollisionMousePointer() &&
+        //    Mouse::GetInstance()->IsRelease(MouseClick::DIM_LEFT)) {
+        //    // 看板をつかんでいるかをfalse
+        //    isHoldSignVector_[i] = false;
+        //    isHoldOther = false;
+        //    offset = { 0,0 };
+        //}
     }
 }
 
