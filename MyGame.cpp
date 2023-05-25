@@ -31,6 +31,12 @@ bool MyGame::Initialize()
 	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });
 	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {1.0f,1.0f,0.0f} }));
 
+
+	pMousePointerSpr = Sprite2D::Create({ true, {}, {0.0f,0.0f} }, { Texture::Load("UI/mousePointer.png") });
+	mousePointerObject_.reset(Sprite2D::Object::Create({ {}, {}, {0.5f,0.5f,0.0f} }));
+
+	ShowCursor(false);
+
 	return true;
 }
 
@@ -44,6 +50,10 @@ void MyGame::Update()
 {
 	// 基底クラス更新処理
 	YFramework::Update();
+
+	// マウス位置更新
+	mousePointerObject_->pos_ = { Mouse::GetInstance()->Pos().x_, Mouse::GetInstance()->Pos().y_, 0.0f };
+	mousePointerObject_->UpdateMatrix();
 
 	// ------------------- 終了処理 ------------------- //
 	// ------------------------------------------------ //
@@ -93,6 +103,9 @@ void MyGame::DrawGameScene()
 {
 	// シーン描画
 	sceneExe_->Draw();
+
+	// マウス描画
+	pMousePointerSpr->SetDrawCommand(mousePointerObject_.get(), DrawLocation::Front);
 
 	// 描画場所の数だけ
 	for (size_t i = 0; i < DrawLocationNum; i++)
