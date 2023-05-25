@@ -94,7 +94,7 @@ void PlatformDrawer::Reset()
 	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 		
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
+	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 	pMaterial = sHologramMate_.get();
 
 	modelObjs_[HologramIdx]->SetColor(pColor);

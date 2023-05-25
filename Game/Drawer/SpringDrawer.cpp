@@ -132,7 +132,7 @@ void SpringDrawer::Reset()
 	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
+	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 	pMaterial = CoreColor::MaterialPtr();
 
 	modelObjs_[CoreIdx]->SetColor(pColor);

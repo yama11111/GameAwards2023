@@ -87,7 +87,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	TowerDrawerCommon::StaticInitialize(sTowerMate_.get(), sTowerLight_.get());
 
 	// 天球
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eRed));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray));
 
 
 	// レターボックス

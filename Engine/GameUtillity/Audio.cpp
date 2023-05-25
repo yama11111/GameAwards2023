@@ -85,7 +85,7 @@ Audio* Audio::Load(const std::string& directoryPath, const std::string& audioFil
 	file.read((char*)&format.fmt_, format.chunk_.size_);
 
 	// ファイル位置変更
-	file.seekg(beginPos);
+	//file.seekg(beginPos);
 	// ヘッダー捜索
 	//SearchHeader(file, "data");
 	

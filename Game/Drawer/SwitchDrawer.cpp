@@ -106,7 +106,7 @@ void SwitchDrawer::Reset(const Type& type)
 	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 	pMaterial = CoreColor::MaterialPtr();
 
 	modelObjs_[BaseOnCoreIdx]->SetColor(pColor);

@@ -71,7 +71,7 @@ void InfectionBlocks::Initialize()
 	rotaEas_[0].Initialize(-PI, 0.0f, 4.0f);
 	rotaEas_[1].Initialize(0.0f, +PI, 4.0f);
 
-	colorEas_[0].Initialize(0.8f, 0.0f, 2.0f);
+	colorEas_[0].Initialize(0.7f, 0.0f, 2.0f);
 	colorEas_[1].Initialize(0.0f, 0.0f, 2.0f);
 
 	alphaEas_[0].Initialize(0.5f, 1.0f, 2.0f);
@@ -338,10 +338,10 @@ void InfectionBlocks::UpdateBlock()
 			blocks_[y][x]->obj_->UpdateMatrix();
 
 
-			// 色 (赤)
-			float red = 0.0f;
-			if (stepIndex_ == 0) { red = colorEas_[0].Out(blocks_[y][x]->colorStartTim_.Ratio()); }
-			if (stepIndex_ == 1) { red = colorEas_[1].In(blocks_[y][x]->colorEndTim_.Ratio()); }
+			// 色 (青)
+			float blue = 0.0f;
+			if (stepIndex_ == 0) { blue = colorEas_[0].Out(blocks_[y][x]->colorStartTim_.Ratio()); }
+			if (stepIndex_ == 1) { blue = colorEas_[1].In(blocks_[y][x]->colorEndTim_.Ratio()); }
 
 			// アルファ値
 			float alpha = 0.0f;
@@ -349,7 +349,7 @@ void InfectionBlocks::UpdateBlock()
 			if (stepIndex_ == 1) { alpha = alphaEas_[1].In(blocks_[y][x]->colorEndTim_.Ratio()); }
 
 			// 色代入
-			blocks_[y][x]->color_->SetRGBA({ red, 0.0f,0.0f,alpha });
+			blocks_[y][x]->color_->SetRGBA({ 0.0f, 0.0f, blue, alpha });
 		}
 	}
 }
