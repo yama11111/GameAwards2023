@@ -89,6 +89,9 @@ void Laser::PreUpdate()
 
 	// ビームの長さ計算
 	CalcBeamLength();
+
+	// アタリ判定
+	if (pIsSwitchOn_) { SetIsExist(*pIsSwitchOn_); }
 }
 
 void Laser::PostUpdate()
@@ -108,8 +111,16 @@ void Laser::PostUpdate()
 
 void Laser::Draw()
 {
-	// 描画
+	if (pIsSwitchOn_)
+	{
+		if (*pIsSwitchOn_ == false)
+		{
+			return;
+		}
+	}
+	
 	drawer_.Draw();
+
 }
 
 void Laser::OnCollision(ObjectCollider* pPair)

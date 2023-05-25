@@ -57,6 +57,9 @@ void Platform::PreUpdate()
 
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+
+	// アタリ判定
+	if (pIsSwitchOn_) { SetIsExist(*pIsSwitchOn_); }
 }
 
 void Platform::PostUpdate()
@@ -70,6 +73,15 @@ void Platform::PostUpdate()
 
 void Platform::Draw()
 {
+
+	if (pIsSwitchOn_)
+	{
+		if (*pIsSwitchOn_ == false)
+		{
+			return;
+		}
+	}
+	
 	// 描画
 	drawer_.Draw();
 }
