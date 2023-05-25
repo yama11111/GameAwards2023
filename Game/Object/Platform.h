@@ -11,6 +11,9 @@ private:
 	// 描画クラス
 	PlatformDrawer drawer_;
 
+	// スイッチオンか
+	bool* pIsSwitchOn_ = nullptr;
+
 public:
 
 	/// <summary>
@@ -19,7 +22,8 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="length"> : 長さ</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length);
+	/// <param name="pIsSwitchOn"> : スイッチポインタ</param>
+	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length, bool* pIsSwitchOn);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
@@ -27,7 +31,8 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="length"> : 長さ</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos, const float length);
+	/// <param name="pIsSwitchOn"> : スイッチポインタ</param>
+	void Reset(const size_t signIndex, const YMath::Vector3& pos, const float length, bool* pIsSwitchOn);
 
 	/// <summary>
 	/// 判定前更新

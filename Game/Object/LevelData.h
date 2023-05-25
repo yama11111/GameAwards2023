@@ -207,6 +207,9 @@ namespace LevelData
 
 			// 長さ
 			float length_;
+
+			// スイッチ番号
+			int switchIdx_ = -1;
 		};
 
 		// 初期化ステータス
@@ -295,6 +298,9 @@ namespace LevelData
 
 			// 長さ
 			float length_;
+
+			// スイッチ番号
+			int switchIdx_ = -1;
 		};
 
 		// 初期化ステータス

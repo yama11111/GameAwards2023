@@ -35,7 +35,15 @@ bool MyGame::Initialize()
 	pMousePointerSpr = Sprite2D::Create({ true, {}, {0.0f,0.0f} }, { Texture::Load("UI/mousePointer.png") });
 	mousePointerObject_.reset(Sprite2D::Object::Create({ {}, {}, {0.5f,0.5f,0.0f} }));
 
-	ShowCursor(false);
+	bool isShow = false;
+
+#ifdef _DEBUG
+	
+	isShow = true;
+
+#endif // DEBUG
+	
+	ShowCursor(isShow);
 
 	return true;
 }

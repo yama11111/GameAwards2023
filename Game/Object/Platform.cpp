@@ -10,7 +10,7 @@ using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
 
-void Platform::Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length)
+void Platform::Initialize(const size_t signIndex, const YMath::Vector3& pos, const float length, bool* pIsSwitchOn)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -19,17 +19,19 @@ void Platform::Initialize(const size_t signIndex, const YMath::Vector3& pos, con
 	drawer_.Initialize(transform_.get());
 
 	// リセット
-	Reset(signIndex, pos, length);
+	Reset(signIndex, pos, length, pIsSwitchOn);
 }
 
-void Platform::Reset(const size_t signIndex, const YMath::Vector3& pos, const float length)
+void Platform::Reset(const size_t signIndex, const YMath::Vector3& pos, const float length, bool* pIsSwitchOn)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {length,1.0f,1.0f} });
+	
+	// スイッチポインタ
+	pIsSwitchOn_ = pIsSwitchOn;
 
 	// 前回左上位置初期化
 	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
-
 
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });

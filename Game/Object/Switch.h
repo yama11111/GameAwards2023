@@ -14,6 +14,9 @@ private:
 	// 動いているか
 	bool isAct_ = false;
 
+	// ギミックフラグ
+	bool* pGimmickFlag_ = nullptr;
+
 public:
 
 	/// <summary>
@@ -22,7 +25,12 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="isAct"> : 動作フラグ</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isAct);
+	/// <param name="pGimmick"> : ギミックフラグポインタ</param>
+	void Initialize(
+		const size_t signIndex, 
+		const YMath::Vector3& pos, 
+		const bool isAct, 
+		bool* pGimmickFlag);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
@@ -30,7 +38,12 @@ public:
 	/// <param name="signIndex"> : 看板番号</param>
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="isAct"> : 動作フラグ</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isAct);
+	/// <param name="pGimmick"> : ギミックフラグポインタ</param>
+	void Reset(
+		const size_t signIndex, 
+		const YMath::Vector3& pos, 
+		const bool isAct, 
+		bool* pGimmickFlag);
 
 	/// <summary>
 	/// 判定前更新
