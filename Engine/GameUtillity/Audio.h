@@ -81,6 +81,13 @@ namespace YGame
 		/// </summary>
 		static void AllClear();
 
+	private:
+
+		/// <summary>
+		/// ƒwƒbƒ_[‘{õ
+		/// </summary>
+		static void SearchHeader(std::ifstream& file, const char* chunkId);
+
 	public:
 
 		/// <summary>

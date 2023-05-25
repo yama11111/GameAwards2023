@@ -82,7 +82,7 @@ void TestScene::Initialize()
 	keyDra_.Initialize(&core_);
 
 	// スイッチ描画用クラス初期化
-	switchDra_.Initialize(&core_, SwitchDrawerCommon::Type::eGreen);
+	switchDra_.Initialize(&core_, SwitchDrawerCommon::Type::eBlue);
 
 	// ゲート描画用クラス初期化
 	gateDra_.Initialize(&core_);
@@ -410,16 +410,10 @@ void TestScene::Update()
 
 		ImGui::Text("---------------");
 
-		if (ImGui::Button("Reset (Green)"))
+		if (ImGui::Button("Reset"))
 		{
 			// リセット
-			switchDra_.Reset(SwitchDrawerCommon::Type::eGreen);
-		}
-
-		if (ImGui::Button("Reset (Red)"))
-		{
-			// リセット
-			switchDra_.Reset(SwitchDrawerCommon::Type::eRed);
+			switchDra_.Reset(SwitchDrawerCommon::Type::eBlue);
 		}
 
 		ImGui::Text("---------------");

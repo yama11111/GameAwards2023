@@ -63,12 +63,17 @@ Audio* Audio::Load(const std::string& directoryPath, const std::string& audioFil
 	assert(file.is_open());
 
 	// RIFFヘッダ－の読み込み
-	RiffHeader riff;
+	RiffHeader riff{};
 	file.read((char*)&riff, sizeof(riff));
 	// ファイルがRIFFかチェック
 	assert(strncmp(riff.chunk_.id_, "RIFF", 4) == 0);
 	// ファイルがWAVEかチェック
 	assert(strncmp(riff.type_, "WAVE", 4) == 0);
+	
+	// ファイル位置取得
+	std::streampos beginPos = file.tellg();
+	// ヘッダー捜索
+	SearchHeader(file, "fmt ");
 
 	// Formatチャンクの読み込み
 	FormatChunk format = {};
@@ -79,8 +84,13 @@ Audio* Audio::Load(const std::string& directoryPath, const std::string& audioFil
 	assert(format.chunk_.size_ <= sizeof(format.fmt_));
 	file.read((char*)&format.fmt_, format.chunk_.size_);
 
+	// ファイル位置変更
+	//file.seekg(beginPos);
+	// ヘッダー捜索
+	//SearchHeader(file, "data");
+	
 	// Dataチャンクの読み込み
-	ChunkHeader data;
+	ChunkHeader data{};
 	file.read((char*)&data, sizeof(data));
 	// JUNKチャンクを検出した場合
 	if (strncmp(data.id_, "JUNK", 4) == 0)
@@ -120,6 +130,22 @@ Audio* Audio::Load(const std::string& directoryPath, const std::string& audioFil
 
 	// オーディオポインタを返す
 	return newAudioPtr;
+}
+
+void Audio::SearchHeader(std::ifstream& file, const char* chunkId)
+{
+	ChunkHeader checkHeader{};
+	std::streampos currentPos{ file.tellg() };
+
+	file.read((char*)&checkHeader, sizeof(checkHeader));
+	while (std::strncmp(checkHeader.id_, "fmt ", 4) != 0)
+	{
+		file.seekg(currentPos);
+		file.seekg(checkHeader.size_, std::ios_base::cur);
+		currentPos = file.tellg();
+		file.read((char*)&checkHeader, sizeof(checkHeader));
+	}
+	file.seekg(currentPos);
 }
 
 void Audio::Play(const bool isLoop)

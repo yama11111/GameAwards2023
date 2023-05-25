@@ -118,7 +118,7 @@ void TowerDrawer::Reset(const Type& type)
 	}
 	else if (type == Type::eWhite)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
+		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 	}
 
 	modelObjs_[CoreIdx]->SetColor(pColor);

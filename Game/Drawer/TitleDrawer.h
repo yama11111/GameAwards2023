@@ -6,6 +6,7 @@
 
 // 多重定義回避用
 namespace YInput { class Keys; }
+namespace YInput { class Mouse; }
 
 class TitleDrawerCommon
 {
@@ -23,6 +24,9 @@ protected:
 
 	// キー
 	static YInput::Keys* sKeys_;
+	
+	// マウス
+	static YInput::Mouse* sMouse_;
 
 
 	// 静的ロゴスプライト

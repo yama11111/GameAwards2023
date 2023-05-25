@@ -803,7 +803,7 @@ namespace DrawerConfig
 	namespace Background
 	{
 		// アンビエント
-		const YMath::Vector3 Ambient = { 0.3f,0.2f,0.2f };
+		const YMath::Vector3 Ambient = { 0.2f,0.2f,0.2f };
 		
 		// クリア時用アンビエント
 		const YMath::Vector3 ClearAmbient = { 0.5f,0.5f,0.7f };
@@ -818,7 +818,7 @@ namespace DrawerConfig
 			namespace Direction
 			{ 
 				// 色
-				const YMath::Vector3 Color = { 1.0f,0.0f,0.0f };
+				const YMath::Vector3 Color = { 0.5f,0.5f,0.5f };
 				
 				// クリア時の色
 				const YMath::Vector3 ClearColor = { 0.0f,0.0f,1.0f };
@@ -943,7 +943,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
+			const YMath::Vector3 Color = { 0.0f,0.0f,0.0f };
 
 			// 位
 			const float Place = 100.0f;
@@ -1048,7 +1048,7 @@ namespace DrawerConfig
 			namespace Material
 			{
 				// アンビエント
-				const YMath::Vector3 Ambient = { 0.9f,0.6f,0.6f };
+				const YMath::Vector3 Ambient = { 0.6f,0.6f,0.6f };
 			}
 
 			// 光
@@ -1061,7 +1061,7 @@ namespace DrawerConfig
 				namespace Direction
 				{
 					// 色
-					const YMath::Vector3 Color = { 0.3f,0.0f,0.1f };
+					const YMath::Vector3 Color = { 0.3f,0.3f,0.3f };
 
 					// 向き
 					const YMath::Vector3 Dire = { +0.1f,-0.4f,-0.3f };
@@ -1073,13 +1073,13 @@ namespace DrawerConfig
 		namespace Earth
 		{
 			// 色
-			const YMath::Vector4 Color = { 0.02f,0.0f,0.02f,1.0f };
+			const YMath::Vector4 Color = { 0.02f,0.02f,0.02f,1.0f };
 
 			// マテリアル
 			namespace Material
 			{
 				// アンビエント
-				const YMath::Vector3 Ambient = { 1.0f,0.3f,0.5f };
+				const YMath::Vector3 Ambient = { 0.3f,0.3f,0.3f };
 			}
 
 			// 光
@@ -1092,7 +1092,7 @@ namespace DrawerConfig
 				namespace Direction
 				{
 					// 色
-					const YMath::Vector3 Color = { 0.8f,0.0f,0.4f };
+					const YMath::Vector3 Color = { 0.4f,0.4f,0.4f };
 
 					// 向き
 					const YMath::Vector3 Dire = { 0.0f,+1.0f,0.0f };
@@ -1151,7 +1151,7 @@ namespace DrawerConfig
 
 
 			// 色
-			const YMath::Vector3 Color = { 0.02f,0.0f,0.0f };
+			const YMath::Vector3 Color = { 0.0f,0.0f,0.02f };
 		}
 	}
 

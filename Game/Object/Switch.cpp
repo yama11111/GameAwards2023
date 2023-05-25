@@ -16,7 +16,7 @@ void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const
 	transform_.reset(new Transform());
 
 	// 描画クラス初期化
-	drawer_.Initialize(transform_.get(), SwitchDrawerCommon::Type::eGreen);
+	drawer_.Initialize(transform_.get(), SwitchDrawerCommon::Type::eBlue);
 
 	// リセット
 	Reset(signIndex, pos, isAct);
@@ -47,7 +47,7 @@ void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 
 
 	// 描画クラスリセット
-	drawer_.Reset(SwitchDrawerCommon::Type::eGreen);
+	drawer_.Reset(SwitchDrawerCommon::Type::eBlue);
 }
 
 void Switch::PreUpdate()

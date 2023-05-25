@@ -6,11 +6,11 @@ namespace HUDConfig
 	// 操作
 	namespace Operation
 	{
-		// キー
-		namespace Key
+		// タイトル
+		namespace Title
 		{
-			// タイトル
-			namespace Title
+			// キー
+			namespace Key
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -26,16 +26,32 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { -1000.0f, -1000.0f, 0.0f };
 				const YMath::Vector3 F = { -1000.0f, -1000.0f, 0.0f };
-				
+
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
-				
+
 				// TAB
 				const YMath::Vector3 Esc = { -100.0f, -100.0f, 0.0f };
-
 			}
+
+			// マウス
+			namespace Mouse
+			{
+				// 大きさ
+				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
+
+				// ----- 位置 ----- //
+
+				// LEFT
+				const YMath::Vector3 Left = { +288.0f, WinSize.y_ - 48.0f , 0.0f };
+			}
+		}
+		
 			// ステージセレクト
-			namespace Select
+		namespace Select
+		{
+			// キー
+			namespace Key
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -51,15 +67,31 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { -1000.0f, -1000.0f, 0.0f };
 				const YMath::Vector3 F = { -1000.0f, -1000.0f, 0.0f };
-				
+
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
-				
+
 				// TAB
 				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
+
+			// マウス
+			namespace Mouse
+			{
+				// 大きさ
+				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
+
+				// ----- 位置 ----- //
+
+				// LEFT
+				const YMath::Vector3 Left = { +288.0f, WinSize.y_ - 48.0f , 0.0f };
+			}
+		}
 			// ゲーム
-			namespace Play
+		namespace Play
+		{
+			// キー
+			namespace Key
 			{
 				// 大きさ
 				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
@@ -75,41 +107,24 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { +96.0f + 64.0f, WinSize.y_ - 48.0f - 32.0f, 0.0f };
 				const YMath::Vector3 F = { +96.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
-				
+
 				// SPACE
 				const YMath::Vector3 Space = { +256.0f, WinSize.y_ - 32.0f, 0.0f };
-				
+
 				// TAB
 				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };
 			}
-		}
 
-		// パッド
-		namespace Pad
-		{
-			// タイトル
-			namespace Title
+			// マウス
+			namespace Mouse
 			{
 				// 大きさ
-				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
+				const YMath::Vector3 Scale = { 1.0f,1.0f,0.0f };
 
 				// ----- 位置 ----- //
-			}
-			// ステージセレクト
-			namespace Select
-			{
-				// 大きさ
-				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
 
-				// ----- 位置 ----- //
-			}
-			// ゲーム
-			namespace Play
-			{
-				// 大きさ
-				const YMath::Vector3 Scale = { 2.0f,2.0f,0.0f };
-
-				// ----- 位置 ----- //
+				// LEFT
+				const YMath::Vector3 Left = { WinSize.x_ - 128.0f, WinSize.y_ - 48.0f , 0.0f };
 			}
 		}
 	}

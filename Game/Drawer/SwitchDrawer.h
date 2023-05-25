@@ -23,8 +23,7 @@ public:
 	// 種類
 	enum class Type
 	{
-		eGreen, // 緑
-		eRed, // 赤
+		eBlue, // 青
 		eEnd, // リサイズ用
 	};
 
@@ -72,7 +71,7 @@ private:
 	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> modelObjs_;
 
 	// 種類
-	Type type_ = Type::eGreen;
+	Type type_ = Type::eBlue;
 
 	// 種類インデックス
 	size_t typeIndex_ = 0;

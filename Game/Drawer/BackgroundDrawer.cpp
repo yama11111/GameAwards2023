@@ -71,7 +71,7 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ParticleManager* pParticleM
 	TowerDrawerCommon::StaticInitialize(sBackMate_.get(), sBackLight_.get());
 
 	// “V‹…
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eRed));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray));
 }
 
 void BackgroundDrawerCommon::StaticReset()

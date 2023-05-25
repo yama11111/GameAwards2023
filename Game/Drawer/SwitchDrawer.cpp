@@ -44,8 +44,7 @@ static const size_t BaseOffShellIdx = static_cast<size_t>(SwitchDrawerCommon::Pa
 static const size_t LeverCoreIdx = static_cast<size_t>(SwitchDrawerCommon::Parts::eLeverCore); // レバー核
 static const size_t LeverShellIdx = static_cast<size_t>(SwitchDrawerCommon::Parts::eLeverShell); // レバー殻
 
-static const size_t GreenIdx = static_cast<size_t>(SwitchDrawerCommon::Type::eGreen); // 緑
-static const size_t RedIdx = static_cast<size_t>(SwitchDrawerCommon::Type::eRed); // 赤
+static const size_t BlueIdx = static_cast<size_t>(SwitchDrawerCommon::Type::eBlue); // 緑
 
 #pragma endregion
 
@@ -106,7 +105,7 @@ void SwitchDrawer::Reset(const Type& type)
 	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 	pMaterial = CoreColor::MaterialPtr();
 
 	modelObjs_[BaseOnCoreIdx]->SetColor(pColor);
@@ -211,13 +210,9 @@ void SwitchDrawer::UpdateSwitchAnimation()
 
 	if (switchOnPower_.IsMax())
 	{
-		if (type_ == Type::eGreen)
+		if (type_ == Type::eBlue)
 		{
-			pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
-		}
-		else if (type_ == Type::eRed)
-		{
-			pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
+			pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
 		}
 	}
 

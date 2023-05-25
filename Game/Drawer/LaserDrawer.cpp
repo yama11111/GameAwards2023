@@ -124,7 +124,7 @@ void LaserDrawer::Reset()
 	CBColor* pColor = nullptr;
 	CBMaterial* pMaterial = nullptr;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
+	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
 	pMaterial = CoreColor::MaterialPtr();
 
 	modelObjs_[CoreIdx]->SetColor(pColor);

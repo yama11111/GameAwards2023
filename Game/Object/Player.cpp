@@ -131,7 +131,7 @@ void Player::Jump()
 	if (spKeys_->IsDown(DIK_E)) { return; }
 
 	// SPACEキー押したら
-	if (spKeys_->IsTrigger(DIK_SPACE))
+	if (spKeys_->IsTrigger(DIK_SPACE) || spKeys_->IsTrigger(DIK_W))
 	{
 		// ジャンプ
 		speed_.y_ = LevelData::Player::JumpPower;

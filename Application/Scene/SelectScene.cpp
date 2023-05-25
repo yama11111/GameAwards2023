@@ -6,6 +6,8 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "MouseCollider.h"
+
 #pragma region 名前空間宣言
 
 using YScene::SelectScene;
@@ -32,6 +34,12 @@ void SelectScene::Load()
 	//pDecisionSE_ = Audio::Load("SE/decision.wav");
 	
 	// ----- 静的初期化 ----- //
+
+	// マウスコライダー静的初期化
+	MouseColliderCommon::StaticInitialize();
+
+	// マウスコライダーにビュープロジェクション設定
+	MouseColliderCommon::StaticSetViewProjectionPointer(&transferVP_);
 
 	// パーティクル
 	ParticleManager::StaticInitialize(&transferVP_);
@@ -93,6 +101,9 @@ void SelectScene::Finalize()
 #pragma region 更新
 void SelectScene::Update()
 {
+	// マウスコライダー静的更新
+	MouseColliderCommon::StaticUpdate();
+
 	// input静的更新
 	InputDrawerCommon::StaticUpdate();
 
