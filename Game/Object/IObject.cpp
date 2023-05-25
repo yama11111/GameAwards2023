@@ -1,5 +1,6 @@
 #include "IObject.h"
 #include <cassert>
+#include <imgui.h>
 
 #include "Stage.h"
 
@@ -13,19 +14,19 @@ void IObject::UpdateLeftTop()
 {
 	// ¶ãˆÊ’u
 	Vector3 ltPos = spStageMan_->GetTopLeftPos(GetSignIndex());
+	
+	// ·•ªŒvŽZ
+	Vector3 difference = ltPos - elderLeftTop_;
 
-	// êŠ‚ªˆá‚¤‚Æ‚«
-	if (ltPos.x_ != elderLeftTop_.x_ || ltPos.y_ != elderLeftTop_.y_)
-	{
-		// ·•ªŒvŽZ
-		Vector3 difference = ltPos - elderLeftTop_;
-
-		// ‘ã“ü
-		transform_->pos_ += difference;
-	}
+	// ‘ã“ü
+	transform_->pos_ += difference;
 
 	// ‹L˜^
 	elderLeftTop_ = ltPos;
+	
+	//ImGui::Begin("Object");
+	//ImGui::Text("%f, %f, %f", difference.x_, difference.y_, difference.z_);
+	//ImGui::End();
 }
 
 void IObject::StaticInitialize(Stage* pStageMan)

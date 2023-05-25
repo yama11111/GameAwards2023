@@ -111,6 +111,9 @@ void Block::UpdatePhysics()
 	// ゴールした後は無視
 	//if (isGoal_) { return; }
 
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
+
 	// 移動
 	Move();
 
@@ -173,9 +176,12 @@ void Block::PreUpdate()
 	// 物理挙動更新
 	UpdatePhysics();
 	
-
-	// 着地フラグ初期化
-	ResetIsLanding();
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	{
+		// 着地フラグ初期化
+		ResetIsLanding();
+	}
 
 	// マップチップコライダー更新
 	Update();
@@ -194,8 +200,12 @@ void Block::PostUpdate()
 		Landing();
 	}
 
-	// 移動
-	transform_->pos_ += speed_;
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false) 
+	{
+		// 移動
+		transform_->pos_ += speed_;
+	}
 
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();

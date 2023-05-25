@@ -5,12 +5,12 @@ using namespace YInput;
 
 void Stage::Update(void)
 {
+    MouseCol4Warp();
+
     for (size_t i = 0; i < signVector_.size(); i++)
     {
         signVector_[i]->Update();
     }
-
-    MouseCol4Warp();
 
     DrawDebug();
 }

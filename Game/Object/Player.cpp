@@ -153,7 +153,8 @@ void Player::Landing()
 	jumpCount_ = 0;
 
 	// 着地した瞬間なら
-	if (IsLandingMoment() || (isGrounded_ && isOldGrounded_ == false))
+	if (IsLandingMoment() || (isGrounded_ && isOldGrounded_ == false) && 
+		spStageMan_->isHoldSignVector_[idxSign_] == false)
 	{
 		// 着地アニメーション
 		drawer_.LandingAnimation();
@@ -162,6 +163,9 @@ void Player::Landing()
 
 void Player::UpdatePhysics()
 {
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
+
 	// 移動
 	Move();
 
@@ -207,6 +211,9 @@ void Player::OnCollision(ObjectCollider* pPair)
 {
 	// ゲームクリア時弾く
 	if (isGameClear_) { return; }
+
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
 
 	// ブロックなら
 	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
@@ -335,9 +342,12 @@ void Player::PreUpdate()
 	// 降りるか
 	SetIsGetOff(isGetOffAct_);
 
-
-	// 着地フラグ初期化
-	ResetIsLanding();
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	{
+		// 着地フラグ初期化
+		ResetIsLanding();
+	}
 
 	// マップチップコライダー更新
 	Update();
@@ -356,8 +366,12 @@ void Player::PostUpdate()
  		Landing();
 	}
 
-	// 移動
-	transform_->pos_ += speed_;
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	{
+		// 移動
+		transform_->pos_ += speed_;
+	}
 
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
