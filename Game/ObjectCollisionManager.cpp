@@ -147,23 +147,29 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{
 			// アタリ + 押し戻し
-			if (pColliderA->PerfectPixelCollision(*pColliderB))
-			{
-				pColliderA->OnCollision(pColliderB);
-				pColliderB->OnCollision(pColliderA);
-			}
+			pColliderA->PerfectPixelCollision(*pColliderB);
+			pColliderB->PerfectPixelCollision(*pColliderA);
 
 			return;
 		}
 		// ブロック × ばね
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
-			// アタリ + 押し戻し
-			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			// 調整用コライダー
+			Box2D collA;
+			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+			// 大きさに幅を持たせる
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(-rad.x_ * 0.5f, 0.0f));
+
+			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
 			}
+
+			// アタリ + 押し戻し
+			pColliderA->PerfectPixelCollision(*pColliderB);
 
 			return;
 		}

@@ -87,15 +87,15 @@ void PlayScene::Initialize()
             // 看板生成
             maruyama::Sign* newSign = new maruyama::Sign;
 
+            // 左上設定
+            newSign->topLeftPos_ = StageData::Datas[index][i].leftTop_;
+
             // 大きさ初期化
             newSign->Initialize(
                 { 
                     static_cast<float>(StageData::Datas[index][i].numbers[0].size()), // X
                     static_cast<float>(StageData::Datas[index][i].numbers.size()) // Y
                 });
-
-            // 左上設定
-            newSign->topLeftPos_ = StageData::Datas[index][i].leftTop_;
 
             // Y
             for (size_t y = 0; y < StageData::Datas[index][i].numbers.size(); y++)
@@ -141,6 +141,21 @@ void PlayScene::Initialize()
     {
         // オブジェクトマネージャー初期化
         objMan_.Initialize();
+
+        // ギミックフラグポインタ
+        std::vector<bool*> pGimmickFlags;
+
+        for (size_t i = 0; i < LevelData::Switch::InitStatuses[index].size(); i++)
+        {
+            // ギミックフラグ生成
+            bool gimmickFlag = false;
+            
+            // ギミックフラグポインタ挿入
+            pGimmickFlags.push_back(&gimmickFlag);
+
+            // ギミックフラグ挿入
+            gimmickFlags_.push_back(gimmickFlag);
+        }
 
         // プレイヤー
         {
@@ -217,6 +232,19 @@ void PlayScene::Initialize()
                 // インスタンス生成
                 std::unique_ptr<Platform> newPlatform = std::make_unique<Platform>();
 
+                // ギミックフラグポインタ
+                bool* pGimmickFlag = nullptr;
+
+                // スイッチ番号
+                if (LevelData::Platform::InitStatuses[index][i].switchIdx_ >= 0)
+                {
+                    // インデックス
+                    size_t switchIndex = static_cast<size_t>(LevelData::Platform::InitStatuses[index][i].switchIdx_);
+
+                    // ギミックフラグポインタに代入
+                    pGimmickFlag = pGimmickFlags[switchIndex];
+                }
+
                 // 初期化
                 newPlatform->Initialize(
                     LevelData::Platform::InitStatuses[index][i].signIndex_,
@@ -225,7 +253,8 @@ void PlayScene::Initialize()
                         LevelData::Platform::InitStatuses[index][i].pos_.y_,
                         0.0f,
                     },
-                    LevelData::Platform::InitStatuses[index][i].length_);
+                    LevelData::Platform::InitStatuses[index][i].length_,
+                    pGimmickFlag);
 
                 // 挿入
                 objMan_.PushBack(newPlatform.get());
@@ -242,6 +271,19 @@ void PlayScene::Initialize()
                 // インスタンス生成
                 std::unique_ptr<Laser> newLaser = std::make_unique<Laser>();
 
+                // ギミックフラグポインタ
+                bool* pGimmickFlag = nullptr;
+
+                // スイッチ番号
+                if (LevelData::Platform::InitStatuses[index][i].switchIdx_ >= 0)
+                {
+                    // インデックス
+                    size_t switchIndex = static_cast<size_t>(LevelData::Platform::InitStatuses[index][i].switchIdx_);
+
+                    // ギミックフラグポインタに代入
+                    pGimmickFlag = pGimmickFlags[switchIndex];
+                }
+
                 // 初期化
                 newLaser->Initialize(
                     LevelData::Laser::InitStatuses[index][i].signIndex_,
@@ -255,7 +297,8 @@ void PlayScene::Initialize()
                         LevelData::Laser::InitStatuses[index][i].direction_.y_,
                         0.0f,
                     },
-                    LevelData::Laser::InitStatuses[index][i].length_);
+                    LevelData::Laser::InitStatuses[index][i].length_,
+                    pGimmickFlag);
 
                 // 挿入
                 objMan_.PushBack(newLaser.get());
@@ -271,7 +314,7 @@ void PlayScene::Initialize()
             {
                 // インスタンス生成
                 std::unique_ptr<Switch> newSwitch = std::make_unique<Switch>();
-
+                
                 // 初期化
                 newSwitch->Initialize(
                     LevelData::Switch::InitStatuses[index][i].signIndex_,
@@ -280,7 +323,8 @@ void PlayScene::Initialize()
                         LevelData::Switch::InitStatuses[index][i].pos_.y_,
                         0.0f,
                     },
-                    LevelData::Switch::InitStatuses[index][i].isAct_);
+                    LevelData::Switch::InitStatuses[index][i].isAct_,
+                    pGimmickFlags[i]);
 
                 // 挿入
                 objMan_.PushBack(newSwitch.get());

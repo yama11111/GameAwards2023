@@ -23,6 +23,9 @@ private:
 	// 描画クラス
 	LaserDrawer drawer_;
 
+	// スイッチオンか
+	bool* pIsSwitchOn_ = nullptr;
+
 public:
 
 	/// <summary>
@@ -32,7 +35,12 @@ public:
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="direction"> : 向き</param>
 	/// <param name="length"> : 長さ</param>
-	void Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length);
+	void Initialize(
+		const size_t signIndex, 
+		const YMath::Vector3& pos, 
+		const YMath::Vector3& direction, 
+		const float length,
+		bool* pIsSwitchOn);
 
 	/// <summary>
 	/// リセット (中身だけ初期化)
@@ -41,7 +49,12 @@ public:
 	/// <param name="pos"> : 初期位置</param>
 	/// <param name="direction"> : 向き</param>
 	/// <param name="length"> : 長さ</param>
-	void Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length);
+	void Reset(
+		const size_t signIndex, 
+		const YMath::Vector3& pos, 
+		const YMath::Vector3& direction, 
+		const float length,
+		bool* pIsSwitchOn);
 
 	/// <summary>
 	/// 判定前更新

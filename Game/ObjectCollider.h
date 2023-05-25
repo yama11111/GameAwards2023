@@ -41,6 +41,9 @@ private:
 	// 着地した瞬間か
 	bool isElderLanding_ = false;
 
+	// アタリ判定適用フラグ
+	bool isExist_ = true;
+
 public:
 
 	/// <summary>
@@ -78,12 +81,18 @@ public:
 	void GetIsGetOff(const bool isGetOff) { isGetOff_ = isGetOff; }
 
 
+	// 当たるか
+	bool IsExist() const { return isExist_; }
+	
+	// 当たるか設定
+	void SetIsExist(const bool isExist) { isExist_ = isExist; }
+
+
 	// 着地したか
 	bool IsLanding() { return isLanding_; }
 
 	// 着地した瞬間か
 	bool IsLandingMoment() { return isLanding_ && isElderLanding_ == false; }
-	
 
 	// 着地フラグリセット
 	void ResetIsLanding();

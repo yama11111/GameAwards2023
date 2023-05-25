@@ -10,7 +10,7 @@ using YGame::Transform;
 using YMath::Vector3;
 using YMath::Clamp;
 
-void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isAct)
+void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isAct, bool* pGimmickFlag)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -19,10 +19,10 @@ void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const
 	drawer_.Initialize(transform_.get(), SwitchDrawerCommon::Type::eBlue);
 
 	// リセット
-	Reset(signIndex, pos, isAct);
+	Reset(signIndex, pos, isAct, pGimmickFlag);
 }
 
-void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isAct)
+void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool isAct, bool* pGimmickFlag)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
@@ -32,6 +32,8 @@ void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 
 	// 動作フラグ設定
 	isAct_ = isAct;
+
+	pGimmickFlag_ = pGimmickFlag;
 
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });

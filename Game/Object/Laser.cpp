@@ -16,7 +16,12 @@ using YMath::Clamp;
 // デフォルト回転量
 static Vector3 defRota = YMath::AdjustAngle(Vector3(0.0f, -1.0f, 0.0f).Normalized());
 
-void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length)
+void Laser::Initialize(
+	const size_t signIndex, 
+	const YMath::Vector3& pos, 
+	const YMath::Vector3& direction, 
+	const float length, 
+	bool* pIsSwitchOn)
 {
 	// トランスフォーム生成
 	transform_.reset(new Transform());
@@ -25,13 +30,21 @@ void Laser::Initialize(const size_t signIndex, const YMath::Vector3& pos, const 
 	drawer_.Initialize(transform_.get(), &beamLength_);
 
 	// リセット
-	Reset(signIndex, pos, direction, length);
+	Reset(signIndex, pos, direction, length, pIsSwitchOn);
 }
 
-void Laser::Reset(const size_t signIndex, const YMath::Vector3& pos, const YMath::Vector3& direction, const float length)
+void Laser::Reset(
+	const size_t signIndex, 
+	const YMath::Vector3& pos, 
+	const YMath::Vector3& direction, 
+	const float length, 
+	bool* pIsSwitchOn)
 {
 	// トランスフォーム初期化
 	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
+
+	// スイッチポインタ
+	pIsSwitchOn_ = pIsSwitchOn;
 
 	// 前回左上位置初期化
 	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
@@ -76,6 +89,9 @@ void Laser::PreUpdate()
 
 	// ビームの長さ計算
 	CalcBeamLength();
+
+	// アタリ判定
+	if (pIsSwitchOn_) { SetIsExist(*pIsSwitchOn_); }
 }
 
 void Laser::PostUpdate()
@@ -95,8 +111,16 @@ void Laser::PostUpdate()
 
 void Laser::Draw()
 {
-	// 描画
+	if (pIsSwitchOn_)
+	{
+		if (*pIsSwitchOn_ == false)
+		{
+			return;
+		}
+	}
+	
 	drawer_.Draw();
+
 }
 
 void Laser::OnCollision(ObjectCollider* pPair)
