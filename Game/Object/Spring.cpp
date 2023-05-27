@@ -88,6 +88,9 @@ void Spring::OnCollision(ObjectCollider* pPair)
 		// アクション
 		SetIsActSkill(true);
 
+		// アニメーション
+		drawer_.AnimateJump();
+
 		// ジャンプ
 		pPair->SpeedRef().y_ = jumpPower_;
 	}
