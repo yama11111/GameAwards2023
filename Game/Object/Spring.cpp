@@ -85,6 +85,6 @@ void Spring::OnCollision(ObjectCollider* pPair)
 		if (isUnder == false || pPair->SpeedRef().y_ > 0.0f) { return; }
 
 		// ƒWƒƒƒ“ƒv
-		pPair->SpeedRef().y_ = 3.0f;
+		pPair->SpeedRef().y_ = jumpPower_;
 	}
 }
