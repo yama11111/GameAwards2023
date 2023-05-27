@@ -82,7 +82,7 @@ public:
 
 
 	// “–‚½‚é‚©
-	bool IsExist() const { return isExist_; }
+	bool GetIsExist() const { return isExist_; }
 	
 	// “–‚½‚é‚©İ’è
 	void SetIsExist(const bool isExist) { isExist_ = isExist; }

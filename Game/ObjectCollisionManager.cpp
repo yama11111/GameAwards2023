@@ -49,22 +49,25 @@ void ObjectCollisionManager::CheckAllCollision()
 
 void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, ObjectCollider* pColliderB)
 {
+	// アタリ判定無視するか
+	if (pColliderA->GetIsExist() == false || pColliderB->GetIsExist() == false) { return; }
+
 	// 看板が違うなら弾く
 	if (pColliderA->GetSignIndex() != pColliderB->GetSignIndex()) { return; }
 
 	// プレイヤー
 	if (pColliderA->GetColliderType() == ObjectCollider::Type::ePlayer)
 	{
-		// 調整用コライダー
-		Box2D collA;
-		collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
-		// 大きさに幅を持たせる
-		Vector2 rad = pColliderA->GetBox2DRadSize();
-		collA.SetBox2DRadSize(rad + Vector2(rad.x_ * 0.5f, -(rad.y_ * 0.75f)));
-
 		// プレイヤー × ブロック
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eBlock)
 		{		
+			// 調整用コライダー
+			Box2D collA;
+			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+			// 大きさに幅を持たせる
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ * 1.0f, -(rad.y_ * 0.75f)));
+
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
@@ -81,12 +84,25 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		// プレイヤー × ばね
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSpring)
 		{
-			// アタリ + 押し戻し
-			if (pColliderA->PerfectPixelCollision(*pColliderB))
+			// 調整用コライダー
+			Box2D collA;
+			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+			// 大きさに幅を持たせる
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ * -0.2f, rad.y_ * +0.5f));
+
+			// アタリ
+			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
+
+				return;
 			}
+
+			// 押し戻し
+			pColliderA->PerfectPixelCollision(*pColliderB);
+			pColliderB->PerfectPixelCollision(*pColliderA);
 
 			return;
 		}
@@ -117,6 +133,13 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		// プレイヤー × スイッチ
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eSwitch)
 		{
+			// 調整用コライダー
+			Box2D collA;
+			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+			// 大きさに幅を持たせる
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ * 0.5f, -(rad.y_ * 0.75f)));
+
 			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
@@ -130,7 +153,7 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 		if (pColliderB->GetColliderType() == ObjectCollider::Type::eKey)
 		{
 			// アタリ
-			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
+			if (YGame::CollisionBoxBox2D(*pColliderA, *pColliderB))
 			{
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
@@ -160,16 +183,20 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
 			// 大きさに幅を持たせる
 			Vector2 rad = pColliderA->GetBox2DRadSize();
-			collA.SetBox2DRadSize(rad + Vector2(-rad.x_ * 0.5f, 0.0f));
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ * -0.2f, rad.y_ * +0.5f));
 
+			// アタリ
 			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
 			{
 				pColliderA->OnCollision(pColliderB);
 				pColliderB->OnCollision(pColliderA);
+
+				return;
 			}
 
-			// アタリ + 押し戻し
+			// 押し戻し
 			pColliderA->PerfectPixelCollision(*pColliderB);
+			pColliderB->PerfectPixelCollision(*pColliderA);
 
 			return;
 		}
@@ -197,12 +224,5 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 
 			return;
 		}
-	}
-
-	// 全オブジェクト
-	if (YGame::CollisionBoxBox2D(*pColliderA, *pColliderB))
-	{
-		pColliderA->OnCollision(pColliderB);
-		pColliderB->OnCollision(pColliderA);
 	}
 }

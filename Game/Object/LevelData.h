@@ -17,7 +17,7 @@ namespace LevelData
 		static const float Friction = 0.1f;
 		
 		// ÉWÉÉÉìÉvóÕ
-		static const float JumpPower = 1.5f;
+		static const float JumpPower = 0.8f;
 
 		// èdóÕ
 		static const float Gravity = 0.1f;
@@ -53,7 +53,7 @@ namespace LevelData
 				{0, { 10.0f,-13.0f }},  //  4
 				{0, { +5.0f,-4.0f }},  //  5
 				{2, { +12.0f,-10.0f }},  //  6
-				{0, { +4.0f,-4.0f }},  //  7
+				{1, { +4.0f,-17.0f }},  //  7
 				{0, { 5.0f,-5.0f }},  //  8
 				//{0, { 0.0f,0.0f }},  //  9
 				//{0, { 0.0f,0.0f }},  // 10
@@ -174,8 +174,10 @@ namespace LevelData
 				},
 				//  7
 				{
-					{1,{+11.0f,-23.0f},3.0f},
-					{1,{+17.0f,-23.0f},3.0f},
+					{1,{+ 9.0f,-23.0f},1.5f},
+					{1,{+11.0f,-23.0f},1.5f},
+					{1,{+17.0f,-23.0f},1.5f},
+					{1,{+19.0f,-23.0f},1.5f},
 				},
 				////  8
 				//{
@@ -262,8 +264,8 @@ namespace LevelData
 				},
 				//  7
 				{
-					{1,{+11.0f,-8.5f},2.0f},
-					{1,{+17.0f,-12.5f},2.0f},
+					{1,{+10.0f,-8.5f},3.0f},
+					{1,{+18.0f,-12.5f},3.0f},
 				},
 				////  8
 				//{

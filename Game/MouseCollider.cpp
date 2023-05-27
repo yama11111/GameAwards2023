@@ -3,6 +3,7 @@
 #include "Mouse.h"
 #include <cmath>
 #include <cassert>
+#include <imgui.h>
 
 using YMath::Vector2;
 using YMath::Vector3;
@@ -44,6 +45,10 @@ void MouseColliderCommon::StaticUpdate()
 
 	// マウス位置設定
 	sMouseBox_.SetBox2DCenter(Vector2(worldPos.x_, worldPos.y_));
+
+	//ImGui::Begin("Mouse");
+	//ImGui::Text("%f, %f", worldPos.x_, worldPos.y_);
+	//ImGui::End();
 }
 
 Vector3 MouseColliderCommon::StaticGetMouseWorldPos()

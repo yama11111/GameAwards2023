@@ -69,7 +69,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	trfm_ = *transform_;
 	
 	// マップチップコライダー半径設定
-	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f };
+	radius_ = { LevelData::Player::CollRadSize.x_, LevelData::Player::CollRadSize.y_, 0.0f };
 
 	// マップチップコライダーインデックス設定
 	idxSign_ = signIndex;
@@ -153,7 +153,8 @@ void Player::Landing()
 	jumpCount_ = 0;
 
 	// 着地した瞬間なら
-	if (IsLandingMoment() || (isGrounded_ && isOldGrounded_ == false))
+	if (IsLandingMoment() || (isGrounded_ && isOldGrounded_ == false) && 
+		spStageMan_->isHoldSignVector_[idxSign_] == false)
 	{
 		// 着地アニメーション
 		drawer_.LandingAnimation();
@@ -162,6 +163,9 @@ void Player::Landing()
 
 void Player::UpdatePhysics()
 {
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
+
 	// 移動
 	Move();
 
@@ -208,30 +212,14 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// ゲームクリア時弾く
 	if (isGameClear_) { return; }
 
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
+
 	// ブロックなら
 	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
 		// E でアクション
 		pPair->SetIsActSkill(spKeys_->IsDown(DIK_E));
-	}
-	// ばねなら
-	else if (pPair->GetColliderType() == ObjectCollider::Type::eSpring)
-	{
-		// 上側か
-		bool isUp = transform_->pos_.y_ >= (pPair->GetBox2DCenter().y_ + pPair->GetBox2DRadSize().y_);
-
-		// 上側じゃないなら弾く
-		if (isUp == false || speed_.y_ > 0.0f) { return; }
-
-		// ジャンプ
-		speed_.y_ = 3.0f;
-
-		// アクション
-		pPair->SetIsActSkill(true);
-
-		// 着地フラグ初期化
-		ResetIsLanding();
-		isGrounded_ = false;
 	}
 	// レーザーなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eLaser)
@@ -287,6 +275,7 @@ void Player::DrawDebug(void)
 {
     ImGui::Begin("p");
     ImGui::Text("trfm:%f,%f,%f", trfm_.pos_.x_, trfm_.pos_.y_, trfm_.pos_.z_);
+    ImGui::Text("speed:%f,%f,%f", speed_.x_, speed_.y_, speed_.z_);
     ImGui::End();
 }
 
@@ -335,9 +324,12 @@ void Player::PreUpdate()
 	// 降りるか
 	SetIsGetOff(isGetOffAct_);
 
-
-	// 着地フラグ初期化
-	ResetIsLanding();
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	{
+		// 着地フラグ初期化
+		ResetIsLanding();
+	}
 
 	// マップチップコライダー更新
 	Update();
@@ -356,8 +348,12 @@ void Player::PostUpdate()
  		Landing();
 	}
 
-	// 移動
-	transform_->pos_ += speed_;
+	// 持ってたら弾く
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	{
+		// 移動
+		transform_->pos_ += speed_;
+	}
 
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();

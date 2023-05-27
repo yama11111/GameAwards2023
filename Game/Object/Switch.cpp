@@ -2,6 +2,7 @@
 #include "MathUtillity.h"
 #include <cassert>
 #include <cmath>
+#include <imgui.h>
 
 #include "Stage.h"
 #include "LevelData.h"
@@ -33,7 +34,11 @@ void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	// 動作フラグ設定
 	isAct_ = isAct;
 
+	// フラグポインタ代入
 	pGimmickFlag_ = pGimmickFlag;
+
+	// フラグ更新
+	*pGimmickFlag_ = isAct_;
 
 	// コライダー位置初期化
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
@@ -76,11 +81,19 @@ void Switch::PostUpdate()
 		SetIsActSkill(false);
 	}
 
+	// ギミック動作
+	*pGimmickFlag_ = isAct_;
+
 	// 動作アニメ
 	drawer_.AnimateSwitch(isAct_);
 
 	// 描画クラス更新
 	drawer_.Update();
+
+	ImGui::Begin("Switch");
+	ImGui::Text("%d", pGimmickFlag_);
+	if (pGimmickFlag_) { ImGui::Text("%d", *pGimmickFlag_); }
+	ImGui::End();
 }
 
 void Switch::Draw()
