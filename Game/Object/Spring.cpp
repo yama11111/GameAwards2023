@@ -7,6 +7,7 @@
 #include "LevelData.h"
 
 using YGame::Transform;
+using YMath::Vector2;
 using YMath::Vector3;
 using YMath::Clamp;
 
@@ -37,7 +38,7 @@ void Spring::Reset(const size_t signIndex, const YMath::Vector3& pos, const floa
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
 
 	// コライダーサイズ初期化
-	Box2D::SetBox2DRadSize({ LevelData::Spring::CollRadSize });
+	Box2D::SetBox2DRadSize({ LevelData::Spring::CollRadSize + Vector2(-0.2f, 0.0f) });
 	
 	// コライダータイプ設定
 	ObjectCollider::SetColliderType(ObjectCollider::Type::eSpring);

@@ -69,7 +69,7 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	trfm_ = *transform_;
 	
 	// マップチップコライダー半径設定
-	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f };
+	radius_ = { LevelData::Player::CollRadSize.x_, LevelData::Player::CollRadSize.y_, 0.0f };
 
 	// マップチップコライダーインデックス設定
 	idxSign_ = signIndex;

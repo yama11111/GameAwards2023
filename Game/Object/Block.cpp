@@ -62,7 +62,7 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	trfm_ = *transform_;
 
 	// マップチップコライダー半径設定
-	radius_ = { GetBox2DRadSize().x_, GetBox2DRadSize().y_, 0.0f};
+	radius_ = { LevelData::Block::CollRadSize.x_, LevelData::Block::CollRadSize.y_, 0.0f};
 
 	// マップチップコライダーインデックス設定
 	idxSign_ = signIndex;
