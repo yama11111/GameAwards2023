@@ -124,6 +124,7 @@ namespace maruyama {
 
         inline const Vector3& GetTopLeftPos(void) { return topLeftPos_; }
         Vector3 GetCenterPos(void);
+
     private:
         // (現在地 + vel) - 基準点 で距離算出 ※プレイヤーは看板の基準点より必ず右にいる想定
         // 距離 / ブロックの直径 でマップチップ配列の要素数では何番目に相当する位置か算出 ->CalcElem()で処理

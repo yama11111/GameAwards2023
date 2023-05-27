@@ -116,17 +116,45 @@ void PlayScene::Initialize()
                         continue;
                     }
 
-                    // WARP1
+                    //// BASIC
+                    //if (StageData::Datas[index][i].numbers[y][x] == 2)
+                    //{
+                    //    newSign->ReWriteBlock(x, y, Sign::BlockType::WARP1);
+                    //    continue;
+                    //}
+
+                    //// BASIC
+                    //if (StageData::Datas[index][i].numbers[y][x] == 3)
+                    //{
+                    //    newSign->ReWriteBlock(x, y, Sign::BlockType::WARP2);
+                    //    continue;
+                    //}
+
+                    // WARP1：左
                     if (StageData::Datas[index][i].numbers[y][x] == 2)
                     {
-                        newSign->ReWriteBlock(x, y, Sign::BlockType::WARP1);
+                        newSign->ReWriteBlock2Warp(x, y, Sign::BlockType::WARP1, Sign::Direction::LEFT);
                         continue;
                     }
 
-                    // WARP2
+                    // WARP1：右
                     if (StageData::Datas[index][i].numbers[y][x] == 3)
                     {
-                        newSign->ReWriteBlock(x, y, Sign::BlockType::WARP2);
+                        newSign->ReWriteBlock2Warp(x, y, Sign::BlockType::WARP1,Sign::Direction::RIGHT);
+                        continue;
+                    }
+
+                    // WARP2：上
+                    if (StageData::Datas[index][i].numbers[y][x] == 4)
+                    {
+                        newSign->ReWriteBlock2Warp(x, y, Sign::BlockType::WARP2, Sign::Direction::TOP);
+                        continue;
+                    }
+
+                    // WARP2：下
+                    if (StageData::Datas[index][i].numbers[y][x] == 5)
+                    {
+                        newSign->ReWriteBlock2Warp(x, y, Sign::BlockType::WARP2, Sign::Direction::BOTTOM);
                         continue;
                     }
                 }
