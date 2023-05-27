@@ -8,6 +8,7 @@
 #include "Vector4.h"
 #include "Transform.h"
 #include "BlockDrawer.h"
+#include "JunctionDrawer.h"
 
 #include "YukiMapchipCollider.h"
 #include "MouseCollider.h"
@@ -83,6 +84,7 @@ namespace maruyama {
             Vector2 offset_{};
             Transform transform_{};
             BlockDrawer bd_{};
+            JunctionDrawer jd_{};
 
         public:
             Info_t(Vector3* basePosPtr, const Vector2& offset) : topLeftPosPtr_(basePosPtr), offset_(offset)
@@ -93,6 +95,15 @@ namespace maruyama {
 
             void Initialize(int bt) { // int 0 = 空気判定だが、enum とずれるので対応　差分　-1
                 bd_.Initialize(&transform_, static_cast<BlockDrawerCommon::Type>(bt - 1));
+            }
+
+            void InitializeWarp(int bt, Direction dir) {
+                Vector3 dirV{};
+                if (dir == Direction::RIGHT) dirV = { 1,0,0 };
+                if (dir == Direction::LEFT) dirV = { -1,0,0 };
+                if (dir == Direction::TOP) dirV = { 0,1,0 };
+                if (dir == Direction::BOTTOM) dirV = { 0,-1,0 };
+                jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
             }
 
             void Update(void) {
