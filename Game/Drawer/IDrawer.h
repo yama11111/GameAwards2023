@@ -35,6 +35,12 @@ protected:
 	/// <param name="status"></param>
 	void Update(const YGame::Transform::Status& status);
 
+	/// <summary>
+	/// ペアレントされているか取得
+	/// </summary>
+	/// <returns>ペアレントされているか</returns>
+	bool GetIsParented() { return pParent_ != nullptr; }
+
 protected:
 	
 	// ビュープロジェクションポインタ
