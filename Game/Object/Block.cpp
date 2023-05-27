@@ -120,12 +120,12 @@ void Block::UpdatePhysics()
 	// –€ŽC—Í
 	if (speed_.x_ > 0.0f)
 	{
-		speed_.x_ -= LevelData::Player::Friction * 0.1f;
+		speed_.x_ -= LevelData::Player::Friction;
 		speed_.x_ = (std::max)(0.0f, speed_.x_);
 	}
 	if (speed_.x_ < 0.0f)
 	{
-		speed_.x_ += LevelData::Player::Friction * 0.1f;
+		speed_.x_ += LevelData::Player::Friction;
 		speed_.x_ = (std::min)(0.0f, speed_.x_);
 	}
 

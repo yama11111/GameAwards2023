@@ -76,13 +76,17 @@ void Spring::Draw()
 void Spring::OnCollision(ObjectCollider* pPair)
 {
 	// プレイヤーかブロックなら
-	if (pPair->GetColliderType() == ObjectCollider::Type::eBlock)
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer ||
+		pPair->GetColliderType() == ObjectCollider::Type::eBlock)
 	{
 		// 下側か
-		bool isUnder = transform_->pos_.y_ >= (pPair->GetBox2DCenter().y_ - pPair->GetBox2DRadSize().y_);
+		bool isUnder = transform_->pos_.y_ <= pPair->GetBox2DCenter().y_;
 
 		// 下側じゃないなら弾く
-		if (isUnder == false || pPair->SpeedRef().y_ > 0.0f) { return; }
+		if (isUnder == false) { return; }
+
+		// アクション
+		SetIsActSkill(true);
 
 		// ジャンプ
 		pPair->SpeedRef().y_ = jumpPower_;

@@ -221,25 +221,6 @@ void Player::OnCollision(ObjectCollider* pPair)
 		// E でアクション
 		pPair->SetIsActSkill(spKeys_->IsDown(DIK_E));
 	}
-	// ばねなら
-	else if (pPair->GetColliderType() == ObjectCollider::Type::eSpring)
-	{
-		// 上側か
-		bool isUp = transform_->pos_.y_ >= (pPair->GetBox2DCenter().y_ + pPair->GetBox2DRadSize().y_);
-
-		// 上側じゃないなら弾く
-		if (isUp == false || speed_.y_ > 0.0f) { return; }
-
-		// ジャンプ
-		speed_.y_ = 3.0f;
-
-		// アクション
-		pPair->SetIsActSkill(true);
-
-		// 着地フラグ初期化
-		ResetIsLanding();
-		isGrounded_ = false;
-	}
 	// レーザーなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eLaser)
 	{
@@ -294,6 +275,7 @@ void Player::DrawDebug(void)
 {
     ImGui::Begin("p");
     ImGui::Text("trfm:%f,%f,%f", trfm_.pos_.x_, trfm_.pos_.y_, trfm_.pos_.z_);
+    ImGui::Text("speed:%f,%f,%f", speed_.x_, speed_.y_, speed_.z_);
     ImGui::End();
 }
 
