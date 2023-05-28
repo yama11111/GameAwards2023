@@ -67,12 +67,10 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	// マップチップコライダー初期化
 	YukiMapchipCollider::Initialize();
 	trfm_ = *transform_;
-	
-	// マップチップコライダー半径設定
 	radius_ = { LevelData::Player::CollRadSize.x_, LevelData::Player::CollRadSize.y_, 0.0f };
-
-	// マップチップコライダーインデックス設定
 	idxSign_ = signIndex;
+	YukiMapchipCollider::UpdatePos();
+	
 
 	// 落下フラグをうごかすか
 	isGetOffAct_ = false;
@@ -287,6 +285,17 @@ void Player::Update()
 	
 	// 判定
 	spStageMan_->CallPPC(this);
+	if (isTeleport_)
+	{
+		isTeleport_ = false;
+		isGrounded_ = false;
+		trfm_.pos_ = { roundToDecimal(teleportedPos_.x_, decimalPlace_),roundToDecimal(teleportedPos_.y_,  decimalPlace_),roundToDecimal(teleportedPos_.z_,  decimalPlace_) };
+		idxSign_ = teleportedIdxSign_;
+
+		// 看板インデックス更新
+		SetSignIndex(idxSign_);
+		elderLeftTop_ = spStageMan_->GetTopLeftPos(GetSignIndex());
+	}
 	
 	// 戻す
 	transform_->pos_ = trfm_.pos_;
@@ -295,15 +304,15 @@ void Player::Update()
 
 void Player::PreUpdate()
 {
+	// 座標更新
+	YukiMapchipCollider::UpdatePos();
+    DrawDebug();
+	
 	// 看板インデックス更新
 	SetSignIndex(idxSign_);
 
 	// 左上更新
 	UpdateLeftTop();
-
-	// 座標更新
-	YukiMapchipCollider::UpdatePos();
-    DrawDebug();
 
 	// 物理挙動更新
 	UpdatePhysics();
