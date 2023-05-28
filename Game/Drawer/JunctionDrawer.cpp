@@ -3,6 +3,7 @@
 #include "DrawerConfig.h"
 #include "CoreColor.h"
 #include <cassert>
+#include <imgui.h>
 
 #pragma region 名前空間
 
@@ -186,6 +187,12 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 
 void JunctionDrawer::Update()
 {
+	ImGui::Begin("Junction");
+	ImGui::Text("%p", this);
+	ImGui::Text("%p", pParent_);
+	ImGui::Text("%f, %f, %f", direction_.x_, direction_.y_, direction_.z_);
+	ImGui::End();
+
 	// アニメーション用
 	Vector3 pos{}, rota{}, scale{};
 
@@ -257,7 +264,7 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	SetPartner(pPartner);
 
 	// 向きイージング初期化
-	Vector3 d = Vector3(core_->pos_ - pParent_->pos_);
+	Vector3 d = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
 	alignDirectionEase_.Initialize(direction_, d.Normalized(), Connect::AlignDirection::Exponent);
 
 	// 向きタイマーリセット
@@ -325,7 +332,7 @@ void JunctionDrawer::UpdateConnectAnimation()
 	connectTimer_.Update();
 
 	// ベクトルの大きさ取得
-	float len = Vector3(core_->pos_ - pParent_->pos_).Length() / 25.0f;
+	float len = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 25.0f;
 
 	// アニメ
 	for (size_t i = 0; i < sFrameNum_; i++)
