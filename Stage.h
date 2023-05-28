@@ -32,5 +32,21 @@ public:
     // 変数
     std::vector<std::unique_ptr<Sign>> signVector_;
     std::vector<bool> isHoldSignVector_;
+
+    bool isReset_{};
+
+    // MouseCol4Warp用
+    // WARP
+    size_t mc4w_IdxWarpInfo_start_{};
+    size_t mc4w_idxWarpInfo_end_{};
+    bool mc4w_isConnectingWarp_{};
+    // Sign
+    // オフセット
+    Vector2 mc4w_offset_{};
+    size_t mc4w_idxSign_start_{};
+    size_t mc4w_idxSign_end_{};
+    bool mc4w_isHoldOther_{};
+
+    bool mc4w_isConnectCheck_{};
 };
 

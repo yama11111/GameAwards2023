@@ -496,7 +496,7 @@ void PlayScene::Update()
     //}
 
     // ƒŠƒZƒbƒg
-    if (sKeys_->IsTrigger(DIK_R))
+    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_)
     {
         SceneManager::GetInstance()->Change("PLAY");
     }

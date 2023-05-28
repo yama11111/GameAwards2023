@@ -266,19 +266,19 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
         if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::RIGHT && warpInfos_[idxWarpInfos_].dirPartner_ != Direction::LEFT) return isExecuted;
 
         if (warpInfos_[idxWarpInfos_].isConnected_) {
-            while (1)
-            {
-                isExecuted = true;
-                // 着地フラグtrue
-                ptr->isGrounded_ = true;
-                // 該当pointのy軸座標が、ワープブロックの右辺もしくは左辺に触れたら
-                if (pointX <= topLeftPos_.x_ - (mElemX * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
-                if (pointX >= topLeftPos_.x_ - ((mElemX + 1) * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
+            //while (1)
+            //{
+            //    isExecuted = true;
+            //    // 着地フラグtrue
+            //    ptr->isGrounded_ = true;
+            //    // 該当pointのy軸座標が、ワープブロックの右辺もしくは左辺に触れたら
+            //    if (pointX <= topLeftPos_.x_ - (mElemX * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
+            //    if (pointX >= topLeftPos_.x_ - ((mElemX + 1) * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
 
-                ptr->trfm_.pos_.x_ += approach.x_;
-                ptr->UpdatePos();
-                ptr->UpdatePoint();
-            }
+            //    ptr->trfm_.pos_.x_ += approach.x_;
+            //    ptr->UpdatePos();
+            //    ptr->UpdatePoint();
+            //}
             ptr->isTeleport_ = true;
             Vector3 TLP = warpInfos_[idxWarpInfos_].partnerPtr_->topLeftPos_;
             float offset{};
@@ -290,6 +290,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + 0.2f,
                 0 };
             ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
+            warpInfos_[idxWarpInfos_].isUsed_ = true;
         }
     }
 

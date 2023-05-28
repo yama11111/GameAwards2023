@@ -23,6 +23,7 @@ namespace maruyama {
         using Vector4 = YMath::Vector4;
         using Transform = YGame::Transform;
 
+    public:
         static constexpr float blockRadius_{ 1.f }; // ブロックの半径
         static constexpr float teleportDistance_{ blockRadius_ * 3 }; // Warpブロックから出る際に当ブロックからどの程度離れるか、デフォルトはブロック1.5個分
         static constexpr float warpColRad_{ blockRadius_ / 3 }; 
@@ -31,7 +32,6 @@ namespace maruyama {
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
         static constexpr float springFall_{ 0.5f }; // バネブロック時の落下速度
 
-    public:
         enum class BlockType // ブロックの種類
         {
             NONE,
@@ -78,10 +78,10 @@ namespace maruyama {
 
             void InitializeWarp(int bt, Direction dir) {
                 Vector3 dirV{};
-                if (dir == Direction::RIGHT) dirV = { 1,0,0 };
-                if (dir == Direction::LEFT) dirV = { -1,0,0 };
-                if (dir == Direction::TOP) dirV = { 0,1,0 };
-                if (dir == Direction::BOTTOM) dirV = { 0,-1,0 };
+                if (dir == Direction::RIGHT) dirV = { -1,0,0 };
+                if (dir == Direction::LEFT) dirV = { 1,0,0 };
+                if (dir == Direction::TOP) dirV = { 0,-1,0 };
+                if (dir == Direction::BOTTOM) dirV = { 0,1,0 };
                 jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
                 type_ = static_cast<BlockType>(bt);
             }
@@ -107,6 +107,8 @@ namespace maruyama {
 
             // 自分が接続済みか - 可変
             bool isConnected_{};
+            // 通った（ワープを使用したかどうか）
+            bool isUsed_{};
             // 自分の"ブロック"の配列要素数（看板に帰属） - 不変
             std::pair<size_t, size_t> mapchipElemSelf_{};
             // 自分側の出現方向 - 不変
