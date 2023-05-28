@@ -27,6 +27,7 @@ void YukiMapchipCollider::UpdatePos(void)
         isTeleport_ = false;
         isGrounded_ = false;
         trfm_.pos_ = { roundToDecimal(teleportedPos_.x_, decimalPlace_),roundToDecimal(teleportedPos_.y_,  decimalPlace_),roundToDecimal(teleportedPos_.z_,  decimalPlace_) };
+        idxSign_ = teleportedIdxSign_;
     }
     isOldGrounded_ = isGrounded_;
 

@@ -55,7 +55,7 @@ namespace maruyama {
         struct WarpIdx_t
         {
         public:
-            WarpIdx_t(Direction dirSelf,const std::pair<size_t,size_t>& mces) : dirSelf_(dirSelf),mapchipElemSelf_(mces) {}
+            WarpIdx_t(Direction dirSelf, const std::pair<size_t, size_t>& mces) : dirSelf_(dirSelf), mapchipElemSelf_(mces) {}
 
             // 自分が接続済みか - 可変
             bool isConnected_{};
@@ -65,7 +65,7 @@ namespace maruyama {
             Direction dirSelf_{};
 
             // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
-            std::pair<size_t,size_t> mapchipElemPartner_{};
+            std::pair<size_t, size_t> mapchipElemPartner_{};
             // 相手の"看板"の配列要素数（stageに帰属） - 不変
             size_t IdxPartnerSign_{};
             // 相手側の出現方向 - 不変
@@ -86,6 +86,8 @@ namespace maruyama {
             BlockDrawer bd_{};
             JunctionDrawer jd_{};
 
+            BlockType type_{};
+
         public:
             Info_t(Vector3* basePosPtr, const Vector2& offset) : topLeftPosPtr_(basePosPtr), offset_(offset)
             {
@@ -95,6 +97,7 @@ namespace maruyama {
 
             void Initialize(int bt) { // int 0 = 空気判定だが、enum とずれるので対応　差分　-1
                 bd_.Initialize(&transform_, static_cast<BlockDrawerCommon::Type>(bt - 1));
+                type_ = static_cast<BlockType>(bt);
             }
 
             void InitializeWarp(int bt, Direction dir) {
@@ -104,16 +107,19 @@ namespace maruyama {
                 if (dir == Direction::TOP) dirV = { 0,1,0 };
                 if (dir == Direction::BOTTOM) dirV = { 0,-1,0 };
                 jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
+                type_ = static_cast<BlockType>(bt);
             }
 
             void Update(void) {
                 transform_.pos_ = *topLeftPosPtr_ + Vector3{ offset_.x_,offset_.y_,0 };
                 transform_.UpdateMatrix();
-                bd_.Update();
+                if (type_ == BlockType::BASIC)bd_.Update();
+                else jd_.Update();
             }
 
             void Draw(void) {
-                bd_.Draw();
+                if (type_ == BlockType::BASIC)bd_.Draw();
+                else jd_.Draw();
             }
         };
 
@@ -130,8 +136,8 @@ namespace maruyama {
         // パーフェクトピクセルコリジョン
         void PPC(YukiMapchipCollider* ptr);
         // 空気ブロックを他ブロックに置換できる。それ以外は例外スロー
-        void ReWriteBlock(size_t X,size_t Y,BlockType bt);
-        void ReWriteBlock2Warp(size_t X,size_t Y,BlockType bt, Direction dirSelf);
+        void ReWriteBlock(size_t X, size_t Y, BlockType bt);
+        void ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Direction dirSelf);
 
         inline const Vector3& GetTopLeftPos(void) { return topLeftPos_; }
         Vector3 GetCenterPos(void);

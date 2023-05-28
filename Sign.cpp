@@ -70,6 +70,15 @@ void maruyama::Sign::DrawDebug(void)
     ImGui::Begin("mcollider");
     ImGui::Text("c (%f,%f), r (%f,%f)", mCollider_.GetBox2DCenter().x_, mCollider_.GetBox2DCenter().y_, mCollider_.GetBox2DRadSize().x_, mCollider_.GetBox2DRadSize().y_);
     ImGui::End();
+
+    ImGui::Begin("warpcollider");
+    for (size_t i = 0; i < warpInfos_.size(); i++)
+    {
+        ImGui::Text("c (%f,%f),r (%f,%f)", warpInfos_[i].mCollider_.GetBox2DCenter().x_, warpInfos_[i].mCollider_.GetBox2DCenter().y_, warpInfos_[i].mCollider_.GetBox2DRadSize().x_, warpInfos_[i].mCollider_.GetBox2DRadSize().y_);
+        ImGui::Text(warpInfos_[i].mCollider_.CollisionMousePointer() ? "warpCol : true" : "warpCol : false");
+        ImGui::Text(warpInfos_[i].isConnected_ ? "isConnected : true" : "isConnected : false");
+    }
+    ImGui::End();
 }
 
 void Sign::PPC(YukiMapchipCollider* ptr)
@@ -184,13 +193,13 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
     // ブロックの管理リストへの追加
     BDrawerList_.emplace_back(new Info_t{ &topLeftPos_,Vector2{x * blockRadius_ * 2 + blockRadius_,-y * blockRadius_ * 2 - blockRadius_ } });
     // 当該ブロックの初期化
-    BDrawerList_.back()->Initialize(static_cast<int>(bt));
+    BDrawerList_.back()->InitializeWarp(static_cast<int>(bt), dirSelf);
 
     // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の配列要素数
     WarpIdx_t tempWarpIdx{ dirSelf,{X,Y} };
     tempWarpIdx.mCollider_.SetBox2DCenter({ topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ - y * blockRadius_ * 2 - blockRadius_ });
-    tempWarpIdx.mCollider_.SetBox2DRadSize({ blockRadius_ / 2,blockRadius_ });
-    warpInfos_.emplace_back(WarpIdx_t{ dirSelf,{X,Y} });
+    tempWarpIdx.mCollider_.SetBox2DRadSize({ blockRadius_ / 3,blockRadius_/ 3 });
+    warpInfos_.emplace_back(tempWarpIdx);
 }
 
 inline Sign::Vector3 maruyama::Sign::GetCenterPos(void)
@@ -253,7 +262,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::RIGHT || warpInfos_[idxWarpInfos_].dirPartner_ != Direction::LEFT) return isExecuted;
+        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::RIGHT && warpInfos_[idxWarpInfos_].dirPartner_ != Direction::LEFT) return isExecuted;
 
         if (warpInfos_[idxWarpInfos_].isConnected_) {
             while (1)
@@ -261,7 +270,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 isExecuted = true;
                 // 着地フラグtrue
                 ptr->isGrounded_ = true;
-                // 該当pointのy軸座標が、ワープブロックの上辺もしくは底辺に触れたら
+                // 該当pointのy軸座標が、ワープブロックの右辺もしくは左辺に触れたら
                 if (pointX <= topLeftPos_.x_ - (mElemX * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT) break;
                 if (pointX >= topLeftPos_.x_ - ((mElemX + 1) * blockRadius_ * 2) && warpInfos_[idxWarpInfos_].dirSelf_ == Direction::LEFT) break;
 
@@ -272,12 +281,12 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
             ptr->isTeleport_ = true;
             Vector3 TLP = warpInfos_[idxWarpInfos_].partnerPtr_->topLeftPos_;
             float offset{};
-            warpInfos_[idxWarpInfos_].dirSelf_ == Direction::RIGHT ?
+            warpInfos_[idxWarpInfos_].dirPartner_ == Direction::RIGHT ?
                 offset = +teleportDistance_ :
                 offset = -teleportDistance_;
             ptr->teleportedPos_ = {
                 TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 + offset,
-                TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2,
+                TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + 0.2f,
                 0 };
             ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
         }
@@ -349,7 +358,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::TOP || warpInfos_[idxWarpInfos_].dirPartner_ != Direction::BOTTOM) return isExecuted;
+        if (warpInfos_[idxWarpInfos_].dirPartner_ != Direction::TOP && warpInfos_[idxWarpInfos_].dirPartner_ != Direction::BOTTOM) return isExecuted;
 
         if (warpInfos_[idxWarpInfos_].isConnected_) {
             while (1)
@@ -368,7 +377,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             ptr->isTeleport_ = true;
             Vector3 TLP = warpInfos_[idxWarpInfos_].partnerPtr_->topLeftPos_;
             float offset{};
-            warpInfos_[idxWarpInfos_].dirSelf_ == Direction::TOP ?
+            warpInfos_[idxWarpInfos_].dirPartner_ == Direction::TOP ?
                 offset = +teleportDistance_ :
                 offset = -teleportDistance_;
             ptr->teleportedPos_ = {
