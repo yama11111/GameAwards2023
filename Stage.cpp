@@ -244,13 +244,14 @@ void Stage::MouseCol4Warp(void)
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_ = true;
             // 始点のwarpInfoに終点側の情報を入力
             // <相手の看板のidx保存>
+            // <相手のワープブロックのidx保存>
             // <相手の出現方向保存>
             // <相手のワープブロックの要素数{X,Y}保存>
             // <相手のptr保存>
             // <相手のjd_のptrを使ってアニメーション開始>
             // いけるかなこれ
-
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerSign_ = mc4w_idxSign_end_;
+            signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_ = mc4w_idxWarpInfo_end_;
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirPartner_ = signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirSelf_;
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemPartner_ =
             { signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemSelf_.first,signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemSelf_.second };
@@ -261,6 +262,7 @@ void Stage::MouseCol4Warp(void)
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_ = true;
             // 終点のwarpInfoに始点の情報を入力
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerSign_ = mc4w_idxSign_start_;
+            signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerWarp_ = mc4w_IdxWarpInfo_start_;
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirPartner_ = signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_;
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemPartner_ =
             { signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.first,signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.second };
