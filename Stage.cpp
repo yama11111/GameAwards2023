@@ -268,12 +268,12 @@ void Stage::MouseCol4Warp(void)
         }
         isConnectCheck = false;
     }
-    ImGui::Text("idxSign_S : %d", idxSign_start);
+    /*ImGui::Text("idxSign_S : %d", idxSign_start);
     ImGui::Text("idxSign_E : %d", idxSign_end);
     ImGui::Text("idxWarp_S : %d", idxWarpInfo_start);
     ImGui::Text("idxWarp_E : %d", idxWarpInfo_end);
     ImGui::Text("S:signVec[%d]->warp[%d].isConnected : %d", idxSign_start, idxWarpInfo_start, signVector_[idxSign_start]->warpInfos_[idxWarpInfo_start].isConnected_);
-    ImGui::Text("E:signVec[%d]->warp[%d].isConnected : %d", idxSign_end, idxWarpInfo_end, signVector_[idxSign_end]->warpInfos_[idxWarpInfo_end].isConnected_);
+    ImGui::Text("E:signVec[%d]->warp[%d].isConnected : %d", idxSign_end, idxWarpInfo_end, signVector_[idxSign_end]->warpInfos_[idxWarpInfo_end].isConnected_);*/
 
     ImGui::End();
 }
