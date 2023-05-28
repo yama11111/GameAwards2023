@@ -198,7 +198,7 @@ void maruyama::Sign::ReWriteBlock2Warp(size_t X, size_t Y, BlockType bt, Directi
     // ワープブロックの情報を専用リストに追加してマッピング管理※キーは対象の配列要素数
     WarpIdx_t tempWarpIdx{ dirSelf,{X,Y} };
     tempWarpIdx.mCollider_.SetBox2DCenter({ topLeftPos_.x_ + x * blockRadius_ * 2 + blockRadius_,topLeftPos_.y_ - y * blockRadius_ * 2 - blockRadius_ });
-    tempWarpIdx.mCollider_.SetBox2DRadSize({ blockRadius_ / 3,blockRadius_ / 3 });
+    tempWarpIdx.mCollider_.SetBox2DRadSize({ warpColRad_,warpColRad_ });
     tempWarpIdx.jdPtr_ = BDrawerList_.back().get();
     warpInfos_.emplace_back(tempWarpIdx);
 }

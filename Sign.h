@@ -25,6 +25,7 @@ namespace maruyama {
 
         static constexpr float blockRadius_{ 1.f }; // ブロックの半径
         static constexpr float teleportDistance_{ blockRadius_ * 3 }; // Warpブロックから出る際に当ブロックからどの程度離れるか、デフォルトはブロック1.5個分
+        static constexpr float warpColRad_{ blockRadius_ / 3 }; 
 
         static constexpr float pushOut_{ 0.2f }; // 定期的押し出し時の移動量
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
