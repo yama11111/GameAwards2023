@@ -51,31 +51,6 @@ namespace maruyama {
             BOTTOM,
         };
 
-        // ワープブロックの情報体
-        struct WarpIdx_t
-        {
-        public:
-            WarpIdx_t(Direction dirSelf, const std::pair<size_t, size_t>& mces) : dirSelf_(dirSelf), mapchipElemSelf_(mces) {}
-
-            // 自分が接続済みか - 可変
-            bool isConnected_{};
-            // 自分の"ブロック"の配列要素数（看板に帰属） - 不変
-            std::pair<size_t, size_t> mapchipElemSelf_{};
-            // 自分側の出現方向 - 不変
-            Direction dirSelf_{};
-
-            // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
-            std::pair<size_t, size_t> mapchipElemPartner_{};
-            // 相手の"看板"の配列要素数（stageに帰属） - 不変
-            size_t IdxPartnerSign_{};
-            // 相手側の出現方向 - 不変
-            Direction dirPartner_{};
-            // 相手側のptr - 可変
-            Sign* partnerPtr_{};
-
-            MouseCollider mCollider_{};
-        };
-
         // ブロック全般用情報
         struct Info_t
         {
@@ -122,6 +97,34 @@ namespace maruyama {
                 else jd_.Draw();
             }
         };
+
+        // ワープブロックの情報体
+        struct WarpIdx_t
+        {
+        public:
+            WarpIdx_t(Direction dirSelf, const std::pair<size_t, size_t>& mces) : dirSelf_(dirSelf), mapchipElemSelf_(mces) {}
+
+            // 自分が接続済みか - 可変
+            bool isConnected_{};
+            // 自分の"ブロック"の配列要素数（看板に帰属） - 不変
+            std::pair<size_t, size_t> mapchipElemSelf_{};
+            // 自分側の出現方向 - 不変
+            Direction dirSelf_{};
+            // 自分側のjd_の参照
+            Info_t* jdPtr_{};
+
+            // 相手の"ブロック"の配列要素数（看板に帰属） - 不変
+            std::pair<size_t, size_t> mapchipElemPartner_{};
+            // 相手の"看板"の配列要素数（stageに帰属） - 不変
+            size_t IdxPartnerSign_{};
+            // 相手側の出現方向 - 不変
+            Direction dirPartner_{};
+            // 相手側のptr - 可変
+            Sign* partnerPtr_{};
+
+            MouseCollider mCollider_{};
+        };
+
 
     public:
         // 関数
