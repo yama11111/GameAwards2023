@@ -25,22 +25,22 @@ void Stage::Draw(void)
 
 void Stage::DrawDebug(void)
 {
-    ImGui::Begin("Stage");
-    ImGui::Text("Cursor:%f,%f,%f", MouseColliderCommon::StaticGetMouseWorldPos().x_, MouseColliderCommon::StaticGetMouseWorldPos().y_, MouseColliderCommon::StaticGetMouseWorldPos().z_);
-    for (size_t i = 0; i < isHoldSignVector_.size(); i++)
-    {
-        ImGui::Text(isHoldSignVector_[i] ? "isHold : true" : "isHold : false");
-    }
-    ImGui::End();
+    //ImGui::Begin("Stage");
+    //ImGui::Text("Cursor:%f,%f,%f", MouseColliderCommon::StaticGetMouseWorldPos().x_, MouseColliderCommon::StaticGetMouseWorldPos().y_, MouseColliderCommon::StaticGetMouseWorldPos().z_);
+    //for (size_t i = 0; i < isHoldSignVector_.size(); i++)
+    //{
+    //    ImGui::Text(isHoldSignVector_[i] ? "isHold : true" : "isHold : false");
+    //}
+    //ImGui::End();
 }
 
 void Stage::MouseCol4Warp(void)
 {
-    ImGui::Begin("mouseCol4");
+    //ImGui::Begin("mouseCol4");
 
     // 左クリックを押した瞬間
     if (Mouse::GetInstance()->IsTrigger(MouseClick::DIM_LEFT)) {
-        ImGui::Text("isTriggerLeft : true");
+        //ImGui::Text("isTriggerLeft : true");
         // ----- ワープブロック ----- //
 
         // コライダー全検索
@@ -80,12 +80,12 @@ void Stage::MouseCol4Warp(void)
         }
     }
     else {
-        ImGui::Text("isTriggerLeft : false");
+        //ImGui::Text("isTriggerLeft : false");
     }
 
     // 左クリックを押している間
     if (Mouse::GetInstance()->IsDown(MouseClick::DIM_LEFT)) {
-        ImGui::Text("isDownLeft : true");
+        //ImGui::Text("isDownLeft : true");
         // ----- ワープブロック ----- //
         if (mc4w_isConnectingWarp_) {
             // 始点から現在点まで線を引く
@@ -104,7 +104,7 @@ void Stage::MouseCol4Warp(void)
         }
     }
     else { // 押さなくなった時
-        ImGui::Text("isDownLeft : false");
+        //ImGui::Text("isDownLeft : false");
         // ----- ワープブロック ----- //
         // コライダー全検索
         if (mc4w_isConnectingWarp_) {
@@ -236,7 +236,7 @@ void Stage::MouseCol4Warp(void)
 
             if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isUsed_ || signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isUsed_) {
                 isReset_ = true;
-                ImGui::End();
+                //ImGui::End();
                 return;
             }
 
@@ -276,14 +276,14 @@ void Stage::MouseCol4Warp(void)
         }
         mc4w_isConnectCheck_ = false;
     }
-    ImGui::Text("idxSign_S : %d", mc4w_idxSign_start_);
-    ImGui::Text("idxSign_E : %d", mc4w_idxSign_end_);
-    ImGui::Text("idxWarp_S : %d", mc4w_IdxWarpInfo_start_);
-    ImGui::Text("idxWarp_E : %d", mc4w_idxWarpInfo_end_);
-    ImGui::Text("S:signVec[%d]->warp[%d].isConnected : %d", mc4w_idxSign_start_, mc4w_IdxWarpInfo_start_, signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_);
-    ImGui::Text("E:signVec[%d]->warp[%d].isConnected : %d", mc4w_idxSign_end_, mc4w_idxWarpInfo_end_, signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_);
+    //ImGui::Text("idxSign_S : %d", mc4w_idxSign_start_);
+    //ImGui::Text("idxSign_E : %d", mc4w_idxSign_end_);
+    //ImGui::Text("idxWarp_S : %d", mc4w_IdxWarpInfo_start_);
+    //ImGui::Text("idxWarp_E : %d", mc4w_idxWarpInfo_end_);
+    //ImGui::Text("S:signVec[%d]->warp[%d].isConnected : %d", mc4w_idxSign_start_, mc4w_IdxWarpInfo_start_, signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_);
+    //ImGui::Text("E:signVec[%d]->warp[%d].isConnected : %d", mc4w_idxSign_end_, mc4w_idxWarpInfo_end_, signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_);
 
-    ImGui::End();
+    //ImGui::End();
 }
 
 void Stage::RegisterSign(Sign* ptr)

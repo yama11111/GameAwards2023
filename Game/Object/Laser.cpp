@@ -110,10 +110,10 @@ void Laser::PostUpdate()
 	drawer_.Update();
 
 	
-	ImGui::Begin("Laser");
-	ImGui::Text("%d", pIsSwitchOn_);
-	if (pIsSwitchOn_) { ImGui::Text("%d", *pIsSwitchOn_); }
-	ImGui::End();
+	//ImGui::Begin("Laser");
+	//ImGui::Text("%d", pIsSwitchOn_);
+	//if (pIsSwitchOn_) { ImGui::Text("%d", *pIsSwitchOn_); }
+	//ImGui::End();
 }
 
 void Laser::Draw()

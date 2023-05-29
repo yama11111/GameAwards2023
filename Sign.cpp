@@ -50,7 +50,7 @@ void Sign::Draw(void)
 void maruyama::Sign::DrawDebug(void)
 {
 
-    ImGui::Begin("SignMapchip");
+    /*ImGui::Begin("SignMapchip");
     for (size_t y = 0; y < mapchip_.size(); y++)
     {
         for (size_t x = 0; x < mapchip_[0].size(); x++)
@@ -78,7 +78,7 @@ void maruyama::Sign::DrawDebug(void)
         ImGui::Text(warpInfos_[i].mCollider_.CollisionMousePointer() ? "warpCol : true" : "warpCol : false");
         ImGui::Text(warpInfos_[i].isConnected_ ? "isConnected : true" : "isConnected : false");
     }
-    ImGui::End();
+    ImGui::End();*/
 }
 
 void Sign::PPC(YukiMapchipCollider* ptr)
