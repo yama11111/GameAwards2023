@@ -161,6 +161,11 @@ void Block::Update()
 		isTeleport_ = false;
 		isGrounded_ = false;
 		trfm_.pos_ = { roundToDecimal(teleportedPos_.x_, decimalPlace_),roundToDecimal(teleportedPos_.y_,  decimalPlace_),roundToDecimal(teleportedPos_.z_,  decimalPlace_) };
+		
+		Vector2 pushVec = teleportedVec_.Normalized() * 2.0f;
+
+		trfm_.pos_ += Vector3(pushVec.x_, pushVec.y_, 0.0f);
+		
 		idxSign_ = teleportedIdxSign_;
 
 		// 看板インデックス更新
