@@ -350,6 +350,10 @@ void JunctionDrawer::UpdateConnectAnimation()
 	// ベクトルの大きさ取得
 	float len = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 25.0f;
 
+	// 向きイージング初期化
+	Vector3 d = -Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
+	alignDirectionEase_.SetEnd(d.Normalized());
+
 	// アニメ
 	for (size_t i = 0; i < sFrameNum_; i++)
 	{
