@@ -64,5 +64,6 @@ public:
     bool isTeleport_{};
     Vector3 teleportedPos_{};
     size_t teleportedIdxSign_{};
+    Vector2 teleportedVec_{};
 };
 

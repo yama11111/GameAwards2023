@@ -289,6 +289,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 + offset,
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + 0.2f,
                 0 };
+            ptr->teleportedVec_ = { offset,0.2f };
             ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
             // 自分側のワープブロックをプレイヤーが通過（使用）したかをtrue
             warpInfos_[idxWarpInfos_].isUsed_ = true;
@@ -390,6 +391,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 - offset,
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
                 0 };
+                ptr->teleportedVec_ = { -offset,offset };
             }
             else
             {
@@ -397,6 +399,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                     TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2,
                     TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
                     0 };
+                ptr->teleportedVec_ = { 0,offset };
             }
             ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
             // 自分側のワープブロックをプレイヤーが通過（使用）したかをtrue
