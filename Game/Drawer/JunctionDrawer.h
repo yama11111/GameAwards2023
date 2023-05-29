@@ -42,10 +42,17 @@ protected:
 	// モデル (パーツの数だけ)
 	static std::array<std::array<YGame::Model*, sPartsNum_>, sTypeNum_> spModels_;
 
+	// モデル (グリッド)
+	static YGame::Model* spGridModel_;
+
 	// ----- アニメーション ----- //
 
 	// 立ち回転スピードイージング
 	static YMath::Ease<float> sIdleRotaSpeedEase_;
+
+
+	// 接続時プッシュ大きさ係数イージング
+	static YMath::Ease<float> sConnectPushScaleFactorEase_;
 
 
 	// 接続位置係数イージング
@@ -84,6 +91,9 @@ private:
 
 	// モデル用オブジェクト (子)
 	std::array<std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_>, sFrameNum_> modelObjs_;
+
+	// モデル用オブジェクト (グリッド)
+	std::unique_ptr<YGame::Model::Object> gridModelObjs_;
 
 	// 向き
 	YMath::Vector3 direction_;

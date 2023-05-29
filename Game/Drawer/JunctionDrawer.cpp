@@ -33,8 +33,9 @@ array<array<Model*, JunctionDrawerCommon::sPartsNum_>, JunctionDrawerCommon::sTy
 	nullptr, nullptr,
 	//nullptr, nullptr,
 };
-
+Model* JunctionDrawerCommon::spGridModel_ = nullptr;
 Ease<float> JunctionDrawerCommon::sIdleRotaSpeedEase_{};
+Ease<float> JunctionDrawerCommon::sConnectPushScaleFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectPosFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaSpeedEase_{};
@@ -65,11 +66,15 @@ void JunctionDrawerCommon::StaticInitialize()
 	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/core", true); // 殻
 	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // 殻
 
+	spGridModel_ = Model::LoadObj("grid", true); // グリッド
+
 	// ----- アニメーション ----- //
 
 	// 立ち回転スピードイージング
 	sIdleRotaSpeedEase_.Initialize(Idle::RotaSpeed::Start, Idle::RotaSpeed::End, Idle::RotaSpeed::Exponent);
 
+	sConnectPushScaleFactorEase_.Initialize(0.5f, 1.0f, Connect::PosFactor::Exponent);
+	
 	// 接続位置係数イージング
 	sConnectPosFactorEase_.Initialize(Connect::PosFactor::Start, Connect::PosFactor::End, Connect::PosFactor::Exponent);
 
@@ -109,6 +114,9 @@ void JunctionDrawer::Initialize(Transform* pParent, const Vector3& direction, co
 			modelObjs_[i][j]->parent_ = &core_->m_;
 		}
 	}
+
+	gridModelObjs_.reset(Model::Object::Create(Transform::Status::Default(), spVP_));
+	gridModelObjs_->parent_ = &pParent->m_;
 
 	// リセット
 	Reset(direction, type);
@@ -151,6 +159,9 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 		modelObjs_[i][ShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
 		modelObjs_[i][ShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 	}
+
+	gridModelObjs_->SetColor(CoreColor::ColorPtr(color, shellParts));
+	gridModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 	// パートナー解除
 	pPartner_ = nullptr;
@@ -218,6 +229,7 @@ void JunctionDrawer::Update()
 	// 接続モーション更新
 	UpdateConnectAnimation();
 
+	gridModelObjs_->UpdateMatrix();
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -236,6 +248,8 @@ void JunctionDrawer::Update()
 
 void JunctionDrawer::Draw()
 {
+	spGridModel_->SetDrawCommand(gridModelObjs_.get(), YGame::DrawLocation::Center);
+
 	// モデルの数描画
 	for (size_t i = 0; i < spModels_[typeIndex_].size(); i++)
 	{
@@ -340,9 +354,9 @@ void JunctionDrawer::UpdateConnectAnimation()
 	for (size_t i = 0; i < sFrameNum_; i++)
 	{
 		// 位置係数
-		animePoss_[i].z_ += sConnectPosFactorEase_.Out(connectTimer_.Ratio()) * (len * i);
+		animePoss_[i].z_ += sConnectPosFactorEase_.Out(connectTimer_.Ratio()) * (len * (i + 1));
 
-		// 位置係数
+		// 回転係数
 		animeRotas_[i].z_ += sConnectRotaFactorEase_.Out(connectTimer_.Ratio()) * i;
 
 
@@ -350,7 +364,7 @@ void JunctionDrawer::UpdateConnectAnimation()
 		animeRotas_[i].z_ += sConnectRotaSpeedEase_.Out(connectTimer_.Ratio());
 
 		// 大きさ
-		animeScales_[i] += sConnectScaleEase_.Out(connectTimer_.Ratio());
+		animeScales_[i] += sConnectScaleEase_.Out(connectTimer_.Ratio()) * sConnectPushScaleFactorEase_.Out(connectTimer_.Ratio());
 	}
 
 
