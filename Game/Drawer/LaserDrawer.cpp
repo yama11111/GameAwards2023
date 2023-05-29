@@ -121,18 +121,30 @@ void LaserDrawer::Reset()
 	IDrawer::Reset();
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
-
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
-	pMaterial = CoreColor::MaterialPtr();
-
-	modelObjs_[CoreIdx]->SetColor(pColor);
-	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
+	CoreColor::ColorType color = CoreColor::ColorType::eRed;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 	
-	modelObjs_[BeamIdx]->SetColor(pColor);
-	modelObjs_[BeamIdx]->SetMaterial(pMaterial);
+	modelObjs_[BaseIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[Funnel1Idx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[Funnel1Idx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[Funnel2Idx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[Funnel2Idx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[Funnel3Idx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[Funnel3Idx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[Funnel4Idx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[Funnel4Idx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[BeamIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BeamIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
 
 	// ----- 演出 ----- //
 

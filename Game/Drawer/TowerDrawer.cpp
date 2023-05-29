@@ -82,13 +82,8 @@ void TowerDrawer::Initialize(Transform* pParent, const Type& type)
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		CBMaterial* pMate = nullptr;
-
-		if (i == CoreIdx) { pMate = CoreColor::MaterialPtr(); }
-		else if (i == ShellIdx) { pMate = spUniqueMate_; }
-
 		// 生成
-		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, nullptr, pMate, spUniqueLight_));
+		modelObjs_[i].reset(Model::Object::Create(Transform::Status::Default(), spVP_, nullptr, nullptr , spUniqueLight_));
 
 		// 親行列挿入
 		modelObjs_[i]->parent_ = &core_->m_;
@@ -110,18 +105,24 @@ void TowerDrawer::Reset(const Type& type)
 	typeIndex_ = static_cast<size_t>(type);
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
 	if (type == Type::eBlack)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+		color = CoreColor::ColorType::eGray;
 	}
 	else if (type == Type::eWhite)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
+		color = CoreColor::ColorType::eBlue;
 	}
 
-	modelObjs_[CoreIdx]->SetColor(pColor);
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[ShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 	// オブジェクト初期化(パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

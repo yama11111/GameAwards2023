@@ -58,7 +58,7 @@ void PlatformDrawerCommon::StaticInitialize()
 	// ----- オブジェクト ----- //
 
 	sHologramMate_.reset(CBMaterial::Create());
-	sHologramMate_->SetAlpha(0.25f);
+	sHologramMate_->SetAlpha(0.4f);
 }
 
 #pragma endregion
@@ -89,16 +89,19 @@ void PlatformDrawer::Reset()
 	// リセット
 	IDrawer::Reset();
 
-
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
-		
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
-	pMaterial = sHologramMate_.get();
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
-	modelObjs_[HologramIdx]->SetColor(pColor);
-	modelObjs_[HologramIdx]->SetMaterial(pMaterial);
+	modelObjs_[HologramIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[HologramIdx]->SetMaterial(sHologramMate_.get());
+	
+	modelObjs_[LeftIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[LeftIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	modelObjs_[RightIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[RightIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 }
 
 void PlatformDrawer::Update()

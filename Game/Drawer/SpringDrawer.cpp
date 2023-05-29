@@ -129,20 +129,27 @@ void SpringDrawer::Reset()
 	IDrawer::Reset();
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
-	pMaterial = CoreColor::MaterialPtr();
+	modelObjs_[BaseIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
-	modelObjs_[CoreIdx]->SetColor(pColor);
-	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[TopCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[TopCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
 	
-	modelObjs_[TopCoreIdx]->SetColor(pColor);
-	modelObjs_[TopCoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[TopShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[TopShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
-	modelObjs_[BottomCoreIdx]->SetColor(pColor);
-	modelObjs_[BottomCoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[BottomCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BottomCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[BottomShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BottomShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 
 	// ----- アニメーション ----- //

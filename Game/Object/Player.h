@@ -76,6 +76,12 @@ public:
 	/// </summary>
 	void Draw() override;
 
+	/// <summary>
+	/// ¶‚«‚Ä‚¢‚é‚©æ“¾
+	/// </summary>
+	/// <returns>¶‘¶ƒtƒ‰ƒO</returns>
+	bool IsAlive() const { return isAlive_; }
+
     void DrawDebug(void);
 
 public:

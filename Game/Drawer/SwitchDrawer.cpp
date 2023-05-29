@@ -102,18 +102,27 @@ void SwitchDrawer::Reset(const Type& type)
 	typeIndex_ = static_cast<size_t>(type);
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
-	pMaterial = CoreColor::MaterialPtr();
-
-	modelObjs_[BaseOnCoreIdx]->SetColor(pColor);
-	modelObjs_[BaseOnCoreIdx]->SetMaterial(pMaterial);
-	modelObjs_[BaseOffCoreIdx]->SetColor(pColor);
-	modelObjs_[BaseOffCoreIdx]->SetMaterial(pMaterial);
-	modelObjs_[LeverCoreIdx]->SetColor(pColor);
-	modelObjs_[LeverCoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[BaseOnCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BaseOnCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[BaseOnShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseOnShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[BaseOffCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BaseOffCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[BaseOffShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseOffShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[LeverCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[LeverCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[LeverShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[LeverShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 	// オブジェクト初期化(パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -206,19 +215,37 @@ void SwitchDrawer::UpdateSwitchAnimation()
 
 
 	// 色変更
-	CBColor* pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
+	CoreColor::ColorType color = CoreColor::ColorType::eGray;
 
 	if (switchOnPower_.IsMax())
 	{
 		if (type_ == Type::eBlue)
 		{
-			pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
+			color = CoreColor::ColorType::eBlue;
 		}
 	}
 
-	modelObjs_[BaseOnCoreIdx]->SetColor(pColor);
-	modelObjs_[BaseOffCoreIdx]->SetColor(pColor);
-	modelObjs_[LeverCoreIdx]->SetColor(pColor);
+	// 核の色とマテリアル設定
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
+
+	modelObjs_[BaseOnCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BaseOnCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[BaseOnShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseOnShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	modelObjs_[BaseOffCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BaseOffCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[BaseOffShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[BaseOffShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	modelObjs_[LeverCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[LeverCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[LeverShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[LeverShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 }
 
 #pragma endregion

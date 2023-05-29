@@ -12,7 +12,7 @@ class CoreColor
 
 public:
 
-	// 種類
+	// 色種類
 	enum class ColorType
 	{
 		eGray	 = 0, // 灰色
@@ -22,19 +22,34 @@ public:
 		eEnd, // リサイズ用
 	};
 
-	// 種類の数
-	static const size_t sTypeNum_ = static_cast<size_t>(ColorType::eEnd);
+	// パーツ種類
+	enum class PartsType
+	{
+		eCore = 0, // 核
+		eShell = 1, // 殻
+		eEnd, // リサイズ用
+	};
+
+	// 色種類の数
+	static const size_t sColorTypeNum_ = static_cast<size_t>(ColorType::eEnd);
+	
+	// パーツ種類の数
+	static const size_t sPartsTypeNum_ = static_cast<size_t>(PartsType::eEnd);
 
 private:
 	
-	// 核色
-	static std::array<std::unique_ptr<YGame::CBColor>, sTypeNum_> sColors_;
-
-	// 核色値
-	static std::array<YMath::Vector3, sTypeNum_> sColorValues_;
+	// 色
+	static std::array<std::array<std::unique_ptr<YGame::CBColor>, sColorTypeNum_>, sPartsTypeNum_> sColors_;
 
 	// マテリアル
-	static std::unique_ptr<YGame::CBMaterial> sMate_;
+	static std::array<std::array<std::unique_ptr<YGame::CBMaterial>, sColorTypeNum_>, sPartsTypeNum_> sMates_;
+
+
+	// 色値
+	static std::array<std::array<YMath::Vector3, sColorTypeNum_>, sPartsTypeNum_> sColorValues_;
+
+	// マテリアル値
+	static std::array<std::array<YMath::Vector3, sColorTypeNum_>, sPartsTypeNum_> sMateValues_;
 
 
 	// 核色明滅パワー
@@ -54,17 +69,17 @@ private:
 	static YMath::Timer sUnifyTim_;
 
 	// 色統一用イージング
-	static std::array<YMath::Ease<YMath::Vector3>, sTypeNum_> sUnifyColorEass_;
+	static std::array<std::array<YMath::Ease<YMath::Vector3>, sColorTypeNum_>, sPartsTypeNum_ > sUnifyColorEass_;
 	
 	// マテリアル統一用イージング
-	static YMath::Ease<YMath::Vector3> sUnifyMaterialEas_;
+	static std::array<std::array<YMath::Ease<YMath::Vector3>, sColorTypeNum_>, sPartsTypeNum_ > sUnifyMateEass_;
 
 public:
 
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
-	static void StaticInitialize(const bool isPlay);
+	static void StaticInitialize();
 
 	/// <summary>
 	/// 静的リセット
@@ -81,8 +96,8 @@ public:
 	/// <summary>
 	/// クリア演出 (全ての色を統一する)
 	/// </summary>
-	/// <param name="colorType"> : 色のタイプ</param>
-	static void StaticClearAnimation(const ColorType& colorType);
+	/// <param name="colorType"> : 色タイプ</param>
+	static void StaticClearAnimation(const ColorType colorType);
 
 public:
 
@@ -90,21 +105,17 @@ public:
 	/// 色ポインタ取得
 	/// </summary>
 	/// <param name="colorType"> : 色のタイプ</param>
+	/// <param name="partsType"> : パーツタイプ</param>
 	/// <returns>対応する色のポインタ</returns>
-	static YGame::CBColor* ColorPtr(const ColorType& colorType);
-
-	/// <summary>
-	/// 色ポインタ取得
-	/// </summary>
-	/// <param name="index"> : インデックス</param>
-	/// <returns>対応する色のポインタ</returns>
-	static YGame::CBColor* ColorPtr(const size_t& index);
+	static YGame::CBColor* ColorPtr(const ColorType colorType, const PartsType partsType);
 
 	/// <summary>
 	/// マテリアルポインタ取得
 	/// </summary>
+	/// <param name="colorType"> : 色のタイプ</param>
+	/// <param name="partsType"> : パーツタイプ</param>
 	/// <returns>マテリアルのポインタ</returns>
-	static YGame::CBMaterial* MaterialPtr();
+	static YGame::CBMaterial* MaterialPtr(const ColorType colorType, const PartsType partsType);
 
 };
 

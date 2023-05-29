@@ -89,17 +89,18 @@ void KeyDrawer::Reset()
 	IDrawer::Reset();
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
-	pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
-	pMaterial = CoreColor::MaterialPtr();
+	modelObjs_[BladeIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[BladeIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
 
-	modelObjs_[BladeIdx]->SetColor(pColor);
-	modelObjs_[BladeIdx]->SetMaterial(pMaterial);
-
-	modelObjs_[RingCoreIdx]->SetColor(pColor);
-	modelObjs_[RingCoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[RingCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[RingCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[RingShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[RingShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 	// オブジェクト初期化(パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

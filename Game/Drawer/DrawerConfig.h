@@ -745,30 +745,76 @@ namespace DrawerConfig
 	// 核
 	namespace CoreColorConfig
 	{
-		// 色
-		namespace Color
+		// 核
+		namespace Core
 		{
-			// グレー
-			const YMath::Vector3 Gray	 = { 0.30f, 0.30f, 0.30f };
+			// 色
+			namespace Color
+			{
+				// グレー
+				const YMath::Vector3 Gray	 = { 0.30f, 0.30f, 0.30f };
 
-			// 赤
-			const YMath::Vector3 Red	 = { 0.60f, 0.00f, 0.00f };
+				// 赤
+				const YMath::Vector3 Red	 = { 0.60f, 0.00f, 0.00f };
 
-			// 緑
-			const YMath::Vector3 Green	 = { 0.00f, 0.60f, 0.00f };
+				// 緑
+				const YMath::Vector3 Green	 = { 0.00f, 0.60f, 0.00f };
 
-			// 青
-			const YMath::Vector3 Blue	 = { 0.05f, 0.20f, 0.90f };
+				// 青
+				const YMath::Vector3 Blue	 = { 0.05f, 0.20f, 0.90f };
+			}
+
+			// アンビエント
+			namespace Material
+			{
+				// グレー
+				const YMath::Vector3 Gray	 = { 1.00f, 1.00f, 1.00f };
+
+				// 赤
+				const YMath::Vector3 Red	 = { 1.00f, 1.00f, 1.00f };
+
+				// 緑
+				const YMath::Vector3 Green	 = { 1.00f, 1.00f, 1.00f };
+
+				// 青
+				const YMath::Vector3 Blue	 = { 1.00f, 1.00f, 1.00f };
+			}
 		}
 
-		// アンビエント
-		namespace Ambient
+		// 殻
+		namespace Shell
 		{
-			// 通常
-			const YMath::Vector3 Normal = { 0.5f, 0.5f, 0.5f };
+			// 色
+			namespace Color
+			{
+				// グレー
+				const YMath::Vector3 Gray	 = { 0.50f, 0.50f, 0.50f };
 
-			// 青
-			const YMath::Vector3 Blue = { 0.7f, 0.7f, 0.8f };
+				// 赤
+				const YMath::Vector3 Red	 = { 0.80f, 0.40f, 0.40f };
+
+				// 緑
+				const YMath::Vector3 Green	 = { 0.40f, 0.80f, 0.40f };
+
+				// 青
+				const YMath::Vector3 Blue	 = { 0.60f, 0.60f, 0.90f };
+			}
+
+			// アンビエント
+			namespace Material
+			{
+				// グレー
+				const YMath::Vector3 Gray	 = { 1.00f, 1.00f, 1.00f };
+
+				// 赤
+				const YMath::Vector3 Red	 = { 1.00f, 1.00f, 1.00f };
+
+				// 緑
+				const YMath::Vector3 Green	 = { 1.00f, 1.00f, 1.00f };
+
+				// 青
+				const YMath::Vector3 Blue	 = { 1.00f, 1.00f, 1.00f };
+			}
 		}
 
 

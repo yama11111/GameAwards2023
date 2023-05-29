@@ -10,7 +10,9 @@
 using std::array;
 using std::unique_ptr;
 
+using YGame::Texture;
 using YGame::Transform;
+using YGame::Sprite3D;
 using YGame::Model;
 using YGame::CBColor;
 using YGame::CBMaterial;
@@ -30,6 +32,7 @@ using namespace DrawerConfig::Background;
 #pragma region Static
 
 YGame::ParticleManager* BackgroundDrawerCommon::spParticleMan_ = nullptr;
+Sprite3D* BackgroundDrawerCommon::spCurtenSpr3D_ = nullptr;
 unique_ptr<CBMaterial> BackgroundDrawerCommon::sBackMate_;
 unique_ptr<CBLightGroup> BackgroundDrawerCommon::sBackLight_;
 bool BackgroundDrawerCommon::sIsUnify_ = false;
@@ -47,8 +50,9 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ParticleManager* pParticleM
 	// 代入
 	spParticleMan_ = pParticleMan;
 
-
 	// 生成
+	spCurtenSpr3D_ = Sprite3D::Create(Texture::Load("white1x1.png"));
+
 	sBackMate_.reset(CBMaterial::Create());
 	sBackMate_->SetAmbient(Ambient);
 
@@ -71,7 +75,7 @@ void BackgroundDrawerCommon::StaticInitialize(YGame::ParticleManager* pParticleM
 	TowerDrawerCommon::StaticInitialize(sBackMate_.get(), sBackLight_.get());
 
 	// 天球
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray, CoreColor::PartsType::eCore));
 }
 
 void BackgroundDrawerCommon::StaticReset()
@@ -112,12 +116,21 @@ void BackgroundDrawerCommon::StaticUnify()
 
 void BackgroundDrawer::Initialize()
 {
+	// タワー初期化
+	InitializeTowers();
+	
 	// 天球
 	skydome_.Initialize();
 	
 	// 天球描画クラス
 	skydomeDra_.Initialize(&skydome_.m_, SkydomeSize);
 
+	// カーテン色
+	curtenColor_.reset(CBColor::Create({ 0.0f,0.0f,0.0f,0.75f }));
+
+	// カーテン
+	curtenSprObj_.reset(Sprite3D::Object::Create());
+	curtenSprObj_->SetColor(curtenColor_.get());
 
 	// 泡グリッド発生用タイマー
 	emitBubbleGridTim_.Initialize(BubbleGrid::IntervalFrame);
@@ -129,15 +142,14 @@ void BackgroundDrawer::Initialize()
 
 void BackgroundDrawer::Reset()
 {
-	// タワー初期化
-	InitializeTowers();
-
 	// 天球
 	skydome_.Initialize();
 
 	// 天球描画クラス
 	skydomeDra_.Reset(SkydomeSize);
 
+	// カーテン
+	curtenSprObj_->Initialize({ {0.0f, 0.0f, 5.0f}, {}, {500.0f, 200.0f, 0.0f} });
 
 	// 泡グリッド発生用タイマー
 	emitBubbleGridTim_.Reset(true);
@@ -193,6 +205,9 @@ void BackgroundDrawer::Update()
 	// 天球描画クラス
 	skydomeDra_.Update();
 
+	// カーテン更新
+	curtenSprObj_->UpdateMatrix();
+
 	// エミッター更新
 	UpdateEmitter();
 }
@@ -206,8 +221,11 @@ void BackgroundDrawer::Draw()
 	for (std::unique_ptr<Tower>& tower : towers_)
 	{
 		// 描画
-		tower->drawer_.Draw(YGame::DrawLocation::Center);
+		tower->drawer_.Draw(YGame::DrawLocation::Back);
 	}
+
+	// カーテン
+	spCurtenSpr3D_->SetDrawCommand(curtenSprObj_.get(), YGame::DrawLocation::Back);
 }
 
 void BackgroundDrawer::UpdateEmitter()

@@ -59,7 +59,7 @@ void GoalDrawerCommon::StaticInitialize()
 
 #pragma region Drawer
 
-void GoalDrawer::Initialize(YGame::Transform* pParent)
+void GoalDrawer::Initialize(YGame::Transform* pParent, const bool isRock)
 {
 	// 基底クラス初期化
 	IDrawer::Initialze(pParent);
@@ -100,10 +100,10 @@ void GoalDrawer::Initialize(YGame::Transform* pParent)
 
 
 	// リセット
-	Reset();
+	Reset(isRock);
 }
 
-void GoalDrawer::Reset()
+void GoalDrawer::Reset(const bool isRock)
 {
 	// リセット
 	IDrawer::Reset();
@@ -119,15 +119,35 @@ void GoalDrawer::Reset()
 		modelObjs_[i]->Initialize(Transform::Status::Default());
 	}
 
-	// 核の色設定
-	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
-	modelObjs_[InsideCoreIdx] ->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
-	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(CoreColor::ColorType::eBlue));
+	// 核の色とマテリアル設定
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
+
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[InsideIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[InsideIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[InsideCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[InsideCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+	
+	modelObjs_[OutsideIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[OutsideIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	
+	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[OutsideCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
 
 	// ----- アニメーション初期化 ----- //
 	
 	// クリアフラグ
 	isClear_ = false;
+
+	// ロックフラグ
+	isRock_ = isRock;
+
 
 	// 縛る回転タイマー
 	bindRotaTim_.Reset(true);

@@ -95,22 +95,24 @@ void BlockDrawer::Reset(const Type& type)
 	typeIndex_ = static_cast<size_t>(type);
 
 	// 核の色とマテリアル設定
-	CBColor * pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 
 	if (type == Type::eBlack)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGray);
-		pMaterial = CoreColor::MaterialPtr();
+		color = CoreColor::ColorType::eGray;
 	}
 	else if (type == Type::eWhite)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eBlue);
-		pMaterial = CoreColor::MaterialPtr();
+		color = CoreColor::ColorType::eBlue;
 	}
 
-	modelObjs_[CoreIdx]->SetColor(pColor);
-	modelObjs_[CoreIdx]->SetMaterial(pMaterial);
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[ShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[ShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
 	// オブジェクト初期化(パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)

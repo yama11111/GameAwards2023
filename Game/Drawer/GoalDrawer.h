@@ -64,6 +64,9 @@ private:
 
 	// クリア演出
 	bool isClear_ = false;
+	
+	// ロックフラグ
+	bool isRock_ = false;
 
 
 	// ログインフラグ
@@ -104,12 +107,14 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="pParent"> : 親ポインタ (この行列に追従する)</param>
-	void Initialize(YGame::Transform* pParent);
+	/// <param name="isRock"> : ロックするか</param>
+	void Initialize(YGame::Transform* pParent, const bool isRock);
 	
 	/// <summary>
 	/// リセット (中身だけ初期化)
 	/// </summary>
-	void Reset();
+	/// <param name="isRock"> : ロックするか</param>
+	void Reset(const bool isRock);
 
 	/// <summary>
 	/// 更新

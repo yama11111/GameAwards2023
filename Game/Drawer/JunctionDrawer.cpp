@@ -129,25 +129,27 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	typeIndex_ = static_cast<size_t>(type);
 
 	// 核の色とマテリアル設定
-	CBColor* pColor = nullptr;
-	CBMaterial* pMaterial = nullptr;
-
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
+	
 	if (type == Type::eGreen)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eGreen);
-		pMaterial = CoreColor::MaterialPtr();
+		color = CoreColor::ColorType::eGreen;
 	}
 	else if (type == Type::eRed)
 	{
-		pColor = CoreColor::ColorPtr(CoreColor::ColorType::eRed);
-		pMaterial = CoreColor::MaterialPtr();
+		color = CoreColor::ColorType::eRed;
 	}
 
 	// カラーとマテリアル設定
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i][CoreIdx]->SetColor(pColor);
-		modelObjs_[i][CoreIdx]->SetMaterial(pMaterial);
+		modelObjs_[i][CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+		modelObjs_[i][CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+		
+		modelObjs_[i][ShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+		modelObjs_[i][ShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 	}
 
 	// パートナー解除
@@ -187,11 +189,11 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 
 void JunctionDrawer::Update()
 {
-	ImGui::Begin("Junction");
-	ImGui::Text("%p", this);
-	ImGui::Text("%p", pParent_);
-	ImGui::Text("%f, %f, %f", direction_.x_, direction_.y_, direction_.z_);
-	ImGui::End();
+	//ImGui::Begin("Junction");
+	//ImGui::Text("%p", this);
+	//ImGui::Text("%p", pParent_);
+	//ImGui::Text("%f, %f, %f", direction_.x_, direction_.y_, direction_.z_);
+	//ImGui::End();
 
 	// アニメーション用
 	Vector3 pos{}, rota{}, scale{};
@@ -264,7 +266,7 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	SetPartner(pPartner);
 
 	// 向きイージング初期化
-	Vector3 d = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
+	Vector3 d = -Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
 	alignDirectionEase_.Initialize(direction_, d.Normalized(), Connect::AlignDirection::Exponent);
 
 	// 向きタイマーリセット

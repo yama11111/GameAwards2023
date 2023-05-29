@@ -81,13 +81,13 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	sEarthLight_->SetDirectionalLightDirection(0, Earth::Light::Direction::Dire);
 
 	// 核色
-	CoreColor::StaticInitialize(false);
+	CoreColor::StaticInitialize();
 
 	// タワー
 	TowerDrawerCommon::StaticInitialize(sTowerMate_.get(), sTowerLight_.get());
 
 	// 天球
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray, CoreColor::PartsType::eCore));
 
 
 	// レターボックス

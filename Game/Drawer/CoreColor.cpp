@@ -24,9 +24,11 @@ using namespace DrawerConfig::CoreColorConfig;
 
 #pragma region Static
 
-array<unique_ptr<CBColor>, CoreColor::sTypeNum_> CoreColor::sColors_;
-array<Vector3, CoreColor::sTypeNum_> CoreColor::sColorValues_;
-unique_ptr<CBMaterial> CoreColor::sMate_;
+array<array<unique_ptr<CBColor>, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sColors_;
+array<array<unique_ptr<CBMaterial>, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sMates_;
+
+array<array<Vector3, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sColorValues_;
+array<array<Vector3, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sMateValues_;
 
 Power CoreColor::sFlickeringPow_;
 bool CoreColor::sIsSwitchFlickeringPow_ = false;
@@ -34,29 +36,59 @@ Ease<float> CoreColor::sFlickeringColorRateEas_;
 
 bool CoreColor::sIsUnify_ = false;
 Timer CoreColor::sUnifyTim_;
-array<Ease<Vector3>, CoreColor::sTypeNum_> CoreColor::sUnifyColorEass_;
-Ease<Vector3> CoreColor::sUnifyMaterialEas_;
+array<array<Ease<Vector3>, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sUnifyColorEass_;
+array<array<Ease<Vector3>, CoreColor::sColorTypeNum_>, CoreColor::sPartsTypeNum_> CoreColor::sUnifyMateEass_;
 
 #pragma endregion
 
-void CoreColor::StaticInitialize(const bool isPlay)
+#pragma region Index
+
+static const size_t CoreIdx = static_cast<size_t>(CoreColor::PartsType::eCore);
+static const size_t ShellIdx = static_cast<size_t>(CoreColor::PartsType::eShell);
+
+#pragma endregion
+
+
+void CoreColor::StaticInitialize()
 {
-	// 色
-	for (size_t i = 0; i < sColors_.size(); i++)
+	// 生成
+	for (size_t i = 0; i < sPartsTypeNum_; i++)
 	{
-		// 生成
-		sColors_[i]. reset(CBColor::Create());
+		for (size_t j = 0; j < sColorTypeNum_; j++)
+		{
+			// 色
+			sColors_[i][j].reset(CBColor::Create());
+
+			// マテリアル
+			sMates_[i][j].reset(CBMaterial::Create());
+		}
 	}
 
 	// 色値
-	sColorValues_ = { Color::Gray, Color::Red, Color::Green, Color::Blue };
+	sColorValues_ = 
+	{
+		{
+			{
+				Core::Color::Gray, Core::Color::Red, Core::Color::Green, Core::Color::Blue 
+			},
+			{
+				Shell::Color::Gray, Shell::Color::Red, Shell::Color::Green, Shell::Color::Blue
+			}
+		}
+	};
 
-	// マテリアル
-	sMate_.reset(CBMaterial::Create(Ambient::Normal));
-
-
-	// 色統一用タイマー
-	sUnifyTim_.Initialize(Unify::Frame);
+	// マテリアル値
+	sMateValues_ =
+	{
+		{
+			{
+				Core::Material::Gray, Core::Material::Red, Core::Material::Green, Core::Material::Blue
+			},
+			{
+				Shell::Material::Gray, Shell::Material::Red, Shell::Material::Green, Shell::Material::Blue
+			}
+		}
+	};
 
 
 	// 明滅パワー
@@ -65,34 +97,39 @@ void CoreColor::StaticInitialize(const bool isPlay)
 	// 明滅色イージング
 	sFlickeringColorRateEas_.Initialize(Flickering::Start, Flickering::End, Flickering::Exponent);
 
+
+	// 色統一用タイマー
+	sUnifyTim_.Initialize(Unify::Frame);
+
 	// リセット
 	StaticReset();
 }
 
 void CoreColor::StaticReset()
 {
-	// 色の数だけ
-	for (size_t i = 0; i < sColors_.size(); i++)
+	// 初期化
+	for (size_t i = 0; i < sPartsTypeNum_; i++)
 	{
-		// 核色初期化
-		sColors_[i] ->SetRGB(sColorValues_[i]);
 		
-		// 核色値初期化
-		sUnifyColorEass_[i].Initialize({}, {}, 0.0f);
+		for (size_t j = 0; j < sColorTypeNum_; j++)
+		{
+			// アルファ値
+			//sColors_[CoreIdx][j]->SetAlpha(0.75f);
+			
+			// 色
+			sColors_[i][j]->SetRGB(sColorValues_[i][j]);
+
+			// マテリアル
+			sMates_[i][j]->SetAmbient(sMateValues_[i][j]);
+
+
+			// 色イージング
+			sUnifyColorEass_[i][j].Initialize({}, {}, 0.0f);
+
+			// マテリアルイージング
+			sUnifyMateEass_[i][j].Initialize({}, {}, 0.0f);
+		}
 	}
-
-	// 核マテリアル値初期化
-	sMate_->SetAmbient(Ambient::Normal);
-	
-	// 核マテリアル値初期化
-	sUnifyMaterialEas_.Initialize({}, {}, 0.0f);
-
-
-	// 色統一用フラグ
-	sIsUnify_ = false;
-
-	// 色統一用タイマー
-	sUnifyTim_.Reset(false);
 
 
 	// 明滅パワーリセット
@@ -100,6 +137,13 @@ void CoreColor::StaticReset()
 
 	// 明滅パワースイッチオン
 	sIsSwitchFlickeringPow_ = true;
+
+
+	// 色統一用フラグ
+	sIsUnify_ = false;
+
+	// 色統一用タイマー
+	sUnifyTim_.Reset(false);
 }
 
 void CoreColor::StaticUpdate()
@@ -139,43 +183,43 @@ void CoreColor::StaticUpdate()
 	// タイマー更新
 	sUnifyTim_.Update();
 
-	// 核色毎に
-	for (size_t i = 0; i < sColors_.size(); i++)
+	// 色毎に
+	for (size_t i = 0; i < sPartsTypeNum_; i++)
 	{
-		// 設定色
-		Vector3 color{};
-		
-		// 統一中なら
-		if (sIsUnify_)
+		for (size_t j = 0; j < sColorTypeNum_; j++)
 		{
-			// イーズイン
-			color = sUnifyColorEass_[i].In(sUnifyTim_.Ratio()) * rate;
-		}
-		// それ以外なら
-		else
-		{
-			// 色値 * 割合
-			color = sColorValues_[i] * rate;
-		}
+			// 設定色, マテリアル
+			Vector3 color{}, mate{};
 
-		// 色更新
-		sColors_[i]->SetRGB(color);
+			// 統一中なら
+			if (sIsUnify_)
+			{
+				// イーズイン
+				color = sUnifyColorEass_[i][j].In(sUnifyTim_.Ratio()) * rate;
+				mate  = sUnifyMateEass_[i][j].In(sUnifyTim_.Ratio());
+			}
+			// それ以外なら
+			else
+			{
+				// 値 * 割合
+				color = sColorValues_[i][j] * rate;
+				mate  = sMateValues_[i][j];
+			}
+
+			// 更新
+			sColors_[i][j]->SetRGB(color);
+			sMates_[i][j]->SetAmbient(mate);
+		}
 	}
 
-	// 統一中なら
-	if (sIsUnify_)
-	{
-		// イーズイン
-		sMate_->SetAmbient(sUnifyMaterialEas_.In(sUnifyTim_.Ratio()));
-	}
-
+	// 統一後終了
 	if (sUnifyTim_.IsEnd())
 	{
 		YScene::SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 10, 10);
 	}
 }
 
-void CoreColor::StaticClearAnimation(const ColorType& colorType)
+void CoreColor::StaticClearAnimation(const ColorType colorType)
 {
 	// 統一開始
 	sIsUnify_ = true;
@@ -183,50 +227,47 @@ void CoreColor::StaticClearAnimation(const ColorType& colorType)
 	// インデックス
 	size_t idx = static_cast<size_t>(colorType);
 
-	// 最終値設定
-	Vector3 end = Vector3(sColorValues_[idx]);
-
-	// 色の数だけ
-	for (size_t i = 0; i < sColors_.size(); i++)
+	for (size_t i = 0; i < sPartsTypeNum_; i++)
 	{
-		// 初期値設定
-		Vector3 start = sColorValues_[i];
+		// 最終値設定
+		Vector3 endColor = Vector3(sColorValues_[i][idx]);
+		Vector3 endMate = Vector3(sMateValues_[i][idx]);
+		
+		// 色の数だけ
+		for (size_t j = 0; j < sColorTypeNum_; j++)
+		{
+			// 初期値設定
+			Vector3 startColor = sColorValues_[i][j];
+			Vector3 startMate = sMateValues_[i][j];
 
-		// 色統一用イージング初期化
-		sUnifyColorEass_[i].Initialize(start, end, Unify::Exponent);
+			// 色統一用イージング初期化
+			sUnifyColorEass_[i][j].Initialize(startColor, endColor, Unify::Exponent);
+
+			// マテリアル統一用イージング初期化
+			sUnifyMateEass_[i][j].Initialize(startMate, endMate, Unify::Exponent);
+		}
 	}
-
-	// マテリアル統一用イージング初期化
-	sUnifyMaterialEas_.Initialize(Ambient::Normal, Ambient::Blue, Unify::Exponent);
 
 	// タイマーリセット + 開始
 	sUnifyTim_.Reset(true);
 }
 
-CBColor* CoreColor::ColorPtr(const ColorType& colorType)
+CBColor* CoreColor::ColorPtr(const ColorType colorType, const PartsType partsType)
 {
 	// インデックス
-	size_t idx = static_cast<size_t>(colorType);
+	size_t colorIdx = static_cast<size_t>(colorType);
+	size_t partsIdx = static_cast<size_t>(partsType);
 
 	// 色ポインタを返す
-	return sColors_[idx].get();
+	return sColors_[partsIdx][colorIdx].get();
 }
 
-CBColor* CoreColor::ColorPtr(const size_t& index)
+CBMaterial* CoreColor::MaterialPtr(const ColorType colorType, const PartsType partsType)
 {
 	// インデックス
-	size_t idx = index;
+	size_t colorIdx = static_cast<size_t>(colorType);
+	size_t partsIdx = static_cast<size_t>(partsType);
 
-	// クランプ
-	if (idx <= 0) { idx = 0; }
-	if (idx >= sColors_.size() - 1) { idx = sColors_.size() - 1; }
-
-	// 色ポインタを返す
-	return sColors_[idx].get();
-}
-
-CBMaterial* CoreColor::MaterialPtr()
-{
 	// マテリアルポインタを返す
-	return sMate_.get();
+	return sMates_[partsIdx][colorIdx].get();
 }

@@ -72,6 +72,9 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	YukiMapchipCollider::UpdatePos();
 	
 
+	// ¶‚«‚Ä‚¢‚é
+	isAlive_ = true;
+
 	// —‰ºƒtƒ‰ƒO‚ğ‚¤‚²‚©‚·‚©
 	isGetOffAct_ = false;
 
@@ -271,10 +274,10 @@ void Player::Draw()
 
 void Player::DrawDebug(void)
 {
-    ImGui::Begin("p");
-    ImGui::Text("trfm:%f,%f,%f", trfm_.pos_.x_, trfm_.pos_.y_, trfm_.pos_.z_);
-    ImGui::Text("speed:%f,%f,%f", speed_.x_, speed_.y_, speed_.z_);
-    ImGui::End();
+    //ImGui::Begin("p");
+    //ImGui::Text("trfm:%f,%f,%f", trfm_.pos_.x_, trfm_.pos_.y_, trfm_.pos_.z_);
+    //ImGui::Text("speed:%f,%f,%f", speed_.x_, speed_.y_, speed_.z_);
+    //ImGui::End();
 }
 
 void Player::Update()

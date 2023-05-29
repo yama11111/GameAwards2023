@@ -16,7 +16,7 @@ void Goal::Initialize(const size_t signIndex, const YMath::Vector3& pos, const b
 	transform_.reset(new Transform());
 
 	// 描画クラス初期化
-	drawer_.Initialize(transform_.get());
+	drawer_.Initialize(transform_.get(), isRock);
 
 	// リセット
 	Reset(signIndex, pos, isRock);
@@ -46,7 +46,7 @@ void Goal::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool i
 	ObjectCollider::SetSignIndex(signIndex);
 
 	// 描画クラスリセット
-	drawer_.Reset();
+	drawer_.Reset(isRock);
 }
 
 void Goal::PreUpdate()

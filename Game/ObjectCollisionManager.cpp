@@ -161,6 +161,18 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 
 			return;
 		}
+		// プレイヤー × ゴール
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eGoal)
+		{
+			// アタリ
+			if (YGame::CollisionBoxBox2D(*pColliderA, *pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
+
+			return;
+		}
 	}
 
 	// ブロック

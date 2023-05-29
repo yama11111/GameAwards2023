@@ -26,6 +26,8 @@ using Sign = maruyama::Sign;
 
 #pragma region Static関連
 
+bool PlayScene::isReset_ = false;
+
 #pragma endregion 
 
 
@@ -420,9 +422,15 @@ void PlayScene::Initialize()
     // ビュープロジェクションにカメラ代入
     transferVP_ = camera_.GetViewProjection();
 
+    // リセットじゃないなら
+    if (isReset_ == false)
+    {
+        // プレイBGM開始
+        pPlayBGM_->Play(true);
+    }
 
-    // プレイBGM開始
-    pPlayBGM_->Play(true);
+    // リセット初期化
+    isReset_ = false;
 }
 
 #pragma endregion
@@ -432,8 +440,12 @@ void PlayScene::Initialize()
 
 void PlayScene::Finalize()
 {
-    // プレイBGM停止
-    pPlayBGM_->Stop();
+    // リセットじゃないなら
+    if (isReset_ == false)
+    {
+        // プレイBGM停止
+        pPlayBGM_->Stop();
+    }
 }
 
 #pragma endregion
@@ -488,17 +500,12 @@ void PlayScene::Update()
     // ビュープロジェクション
     transferVP_.UpdateMatrix();
 
-    //ゴール判定
-    //if ()
-    //{
-    //	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
-    //	SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);
-    //}
-
     // リセット
     if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_)
     {
-        SceneManager::GetInstance()->Change("PLAY");
+        isReset_ = true;
+        SceneExecutive::GetInstance()->Change("PLAY", "BLACKOUT", 2, 2);
+        //SceneManager::GetInstance()->Change("PLAY");
     }
 
 }

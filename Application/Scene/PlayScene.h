@@ -91,6 +91,9 @@ namespace YScene
 		YGame::ViewProjection transferVP_;
 
 
+		// リセットフラグ
+		static bool isReset_;
+
 
 #pragma endregion
 

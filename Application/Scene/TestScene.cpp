@@ -88,7 +88,7 @@ void TestScene::Initialize()
 	gateDra_.Initialize(&core_);
 
 	// ゴール描画用クラス初期化
-	goalDra_.Initialize(&core_);
+	goalDra_.Initialize(&core_, false);
 
 
 	// 背景初期化
@@ -99,12 +99,12 @@ void TestScene::Initialize()
 
 	
 	// パーティクル
-	isDrawParticle_ = false;
+	isDrawParticle_ = true;
 	
 	// プレイヤー
 	isDrawPlayer_ = false;
 	// ブロック
-	isDrawBlock_ = false;
+	isDrawBlock_ = true;
 	// 足場
 	isDrawPlatform_ = false;
 	// ばね
@@ -122,7 +122,7 @@ void TestScene::Initialize()
 	// ゴール
 	isDrawGoal_ = false;
 	// 背景
-	isDrawBackground_ = false;
+	isDrawBackground_ = true;
 	// HUD
 	isDrawHUD_ = false;
 
@@ -471,7 +471,12 @@ void TestScene::Update()
 		if (ImGui::Button("Reset"))
 		{
 			// リセット
-			goalDra_.Reset();
+			goalDra_.Reset(false);
+		}
+		if (ImGui::Button("Reset (Rock)"))
+		{
+			// リセット
+			goalDra_.Reset(true);
 		}
 		if (ImGui::Button("Clear"))
 		{

@@ -10,6 +10,9 @@ protected:
 
 	// 静的パーティクルマネージャーポインタ
 	static YGame::ParticleManager* spParticleMan_;
+	
+	// スプライト3D
+	static YGame::Sprite3D* spCurtenSpr3D_;
 
 	
 	// 背景マテリアル
@@ -89,6 +92,11 @@ private:
 	// スカイドーム描画クラス
 	SkydomeDrawer skydomeDra_;
 
+	// カーテンオブジェクト
+	std::unique_ptr<YGame::Sprite3D::Object> curtenSprObj_;
+	
+	// カーテン色
+	std::unique_ptr<YGame::CBColor> curtenColor_;
 
 	// 泡グリッド発生用タイマー
 	YMath::Timer emitBubbleGridTim_;
