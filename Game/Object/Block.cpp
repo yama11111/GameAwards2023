@@ -156,6 +156,17 @@ void Block::Update()
 
 	// 判定
 	spStageMan_->CallPPC(this);
+	if (isTeleport_)
+	{
+		isTeleport_ = false;
+		isGrounded_ = false;
+		trfm_.pos_ = { roundToDecimal(teleportedPos_.x_, decimalPlace_),roundToDecimal(teleportedPos_.y_,  decimalPlace_),roundToDecimal(teleportedPos_.z_,  decimalPlace_) };
+		idxSign_ = teleportedIdxSign_;
+
+		// 看板インデックス更新
+		SetSignIndex(idxSign_);
+		elderLeftTop_ = spStageMan_->GetTopLeftPos(GetSignIndex());
+	}
 
 	// 戻す
 	*transform_ = trfm_;
