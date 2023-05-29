@@ -73,7 +73,7 @@ void JunctionDrawerCommon::StaticInitialize()
 	// 立ち回転スピードイージング
 	sIdleRotaSpeedEase_.Initialize(Idle::RotaSpeed::Start, Idle::RotaSpeed::End, Idle::RotaSpeed::Exponent);
 
-	sConnectPushScaleFactorEase_.Initialize(0.5f, 1.0f, Connect::PosFactor::Exponent);
+	sConnectPushScaleFactorEase_.Initialize(0.25f, 1.0f, Connect::PosFactor::Exponent);
 	
 	// 接続位置係数イージング
 	sConnectPosFactorEase_.Initialize(Connect::PosFactor::Start, Connect::PosFactor::End, Connect::PosFactor::Exponent);

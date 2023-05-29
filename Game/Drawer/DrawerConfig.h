@@ -401,7 +401,7 @@ namespace DrawerConfig
 				static const float Start = 0.0f;
 
 				// I—¹’l
-				static const float End = 2.0f;
+				static const float End = 3.0f;
 
 				// w”
 				static const float Exponent = 3.0f;
