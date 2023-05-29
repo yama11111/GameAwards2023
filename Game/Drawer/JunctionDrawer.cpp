@@ -34,8 +34,10 @@ array<array<Model*, JunctionDrawerCommon::sPartsNum_>, JunctionDrawerCommon::sTy
 	//nullptr, nullptr,
 };
 Model* JunctionDrawerCommon::spGridModel_ = nullptr;
+Model* JunctionDrawerCommon::spRayModel_ = nullptr;
 Ease<float> JunctionDrawerCommon::sIdleRotaSpeedEase_{};
 Ease<float> JunctionDrawerCommon::sConnectPushScaleFactorEase_{};
+Ease<float> JunctionDrawerCommon::sConnectRayScaleEase_{};
 Ease<float> JunctionDrawerCommon::sConnectPosFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaSpeedEase_{};
@@ -68,12 +70,16 @@ void JunctionDrawerCommon::StaticInitialize()
 
 	spGridModel_ = Model::LoadObj("grid", true); // グリッド
 
+	spRayModel_ = Model::CreateCube(); // 線
+
 	// ----- アニメーション ----- //
 
 	// 立ち回転スピードイージング
 	sIdleRotaSpeedEase_.Initialize(Idle::RotaSpeed::Start, Idle::RotaSpeed::End, Idle::RotaSpeed::Exponent);
 
 	sConnectPushScaleFactorEase_.Initialize(0.25f, 1.0f, Connect::PosFactor::Exponent);
+
+	sConnectRayScaleEase_.Initialize(0.0f, +0.1f, 3.0f);
 	
 	// 接続位置係数イージング
 	sConnectPosFactorEase_.Initialize(Connect::PosFactor::Start, Connect::PosFactor::End, Connect::PosFactor::Exponent);
@@ -117,6 +123,9 @@ void JunctionDrawer::Initialize(Transform* pParent, const Vector3& direction, co
 
 	gridModelObjs_.reset(Model::Object::Create(Transform::Status::Default(), spVP_));
 	gridModelObjs_->parent_ = &pParent->m_;
+
+	rayModelObjs_.reset(Model::Object::Create({}, spVP_));
+	rayModelObjs_->parent_ = &core_->m_;
 
 	// リセット
 	Reset(direction, type);
@@ -163,6 +172,9 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	gridModelObjs_->SetColor(CoreColor::ColorPtr(color, shellParts));
 	gridModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
 
+	rayModelObjs_->SetColor(CoreColor::ColorPtr(color, coreParts));
+	rayModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
 	// パートナー解除
 	pPartner_ = nullptr;
 
@@ -177,6 +189,7 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	{
 		animePoss_[i] = animeRotas_[i] = animeScales_[i] = {};
 	}
+	animeRayPos_ = animeRayRota_ = animeRayScale_;
 
 	// 立ちモーションする
 	isIdle_ = true;
@@ -196,6 +209,8 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 
 	// 向き合わせタイマー初期化
 	alignDirectionTimer_.Initialize(Connect::AlignDirection::Frame);
+
+	rayScaleTimer_.Initialize(20);
 }
 
 void JunctionDrawer::Update()
@@ -209,6 +224,16 @@ void JunctionDrawer::Update()
 	// アニメーション用
 	Vector3 pos{}, rota{}, scale{};
 
+	if (isConnected_)
+	{
+		// 向きイージング初期化
+		Vector3 d = -Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
+		alignDirectionEase_.SetEnd(d.Normalized());
+
+		// 向き合わせ
+		direction_ = alignDirectionEase_.In(alignDirectionTimer_.Ratio());
+	}
+	
 	// 向き合わせ
 	rota = YMath::AdjustAngle(direction_);
 
@@ -222,6 +247,8 @@ void JunctionDrawer::Update()
 	{
 		animePoss_[i] = animeRotas_[i] = animeScales_[i] = {};
 	}
+	animeRayPos_ = animeRayRota_ = animeRayScale_ = {};
+
 
 	// 立ちモーション更新
 	UpdateIdleAnimation();
@@ -230,6 +257,10 @@ void JunctionDrawer::Update()
 	UpdateConnectAnimation();
 
 	gridModelObjs_->UpdateMatrix();
+
+	if (animeRayRota_.z_ >= +PI * 4) { animeRayRota_.z_ -= PI * 4; }
+	else if (animeRayRota_.z_ <= -PI * 4) { animeRayRota_.z_ += PI * 4; }
+	rayModelObjs_->UpdateMatrix({ animeRayPos_, animeRayRota_, animeRayScale_ });
 
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -249,6 +280,7 @@ void JunctionDrawer::Update()
 void JunctionDrawer::Draw()
 {
 	spGridModel_->SetDrawCommand(gridModelObjs_.get(), YGame::DrawLocation::Center);
+	spRayModel_->SetDrawCommand(rayModelObjs_.get(), YGame::DrawLocation::Center);
 
 	// モデルの数描画
 	for (size_t i = 0; i < spModels_[typeIndex_].size(); i++)
@@ -350,10 +382,6 @@ void JunctionDrawer::UpdateConnectAnimation()
 	// ベクトルの大きさ取得
 	float len = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 25.0f;
 
-	// 向きイージング初期化
-	Vector3 d = -Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
-	alignDirectionEase_.SetEnd(d.Normalized());
-
 	// アニメ
 	for (size_t i = 0; i < sFrameNum_; i++)
 	{
@@ -370,6 +398,11 @@ void JunctionDrawer::UpdateConnectAnimation()
 		// 大きさ
 		animeScales_[i] += sConnectScaleEase_.Out(connectTimer_.Ratio()) * sConnectPushScaleFactorEase_.Out(connectTimer_.Ratio());
 	}
+
+	float rayLen = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 2.0f;
+	animeRayPos_ = { 0.0f, 0.0f, rayLen };
+	animeRayRota_.z_ += sConnectRotaSpeedEase_.Out(connectTimer_.Ratio());
+	animeRayScale_ = { sConnectRayScaleEase_.Out(rayScaleTimer_.Ratio()),sConnectRayScaleEase_.Out(rayScaleTimer_.Ratio()), rayLen };
 
 
 	// タイマー終わったら
@@ -391,12 +424,17 @@ void JunctionDrawer::UpdateConnectAnimation()
 		isIdle_ = true;
 	}
 
+	if (connectTimer_.Ratio() >= 0.5f && rayScaleTimer_.IsAct() == false)
+	{
+		rayScaleTimer_.Reset(true);
+	}
+
 
 	// 向き合わせタイマー更新
 	alignDirectionTimer_.Update();
 
-	// 向き合わせ
-	direction_ = alignDirectionEase_.In(alignDirectionTimer_.Ratio());
+
+	rayScaleTimer_.Update();
 }
 
 #pragma endregion

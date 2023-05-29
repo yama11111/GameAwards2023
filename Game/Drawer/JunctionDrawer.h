@@ -44,15 +44,21 @@ protected:
 
 	// モデル (グリッド)
 	static YGame::Model* spGridModel_;
+	
+	// モデル (線)
+	static YGame::Model* spRayModel_;
 
 	// ----- アニメーション ----- //
 
 	// 立ち回転スピードイージング
 	static YMath::Ease<float> sIdleRotaSpeedEase_;
 
-
+	
 	// 接続時プッシュ大きさ係数イージング
 	static YMath::Ease<float> sConnectPushScaleFactorEase_;
+
+	// 接続時レイ大きさ係数イージング
+	static YMath::Ease<float> sConnectRayScaleEase_;
 
 
 	// 接続位置係数イージング
@@ -95,6 +101,9 @@ private:
 	// モデル用オブジェクト (グリッド)
 	std::unique_ptr<YGame::Model::Object> gridModelObjs_;
 
+	// モデル用オブジェクト (線)
+	std::unique_ptr<YGame::Model::Object> rayModelObjs_;
+
 	// 向き
 	YMath::Vector3 direction_;
 
@@ -123,6 +132,16 @@ private:
 	std::array<YMath::Vector3, sFrameNum_> animeScales_;
 
 
+	// 位置 (アニメ用)
+	YMath::Vector3 animeRayPos_;
+
+	// 回転 (アニメ用)
+	YMath::Vector3 animeRayRota_;
+
+	// 大きさ (アニメ用)
+	YMath::Vector3 animeRayScale_;
+
+
 	// 立ちモーションか
 	bool isIdle_ = false;
 
@@ -142,6 +161,9 @@ private:
 
 	// 向き合わせイージング
 	YMath::Ease<YMath::Vector3> alignDirectionEase_;
+	
+	// レイスケールタイマー
+	YMath::Timer rayScaleTimer_;
 
 public:
 

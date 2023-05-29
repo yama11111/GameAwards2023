@@ -121,6 +121,11 @@ void GoalDrawer::Reset(const bool isRock)
 
 	// 核の色とマテリアル設定
 	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	if (isRock_)
+	{
+		color = CoreColor::ColorType::eGray;
+	}
+
 	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
 	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
 

@@ -145,7 +145,7 @@ void YFramework::Update()
 	sceneExe_->Update();
 
 	// デスクリプタカウント表示
-	descHeap_.ShowCount();
+	//descHeap_.ShowCount();
 
 	// imgui受付終了
 	imguiMan_.End();
