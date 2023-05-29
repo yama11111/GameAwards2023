@@ -24,8 +24,8 @@ void SelectScene::Load()
 	// ----- オーディオ ----- //
 
 	// セレクトシーンBGM
-	pSelectBGM_ = Audio::Load("BGM/select.wav");
-
+	//pSelectBGM_ = Audio::Load("BGM/select.wav");
+	pSelectBGM_ = Audio::Load("BGM/audiostock_1241176.wav");
 
 	//// セレクトSE
 	//pSelectSE_ = Audio::Load("SE/select.wav");
