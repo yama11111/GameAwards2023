@@ -501,7 +501,7 @@ void PlayScene::Update()
     transferVP_.UpdateMatrix();
 
     // ƒŠƒZƒbƒg
-    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_)
+    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_ || player_->IsAlive() == false)
     {
         isReset_ = true;
         SceneExecutive::GetInstance()->Change("PLAY", "BLACKOUT", 2, 2);
