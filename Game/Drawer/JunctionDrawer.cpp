@@ -424,7 +424,9 @@ void JunctionDrawer::UpdateConnectAnimation()
 		isIdle_ = true;
 	}
 
-	if (connectTimer_.Ratio() >= 0.5f && rayScaleTimer_.IsAct() == false)
+	if (connectTimer_.Ratio() >= 0.5f && 
+		rayScaleTimer_.IsAct() == false &&
+		rayScaleTimer_.IsEnd() == false)
 	{
 		rayScaleTimer_.Reset(true);
 	}
