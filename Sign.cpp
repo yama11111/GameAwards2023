@@ -385,10 +385,19 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
             warpInfos_[idxWarpInfos_].dirPartner_ == Direction::TOP ?
                 offset = +teleportDistance_ :
                 offset = -teleportDistance_;
-            ptr->teleportedPos_ = {
-                TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2,
+            if (warpInfos_[idxWarpInfos_].dirPartner_ == Direction::TOP) {
+                ptr->teleportedPos_ = {
+                TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2 - offset,
                 TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
                 0 };
+            }
+            else
+            {
+                ptr->teleportedPos_ = {
+                    TLP.x_ + warpInfos_[idxWarpInfos_].mapchipElemPartner_.first * blockRadius_ * 2,
+                    TLP.y_ - warpInfos_[idxWarpInfos_].mapchipElemPartner_.second * blockRadius_ * 2 + offset,
+                    0 };
+            }
             ptr->teleportedIdxSign_ = warpInfos_[idxWarpInfos_].IdxPartnerSign_;
             // 自分側のワープブロックをプレイヤーが通過（使用）したかをtrue
             warpInfos_[idxWarpInfos_].isUsed_ = true;
