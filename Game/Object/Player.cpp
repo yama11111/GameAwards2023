@@ -265,8 +265,7 @@ void Player::OnCollision(ObjectCollider* pPair)
 		// 鍵持ってないなら
 		if (isKeyHolder_ == false) { return; }
 
-		// アクション
-		if (pPair->GetIsActSkill() == false) { return; }
+		pPair->SetIsActSkill(true);
 
 		// ゴール
 		drawer_.AnimateGoal();

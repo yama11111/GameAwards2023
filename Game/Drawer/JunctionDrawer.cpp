@@ -65,7 +65,7 @@ void JunctionDrawerCommon::StaticInitialize()
 	spModels_[GreenIdx][CoreIdx] = Model::LoadObj("junction/core", true); // Šj
 	spModels_[GreenIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // Šk
 
-	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/core", true); // Šk
+	spModels_[RedIdx][CoreIdx] = Model::LoadObj("junction/core", true); // Šk
 	spModels_[RedIdx][ShellIdx] = Model::LoadObj("junction/shell", true); // Šk
 
 	spGridModel_ = Model::LoadObj("grid", true); // ƒOƒŠƒbƒh

@@ -1,6 +1,7 @@
 #pragma once
 #include "Stage.h"
 #include "Camera.h"
+#include "Sprite2D.h"
 
 namespace YInput { class Keys; }
 
@@ -38,6 +39,19 @@ private:
 
 	static YInput::Keys* spKeys_;
 
+	static YGame::Sprite2D* spPilotPlayerSpr_;
+	static std::unique_ptr<YGame::Sprite2D::Object> sPilotPlayerObj_;
+	static std::unique_ptr<YGame::CBColor> sPilotPlayerColor_;
+	
+	static YGame::Sprite2D* spPilotStageSpr_;
+	static std::unique_ptr<YGame::Sprite2D::Object> sPilotStageObj_;
+	static std::unique_ptr<YGame::CBColor> sPilotStageColor_;
+	
+	static YMath::Power sChangePlayerPower_;
+	static YMath::Power sChangeStagePower_;
+	static YMath::Ease<float> sChangeHeight_;
+	static YMath::Ease<float> sChangeAlpha_;
+
 public:
 
 	static void StaticInitialize(YGame::Camera* pCamera, Stage* pStage);
@@ -47,6 +61,8 @@ public:
 	static void StaticReset();
 
 	static void StaticUpdate();
+	
+	static void StaticDraw();
 
 	
 	static void StaticChangePilot(const PilotType& pilot);

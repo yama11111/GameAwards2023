@@ -4,11 +4,16 @@
 #include "MouseCollider.h"
 #include <cassert>
 
+using std::unique_ptr;
 using YInput::Keys;
 using YMath::Vector3;
+using YMath::Power;
 using YMath::Timer;
 using YMath::Ease;
+using YGame::Texture;
 using YGame::Camera;
+using YGame::Sprite2D;
+using YGame::CBColor;
 
 PilotManager::PilotType PilotManager::sPilot_;
 Stage* PilotManager::spStage_ = nullptr;
@@ -20,6 +25,16 @@ Ease<float> PilotManager::sInitZoomEase_;
 bool PilotManager::sIsActInitAnime_ = false;
 Keys* PilotManager::spKeys_ = nullptr;
 
+Sprite2D* PilotManager::spPilotPlayerSpr_ = nullptr;
+unique_ptr<Sprite2D::Object> PilotManager::sPilotPlayerObj_;
+unique_ptr<CBColor> PilotManager::sPilotPlayerColor_;
+Sprite2D* PilotManager::spPilotStageSpr_ = nullptr;
+unique_ptr<Sprite2D::Object> PilotManager::sPilotStageObj_;
+unique_ptr<CBColor> PilotManager::sPilotStageColor_;
+Power PilotManager::sChangePlayerPower_;
+Power PilotManager::sChangeStagePower_;
+Ease<float> PilotManager::sChangeHeight_;
+Ease<float> PilotManager::sChangeAlpha_;
 
 void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 {
@@ -38,6 +53,23 @@ void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 	
 	sIsActInitAnime_ = true;
 	
+	spPilotPlayerSpr_ = Sprite2D::Create({}, { Texture::Load("UI/pilot_Player.png")});
+	spPilotStageSpr_ = Sprite2D::Create({}, { Texture::Load("UI/pilot_Stage.png") });
+	
+	sPilotPlayerObj_.reset(Sprite2D::Object::Create());
+	sPilotStageObj_.reset(Sprite2D::Object::Create());
+	
+	sPilotPlayerColor_.reset(CBColor::Create());
+	sPilotPlayerObj_->SetColor(sPilotPlayerColor_.get());
+	
+	sPilotStageColor_.reset(CBColor::Create());
+	sPilotStageObj_->SetColor(sPilotStageColor_.get());
+		
+	sChangePlayerPower_.Initialize(20);
+	sChangeStagePower_.Initialize(20);
+	sChangeHeight_.Initialize(-120.0f, 240.0f, 3.0f);
+	sChangeAlpha_.Initialize(0.0f, 1.0f, 3.0f);
+
 	StaticReset();
 }
 
@@ -48,6 +80,9 @@ void PilotManager::StaticReset()
 	sSignIndex_ = 0;
 
 	sPilot_ = PilotType::ePlayer;
+	
+	sChangePlayerPower_.Reset();
+	sChangeStagePower_.Reset();
 }
 
 void PilotManager::StaticUpdate()
@@ -86,6 +121,12 @@ void PilotManager::StaticUpdate()
 			StaticSetFollowStage(sSignIndex_);
 		}
 	}
+}
+
+void PilotManager::StaticDraw()
+{
+	spPilotPlayerSpr_->SetDrawCommand(sPilotPlayerObj_.get(), YGame::DrawLocation::Front);
+	spPilotStageSpr_->SetDrawCommand(sPilotStageObj_.get(), YGame::DrawLocation::Front);
 }
 
 void PilotManager::StaticChangePilot(const PilotType& pilot)
