@@ -227,9 +227,11 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// レーザーなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eLaser)
 	{
+		if (isAlive_ == false) { return; }
+
 		// 死ぬ
 		isAlive_ = false;
-
+		
 		// アニメーション
 		drawer_.AnimateDead();
 	}

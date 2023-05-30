@@ -117,6 +117,11 @@ void PlayerDrawer::Reset()
 	// テレポート用アルファ値イージング
 	teleportAlphaEas_.Initialize(0.5f, 0.0f, Respawn::Exponent);
 
+	// 死亡フラグ
+	isDead_ = false;
+	// 死亡用タイマー
+	deadTim_.Initialize(Respawn::Frame);
+
 	// リスポーンフラグ
 	isRespawn_ = false;
 	// リスポーン用タイマー
@@ -147,6 +152,9 @@ void PlayerDrawer::ResetAnimation()
 	// テレポート用タイマーリセット
 	teleportTim_.Reset(false);
 
+	// 死亡用タイマーリセット
+	deadTim_.Reset(false);
+	
 	// リスポーン用タイマーリセット
 	respawnTim_.Reset(false);
 
@@ -190,7 +198,10 @@ void PlayerDrawer::Draw()
 	// モデルの数描画
 	for (size_t i = 0; i < spModels_.size(); i++)
 	{
-		spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
+		if (isDead_ == false)
+		{
+			spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
+		}
 		if (isTeleport_)
 		{
 			spModels_[i]->SetDrawCommand(teleportModelObjs_[i].get(), YGame::DrawLocation::Center);
@@ -337,6 +348,24 @@ void PlayerDrawer::AnimateDead()
 {
 	// カメラブレ
 	spCamera_->Shaking(0.5f, 0.1f, 100.0f);
+
+	// 煙発生
+	spParticleMan_->EmitSmoke(
+		20,
+		Move::Smoke::AliveFrame,
+		pParent_->pos_, Move::Smoke::Range,
+		Move::Smoke::MinScaleSize, Move::Smoke::MaxScaleSize,
+		Vector3(-1.0f, -1.0f, -1.0f), Vector3(+1.0f, +1.0f, +1.0f),
+		Move::Smoke::MinRotaSpeed, Move::Smoke::MaxRotaSpeed,
+		Move::Smoke::Color,
+		Move::Smoke::Place,
+		YGame::DrawLocation::Center);
+
+	// 死ぬ
+	deadTim_.Reset(true);
+
+	// 死んだ
+	isDead_ = true;
 }
 
 void PlayerDrawer::AnimateRespawn()
@@ -422,6 +451,9 @@ void PlayerDrawer::UpdateTeleportAnimation()
 void PlayerDrawer::UpdateDeadAnimation()
 {
 	if (isDead_ == false) { return; }
+
+	// タイマー更新
+	deadTim_.Update();
 }
 
 void PlayerDrawer::UpdateRespawnAnimation()
