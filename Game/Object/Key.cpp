@@ -25,7 +25,7 @@ void Key::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 void Key::Reset(const size_t signIndex, const YMath::Vector3& pos)
 {
 	// トランスフォーム初期化
-	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.0f,1.0f,1.0f} });
+	transform_->Initialize({ pos + spStageMan_->GetTopLeftPos(signIndex), {}, {1.5f,1.5f,1.5f} });
 	
 	// 前回左上位置初期化
 	elderLeftTop_ = spStageMan_->GetTopLeftPos(signIndex);
@@ -82,7 +82,7 @@ void Key::UpdateFollowPlayer()
 	// nullなら弾く
 	if (pPlayerPos_ == nullptr) { return; }
 
-	transform_->pos_ = *pPlayerPos_ + Vector3(0, 1.5f, 0);
+	transform_->pos_ = *pPlayerPos_ + Vector3(0.0f, 2.0f, 0);
 }
 
 void Key::OnCollision(ObjectCollider* pPair)

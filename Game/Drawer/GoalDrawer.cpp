@@ -369,4 +369,44 @@ void GoalDrawer::Draw()
 	}
 }
 
+void GoalDrawer::Unlock()
+{
+	if (isRock_ == false) { return; }
+
+	isRock_ = false;
+	
+	// 核の色とマテリアル設定
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
+
+	modelObjs_[CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[InsideIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[InsideIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	modelObjs_[InsideCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[InsideCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	modelObjs_[OutsideIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+	modelObjs_[OutsideIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	modelObjs_[OutsideCoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+	modelObjs_[OutsideCoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+	spParticleMan_->EmitSmoke(
+		20, 8, 
+		pParent_->pos_, Vector3(), 0.2f, 0.4f, 
+		Vector3(-0.1f,-0.1f,-0.1f), Vector3(+0.1f, +0.1f, +0.1f), 
+		Vector3(-0.1f,-0.1f,-0.1f), Vector3(+0.1f, +0.1f, +0.1f), 
+		{	
+			CoreColor::ColorPtr(color, coreParts)->GetRGBA().r_, 
+			CoreColor::ColorPtr(color, coreParts)->GetRGBA().g_, 
+			CoreColor::ColorPtr(color, coreParts)->GetRGBA().b_ 
+		}, 
+		100.0f, YGame::DrawLocation::Center
+	);
+}
+
 #pragma endregion

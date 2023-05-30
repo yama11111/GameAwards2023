@@ -84,6 +84,11 @@ void Goal::OnCollision(ObjectCollider* pPair)
 		// スキル発動時
 		if (GetIsActSkill())
 		{
+			if (isRock_)
+			{
+				drawer_.Unlock();
+			}
+
 			// クリア
 			drawer_.ActivateClearAnimation(pPair->PosRef());
 

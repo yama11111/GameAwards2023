@@ -128,6 +128,9 @@ public:
 
 public:
 
+	///
+	void Unlock();
+
 	/// <summary>
 	/// ƒNƒŠƒA‰‰o
 	/// </summary>

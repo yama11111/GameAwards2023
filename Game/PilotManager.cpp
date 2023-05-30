@@ -46,21 +46,26 @@ void PilotManager::StaticReset()
 	sInitZoomTimer_.SetActive(true);
 	
 	sSignIndex_ = 0;
+
+	sPilot_ = PilotType::ePlayer;
 }
 
 void PilotManager::StaticUpdate()
 {
-	if (spKeys_->IsTrigger(DIK_F))
+	if (sIsActInitAnime_ == false)
 	{
-		if (sPilot_ == PilotType::ePlayer)
+		if (spKeys_->IsTrigger(DIK_F))
 		{
-			StaticChangePilot(PilotType::eStage);
-			MouseColliderCommon::StaticSetIsActMouse(true);
-		}
-		else if (sPilot_ == PilotType::eStage)
-		{
-			StaticChangePilot(PilotType::ePlayer);
-			MouseColliderCommon::StaticSetIsActMouse(false);
+			if (sPilot_ == PilotType::ePlayer)
+			{
+				StaticChangePilot(PilotType::eStage);
+				MouseColliderCommon::StaticSetIsActMouse(true);
+			}
+			else if (sPilot_ == PilotType::eStage)
+			{
+				StaticChangePilot(PilotType::ePlayer);
+				MouseColliderCommon::StaticSetIsActMouse(false);
+			}
 		}
 	}
 
