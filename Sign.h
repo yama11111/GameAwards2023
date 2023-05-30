@@ -107,7 +107,7 @@ namespace maruyama {
 
             // 自分が接続済みか - 可変
             bool isConnected_{};
-            // 通った（ワープを使用したかどうか） - 可変
+            // 通った（ワープを使用したかどうか） - 可変もうつかってませんｗｗｗｗｗ
             bool isUsed_{};
             // 接続先との相互の位置関係から現在使えるのかどうか - 可変
             bool isAvailable_{};

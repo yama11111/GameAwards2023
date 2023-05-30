@@ -54,8 +54,10 @@ void Stage::MouseCol4Warp(void)
                 //<< ワープブロック接続処理 >>//
                 // ワープブロックのマウスコライダーがtrue && 他のワープブロックの接続処理中でないなら
                 if (signVector_[i]->warpInfos_[j].mCollider_.CollisionMousePointer() &&
-                    mc4w_isConnectingWarp_ == false) {
+                    mc4w_isConnectingWarp_ == false && signVector_[i]->warpInfos_[j].isConnected_ == false) {
                     // ワープ軌道を引き伸ばし
+                    mc4w_IdxWarpInfo_oldstart_ = mc4w_IdxWarpInfo_start_;
+                    mc4w_idxSign_oldstart_ = mc4w_idxSign_start_;
                     mc4w_isConnectingWarp_ = true;
                     mc4w_IdxWarpInfo_start_ = j;
                     mc4w_idxSign_start_ = i;
@@ -246,26 +248,26 @@ void Stage::MouseCol4Warp(void)
         if (static_cast<int>(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_) +
             static_cast<int>(signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirSelf_) == 3) {
 
-            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isUsed_ || signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isUsed_) {
-                isReset_ = true;
-                //ImGui::End();
-                return;
-            }
+            //if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isUsed_ || signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isUsed_) {
+            //    isReset_ = true;
+            //    //ImGui::End();
+            //    return;
+            //}
 
             // 自分側のワープブロックが既にisConnectedだった場合（isConnected == true && isUsed == false)
-            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_) {
-                // 相手側のワープブロックに保存された情報は初期化する
-                // 終点側の接続フラグを変更
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_ = false;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isAvailable_ = false;
-                // 終点のwarpInfoに始点の情報を入力
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerSign_ = 0;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerWarp_ = 0;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirPartner_ = Sign::Direction::TOP;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemPartner_ = { 0,0 };
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].partnerPtr_ = nullptr;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].jdPtr_->jd_.Reset();
-            }
+            //if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_) {
+            //    //// 相手側のワープブロックに保存された情報は初期化する
+            //    //// 終点側の接続フラグを変更
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].isConnected_ = false;
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].isAvailable_ = false;
+            //    //// 終点のwarpInfoに始点の情報を入力
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].IdxPartnerSign_ = 0;
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].IdxPartnerWarp_ = 0;
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].dirPartner_ = Sign::Direction::TOP;
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].mapchipElemPartner_ = { 0,0 };
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].partnerPtr_ = nullptr;
+            //    //signVector_[mc4w_idxSign_oldstart_]->warpInfos_[mc4w_IdxWarpInfo_oldstart_].jdPtr_->jd_.Reset();
+            //}
 
             // 始点側の接続フラグを変更
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_ = true;
