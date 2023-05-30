@@ -252,6 +252,21 @@ void Stage::MouseCol4Warp(void)
                 return;
             }
 
+            // 自分側のワープブロックが既にisConnectedだった場合（isConnected == true && isUsed == false)
+            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_) {
+                // 相手側のワープブロックに保存された情報は初期化する
+                // 終点側の接続フラグを変更
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_ = false;
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isAvailable_ = false;
+                // 終点のwarpInfoに始点の情報を入力
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerSign_ = 0;
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerWarp_ = 0;
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirPartner_ = Sign::Direction::TOP;
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemPartner_ = { 0,0 };
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].partnerPtr_ = nullptr;
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].jdPtr_->jd_.Reset(signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].);
+            }
+
             // 始点側の接続フラグを変更
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_ = true;
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
