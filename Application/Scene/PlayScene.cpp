@@ -451,13 +451,10 @@ void PlayScene::Initialize()
 void PlayScene::Finalize()
 {
     // リセットじゃないなら
-    if (isReset_ == false)
+    if (isReset_ == false || hud_.IsElderPause())
     {
         // プレイBGM停止
         pPlayBGM_->Stop();
-
-        // リセット初期化
-        isReset_ = false;
     }
 }
 
