@@ -168,6 +168,8 @@ void Player::Landing()
 
 void Player::UpdatePhysics()
 {
+	if (PilotManager::StaticGetCurrentPilot() != PilotManager::PilotType::ePlayer) { return; }
+	
 	// Ž‚Á‚Ä‚½‚ç’e‚­
 	if (spStageMan_->isHoldSignVector_[idxSign_]) { return; }
 
@@ -372,7 +374,8 @@ void Player::PostUpdate()
 	}
 
 	// Ž‚Á‚Ä‚½‚ç’e‚­
-	if (spStageMan_->isHoldSignVector_[idxSign_] == false)
+	if (spStageMan_->isHoldSignVector_[idxSign_] == false && 
+		PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::ePlayer)
 	{
 		// ˆÚ“®
 		transform_->pos_ += speed_;

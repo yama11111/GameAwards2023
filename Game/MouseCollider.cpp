@@ -16,6 +16,8 @@ YGame::Ray MouseColliderCommon::sMouseRay_;
 YGame::Plane MouseColliderCommon::sDisplayPlane_;
 Box2D MouseColliderCommon::sMouseBox_;
 ViewProjection* MouseColliderCommon::spVP_ = nullptr;
+bool MouseColliderCommon::sIsActMouse_ = false;
+bool MouseColliderCommon::sIsHoldMouse_ = false;
 
 static Vector2 DefaultMouseCollRadSize = { 5.0f, 5.0f };
 
@@ -36,10 +38,16 @@ void MouseColliderCommon::StaticInitialize()
 
 	// マウスデフォルトの大きさ設定
 	StaticSetMouseCollisionRadSize(DefaultMouseCollRadSize);
+
+	sIsActMouse_ = false;
+	
+	sIsHoldMouse_ = false;
 }
 
 void MouseColliderCommon::StaticUpdate()
 {
+	if (sIsActMouse_ == false) { return; }
+
 	// ワールド座標
 	Vector3 worldPos = StaticGetMouseWorldPos();
 
@@ -91,6 +99,11 @@ void MouseColliderCommon::StaticSetViewProjectionPointer(ViewProjection* pVP)
 
 bool MouseCollider::CollisionMousePointer()
 {
+	if (sIsActMouse_ == false)
+	{
+		return false;
+	}
+
 	// 四角形のアタリ判定を返す
 	return YGame::CollisionBoxBox2D(*this, sMouseBox_);
 }

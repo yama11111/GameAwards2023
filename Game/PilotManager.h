@@ -51,6 +51,8 @@ public:
 	
 	static void StaticChangePilot(const PilotType& pilot);
 	
+	static void StaticSetSignIndex(const int signIndex) { sSignIndex_ = signIndex; }
+	
 	static void StaticSetFollowStage(const int signIndex);
 
 

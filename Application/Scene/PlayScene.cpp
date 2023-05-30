@@ -205,6 +205,8 @@ void PlayScene::Initialize()
 
             // 挿入
             objMan_.PushBack(player_.get());
+
+            PilotManager::StaticSetSignIndex(LevelData::Player::InitStatuses[index].signIndex_);
         }
 
         // ブロック
@@ -487,6 +489,8 @@ void PlayScene::Update()
 
     //sign_.Update();
     stage_.Update();
+
+    MouseColliderCommon::StaticSetIsHoldMouse(stage_.mc4w_isHoldOther_);
 
     // ------------ ↑ プレイシーンの処理 ↑ ------------//
 
