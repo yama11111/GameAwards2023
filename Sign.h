@@ -26,7 +26,7 @@ namespace maruyama {
     public:
         static constexpr float blockRadius_{ 1.f }; // ブロックの半径
         static constexpr float teleportDistance_{ blockRadius_ * 3 }; // Warpブロックから出る際に当ブロックからどの程度離れるか、デフォルトはブロック1.5個分
-        static constexpr float warpColRad_{ blockRadius_ / 2 }; 
+        static constexpr float warpColRad_{ blockRadius_ / 2 };
 
         static constexpr float pushOut_{ 0.2f }; // 定期的押し出し時の移動量
         static constexpr float springPower_{ 5.f }; // バネブロックのジャンプ力
@@ -78,11 +78,22 @@ namespace maruyama {
 
             void InitializeWarp(int bt, Direction dir) {
                 Vector3 dirV{};
-                if (dir == Direction::RIGHT) dirV = { -1,0,0 };
-                if (dir == Direction::LEFT) dirV = { 1,0,0 };
-                if (dir == Direction::TOP) dirV = { 0,-1,0 };
-                if (dir == Direction::BOTTOM) dirV = { 0,1,0 };
-                jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
+                if (dir == Direction::RIGHT) {
+                    dirV = { -1,0,0 };
+                    jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
+                }
+                if (dir == Direction::LEFT) {
+                    dirV = { 1,0,0 };
+                    jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eGreen);
+                }
+                if (dir == Direction::TOP) {
+                    dirV = { 0,-1,0 };
+                    jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eRed);
+                }
+                if (dir == Direction::BOTTOM) {
+                    dirV = { 0,1,0 };
+                    jd_.Initialize(&transform_, dirV, JunctionDrawerCommon::Type::eRed);
+                }
                 type_ = static_cast<BlockType>(bt);
             }
 
