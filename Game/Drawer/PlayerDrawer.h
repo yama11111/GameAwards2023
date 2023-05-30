@@ -156,6 +156,10 @@ public:
 	void Draw();
 
 public:
+
+	bool IsEndDeadAnime() const { return deadTim_.IsEnd(); }
+
+public:
 	
 	// ˆÚ“®ƒ‚[ƒVƒ‡ƒ“
 	void SetActMoveAnimation(const bool isMove) { isMove_ = isMove; }

@@ -90,10 +90,10 @@ void Switch::PostUpdate()
 	// 描画クラス更新
 	drawer_.Update();
 
-	ImGui::Begin("Switch");
-	ImGui::Text("%d", pGimmickFlag_);
-	if (pGimmickFlag_) { ImGui::Text("%d", *pGimmickFlag_); }
-	ImGui::End();
+	//ImGui::Begin("Switch");
+	//ImGui::Text("%d", pGimmickFlag_);
+	//if (pGimmickFlag_) { ImGui::Text("%d", *pGimmickFlag_); }
+	//ImGui::End();
 }
 
 void Switch::Draw()

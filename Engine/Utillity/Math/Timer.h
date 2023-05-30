@@ -30,13 +30,13 @@ namespace YMath
 		// ”ä—¦
 		float Ratio();
 		// Œ»İ
-		float Current() { return count_; }
+		float Current() const { return count_; }
 		// ÅIŠÔ
-		float End() { return end_; }
+		float End() const { return end_; }
 		// “®‚¢‚Ä‚¢‚é‚©
-		bool IsAct() { return isAct_; }
+		bool IsAct() const { return isAct_; }
 		// I—¹‚µ‚½‚©
-		bool IsEnd() { return end_ != 0 && count_ == end_; }
+		bool IsEnd() const { return end_ != 0 && count_ == end_; }
 		// “®ìİ’è
 		void SetActive(bool isAct) { isAct_ = isAct; }
 	};
