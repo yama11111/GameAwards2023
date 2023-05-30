@@ -27,6 +27,8 @@ public:
     void RegisterSign(Sign* ptr);
     void CallPPC(YukiMapchipCollider* ptr);
 
+    // x‚ªmin,y‚ªmax
+    void SetMovableSignRenge(const Vector2& pointMin, const Vector2& pointMax);
     const Vector3& GetTopLeftPos(size_t idx);
 
     // •Ï”
@@ -48,5 +50,8 @@ public:
     bool mc4w_isHoldOther_{};
 
     bool mc4w_isConnectCheck_{};
+
+    Vector2 movablePointMin_{};
+    Vector2 movablePointMax_{};
 };
 
