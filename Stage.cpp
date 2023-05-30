@@ -99,8 +99,21 @@ void Stage::MouseCol4Warp(void)
             for (size_t i = 0; i < signVector_.size(); i++)
             {
                 if (isHoldSignVector_[i]) {
-                    signVector_[i]->topLeftPos_.x_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_,movablePointMin_.x_,movablePointMax_.x_);
-                    signVector_[i]->topLeftPos_.y_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMin_.y_,movablePointMax_.y_);
+                    // 左右（-+）
+                    signVector_[i]->topLeftPos_.x_ = (std::max)(MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_, movablePointMin_.x_);
+                    if (MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_ + signVector_[i]->mapchip_[0].size() * Sign::blockRadius_ * 2 > movablePointMax_.x_) {
+                        signVector_[i]->topLeftPos_.x_ = movablePointMax_.x_ - signVector_[i]->mapchip_[0].size() * Sign::blockRadius_ * 2;
+                    }
+                    // 上下（+-)
+                    signVector_[i]->topLeftPos_.y_ = (std::min)(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMax_.y_);
+                    if (MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_ - signVector_[i]->mapchip_.size() * Sign::blockRadius_ * 2 < movablePointMin_.y_) {
+                        signVector_[i]->topLeftPos_.y_ = movablePointMin_.y_ + signVector_[i]->mapchip_.size() * Sign::blockRadius_ * 2;
+                    }
+                    //signVector_[i]->topLeftPos_.y_ = (std::max)(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMin_.y_);
+
+
+                    //signVector_[i]->topLeftPos_.x_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_,movablePointMin_.x_,movablePointMax_.x_);
+                    //signVector_[i]->topLeftPos_.y_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMin_.y_,movablePointMax_.y_);
                     signVector_[i]->mCollider_.SetBox2DCenter({ signVector_[i]->GetCenterPos().x_,signVector_[i]->GetCenterPos().y_ });
                 }
             }

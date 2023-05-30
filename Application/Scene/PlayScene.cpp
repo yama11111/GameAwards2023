@@ -407,7 +407,7 @@ void PlayScene::Initialize()
     }
 
     // 左下の座標から右上の座標を確認するといいかも
-    stage_.SetMovableSignRenge({ -50,-40 }, {40,13});
+    stage_.SetMovableSignRenge({ -50,-54 }, {68,13});
 
     // 背景初期化
     background_.Initialize();
