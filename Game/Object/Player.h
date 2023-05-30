@@ -77,10 +77,10 @@ public:
 	void Draw() override;
 
 	/// <summary>
-	/// 生きているか取得
+	/// 死んだか取得
 	/// </summary>
-	/// <returns>生存フラグ</returns>
-	bool IsAlive() const { return isAlive_; }
+	/// <returns>死亡フラグ</returns>
+	bool IsDead() const { return isAlive_ == false && drawer_.IsEndDeadAnime(); }
 
     void DrawDebug(void);
 

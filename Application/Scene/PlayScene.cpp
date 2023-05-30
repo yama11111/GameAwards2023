@@ -406,6 +406,9 @@ void PlayScene::Initialize()
         }
     }
 
+    // 左下の座標から右上の座標を確認するといいかも
+    stage_.SetMovableSignRenge({ -50,-40 }, {40,13});
+
     // 背景初期化
     background_.Initialize();
 
@@ -501,7 +504,7 @@ void PlayScene::Update()
     transferVP_.UpdateMatrix();
 
     // リセット
-    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_ || player_->IsAlive() == false)
+    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_ || player_->IsDead())
     {
         isReset_ = true;
         SceneExecutive::GetInstance()->Change("PLAY", "BLACKOUT", 2, 2);

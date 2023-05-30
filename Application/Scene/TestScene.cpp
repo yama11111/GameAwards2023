@@ -209,15 +209,15 @@ void TestScene::Update()
 
 		if (ImGui::Button("Jump"))
 		{
-			playerDra_.JumpAnimation();
+			playerDra_.AnimateJump();
 		}
 		if (ImGui::Button("Landing"))
 		{
-			playerDra_.LandingAnimation();
+			playerDra_.AnimateLanding();
 		}
 		if (ImGui::Button("Respawn"))
 		{
-			playerDra_.RespawnAnimation();
+			playerDra_.AnimateRespawn();
 		}
 
 		ImGui::End();

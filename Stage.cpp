@@ -1,5 +1,6 @@
 #include "Stage.h"
 #include <imgui.h>
+#include "MathUtillity.h"
 
 using namespace YInput;
 
@@ -37,6 +38,8 @@ void Stage::DrawDebug(void)
 void Stage::MouseCol4Warp(void)
 {
     //ImGui::Begin("mouseCol4");
+    //ImGui::Text("mpos : (%f,%f)", MouseColliderCommon::StaticGetMouseWorldPos().x_, MouseColliderCommon::StaticGetMouseWorldPos().y_);
+    //ImGui::End();
 
     // ¶ƒNƒŠƒbƒN‚ð‰Ÿ‚µ‚½uŠÔ
     if (Mouse::GetInstance()->IsTrigger(MouseClick::DIM_LEFT)) {
@@ -96,8 +99,8 @@ void Stage::MouseCol4Warp(void)
             for (size_t i = 0; i < signVector_.size(); i++)
             {
                 if (isHoldSignVector_[i]) {
-                    signVector_[i]->topLeftPos_.x_ = MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_;
-                    signVector_[i]->topLeftPos_.y_ = MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_;
+                    signVector_[i]->topLeftPos_.x_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_,movablePointMin_.x_,movablePointMax_.x_);
+                    signVector_[i]->topLeftPos_.y_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMin_.y_,movablePointMax_.y_);
                     signVector_[i]->mCollider_.SetBox2DCenter({ signVector_[i]->GetCenterPos().x_,signVector_[i]->GetCenterPos().y_ });
                 }
             }
@@ -295,6 +298,12 @@ void Stage::RegisterSign(Sign* ptr)
 void Stage::CallPPC(YukiMapchipCollider* ptr)
 {
     signVector_[ptr->idxSign_]->PPC(ptr);
+}
+
+void Stage::SetMovableSignRenge(const Vector2& pointMin, const Vector2& pointMax)
+{
+    movablePointMin_ = pointMin;
+    movablePointMax_ = pointMax;
 }
 
 const Stage::Vector3& Stage::GetTopLeftPos(size_t idx)

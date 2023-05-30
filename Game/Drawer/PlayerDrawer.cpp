@@ -27,20 +27,19 @@ using namespace DrawerConfig::Player;
 
 array<Model*, PlayerDrawerCommon::sPartsNum_> PlayerDrawerCommon::spModels_ =
 {
-	nullptr, nullptr
+	nullptr
 };
 
 #pragma endregion
 
 // インデックス
-static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::Body); // 体
+static const size_t BodyIdx = static_cast<size_t>(PlayerDrawerCommon::Parts::eBody); // 体
 
 void PlayerDrawerCommon::StaticInitialize()
 {
 	// ----- モデル読み込み ----- //
 
 	spModels_[BodyIdx] = Model::LoadObj("player", true); // 体
-	spModels_[1] = Model::CreateCube();
 }
 
 
@@ -54,6 +53,7 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 
 	// 色生成
 	color_.reset(CBColor::Create());
+	teleportColor_.reset(CBColor::Create());
 
 	// オブジェクト生成 + 親行列挿入 (パーツの数)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
@@ -63,6 +63,13 @@ void PlayerDrawer::Initialize(Transform* pParent, Vector3* pDirection)
 
 		// 親行列代入
 		modelObjs_[i]->parent_ = &core_->m_;
+	}
+	for (size_t i = 0; i < teleportModelObjs_.size(); i++)
+	{
+		// 生成
+		teleportModelObjs_[i].reset(Model::Object::Create(
+			{ pParent_->pos_, pParent_->rota_, pParent_->scale_ },
+			spVP_, teleportColor_.get(), spMate_));
 	}
 
 	// 向きポインタ挿入
@@ -86,6 +93,7 @@ void PlayerDrawer::Reset()
 
 	// 色初期化
 	color_->SetRGB(DefColor);
+	teleportColor_->SetRGB(DefColor);
 
 	// ----- アニメーション ----- //
 	
@@ -100,12 +108,26 @@ void PlayerDrawer::Reset()
 	// 移動用エミットタイマー
 	moveEmitTimer_.Initialize(Move::Smoke::IntervalFrame);
 
+	// テレポートフラグ
+	isTeleport_ = false;
+	// テレポート用タイマー
+	teleportTim_.Initialize(5);
+	// テレポート用スケールイージング
+	teleportScaleEas_.Initialize(0.0f, -1.0f, Respawn::Exponent);
+	// テレポート用アルファ値イージング
+	teleportAlphaEas_.Initialize(0.5f, 0.0f, Respawn::Exponent);
+
+	// 死亡フラグ
+	isDead_ = false;
+	// 死亡用タイマー
+	deadTim_.Initialize(Respawn::Frame);
+
 	// リスポーンフラグ
 	isRespawn_ = false;
 	// リスポーン用タイマー
 	respawnTim_.Initialize(Respawn::Frame);
 	// リスポーン用スケールイージング
-	respScaleEas_.Initialize(-1.0f, 0.0f, Respawn::Exponent);
+	respScaleEas_.Initialize(-0.25f, 0.0f, Respawn::Exponent);
 	// リスポーン用アルファ値イージング
 	respAlphaEas_.Initialize(0.0f, 1.0f, Respawn::Exponent);
 
@@ -127,6 +149,12 @@ void PlayerDrawer::ResetAnimation()
 	// 移動タイマーリセット
 	moveEmitTimer_.Reset(false);
 
+	// テレポート用タイマーリセット
+	teleportTim_.Reset(false);
+
+	// 死亡用タイマーリセット
+	deadTim_.Reset(false);
+	
 	// リスポーン用タイマーリセット
 	respawnTim_.Reset(false);
 
@@ -138,92 +166,47 @@ void PlayerDrawer::Update()
 {
 	// アニメーション用
 	Vector3 pos{}, rota{}, scale{};
-
 	// 向き合わせ
 	rota = YMath::AdjustAngle(*pDirection_);
-
-	// 煙発生
-	UpdateSmokeEmitter();
-
-	// 回転パワー更新
-	moveRotaPow_.Update(isMove_);
-
-	// 回転保存用
-	float moveRota = 0.0f;
-
-	// 移動中なら
-	if (isMove_)
-	{
-		// イーズイン
-		moveRota += moveRotaEas_.In(moveRotaPow_.Ratio());
-	}
-	// それ以外なら
-	else
-	{
-		// イーズアウト
-		moveRota += moveRotaEas_.Out(moveRotaPow_.Ratio());
-	}
-	
-	// 回転
-	rota.x_ = moveRota;
-	
-	// 移動フラグ保存
-	isElderMove_ = isMove_;
-
-
-	// リスポーン中なら
-	if (isRespawn_)
-	{
-		// リスポーン用タイマー更新
-		respawnTim_.Update();
-		// リスポーン用のスケール計算
-		float respSca = respScaleEas_.In(respawnTim_.Ratio());
-		
-		// 代入
-		scale = Vector3(respSca, respSca, respSca);
-
-		// リスポーン用のアルファ値計算
-		float respAlpha = respAlphaEas_.In(respawnTim_.Ratio());
-
-		// 代入
-		color_->SetAlpha(respAlpha);
-	}
-	// ゴール中なら
-	if (isGoal_)
-	{
-		// リスポーン用タイマー更新
-		goalTim_.Update();
-		// リスポーン用のスケール計算
-		float goalSca = goalScaleEas_.In(goalTim_.Ratio());
-
-		// 代入
-		scale = Vector3(goalSca, goalSca, goalSca);
-
-		// リスポーン用のアルファ値計算
-		float goalAlpha = goalAlphaEas_.In(goalTim_.Ratio());
-
-		// 代入
-		color_->SetAlpha(goalAlpha);
-	}
 
 	// 基底クラス更新 
 	IDrawer::Update({ pos, rota, scale });
 
+	// アニメーション用
+	animePos = animeRota = animeScale = {};
+	teleportAnimePos = teleportAnimeRota = teleportAnimeScale = {};	
+
+	UpdateMoveAnimation();
+	UpdateTeleportAnimation();
+	UpdateDeadAnimation();
+	UpdateRespawnAnimation();
+	UpdateGoalAnimation();
+
 	// 行列更新 (子)
 	for (size_t i = 0; i < modelObjs_.size(); i++)
 	{
-		modelObjs_[i]->UpdateMatrix();
+		modelObjs_[i]->UpdateMatrix({ animePos, animeRota, animeScale });
+	}
+	for (size_t i = 0; i < teleportModelObjs_.size(); i++)
+	{
+		teleportModelObjs_[i]->UpdateMatrix({ teleportAnimePos, teleportAnimeRota, teleportAnimeScale });
 	}
 }
 
 void PlayerDrawer::Draw()
 {
-	//// モデルの数描画
-	//for (size_t i = 0; i < spModels_.size(); i++)
-	//{
-	//	spModels_[i]->Draw(modelObjs_[i].get());
-	//}
-	spModels_[BodyIdx]->SetDrawCommand(modelObjs_[BodyIdx].get(), YGame::DrawLocation::Center);
+	// モデルの数描画
+	for (size_t i = 0; i < spModels_.size(); i++)
+	{
+		if (isDead_ == false)
+		{
+			spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
+		}
+		if (isTeleport_)
+		{
+			spModels_[i]->SetDrawCommand(teleportModelObjs_[i].get(), YGame::DrawLocation::Center);
+		}
+	}
 }
 
 void PlayerDrawer::UpdateSmokeEmitter()
@@ -299,7 +282,7 @@ void PlayerDrawer::UpdateSmokeEmitter()
 	}
 }
 
-void PlayerDrawer::JumpAnimation()
+void PlayerDrawer::AnimateJump()
 {
 	// 伸縮量
 	Vector3 val = core_->scale_ * DrawerConfig::Player::Jump::SlimeAction::Value;
@@ -325,7 +308,7 @@ void PlayerDrawer::JumpAnimation()
 		}
 	);
 }
-void PlayerDrawer::LandingAnimation()
+void PlayerDrawer::AnimateLanding()
 {
 	// つぶれる量
 	Vector3 squash = core_->scale_ * DrawerConfig::Player::Landing::SlimeAction::Value;
@@ -346,12 +329,46 @@ void PlayerDrawer::LandingAnimation()
 	);
 }
 
-void PlayerDrawer::DeadAnimation()
+void PlayerDrawer::AnimateTeleport()
 {
+	// タイマーリセット + 開始
+	teleportTim_.Reset(true);
 
+	for (size_t i = 0; i < teleportModelObjs_.size(); i++)
+	{
+		// 初期化
+		teleportModelObjs_[i]->Initialize({ pParent_->pos_, pParent_->rota_, pParent_->scale_ });
+	}
+
+	// テレポート
+	isTeleport_ = true;
 }
 
-void PlayerDrawer::RespawnAnimation()
+void PlayerDrawer::AnimateDead()
+{
+	// カメラブレ
+	spCamera_->Shaking(0.5f, 0.1f, 100.0f);
+
+	// 煙発生
+	spParticleMan_->EmitSmoke(
+		20,
+		Move::Smoke::AliveFrame,
+		pParent_->pos_, Move::Smoke::Range,
+		Move::Smoke::MinScaleSize, Move::Smoke::MaxScaleSize,
+		Vector3(-1.0f, -1.0f, -1.0f), Vector3(+1.0f, +1.0f, +1.0f),
+		Move::Smoke::MinRotaSpeed, Move::Smoke::MaxRotaSpeed,
+		Move::Smoke::Color,
+		Move::Smoke::Place,
+		YGame::DrawLocation::Center);
+
+	// 死ぬ
+	deadTim_.Reset(true);
+
+	// 死んだ
+	isDead_ = true;
+}
+
+void PlayerDrawer::AnimateRespawn()
 {
 	// アニメーションリセット
 	ResetAnimation();
@@ -359,28 +376,11 @@ void PlayerDrawer::RespawnAnimation()
 	// リスポーンタイマー開始
 	respawnTim_.SetActive(true);
 
-	// つぶれる量
-	Vector3 squash = core_->scale_ * DrawerConfig::Player::Respawn::SlimeAction::Value;
-
-	// 時間 (フレーム)
-	unsigned int frame = DrawerConfig::Player::Respawn::SlimeAction::Frame;
-	// 指数 (緩急)
-	float exponent = DrawerConfig::Player::Respawn::SlimeAction::Exponent;
-
-	// ぷよぷよアニメーション
-	SlimeActor::Activate(
-		{
-			{{}, frame, exponent},
-			{squash, frame, exponent},
-			{{}, frame, exponent}
-		}
-	);
-
 	// リスポーンアニメーション開始
 	isRespawn_ = true;
 }
 
-void PlayerDrawer::GoalAnimation()
+void PlayerDrawer::AnimateGoal()
 {
 	// アニメーションリセット
 	ResetAnimation();
@@ -390,4 +390,111 @@ void PlayerDrawer::GoalAnimation()
 
 	// ゴールアニメーション開始
 	isGoal_ = true;
+}
+
+
+void PlayerDrawer::UpdateMoveAnimation()
+{
+	// 煙発生
+	UpdateSmokeEmitter();
+
+	// 回転パワー更新
+	moveRotaPow_.Update(isMove_);
+
+	// 回転保存用
+	float moveRota = 0.0f;
+
+	// 移動中なら
+	if (isMove_)
+	{
+		// イーズイン
+		moveRota += moveRotaEas_.In(moveRotaPow_.Ratio());
+	}
+	// それ以外なら
+	else
+	{
+		// イーズアウト
+		moveRota += moveRotaEas_.Out(moveRotaPow_.Ratio());
+	}
+
+	// 回転
+	animeRota.x_ = moveRota;
+
+	// 移動フラグ保存
+	isElderMove_ = isMove_;
+}
+
+void PlayerDrawer::UpdateTeleportAnimation()
+{
+	if (isTeleport_ == false) { return; }
+
+	// テレポート用タイマー更新
+	teleportTim_.Update();
+	// テレポート用のスケール計算
+	float teleportSca = teleportScaleEas_.In(teleportTim_.Ratio());
+
+	// 代入
+	teleportAnimeScale += Vector3(teleportSca, teleportSca, teleportSca);
+
+	// テレポート用のアルファ値計算
+	float teleportAlpha = teleportAlphaEas_.In(teleportTim_.Ratio());
+
+	// 代入
+	teleportColor_->SetAlpha(teleportAlpha);
+
+	if (teleportTim_.IsEnd())
+	{
+		isTeleport_ = false;
+	}
+}
+
+void PlayerDrawer::UpdateDeadAnimation()
+{
+	if (isDead_ == false) { return; }
+
+	// タイマー更新
+	deadTim_.Update();
+}
+
+void PlayerDrawer::UpdateRespawnAnimation()
+{
+	if (isRespawn_ == false) { return; }
+	
+	// リスポーン用タイマー更新
+	respawnTim_.Update();
+	// リスポーン用のスケール計算
+	float respSca = respScaleEas_.In(respawnTim_.Ratio());
+
+	// 代入
+	animeScale += Vector3(respSca, respSca, respSca);
+
+	// リスポーン用のアルファ値計算
+	float respAlpha = respAlphaEas_.In(respawnTim_.Ratio());
+
+	// 代入
+	color_->SetAlpha(respAlpha);
+
+	if (respawnTim_.IsEnd())
+	{
+		isRespawn_ = false;
+	}
+}
+
+void PlayerDrawer::UpdateGoalAnimation()
+{
+	if (isGoal_ == false) { return; }
+
+	// リスポーン用タイマー更新
+	goalTim_.Update();
+	// リスポーン用のスケール計算
+	float goalSca = goalScaleEas_.In(goalTim_.Ratio());
+
+	// 代入
+	animeScale += Vector3(goalSca, goalSca, goalSca);
+
+	// リスポーン用のアルファ値計算
+	float goalAlpha = goalAlphaEas_.In(goalTim_.Ratio());
+
+	// 代入
+	color_->SetAlpha(goalAlpha);
 }
