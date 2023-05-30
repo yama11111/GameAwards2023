@@ -205,8 +205,8 @@ void Stage::MouseCol4Warp(void)
                 if (signVector_[i]->mCollider_.CollisionMousePointer() && i != mc4w_idxSign_start_) {
                     for (size_t j = 0; j < signVector_[i]->warpInfos_.size(); j++)
                     {
-                        // 看板内のワープブロックとカーソルが重なっている
-                        if (signVector_[i]->warpInfos_[j].mCollider_.CollisionMousePointer()) {
+                        // 看板内のワープブロックとカーソルが重なっている && 繋げ先が繋がってない
+                        if (signVector_[i]->warpInfos_[j].mCollider_.CollisionMousePointer() && signVector_[i]->warpInfos_[j].isConnected_ == false) {
                             mc4w_idxSign_end_ = i;
                             mc4w_idxWarpInfo_end_ = j;
                             mc4w_isConnectCheck_ = true;
