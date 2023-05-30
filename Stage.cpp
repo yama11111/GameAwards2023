@@ -264,7 +264,7 @@ void Stage::MouseCol4Warp(void)
                 signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].dirPartner_ = Sign::Direction::TOP;
                 signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].mapchipElemPartner_ = { 0,0 };
                 signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].partnerPtr_ = nullptr;
-                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].jdPtr_->jd_.Reset(signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].);
+                signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].jdPtr_->jd_.Reset();
             }
 
             // 始点側の接続フラグを変更
