@@ -246,6 +246,15 @@ void GoalDrawer::BindRotaAnimation()
 
 	// 縛る回転タイマー更新
 	bindRotaTim_.Update();
+	if (isRock_)
+	{
+		if (bindRotaTim_.Ratio() >= 0.4f)
+		{
+			// タイマーリセット
+			bindRotaTim_.Reset(true);
+		}
+	}
+	
 	// タイマー終了したら
 	if (bindRotaTim_.IsEnd())
 	{

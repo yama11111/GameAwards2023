@@ -9,6 +9,7 @@
 #include "LevelData.h"
 
 #include "PilotManager.h"
+#include "TransitionManager.h"
 
 using YGame::Transform;
 using YMath::Vector2;
@@ -100,6 +101,8 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 
 void Player::Move()
 {
+	if (PilotManager::StaticGetIsActInit()) { return; }
+
 	// ÉSÅ[ÉãÇµÇΩå„ÇÕñ≥éã
 	if (isGameClear_) { return; }
 
@@ -126,6 +129,8 @@ void Player::Move()
 
 void Player::Jump()
 {
+	if (PilotManager::StaticGetIsActInit()) { return; }
+
 	// ÉSÅ[ÉãÇµÇΩå„ÇÕñ≥éã
 	if (isGameClear_) { return; }
 
