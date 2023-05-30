@@ -263,7 +263,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false)
         {
             while (1)
             {
@@ -428,7 +428,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false)
         {
             while (1)
             {

@@ -82,9 +82,9 @@ void Stage::MouseCol4Warp(void)
             }
         }
     }
-    else {
-        //ImGui::Text("isTriggerLeft : false");
-    }
+    //else {
+    //    //ImGui::Text("isTriggerLeft : false");
+    //}
 
     // 左クリックを押している間
     if (Mouse::GetInstance()->IsDown(MouseClick::DIM_LEFT)) {
@@ -115,6 +115,79 @@ void Stage::MouseCol4Warp(void)
                     //signVector_[i]->topLeftPos_.x_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().x_ - mc4w_offset_.x_,movablePointMin_.x_,movablePointMax_.x_);
                     //signVector_[i]->topLeftPos_.y_ = YMath::Clamp(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMin_.y_,movablePointMax_.y_);
                     signVector_[i]->mCollider_.SetBox2DCenter({ signVector_[i]->GetCenterPos().x_,signVector_[i]->GetCenterPos().y_ });
+
+                    // 動かした看板内のワープブロックに接続済みのものがあるかどうか全検索
+                    for (size_t j = 0; j < signVector_[i]->warpInfos_.size(); j++)
+                    {
+                        // それが接続済みなら
+                        if (signVector_[i]->warpInfos_[j].isConnected_) {
+                            // ワープブロックが右壁にあるなら（ワープブロックから見た出現方向がLEFTなので）
+                            if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::LEFT) {
+                                // 相手（左壁）のx座標が自分（右壁）のx座標より小さい時
+                                if (signVector_[i]->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.first * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                }
+                                else {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                }
+                            }
+                            // ワープブロックが左壁にあるなら（ワープブロックから見た出現方向がRIGHTなので）
+                            if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::RIGHT) {
+                                // 相手（左壁）のx座標が自分（右壁）のx座標より大きい時
+                                if (signVector_[i]->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.first * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                }
+                                else {
+                                    // そのワープブロックは利用可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    // そいつの相方のワープブロックも利用可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                }
+                            }
+
+                            // ワープブロックが底壁にあるなら（ワープブロックから見た出現方向がTOPなので）
+                            if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::TOP) {
+                                // 相手（上壁）のy座標が自分（底壁）のy座標より小さい時
+                                if (signVector_[i]->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                }
+                                else {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                }
+                            }
+                            // ワープブロックが上壁にあるなら（ワープブロックから見た出現方向がBOTTOMなので）
+                            if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::BOTTOM) {
+                                // 相手（底壁）のy座標が自分（上壁）のy座標より大きい時
+                                if (signVector_[i]->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                                    // そのワープブロックは利用不可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    // そいつの相方のワープブロックも利用不可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                }
+                                else {
+                                    // そのワープブロックは利用可能になる
+                                    signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    // そいつの相方のワープブロックも利用可
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -181,6 +254,7 @@ void Stage::MouseCol4Warp(void)
 
             // 始点側の接続フラグを変更
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isConnected_ = true;
+            signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
             // 始点のwarpInfoに終点側の情報を入力
             // <相手の看板のidx保存>
             // <相手のワープブロックのidx保存>
@@ -199,6 +273,7 @@ void Stage::MouseCol4Warp(void)
 
             // 終点側の接続フラグを変更
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isConnected_ = true;
+            signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].isAvailable_ = true;
             // 終点のwarpInfoに始点の情報を入力
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerSign_ = mc4w_idxSign_start_;
             signVector_[mc4w_idxSign_end_]->warpInfos_[mc4w_idxWarpInfo_end_].IdxPartnerWarp_ = mc4w_IdxWarpInfo_start_;
