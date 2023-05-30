@@ -106,6 +106,9 @@ private:
 
 	// Œü‚«
 	YMath::Vector3 direction_;
+	
+	// Œü‚«
+	YMath::Vector3 initDirection_;
 
 	// í—Ş
 	Type type_ = Type::eGreen;
@@ -187,6 +190,8 @@ public:
 	/// <param name="BlockDrawerCommon::Type::eGreen"> : —Î</param>
 	/// <param name="BlockDrawerCommon::Type::eRed"> : Ô</param>
 	void Reset(const YMath::Vector3& direction, const Type& type);
+
+	void Reset();
 
 	/// <summary>
 	/// XV

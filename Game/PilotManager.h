@@ -54,6 +54,8 @@ public:
 	static void StaticSetSignIndex(const int signIndex) { sSignIndex_ = signIndex; }
 	
 	static void StaticSetFollowStage(const int signIndex);
+	
+	static bool StaticGetIsActInit() { return sIsActInitAnime_; }
 
 
 	static PilotType StaticGetCurrentPilot() { return sPilot_; }

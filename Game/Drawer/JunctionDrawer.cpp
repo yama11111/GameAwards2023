@@ -139,6 +139,8 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	// 向き代入
 	direction_ = direction.Normalized();
 
+	initDirection_ = direction.Normalized();
+
 	// 代入
 	type_ = type;
 
@@ -175,6 +177,52 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	rayModelObjs_->SetColor(CoreColor::ColorPtr(color, coreParts));
 	rayModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
 
+	// パートナー解除
+	pPartner_ = nullptr;
+
+
+	// ----- アニメーション ----- //
+
+	// 動く
+	isAct_ = true;
+
+	// アニメ用初期化
+	for (size_t i = 0; i < sFrameNum_; i++)
+	{
+		animePoss_[i] = animeRotas_[i] = animeScales_[i] = {};
+	}
+	animeRayPos_ = animeRayRota_ = animeRayScale_;
+
+	// 立ちモーションする
+	isIdle_ = true;
+
+	// 立ちタイマー初期化
+	for (size_t i = 0; i < idleTimers_.size(); i++)
+	{
+		idleTimers_[i].Initialize(Idle::Frame);
+		idleTimers_[i].SetActive(true);
+	}
+
+	// 接続しない
+	isConnected_ = false;
+
+	// 接続タイマー初期化
+	connectTimer_.Initialize(Connect::Frame);
+
+	// 向き合わせタイマー初期化
+	alignDirectionTimer_.Initialize(Connect::AlignDirection::Frame);
+
+	rayScaleTimer_.Initialize(20);
+}
+
+void JunctionDrawer::Reset()
+{
+	// リセット
+	IDrawer::Reset();
+
+	// 向き代入
+	direction_ = initDirection_;
+	
 	// パートナー解除
 	pPartner_ = nullptr;
 

@@ -127,6 +127,11 @@ void MyGame::DrawGameScene()
 		}
 	}
 
+	if (SceneManager::GetInstance()->CurrentSceneName() != "PLAY")
+	{
+		pMousePointerSpr_->SetDrawCommand(mousePointerObject_.get(), DrawLocation::Front);
+	}
+
 	// •`‰æêŠ‚Ì”‚¾‚¯
 	for (size_t i = 0; i < DrawLocationNum; i++)
 	{
