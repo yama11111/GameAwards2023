@@ -2,6 +2,8 @@
 #include "Transform.h"
 #include "ViewProjection.h"
 #include "Shake.h"
+#include "Timer.h"
+#include "Lerp.h"
 
 namespace YGame
 {
@@ -33,7 +35,14 @@ namespace YGame
 		
 		// カメラシェイク
 		YMath::Shake shake_;
-	
+
+
+		bool isSmooth_ = false;
+
+		YMath::Timer moveTimer_;
+
+		YMath::Ease<YMath::Vector3> moveEase_;
+
 	public:
 		
 		/// <summary>
@@ -57,6 +66,8 @@ namespace YGame
 		void Update();
 	
 	public:
+		// 滑らかに移動
+		void SmoothMoving(const unsigned int frame, const YMath::Vector3& pos, const float exponent);
 		// カメラシェイク
 		virtual void Shaking(const float swing, const float dekey, const float place);
 		// ビュープロジェクション

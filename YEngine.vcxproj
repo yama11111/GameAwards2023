@@ -189,6 +189,7 @@
     <ClCompile Include="Game\Object\Key.cpp" />
     <ClCompile Include="Game\Object\Laser.cpp" />
     <ClCompile Include="Game\Object\ObjectManager.cpp" />
+    <ClCompile Include="Game\PilotManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game\MouseCollider.cpp" />
     <ClCompile Include="Sign.cpp" />
@@ -322,6 +323,7 @@
     <ClInclude Include="Game\MouseCollider.h" />
     <ClInclude Include="Game\Object\LevelData.h" />
     <ClInclude Include="Game\Object\ObjectManager.h" />
+    <ClInclude Include="Game\PilotManager.h" />
     <ClInclude Include="Game\StageData.h" />
     <ClInclude Include="Sign.h" />
     <ClInclude Include="Stage.h" />

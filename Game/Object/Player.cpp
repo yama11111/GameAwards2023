@@ -8,6 +8,8 @@
 #include "Stage.h"
 #include "LevelData.h"
 
+#include "PilotManager.h"
+
 using YGame::Transform;
 using YMath::Vector2;
 using YMath::Vector3;
@@ -305,6 +307,8 @@ void Player::Update()
 
 		// テレポートアニメーション
 		drawer_.AnimateTeleport();
+
+		PilotManager::StaticSetFollowStage(idxSign_);
 	}
 	
 	// 戻す

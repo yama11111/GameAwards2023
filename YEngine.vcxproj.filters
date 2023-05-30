@@ -525,6 +525,9 @@
     <ClCompile Include="Engine\GameUtillity\Level\Level.cpp">
       <Filter>Engine\GameUtil\Level</Filter>
     </ClCompile>
+    <ClCompile Include="Game\PilotManager.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -916,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="Engine\GameUtillity\Level\Level.h">
       <Filter>Engine\GameUtil\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\PilotManager.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

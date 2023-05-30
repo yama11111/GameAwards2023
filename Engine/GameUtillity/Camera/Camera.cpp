@@ -40,6 +40,10 @@ void Camera::Initialize(const Vector3 pos, Vector3* pFollowPoint, bool isFollow)
 	
 	SetIsFollow(isFollow);
 
+	isSmooth_ = false;
+	moveTimer_.Initialize(0);
+	moveEase_.Initialize({}, {}, 0.0f);
+
 	// 更新
 	Update();
 }
@@ -62,6 +66,17 @@ void Camera::UpdateTarget()
 }
 void Camera::Update()
 {
+	if (isSmooth_)
+	{
+		moveTimer_.Update();
+		pos_ = moveEase_.Out(moveTimer_.Ratio());
+
+		if (moveTimer_.IsEnd())
+		{
+			isSmooth_ = false;
+		}
+	}
+
 	// 位置 + 回転更新
 	transform_.pos_ = pos_;
 	transform_.rota_ = rota_;
@@ -82,6 +97,16 @@ void Camera::Update()
 
 	// ビュープロジェクション行列更新
 	vp_.UpdateMatrix();
+}
+
+void Camera::SmoothMoving(const unsigned int frame, const Vector3& pos, const float exponent)
+{
+	moveTimer_.Initialize(frame);
+	moveTimer_.SetActive(true);
+
+	moveEase_.Initialize(pos_, pos, exponent);
+
+	isSmooth_ = true;
 }
 
 void Camera::Shaking(const float swing, const float dekey, const float place)

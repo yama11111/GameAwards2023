@@ -11,6 +11,7 @@
 #include "MouseCollider.h"
 #include "LevelData.h"
 #include "StageData.h"
+#include "PilotManager.h"
 
 #pragma region 名前空間宣言
 
@@ -62,6 +63,9 @@ void PlayScene::Load()
 
     // ブロック
     Block::StaticInitialize();
+
+    // パイロット
+    PilotManager::StaticInitialize(&camera_, &stage_);
 }
 
 #pragma endregion
@@ -418,6 +422,7 @@ void PlayScene::Initialize()
 
     // カメラ
     camera_.Initialize({ +10.0f,-20.0f,-80.0f }, {});
+    PilotManager::StaticSetInitCameraPos(camera_.pos_);
 
     // ビュープロジェクション初期化
     transferVP_.Initialize();
@@ -448,6 +453,9 @@ void PlayScene::Finalize()
     {
         // プレイBGM停止
         pPlayBGM_->Stop();
+
+        // リセット初期化
+        isReset_ = false;
     }
 }
 
@@ -463,6 +471,8 @@ void PlayScene::Update()
 
     // 入力描画静的更新
     InputDrawerCommon::StaticUpdate();
+
+    PilotManager::StaticUpdate();
 
     // カメラ位置更新
     CameraUpdate();
