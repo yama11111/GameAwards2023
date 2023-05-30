@@ -1,6 +1,7 @@
 #include "PilotManager.h"
 #include "Keys.h"
 #include "TransitionManager.h"
+#include "MouseCollider.h"
 #include <cassert>
 
 using YInput::Keys;
@@ -54,10 +55,12 @@ void PilotManager::StaticUpdate()
 		if (sPilot_ == PilotType::ePlayer)
 		{
 			StaticChangePilot(PilotType::eStage);
+			MouseColliderCommon::StaticSetIsActMouse(true);
 		}
 		else if (sPilot_ == PilotType::eStage)
 		{
 			StaticChangePilot(PilotType::ePlayer);
+			MouseColliderCommon::StaticSetIsActMouse(false);
 		}
 	}
 

@@ -25,6 +25,11 @@ protected:
 	// 静的ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;
 
+	// 
+	static bool sIsActMouse_;
+
+	static bool sIsHoldMouse_;
+
 public:
 
 	/// <summary>
@@ -54,6 +59,12 @@ public:
 	/// </summary>
 	/// <param name="pVP"> : ビュープロジェクションポインタ</param>
 	static void StaticSetViewProjectionPointer(YGame::ViewProjection* pVP);
+
+
+	static void StaticSetIsActMouse(const bool isActMouse) { sIsActMouse_ = isActMouse; }
+	
+	static void StaticSetIsHoldMouse(const bool isHoldMouse) { sIsHoldMouse_ = isHoldMouse; }
+	static bool StaticGetIsHoldMouse() { return sIsHoldMouse_; }
 
 public:
 

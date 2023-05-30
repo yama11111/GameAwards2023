@@ -11,7 +11,8 @@ namespace YBase
 		YGame::PostEffect* pPostEffect_ = nullptr;
 		std::unique_ptr<YGame::PostEffect::Object> postEffectObject_;
 
-		YGame::Sprite2D* pMousePointerSpr = nullptr;
+		YGame::Sprite2D* pMousePointerSpr_ = nullptr;
+		YGame::Sprite2D* pMousePointerHoldSpr_ = nullptr;
 		std::unique_ptr<YGame::Sprite2D::Object> mousePointerObject_;
 
 	public:

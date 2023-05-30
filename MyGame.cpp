@@ -3,6 +3,7 @@
 #include "YGameSceneFactory.h"
 #include "YGameTransitionFactory.h"
 #include "StageConfig.h"
+#include "PilotManager.h"
 
 #pragma region 名前空間宣言
 using YBase::MyGame;
@@ -32,7 +33,8 @@ bool MyGame::Initialize()
 	postEffectObject_.reset(PostEffect::Object::Create({ { WinSize.x_ / 2.0f,WinSize.y_ / 2.0f ,0.0f }, {}, {1.0f,1.0f,0.0f} }));
 
 
-	pMousePointerSpr = Sprite2D::Create({ true, {}, {0.0f,0.0f} }, { Texture::Load("UI/mousePointer.png") });
+	pMousePointerSpr_ = Sprite2D::Create({ true, {}, {0.0f,0.0f} }, { Texture::Load("UI/mousePointer.png") });
+	pMousePointerHoldSpr_ = Sprite2D::Create({ true, {}, {0.5f,0.5f} }, { Texture::Load("UI/mousePointerHold.png") });
 	mousePointerObject_.reset(Sprite2D::Object::Create({ {}, {}, {0.5f,0.5f,0.0f} }));
 
 	bool isShow = false;
@@ -113,7 +115,17 @@ void MyGame::DrawGameScene()
 	sceneExe_->Draw();
 
 	// マウス描画
-	pMousePointerSpr->SetDrawCommand(mousePointerObject_.get(), DrawLocation::Front);
+	if (PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::eStage)
+	{
+		if (MouseColliderCommon::StaticGetIsHoldMouse())
+		{
+			pMousePointerHoldSpr_->SetDrawCommand(mousePointerObject_.get(), DrawLocation::Front);
+		}
+		else
+		{
+			pMousePointerSpr_->SetDrawCommand(mousePointerObject_.get(), DrawLocation::Front);
+		}
+	}
 
 	// 描画場所の数だけ
 	for (size_t i = 0; i < DrawLocationNum; i++)

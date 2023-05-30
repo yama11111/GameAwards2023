@@ -205,6 +205,8 @@ void PlayScene::Initialize()
 
             // 挿入
             objMan_.PushBack(player_.get());
+
+            PilotManager::StaticSetSignIndex(LevelData::Player::InitStatuses[index].signIndex_);
         }
 
         // ブロック
@@ -449,13 +451,10 @@ void PlayScene::Initialize()
 void PlayScene::Finalize()
 {
     // リセットじゃないなら
-    if (isReset_ == false)
+    if (isReset_ == false || hud_.IsElderPause())
     {
         // プレイBGM停止
         pPlayBGM_->Stop();
-
-        // リセット初期化
-        isReset_ = false;
     }
 }
 
@@ -487,6 +486,8 @@ void PlayScene::Update()
 
     //sign_.Update();
     stage_.Update();
+
+    MouseColliderCommon::StaticSetIsHoldMouse(stage_.mc4w_isHoldOther_);
 
     // ------------ ↑ プレイシーンの処理 ↑ ------------//
 
