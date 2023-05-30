@@ -107,8 +107,10 @@ namespace maruyama {
 
             // 自分が接続済みか - 可変
             bool isConnected_{};
-            // 通った（ワープを使用したかどうか）
+            // 通った（ワープを使用したかどうか） - 可変
             bool isUsed_{};
+            // 接続先との相互の位置関係から現在使えるのかどうか - 可変
+            bool isAvailable_{};
             // 自分の"ブロック"の配列要素数（看板に帰属） - 不変
             std::pair<size_t, size_t> mapchipElemSelf_{};
             // 自分側の出現方向 - 不変
