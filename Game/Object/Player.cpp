@@ -92,6 +92,8 @@ void Player::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 
 	// 描画クラスリセット
 	drawer_.Reset();
+
+	drawer_.AnimateRespawn();
 }
 
 void Player::Move()
@@ -138,7 +140,7 @@ void Player::Jump()
 		speed_.y_ = LevelData::Player::JumpPower;
 
 		// ジャンプアニメーション
-		drawer_.JumpAnimation();
+		drawer_.AnimateJump();
 
 		// ジャンプカウント
 		jumpCount_++;
@@ -158,7 +160,7 @@ void Player::Landing()
 		spStageMan_->isHoldSignVector_[idxSign_] == false)
 	{
 		// 着地アニメーション
-		drawer_.LandingAnimation();
+		drawer_.AnimateLanding();
 	}
 }
 
@@ -229,7 +231,7 @@ void Player::OnCollision(ObjectCollider* pPair)
 		isAlive_ = false;
 
 		// アニメーション
-		drawer_.DeadAnimation();
+		drawer_.AnimateDead();
 	}
 	// スイッチなら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eSwitch)
@@ -259,7 +261,7 @@ void Player::OnCollision(ObjectCollider* pPair)
 		pPair->SetIsActSkill(true);
 
 		// ゴール
-		drawer_.GoalAnimation();
+		drawer_.AnimateGoal();
 
 		// ゲームクリア
 		isGameClear_ = true;
@@ -298,6 +300,9 @@ void Player::Update()
 		// 看板インデックス更新
 		SetSignIndex(idxSign_);
 		elderLeftTop_ = spStageMan_->GetTopLeftPos(GetSignIndex());
+
+		// テレポートアニメーション
+		drawer_.AnimateTeleport();
 	}
 	
 	// 戻す

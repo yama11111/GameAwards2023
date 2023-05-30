@@ -11,13 +11,14 @@ public:
 	// パーツの名前
 	enum class Parts
 	{
-		Body, // 体
+		eBody, // 体
+		eEnd, // リサイズ用
 	};
 
 protected:
 	
 	// パーツの総数
-	static const size_t sPartsNum_ = 2;
+	static const size_t sPartsNum_ = static_cast<size_t>(Parts::eEnd);
 
 protected:
 	
@@ -55,7 +56,19 @@ private:
 	YMath::Vector3* pDirection_ = nullptr;
 
 	
+	// モデル用オブジェクト (テレポート)
+	std::array<std::unique_ptr<YGame::Model::Object>, sPartsNum_> teleportModelObjs_;
+
+	// 色
+	std::unique_ptr<YGame::CBColor> teleportColor_;
+	
+
 	// ----- アニメーション ----- //
+
+	// アニメーション用
+	YMath::Vector3 animePos{}, animeRota{}, animeScale{};
+	
+	YMath::Vector3 teleportAnimePos{}, teleportAnimeRota{}, teleportAnimeScale{};
 
 	// 移動中か
 	bool isMove_ = false;
@@ -71,6 +84,26 @@ private:
 
 	// 移動用エミットタイマー
 	YMath::Timer moveEmitTimer_;
+
+
+	// テレポート中か
+	bool isTeleport_ = false;
+
+	// テレポートタイマー
+	YMath::Timer teleportTim_;
+
+	// テレポート用アルファ値イージング
+	YMath::Ease<float> teleportAlphaEas_;
+
+	// テレポート用スケールイージング
+	YMath::Ease<float> teleportScaleEas_;
+
+
+	// 死亡中か
+	bool isDead_ = false;
+
+	// 死亡タイマー
+	YMath::Timer deadTim_;
 
 
 	// リスポーン中か
@@ -128,25 +161,44 @@ public:
 	void SetActMoveAnimation(const bool isMove) { isMove_ = isMove; }
 	
 	// ジャンプモーション
-	void JumpAnimation();
+	void AnimateJump();
 	
 	// 着地モーション
-	void LandingAnimation();
+	void AnimateLanding();
+
+
+	// テレポートモーション
+	void AnimateTeleport();
 
 
 	// 死亡アニメーション
-	void DeadAnimation();
+	void AnimateDead();
 	
 	// リスポーンアニメーション
-	void RespawnAnimation();
+	void AnimateRespawn();
 
 	// ゴールアニメーション
-	void GoalAnimation();
+	void AnimateGoal();
 
 private:
 	
 	// アニメーションリセット
 	void ResetAnimation();
+
+	// 移動アニメーション
+	void UpdateMoveAnimation();
+	
+	// テレポートアニメーション
+	void UpdateTeleportAnimation();
+	
+	// 死亡アニメーション
+	void UpdateDeadAnimation();
+
+	// リスポーンアニメーション
+	void UpdateRespawnAnimation();
+
+	// ゴールアニメーション
+	void UpdateGoalAnimation();
 
 	// 煙発生更新
 	void UpdateSmokeEmitter();
