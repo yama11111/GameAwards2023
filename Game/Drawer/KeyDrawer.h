@@ -91,6 +91,16 @@ private:
 	std::array<bool, sSetNum_> isIdlePowerSwitches_;
 
 
+	
+	bool isGoal_ = false;
+	
+	YMath::Timer goalTimer_;
+
+	YMath::Ease<float> goalHeightEase_;
+	
+	YMath::Ease<float> goalScaleEase_;
+
+
 public:
 
 	/// <summary>
@@ -116,7 +126,10 @@ public:
 
 public:
 
-
+	/// <summary>
+	/// ゴールアニメ開始
+	/// </summary>
+	void AnimateGoal();
 
 private:
 

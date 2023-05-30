@@ -256,9 +256,6 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// 鍵なら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eKey)
 	{
-		// アクション
-		pPair->SetIsActSkill(true);
-		
 		// 鍵を所持する
 		isKeyHolder_ = true;
 	}
@@ -269,7 +266,7 @@ void Player::OnCollision(ObjectCollider* pPair)
 		if (isKeyHolder_ == false) { return; }
 
 		// アクション
-		pPair->SetIsActSkill(true);
+		if (pPair->GetIsActSkill() == false) { return; }
 
 		// ゴール
 		drawer_.AnimateGoal();

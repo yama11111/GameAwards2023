@@ -128,6 +128,15 @@ void KeyDrawer::Reset()
 		idlePowers_[i].Initialize(Idle::Frame);
 	}
 
+
+	isGoal_ = false;
+
+	goalTimer_.Initialize(20);
+
+	goalHeightEase_.Initialize(0.0f, +1.0f, 3.0f);
+	
+	goalScaleEase_.Initialize(0.0f, -1.0f, 3.0f);
+
 }
 
 void KeyDrawer::Update()
@@ -145,11 +154,24 @@ void KeyDrawer::Update()
 	// 立ちモーション更新
 	UpdateIdleAnimation();
 
+	Vector3 scale{};
+
+	if (isGoal_)
+	{
+		goalTimer_.Update();
+
+		animeBladePos_.y_ += goalHeightEase_.In(goalTimer_.Ratio());
+		animeRingPos_.y_ += goalHeightEase_.In(goalTimer_.Ratio());
+		scale.x_ += goalScaleEase_.In(goalTimer_.Ratio());
+		scale.y_ += goalScaleEase_.In(goalTimer_.Ratio());
+		scale.z_ += goalScaleEase_.In(goalTimer_.Ratio());
+	}
+
 
 	// 行列更新 (子)
-	modelObjs_[BladeIdx]->UpdateMatrix({ animeBladePos_ });
-	modelObjs_[RingCoreIdx]->UpdateMatrix({ animeRingPos_, animeRingRota_ });
-	modelObjs_[RingShellIdx]->UpdateMatrix({ animeRingPos_, animeRingRota_ });
+	modelObjs_[BladeIdx]->UpdateMatrix({ animeBladePos_, {}, scale });
+	modelObjs_[RingCoreIdx]->UpdateMatrix({ animeRingPos_, animeRingRota_, scale });
+	modelObjs_[RingShellIdx]->UpdateMatrix({ animeRingPos_, animeRingRota_, scale });
 }
 
 void KeyDrawer::Draw()
@@ -159,6 +181,15 @@ void KeyDrawer::Draw()
 	{
 		spModels_[i]->SetDrawCommand(modelObjs_[i].get(), YGame::DrawLocation::Center);
 	}
+}
+
+void KeyDrawer::AnimateGoal()
+{
+	if (isGoal_) { return; }
+
+	isGoal_ = true;
+
+	goalTimer_.Reset(true);
 }
 
 void KeyDrawer::UpdateIdleAnimation()

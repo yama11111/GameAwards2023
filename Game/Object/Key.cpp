@@ -67,6 +67,11 @@ void Key::PostUpdate()
 	// トランスフォーム行列更新
 	transform_->UpdateMatrix();
 
+	if (GetIsActSkill())
+	{
+		drawer_.AnimateGoal();
+	}
+
 	// 描画クラス更新
 	drawer_.Update();
 }
@@ -92,5 +97,10 @@ void Key::OnCollision(ObjectCollider* pPair)
 	{
 		// 座標ポインタに代入
 		pPlayerPos_ = pPair->PosPointer();
+	}
+	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)
+	{
+		SetIsActSkill(true);
+		pPair->SetIsActSkill(true);
 	}
 }

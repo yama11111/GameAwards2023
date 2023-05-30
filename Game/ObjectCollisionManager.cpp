@@ -237,4 +237,28 @@ void ObjectCollisionManager::CheckCollisionPair(ObjectCollider* pColliderA, Obje
 			return;
 		}
 	}
+
+	// 鍵
+	if (pColliderA->GetColliderType() == ObjectCollider::Type::eKey)
+	{
+		// 鍵 × ゴール
+		if (pColliderB->GetColliderType() == ObjectCollider::Type::eGoal)
+		{
+			// 調整用コライダー
+			Box2D collA;
+			collA.SetBox2DCenter(pColliderA->GetBox2DCenter());
+			// 大きさに幅を持たせる
+			Vector2 rad = pColliderA->GetBox2DRadSize();
+			collA.SetBox2DRadSize(rad + Vector2(rad.x_ * +0.5f, rad.y_ * +0.5f));
+
+			// アタリ
+			if (YGame::CollisionBoxBox2D(collA, *pColliderB))
+			{
+				pColliderA->OnCollision(pColliderB);
+				pColliderB->OnCollision(pColliderA);
+			}
+
+			return;
+		}
+	}
 }
