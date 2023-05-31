@@ -17,11 +17,14 @@ using YMath::Vector3;
 using YMath::Clamp;
 
 YInput::Keys* Player::spKeys_ = nullptr;
+YGame::Audio* Player::spGetKeySE_ = nullptr;
 
 void Player::StaticInitialize()
 {
 	// キーインスタンス取得
 	spKeys_ = YInput::Keys::GetInstance();
+
+	spGetKeySE_ = YGame::Audio::Load("SE/SE_key.wav");
 }
 
 void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)
@@ -256,6 +259,12 @@ void Player::OnCollision(ObjectCollider* pPair)
 	// 鍵なら
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eKey)
 	{
+		if (isKeyHolder_ == false)
+		{
+			spGetKeySE_->Stop();
+			spGetKeySE_->Play(false);
+		}
+
 		// 鍵を所持する
 		isKeyHolder_ = true;
 

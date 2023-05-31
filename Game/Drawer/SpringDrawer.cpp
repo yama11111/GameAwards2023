@@ -15,6 +15,7 @@ using YGame::CBColor;
 using YGame::CBMaterial;
 
 using YGame::SlimeActor;
+using YGame::Audio;
 
 using YMath::Ease;
 using YMath::Power;
@@ -38,6 +39,7 @@ Ease<float>SpringDrawerCommon::sJumpAnticipationHeightEase_;
 array<Ease<float>, SpringDrawerCommon::sRingNum_> SpringDrawerCommon::sJumpHeightEases_;
 Ease<Vector3>SpringDrawerCommon::sJumpAnticipationScaleEase_;
 array<Ease<Vector3>, SpringDrawerCommon::sRingNum_> SpringDrawerCommon::sJumpScaleEases_;
+Audio* SpringDrawerCommon::spJumpSE_ = nullptr;
 
 #pragma endregion
 
@@ -98,6 +100,9 @@ void SpringDrawerCommon::StaticInitialize()
 		Jump::Scale::Performance::Top::Start, Jump::Scale::Performance::Top::End, Jump::Scale::Performance::Top::Exponent);
 	sJumpScaleEases_[BottomRingIdx].Initialize(
 		Jump::Scale::Performance::Bottom::Start, Jump::Scale::Performance::Bottom::End, Jump::Scale::Performance::Bottom::Exponent);
+
+
+	spJumpSE_ = Audio::Load("SE/SE_spring.wav");
 }
 
 #pragma endregion
@@ -270,6 +275,9 @@ void SpringDrawer::AnimateJump()
 
 	// ƒWƒƒƒ“ƒv‚µ‚½
 	isJumped_ = true;
+
+	spJumpSE_->Stop();
+	spJumpSE_->Play(false);
 }
 
 void SpringDrawer::UpdateIdle()

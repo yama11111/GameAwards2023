@@ -146,6 +146,8 @@ private:
 	// ÉLÅ[
 	static YInput::Keys* spKeys_;
 
+	static YGame::Audio* spGetKeySE_;
+
 public:
 
 	/// <summary>

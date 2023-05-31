@@ -55,6 +55,9 @@ protected:
 
 	// ジャンプ大きさイージング
 	static std::array<YMath::Ease<YMath::Vector3>, sRingNum_> sJumpScaleEases_;
+	
+	
+	static YGame::Audio* spJumpSE_;
 
 public:
 

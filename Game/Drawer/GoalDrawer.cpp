@@ -188,9 +188,15 @@ void GoalDrawer::Reset(const bool isRock)
 
 void GoalDrawer::ActivateClearAnimation(const Vector3& playerPos)
 {
+	if (isClear_ == false)
+	{
+		spGoalSE_->Stop();
+		spGoalSE_->Play(false);
+	}
+
 	// クリア
 	isClear_ = true;
-
+	
 	// ログイン開始
 	StartLogin(playerPos);
 }
@@ -332,9 +338,6 @@ void GoalDrawer::ClearAnimation()
 		{
 			// 描画クラスクリア演出
 			DrawerHelper::StaticClear();
-
-			spGoalSE_->Stop();
-			spGoalSE_->Play(false);
 
 			// フラグをfalseに
 			isActClearRota_ = false;
