@@ -10,6 +10,7 @@ using YGame::Transform;
 using YGame::Sprite2D;
 using YGame::Texture;
 using YGame::UIButtonDrawer;
+using YGame::UIChargeButtonDrawer;
 using YScene::SceneManager;
 using YScene::YGameSceneFactory;
 using YMath::Vector3;
@@ -27,7 +28,7 @@ UIButtonDrawer InputDrawerCommon::spKeyS_;
 UIButtonDrawer InputDrawerCommon::spKeyD_;
 UIButtonDrawer InputDrawerCommon::spKeyE_;
 UIButtonDrawer InputDrawerCommon::spKeyF_;
-UIButtonDrawer InputDrawerCommon::spKeyR_;
+UIChargeButtonDrawer InputDrawerCommon::spKeyR_;
 UIButtonDrawer InputDrawerCommon::spKeySpace_;
 UIButtonDrawer InputDrawerCommon::spMouseL_;
 UIButtonDrawer InputDrawerCommon::spKeyEsc_;
@@ -39,6 +40,9 @@ bool InputDrawerCommon::isPlayer_ = false;
 
 void InputDrawerCommon::StaticInitialize()
 {
+
+	UIChargeButtonDrawer::StaticInitialize();
+
 	// ÉLÅ[
 	sKeys_ = YInput::Keys::GetInstance();
 
@@ -56,7 +60,7 @@ void InputDrawerCommon::StaticInitialize()
 	// F
 	spKeyF_.Initialize(Texture::Load("UI/key_F.png"), Texture::Load("UI/key_F_PUSH.png"));
 	// R
-	spKeyR_.Initialize(Texture::Load("UI/key_R.png"), Texture::Load("UI/key_R_PUSH.png"));
+	spKeyR_.Initialize(Texture::Load("UI/key_R.png"), Texture::Load("UI/key_R_PUSH.png"), nullptr, 120);
 
 	// LEFT
 	spMouseL_.Initialize(Texture::Load("UI/mouse_LEFT.png"), Texture::Load("UI/mouse_LEFT_PUSH.png"), Texture::Load("UI/mouse_LEFT_DEAD.png"));

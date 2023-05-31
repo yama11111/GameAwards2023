@@ -528,6 +528,9 @@
     <ClCompile Include="Game\PilotManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Draw\Drawer\UIChargeButtonDrawer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Def.h">
@@ -922,6 +925,9 @@
     </ClInclude>
     <ClInclude Include="Game\PilotManager.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Draw\Drawer\UIChargeButtonDrawer.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

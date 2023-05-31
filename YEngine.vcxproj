@@ -105,6 +105,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application\Draw\Drawer\UIChargeButtonDrawer.cpp" />
     <ClCompile Include="Engine\GameUtillity\Level\Level.cpp" />
     <ClCompile Include="Game\Drawer\JunctionDrawer.cpp" />
     <ClCompile Include="Game\Drawer\KeyDrawer.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Game\Object\Switch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application\Draw\Drawer\UIChargeButtonDrawer.h" />
     <ClInclude Include="Engine\GameUtillity\Level\Level.h" />
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
     <ClInclude Include="Game\Drawer\JunctionDrawer.h" />

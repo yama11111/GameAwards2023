@@ -7,20 +7,6 @@ namespace YGame
 	class UIButtonDrawer
 	{
 
-	protected:
-
-		// ボタンスプライト配列
-		std::array<Sprite2D*, 2> pButtonSpr_{};
-		
-		// デッドボタンスプライト
-		Sprite2D* pDeadButtonSpr_ = nullptr;
-
-		// 押したか
-		bool isPush_ = false;
-
-		// 押せないか
-		bool isDead_ = false;
-
 	public:
 
 		/// <summary>
@@ -41,7 +27,7 @@ namespace YGame
 		/// 描画
 		/// </summary>
 		/// <param name="pObject"> : オブジェクトポインタ</param>
-		void Draw(Sprite2D::Object* pObject);
+		virtual void Draw(Sprite2D::Object* pObject);
 
 	public:
 
@@ -49,6 +35,24 @@ namespace YGame
 		/// ボタンを殺すか
 		/// </summary>
 		void SetIsDead(const bool isDead);
+
+	public:
+
+		~UIButtonDrawer() = default;
+
+	protected:
+
+		// ボタンスプライト配列
+		std::array<Sprite2D*, 2> pButtonSpr_{};
+		
+		// デッドボタンスプライト
+		Sprite2D* pDeadButtonSpr_ = nullptr;
+
+		// 押したか
+		bool isPush_ = false;
+
+		// 押せないか
+		bool isDead_ = false;
 	};
 }
 

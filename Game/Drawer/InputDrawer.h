@@ -1,5 +1,5 @@
 #pragma once
-#include "UIButtonDrawer.h"
+#include "UIChargeButtonDrawer.h"
 
 // 多重定義回避用
 namespace YInput { class Keys; }
@@ -29,7 +29,7 @@ protected:
 	// F
 	static YGame::UIButtonDrawer spKeyF_;
 	// R
-	static YGame::UIButtonDrawer spKeyR_;
+	static YGame::UIChargeButtonDrawer spKeyR_;
 	
 	// SPACE
 	static YGame::UIButtonDrawer spKeySpace_;
@@ -55,6 +55,8 @@ public:
 	/// 静的更新
 	/// </summary>
 	static void StaticUpdate();
+	
+	static bool StaticIsReset() { return spKeyR_.IsChargeMax(); }
 
 public:
 

@@ -514,8 +514,7 @@ void PlayScene::Update()
     // ビュープロジェクション
     transferVP_.UpdateMatrix();
 
-    // リセット
-    if (sKeys_->IsTrigger(DIK_R) || stage_.isReset_ || player_->IsDead())
+    if (InputDrawerCommon::StaticIsReset() || stage_.isReset_ || player_->IsDead())
     {
         isReset_ = true;
         SceneExecutive::GetInstance()->Change("PLAY", "BLACKOUT", 2, 2);

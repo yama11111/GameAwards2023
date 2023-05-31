@@ -94,7 +94,6 @@ namespace YScene
 		// リセットフラグ
 		static bool isReset_;
 
-
 #pragma endregion
 
 	public:
