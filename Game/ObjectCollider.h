@@ -43,6 +43,9 @@ private:
 
 	// アタリ判定適用フラグ
 	bool isExist_ = true;
+	
+	// 保存用
+	ObjectCollider* pObjCollider_ = nullptr;
 
 public:
 
@@ -96,6 +99,12 @@ public:
 
 	// 着地フラグリセット
 	void ResetIsLanding();
+
+
+	
+	ObjectCollider* GetObjeColliderPointer() const { return pObjCollider_; }
+
+	void SetObjeColliderPointer(ObjectCollider* pObjCollider) { pObjCollider_ = pObjCollider; }
 
 
 	// 座標 (参照渡し)
