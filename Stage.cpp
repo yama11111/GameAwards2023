@@ -169,7 +169,7 @@ void Stage::MouseCol4Warp(void)
                             // ワープブロックが底壁にあるなら（ワープブロックから見た出現方向がTOPなので）
                             if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::TOP) {
                                 // 相手（上壁）のy座標が自分（底壁）のy座標より小さい時
-                                if (signVector_[i]->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                                if (signVector_[i]->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
                                     signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
@@ -189,7 +189,7 @@ void Stage::MouseCol4Warp(void)
                             // ワープブロックが上壁にあるなら（ワープブロックから見た出現方向がBOTTOMなので）
                             if (signVector_[i]->warpInfos_[j].dirSelf_ == Sign::Direction::BOTTOM) {
                                 // 相手（底壁）のy座標が自分（上壁）のy座標より大きい時
-                                if (signVector_[i]->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                                if (signVector_[i]->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
                                     signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
