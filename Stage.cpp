@@ -324,6 +324,88 @@ void Stage::MouseCol4Warp(void)
             //idxSign_end = 0;
             //idxWarpInfo_start = 0;
             //idxWarpInfo_end = 0;
+
+            // ワープブロックが右壁にあるなら（ワープブロックから見た出現方向がLEFTなので）
+            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_ == Sign::Direction::LEFT) {
+                // 相手（左壁）のx座標が自分（右壁）のx座標より小さい時
+                if (signVector_[mc4w_idxSign_start_]->topLeftPos_.x_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.first * Sign::blockRadius_ * 2 > signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->topLeftPos_.x_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+                else {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+            }
+            // ワープブロックが左壁にあるなら（ワープブロックから見た出現方向がRIGHTなので）
+            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_ == Sign::Direction::RIGHT) {
+                // 相手（左壁）のx座標が自分（右壁）のx座標より大きい時
+                if (signVector_[mc4w_idxSign_start_]->topLeftPos_.x_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.first * Sign::blockRadius_ * 2 < signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->topLeftPos_.x_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+                else {
+                    // そのワープブロックは利用可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+            }
+
+            // ワープブロックが底壁にあるなら（ワープブロックから見た出現方向がTOPなので）
+            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_ == Sign::Direction::TOP) {
+                // 相手（上壁）のy座標が自分（底壁）のy座標より小さい時
+                if (signVector_[mc4w_idxSign_start_]->topLeftPos_.y_ - signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.second * Sign::blockRadius_ * 2 < signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->topLeftPos_.y_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+                else {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+            }
+            // ワープブロックが上壁にあるなら（ワープブロックから見た出現方向がBOTTOMなので）
+            if (signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].dirSelf_ == Sign::Direction::BOTTOM) {
+                // 相手（底壁）のy座標が自分（上壁）のy座標より大きい時
+                if (signVector_[mc4w_idxSign_start_]->topLeftPos_.y_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemSelf_.second * Sign::blockRadius_ * 2 > signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->topLeftPos_.y_ + signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
+                    // そのワープブロックは利用不可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用不可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = false;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+                else {
+                    // そのワープブロックは利用可能になる
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].isAvailable_);
+                    // そいつの相方のワープブロックも利用可
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_ = true;
+                    signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].partnerPtr_->warpInfos_[signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].IdxPartnerWarp_].isAvailable_);
+                }
+            }
         }
         mc4w_isConnectCheck_ = false;
     }
