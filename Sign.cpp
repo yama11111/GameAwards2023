@@ -3,6 +3,7 @@
 #include <cmath>
 #include <imgui.h>
 #include "Stage.h"
+#include "PilotManager.h"
 
 using namespace maruyama;
 
@@ -263,7 +264,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false || PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::eStage)
         {
             while (1)
             {
@@ -322,7 +323,7 @@ bool maruyama::Sign::SlowlyFillingSpaceX(YukiMapchipCollider* ptr, float& pointX
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false || PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::eStage)
         {
             while (1)
             {
@@ -403,7 +404,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false || PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::eStage)
         {
             while (1)
             {
@@ -428,7 +429,7 @@ bool maruyama::Sign::SlowlyFillingSpaceY(YukiMapchipCollider* ptr, float& pointY
                 break;
             }
         }
-        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false)
+        if (warpInfos_[idxWarpInfos_].isConnected_ == false || warpInfos_[idxWarpInfos_].isAvailable_ == false || PilotManager::StaticGetCurrentPilot() == PilotManager::PilotType::eStage)
         {
             while (1)
             {
