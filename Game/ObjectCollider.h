@@ -1,5 +1,6 @@
 #pragma once
 #include "CollisionPrimitive.h"
+#include "Sprite3D.h"
 
 class ObjectCollider :
 	public YGame::Box2D
@@ -46,6 +47,8 @@ private:
 	
 	// 保存用
 	ObjectCollider* pObjCollider_ = nullptr;
+
+	bool isDraw_ = false;
 
 public:
 
@@ -100,11 +103,17 @@ public:
 	// 着地フラグリセット
 	void ResetIsLanding();
 
+	
+	bool GetIsDraw() const { return isDraw_; }
+
+	void SetIsActionDraw(const bool isDraw) { isDraw_ = isDraw; }
 
 	
 	ObjectCollider* GetObjeColliderPointer() const { return pObjCollider_; }
 
 	void SetObjeColliderPointer(ObjectCollider* pObjCollider) { pObjCollider_ = pObjCollider; }
+
+	void DrawActionSprite(YGame::Sprite3D::Object* pActionSprObj_);
 
 
 	// 座標 (参照渡し)
@@ -149,6 +158,15 @@ private:
 	/// <param name="pair"> : ペア四角形2D</param>
 	/// <returns>当たったか</returns>
 	bool CollisionTemporaryBox2DUpperSide(const YMath::Vector2& speed, const YGame::Box2D& pair);
+
+public:
+
+	static YGame::Sprite3D* spActionSpr_;
+	static YGame::ViewProjection* spVP_;
+
+public:
+
+	static void StaticIntialize(YGame::ViewProjection* pVP);
 
 public:
 

@@ -17,6 +17,8 @@ private:
 	// ギミックフラグ
 	bool* pGimmickFlag_ = nullptr;
 
+	std::unique_ptr<YGame::Sprite3D::Object> actionSprObj_;
+
 public:
 
 	/// <summary>

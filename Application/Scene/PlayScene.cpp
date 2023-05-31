@@ -56,6 +56,9 @@ void PlayScene::Load()
     DrawerHelper::StaticInitialize(&transferVP_, &camera_, &particleMan_);
 
     // オブジェクト
+    ObjectCollider::StaticIntialize(&transferVP_);
+
+    // オブジェクト
     IObject::StaticInitialize(&stage_);
 
     // プレイヤー
@@ -541,6 +544,8 @@ void PlayScene::Draw()
 
     // オブジェクト描画
     objMan_.Draw();
+    
+    PilotManager::StaticDraw();
 
     // HUD描画
     hud_.Draw();
@@ -548,7 +553,6 @@ void PlayScene::Draw()
     // パーティクル描画
     particleMan_.Draw();
 
-    PilotManager::StaticDraw();
 }
 
 void PlayScene::CameraUpdate()

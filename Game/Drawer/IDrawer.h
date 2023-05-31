@@ -42,7 +42,7 @@ protected:
 	/// <returns>ペアレントされているか</returns>
 	bool GetIsParented() { return pParent_ != nullptr; }
 
-protected:
+public:
 	
 	// ビュープロジェクションポインタ
 	static YGame::ViewProjection* spVP_;

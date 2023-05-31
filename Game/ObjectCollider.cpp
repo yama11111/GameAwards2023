@@ -1,4 +1,5 @@
 #include "ObjectCollider.h"
+#include "PilotManager.h"
 
 using YMath::Vector2;
 using YMath::Vector3;
@@ -8,6 +9,16 @@ void ObjectCollider::ResetIsLanding()
 {
 	isElderLanding_ = isLanding_;
 	isLanding_ = false;
+}
+
+void ObjectCollider::DrawActionSprite(YGame::Sprite3D::Object* pActionSprObj_)
+{
+	if (PilotManager::StaticGetIsActInit()) { return; }
+	if (PilotManager::StaticGetCurrentPilot() != PilotManager::PilotType::ePlayer) { return; }
+	if (isDraw_)
+	{
+		spActionSpr_->SetDrawCommand(pActionSprObj_, YGame::DrawLocation::Center);
+	}
 }
 
 Vector3& ObjectCollider::PosRef()
@@ -143,4 +154,14 @@ bool ObjectCollider::CollisionTemporaryBox2DUpperSide(const YMath::Vector2& spee
 
 	// “àŠO”»’è
 	return tempY - this->GetBox2DRadSize().y_ <= pair.GetBox2DCenter().y_ + pair.GetBox2DRadSize().y_;
+}
+
+YGame::Sprite3D* ObjectCollider::spActionSpr_ = nullptr;
+YGame::ViewProjection* ObjectCollider::spVP_ = nullptr;
+
+void ObjectCollider::StaticIntialize(YGame::ViewProjection* pVP)
+{
+	spActionSpr_ = YGame::Sprite3D::Create(YGame::Texture::Load("UI/key_E_PUSH.png"));
+
+	spVP_ = pVP;
 }

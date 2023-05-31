@@ -19,6 +19,8 @@ private:
 	// •`‰æƒNƒ‰ƒX
 	BlockDrawer drawer_;
 
+	std::unique_ptr<YGame::Sprite3D::Object> actionSprObj_;
+
 public:
 
 	/// <summary>

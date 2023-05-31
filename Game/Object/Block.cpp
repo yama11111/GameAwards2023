@@ -28,6 +28,8 @@ void Block::Initialize(const size_t signIndex, const YMath::Vector3& pos)
 	// 描画クラス初期化
 	drawer_.Initialize(transform_.get(), BlockDrawerCommon::Type::eWhite);
 
+	actionSprObj_.reset(YGame::Sprite3D::Object::Create());
+
 	// リセット
 	Reset(signIndex, pos);
 }
@@ -67,6 +69,8 @@ void Block::Reset(const size_t signIndex, const YMath::Vector3& pos)
 	// マップチップコライダーインデックス設定
 	idxSign_ = signIndex;
 
+	actionSprObj_->scale_ = { 3.0f,3.0f,3.0f };
+	actionSprObj_->SetViewProjection(spVP_);
 
 	// 描画クラスリセット
 	drawer_.Reset(BlockDrawerCommon::Type::eWhite);
@@ -139,13 +143,18 @@ void Block::UpdatePhysics()
 
 void Block::OnCollision(ObjectCollider* pPair)
 {
-
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer)
+	{
+		ObjectCollider::SetIsActionDraw(true);
+	}
 }
 
 void Block::Draw()
 {
 	// 描画
 	drawer_.Draw();
+
+	ObjectCollider::DrawActionSprite(actionSprObj_.get());
 }
 
 void Block::Update()
@@ -208,6 +217,8 @@ void Block::PreUpdate()
 
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+
+	SetIsActionDraw(false);
 }
 
 void Block::PostUpdate()
@@ -231,4 +242,7 @@ void Block::PostUpdate()
 
 	// 描画クラス更新
 	drawer_.Update();
+
+	actionSprObj_->pos_ = transform_->pos_ + Vector3(0.0f, 3.0f, 0.0f);
+	actionSprObj_->UpdateMatrix();
 }

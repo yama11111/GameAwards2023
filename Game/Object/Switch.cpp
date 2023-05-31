@@ -20,6 +20,8 @@ void Switch::Initialize(const size_t signIndex, const YMath::Vector3& pos, const
 	// 描画クラス初期化
 	drawer_.Initialize(transform_.get(), SwitchDrawerCommon::Type::eBlue);
 
+	actionSprObj_.reset(YGame::Sprite3D::Object::Create());
+
 	// リセット
 	Reset(signIndex, pos, isAct, pGimmickFlag);
 }
@@ -53,6 +55,8 @@ void Switch::Reset(const size_t signIndex, const YMath::Vector3& pos, const bool
 	// コライダー看板番号設定
 	ObjectCollider::SetSignIndex(signIndex);
 
+	actionSprObj_->scale_ = { 3.0f,3.0f,3.0f };
+	actionSprObj_->SetViewProjection(spVP_);
 
 	// 描画クラスリセット
 	drawer_.Reset(SwitchDrawerCommon::Type::eBlue);
@@ -65,6 +69,8 @@ void Switch::PreUpdate()
 
 	// コライダー位置更新
 	Box2D::SetBox2DCenter({ transform_->pos_.x_, transform_->pos_.y_ });
+
+	SetIsActionDraw(false);
 }
 
 void Switch::PostUpdate()
@@ -91,6 +97,9 @@ void Switch::PostUpdate()
 	// 描画クラス更新
 	drawer_.Update();
 
+	actionSprObj_->pos_ = transform_->pos_ + Vector3(0.0f, 3.0f, 0.0f);
+	actionSprObj_->UpdateMatrix();
+
 	//ImGui::Begin("Switch");
 	//ImGui::Text("%d", pGimmickFlag_);
 	//if (pGimmickFlag_) { ImGui::Text("%d", *pGimmickFlag_); }
@@ -101,8 +110,14 @@ void Switch::Draw()
 {
 	// 描画
 	drawer_.Draw();
+
+	ObjectCollider::DrawActionSprite(actionSprObj_.get());
 }
 
 void Switch::OnCollision(ObjectCollider* pPair)
 {
+	if (pPair->GetColliderType() == ObjectCollider::Type::ePlayer)
+	{
+		ObjectCollider::SetIsActionDraw(true);
+	}
 }
