@@ -94,6 +94,7 @@ void Stage::MouseCol4Warp(void)
         // ----- ワープブロック ----- //
         if (mc4w_isConnectingWarp_) {
             // 始点から現在点まで線を引く
+            signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimateSelectConnect(true);
         }
 
         // ----- 看板移動 ----- //
