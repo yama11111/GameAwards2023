@@ -24,7 +24,7 @@ void TitleScene::Load()
 	// ----- オーディオ ----- //
 
 	// タイトルBGM
-	pTitleBGM_ = Audio::Load("BGM/select.wav");
+	pTitleBGM_ = Audio::Load("BGM/title.wav");
 
 
 	//// セレクトSE

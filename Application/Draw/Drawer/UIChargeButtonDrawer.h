@@ -41,7 +41,9 @@ namespace YGame
     public:
 
 		
-		std::unique_ptr<Sprite2D::Object> chargeGaugeObj_;
+		std::unique_ptr<Sprite2D::Object> chargeGaugeObj1_;
+		std::unique_ptr<Sprite2D::Object> chargeGaugeObj2_;
+		std::unique_ptr<Sprite2D::Object> chargeGaugeObj3_;
 
         // チャージタイマー
         YMath::Power chargePower_;
@@ -54,7 +56,9 @@ namespace YGame
 		
 		static Sprite2D* spChargeGauge_;
 		
-		static std::unique_ptr<CBColor> sChargeGaugeColor_;
+		static std::unique_ptr<CBColor> sChargeGaugeColor1_;
+		static std::unique_ptr<CBColor> sChargeGaugeColor2_;
+		static std::unique_ptr<CBColor> sChargeGaugeColor3_;
 
 	public:
 

@@ -26,7 +26,7 @@ bool MyGame::Initialize()
 	sceneExe_->SetFactory(new YGameSceneFactory(), new YGameTransitionFactory());
 
 	// シーンエグゼクティブ初期化
-	sceneExe_->Initialize(YGameSceneFactory::Select_, YGameTransitionFactory::Blackout_);
+	sceneExe_->Initialize(YGameSceneFactory::Title_, YGameTransitionFactory::Blackout_);
 
 
 	pPostEffect_ = PostEffect::Create({}, { Texture::CreateRender() });

@@ -4,6 +4,8 @@
 #include "SceneManager.h"
 #include "YGameSceneFactory.h"
 
+#include "PilotManager.h"
+
 #pragma region 名前空間
 
 using YGame::Transform;
@@ -60,7 +62,7 @@ void InputDrawerCommon::StaticInitialize()
 	// F
 	spKeyF_.Initialize(Texture::Load("UI/key_F.png"), Texture::Load("UI/key_F_PUSH.png"));
 	// R
-	spKeyR_.Initialize(Texture::Load("UI/key_R.png"), Texture::Load("UI/key_R_PUSH.png"), nullptr, 120);
+	spKeyR_.Initialize(Texture::Load("UI/key_R.png"), Texture::Load("UI/key_R_PUSH.png"), nullptr, 60);
 
 	// LEFT
 	spMouseL_.Initialize(Texture::Load("UI/mouse_LEFT.png"), Texture::Load("UI/mouse_LEFT_PUSH.png"), Texture::Load("UI/mouse_LEFT_DEAD.png"));
@@ -86,7 +88,11 @@ void InputDrawerCommon::StaticUpdate()
 	// EFR 押したか更新
 	spKeyE_.Update(sKeys_->IsDown(DIK_E));
 	spKeyF_.Update(sKeys_->IsDown(DIK_F));
-	spKeyR_.Update(sKeys_->IsDown(DIK_R));
+
+	if (PilotManager::StaticGetIsActInit() == false)
+	{
+		spKeyR_.Update(sKeys_->IsDown(DIK_R));
+	}
 
 	// SPACE 押したか更新
 	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));

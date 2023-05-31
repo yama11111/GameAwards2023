@@ -39,7 +39,7 @@ void PlayScene::Load()
     // ----- オーディオ ----- //
 
     // プレイBGM
-    pPlayBGM_ = Audio::Load("BGM/select.wav");
+    pPlayBGM_ = Audio::Load("BGM/play.wav");
 
     // ----- 静的初期化 ----- //
 
@@ -435,9 +435,9 @@ void PlayScene::Initialize()
     // リセットじゃないなら
     if (isReset_ == false)
     {
-        // プレイBGM開始
-        pPlayBGM_->Play(true);
     }
+    // プレイBGM開始
+    pPlayBGM_->Play(true);
 
     // リセット初期化
     isReset_ = false;
@@ -453,9 +453,9 @@ void PlayScene::Finalize()
     // リセットじゃないなら
     if (isReset_ == false || hud_.IsElderPause())
     {
-        // プレイBGM停止
-        pPlayBGM_->Stop();
     }
+    // プレイBGM停止
+    pPlayBGM_->Stop();
 }
 
 #pragma endregion
