@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "MouseCollider.h"
+#include "AudioConfig.h"
 
 #pragma region 名前空間宣言
 
@@ -25,13 +26,15 @@ void TitleScene::Load()
 
 	// タイトルBGM
 	pTitleBGM_ = Audio::Load("BGM/title.wav");
-
+	pTitleBGM_->SetVolume(AudioConfig::BGM::Title);
 
 	// セレクトSE
 	pSelectSE_ = Audio::Load("SE/SE_select.wav");
+	pSelectSE_->SetVolume(AudioConfig::SE::Select);
 
 	// 決定SE
 	pDecisionSE_ = Audio::Load("SE/SE_decision.wav");
+	pDecisionSE_->SetVolume(AudioConfig::SE::Decition);
 
 	// ----- 静的初期化 ----- //
 

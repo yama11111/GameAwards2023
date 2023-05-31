@@ -3,6 +3,7 @@
 #include "DrawerConfig.h"
 #include "CoreColor.h"
 #include <cassert>
+#include "AudioConfig.h"
 
 #pragma region –¼‘O‹óŠÔ
 
@@ -40,6 +41,7 @@ array<Ease<float>, SpringDrawerCommon::sRingNum_> SpringDrawerCommon::sJumpHeigh
 Ease<Vector3>SpringDrawerCommon::sJumpAnticipationScaleEase_;
 array<Ease<Vector3>, SpringDrawerCommon::sRingNum_> SpringDrawerCommon::sJumpScaleEases_;
 Audio* SpringDrawerCommon::spJumpSE_ = nullptr;
+Audio* SpringDrawerCommon::spActionSE_ = nullptr;
 
 #pragma endregion
 
@@ -102,7 +104,11 @@ void SpringDrawerCommon::StaticInitialize()
 		Jump::Scale::Performance::Bottom::Start, Jump::Scale::Performance::Bottom::End, Jump::Scale::Performance::Bottom::Exponent);
 
 
-	spJumpSE_ = Audio::Load("SE/SE_spring.wav");
+	spJumpSE_ = Audio::Load("SE/SE_jump.wav");
+	spJumpSE_->SetVolume(AudioConfig::SE::Jump);
+	
+	spActionSE_ = Audio::Load("SE/SE_spring.wav");
+	spActionSE_->SetVolume(AudioConfig::SE::Spring);
 }
 
 #pragma endregion
@@ -278,6 +284,9 @@ void SpringDrawer::AnimateJump()
 
 	spJumpSE_->Stop();
 	spJumpSE_->Play(false);
+
+	spActionSE_->Stop();
+	spActionSE_->Play(false);
 }
 
 void SpringDrawer::UpdateIdle()

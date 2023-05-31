@@ -929,6 +929,9 @@
     <ClInclude Include="Application\Draw\Drawer\UIChargeButtonDrawer.h">
       <Filter>Application\Draw\Drawer</Filter>
     </ClInclude>
+    <ClInclude Include="Game\AudioConfig.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Sprite3D.hlsli">

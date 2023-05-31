@@ -4,6 +4,8 @@
 #include "DrawerConfig.h"
 #include <cassert>
 
+#include "AudioConfig.h"
+
 #pragma region –¼‘O‹óŠÔ
 
 using std::array;
@@ -44,8 +46,11 @@ void PlayerDrawerCommon::StaticInitialize()
 
 	spModels_[BodyIdx] = Model::LoadObj("player", true); // ‘Ì
 
-	//spJumpSE_ = Audio::Load("SE/SE_jump.wav");
+	spJumpSE_ = Audio::Load("SE/SE_jump.wav");
+	spJumpSE_->SetVolume(AudioConfig::SE::Jump);
+
 	spDeadSE_ = Audio::Load("SE/SE_death.wav");
+	spDeadSE_->SetVolume(AudioConfig::SE::Dead);
 }
 
 
@@ -290,6 +295,9 @@ void PlayerDrawer::UpdateSmokeEmitter()
 
 void PlayerDrawer::AnimateJump()
 {
+	spJumpSE_->Stop();
+	spJumpSE_->Play(false);
+
 	// Lk—Ê
 	Vector3 val = core_->scale_ * DrawerConfig::Player::Jump::SlimeAction::Value;
 	val.y_ *= -1.0f;

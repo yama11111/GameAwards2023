@@ -10,6 +10,7 @@
 
 #include "PilotManager.h"
 #include "TransitionManager.h"
+#include "AudioConfig.h"
 
 using YGame::Transform;
 using YMath::Vector2;
@@ -25,6 +26,7 @@ void Player::StaticInitialize()
 	spKeys_ = YInput::Keys::GetInstance();
 
 	spGetKeySE_ = YGame::Audio::Load("SE/SE_key.wav");
+	spGetKeySE_->SetVolume(AudioConfig::SE::Key);
 }
 
 void Player::Initialize(const size_t signIndex, const YMath::Vector3& pos, const bool isExistKey)

@@ -4,6 +4,7 @@
 #include "CoreColor.h"
 #include "DrawerHelper.h"
 #include <cassert>
+#include "AudioConfig.h"
 
 #pragma region –¼‘O‹óŠÔ
 
@@ -57,6 +58,7 @@ void GoalDrawerCommon::StaticInitialize()
 	spModels_[OutsideCoreIdx] = Model::LoadObj("goal/outsideCore", true); // ŠO˜g
 
 	spGoalSE_ = Audio::Load("SE/SE_clear.wav");
+	spGoalSE_->SetVolume(AudioConfig::SE::Clear);
 }
 
 #pragma endregion

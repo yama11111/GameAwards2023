@@ -3,6 +3,7 @@
 #include "DrawerConfig.h"
 #include "CoreColor.h"
 #include <cassert>
+#include "AudioConfig.h"
 
 #pragma region –¼‘O‹óŠÔ
 
@@ -70,6 +71,7 @@ void SwitchDrawerCommon::StaticInitialize()
 
 
 	spSwicthSE_ = Audio::Load("SE/SE_switch.wav");
+	spSwicthSE_->SetVolume(AudioConfig::SE::Switch);
 }
 
 #pragma endregion

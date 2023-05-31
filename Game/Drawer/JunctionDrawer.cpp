@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 #include "MouseCollider.h"
+#include "AudioConfig.h"
 
 #pragma region –¼‘O‹óŠÔ
 
@@ -99,6 +100,7 @@ void JunctionDrawerCommon::StaticInitialize()
 	sConnectScaleEase_.Initialize(Connect::Scale::Start, Connect::Scale::End, Connect::Scale::Exponent);
 
 	spConnectSE_ = Audio::Load("SE/SE_warpConnect.wav");
+	spConnectSE_->SetVolume(AudioConfig::SE::Connect);
 }
 
 #pragma endregion

@@ -58,6 +58,7 @@ protected:
 	
 	
 	static YGame::Audio* spJumpSE_;
+	static YGame::Audio* spActionSE_;
 
 public:
 

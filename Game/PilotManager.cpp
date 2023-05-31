@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "InputDrawer.h"
+#include "AudioConfig.h"
 
 using std::unique_ptr;
 using YInput::Keys;
@@ -37,6 +38,8 @@ Power PilotManager::sChangePlayerPower_;
 Power PilotManager::sChangeStagePower_;
 Ease<float> PilotManager::sChangeHeight_;
 Ease<float> PilotManager::sChangeAlpha_;
+
+YGame::Audio* PilotManager::spChangeSE_ = nullptr;
 
 void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 {
@@ -71,6 +74,9 @@ void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 	sChangeStagePower_.Initialize(20);
 	sChangeHeight_.Initialize(-120.0f, 0.0f, 3.0f);
 	sChangeAlpha_.Initialize(0.0f, 1.0f, 3.0f);
+
+	spChangeSE_ = YGame::Audio::Load("SE/SE_change.wav");
+	spChangeSE_->SetVolume(AudioConfig::SE::Change);
 
 	StaticReset();
 }
@@ -178,12 +184,18 @@ void PilotManager::StaticChangePilot(const PilotType& pilot)
 		Vector3 pos = spStage_->signVector_[sSignIndex_]->GetCenterPos() + Vector3(0.0f, 0.0f, -50.0f);
 
 		spCamera_->SmoothMoving(40, pos, 3.0f);
+
+		spChangeSE_->Stop();
+		spChangeSE_->Play(false);
 	}
 	else if (sPilot_ == PilotType::eStage)
 	{
 		Vector3 pos = sInitCameraPos_;
 
 		spCamera_->SmoothMoving(40, pos, 3.0f);
+
+		spChangeSE_->Stop();
+		spChangeSE_->Play(false);
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "Stage.h"
 #include "Camera.h"
 #include "Sprite2D.h"
+#include "Audio.h"
 
 namespace YInput { class Keys; }
 
@@ -51,6 +52,8 @@ private:
 	static YMath::Power sChangeStagePower_;
 	static YMath::Ease<float> sChangeHeight_;
 	static YMath::Ease<float> sChangeAlpha_;
+
+	static YGame::Audio* spChangeSE_;
 
 public:
 

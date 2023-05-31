@@ -233,6 +233,7 @@
     <ClInclude Include="Application\Draw\Drawer\UIChargeButtonDrawer.h" />
     <ClInclude Include="Engine\GameUtillity\Level\Level.h" />
     <ClInclude Include="Engine\GameUtillity\Object\ObjectConfig.h" />
+    <ClInclude Include="Game\AudioConfig.h" />
     <ClInclude Include="Game\Drawer\JunctionDrawer.h" />
     <ClInclude Include="Game\Drawer\KeyDrawer.h" />
     <ClInclude Include="Game\Drawer\LaserDrawer.h" />

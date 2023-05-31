@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include "Stage.h"
+#include "AudioConfig.h"
 
 using YMath::Vector2;
 using YMath::Vector3;
@@ -39,4 +40,5 @@ void IObject::StaticInitialize(Stage* pStageMan)
 	spStageMan_ = pStageMan;
 
 	spWarpSE_ = Audio::Load("SE/SE_warp.wav");
+	spWarpSE_->SetVolume(AudioConfig::SE::Warp);
 }

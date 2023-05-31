@@ -7,6 +7,7 @@
 #include <imgui.h>
 
 #include "MouseCollider.h"
+#include "AudioConfig.h"
 
 #pragma region 名前空間宣言
 
@@ -25,12 +26,15 @@ void SelectScene::Load()
 
 	// セレクトシーンBGM
 	pSelectBGM_ = Audio::Load("BGM/select.wav");
+	pSelectBGM_->SetVolume(AudioConfig::BGM::Select);
 
 	// セレクトSE
 	pSelectSE_ = Audio::Load("SE/SE_select.wav");
+	pSelectSE_->SetVolume(AudioConfig::SE::Select);
 
 	// 決定SE
 	pDecisionSE_ = Audio::Load("SE/SE_decision.wav");
+	pDecisionSE_->SetVolume(AudioConfig::SE::Decition);
 	
 	// ----- 静的初期化 ----- //
 

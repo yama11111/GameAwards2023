@@ -12,6 +12,7 @@
 #include "LevelData.h"
 #include "StageData.h"
 #include "PilotManager.h"
+#include "AudioConfig.h"
 
 #pragma region 名前空間宣言
 
@@ -40,6 +41,7 @@ void PlayScene::Load()
 
     // プレイBGM
     pPlayBGM_ = Audio::Load("BGM/play.wav");
+    pPlayBGM_->SetVolume(AudioConfig::BGM::Play);
 
     // ----- 静的初期化 ----- //
 
