@@ -107,12 +107,12 @@ namespace HUDConfig
 				const YMath::Vector3 D = { +96.0f, WinSize.y_ - 48.0f, 0.0f };
 
 				// EF
-				const YMath::Vector3 E = { +96.0f + 64.0f, WinSize.y_ - 48.0f - 32.0f, 0.0f };
-				const YMath::Vector3 F = { +96.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
-				const YMath::Vector3 R = { +96.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 E = { +128.0f + 64.0f, WinSize.y_ - 48.0f - 32.0f, 0.0f };
+				const YMath::Vector3 F = { +128.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 R = { +128.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
 
 				// SPACE
-				const YMath::Vector3 Space = { +256.0f, WinSize.y_ - 32.0f, 0.0f };
+				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
 
 				// TAB
 				const YMath::Vector3 Esc = { WinSize.x_ - 64.0f, +32.0f, 0.0f };

@@ -87,7 +87,7 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	TowerDrawerCommon::StaticInitialize(sTowerMate_.get(), sTowerLight_.get());
 
 
-	bool isAllClear = false;
+	bool isAllClear = true;
 	for (size_t i = 0; i < StageConfig::GetInstance()->StageNum_; i++)
 	{
 		isAllClear = isAllClear && StageConfig::GetInstance()->GetIsClearStage(i);
