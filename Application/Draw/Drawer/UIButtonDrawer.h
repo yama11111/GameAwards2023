@@ -7,7 +7,7 @@ namespace YGame
 	class UIButtonDrawer
 	{
 
-	private:
+	protected:
 
 		// ボタンスプライト配列
 		std::array<Sprite2D*, 2> pButtonSpr_{};
@@ -35,7 +35,7 @@ namespace YGame
 		/// 更新
 		/// </summary>
 		/// <param name="isPush"> : 押したか</param>
-		void Update(const bool isPush);
+		virtual void Update(const bool isPush);
 
 		/// <summary>
 		/// 描画
