@@ -11,9 +11,15 @@ namespace YGame
 
 		// ボタンスプライト配列
 		std::array<Sprite2D*, 2> pButtonSpr_{};
+		
+		// デッドボタンスプライト
+		Sprite2D* pDeadButtonSpr_ = nullptr;
 
 		// 押したか
 		bool isPush_ = false;
+
+		// 押せないか
+		bool isDead_ = false;
 
 	public:
 
@@ -22,7 +28,8 @@ namespace YGame
 		/// </summary>
 		/// <param name="pButtonTex"> : ボタンテクスチャ</param>
 		/// <param name="pPressedTex"> : 押されたボタンテクスチャ</param>
-		void Initialize(Texture* pButtonTex, Texture* pPressedTex);
+		/// <param name="pPressedTex"> : 死んだボタンテクスチャ</param>
+		void Initialize(Texture* pButtonTex, Texture* pPressedTex, Texture* pDeadTex = nullptr);
 
 		/// <summary>
 		/// 更新
@@ -35,6 +42,13 @@ namespace YGame
 		/// </summary>
 		/// <param name="pObject"> : オブジェクトポインタ</param>
 		void Draw(Sprite2D::Object* pObject);
+
+	public:
+
+		/// <summary>
+		/// ボタンを殺すか
+		/// </summary>
+		void SetIsDead(const bool isDead);
 	};
 }
 

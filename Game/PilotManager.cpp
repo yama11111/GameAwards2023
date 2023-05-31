@@ -4,6 +4,8 @@
 #include "MouseCollider.h"
 #include <cassert>
 
+#include "InputDrawer.h"
+
 using std::unique_ptr;
 using YInput::Keys;
 using YMath::Vector3;
@@ -156,6 +158,9 @@ void PilotManager::StaticUpdate()
 
 	sPilotPlayerObj_->UpdateMatrix({ {0.0f,playerHeight,0.0f}, {},{} });
 	sPilotStageObj_->UpdateMatrix({ {0.0f,stageHeight,0.0f}, {},{} });
+
+
+	InputDrawerCommon::SetIsPlayer(sPilot_ == PilotType::ePlayer);
 }
 
 void PilotManager::StaticDraw()

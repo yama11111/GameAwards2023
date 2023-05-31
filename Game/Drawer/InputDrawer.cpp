@@ -27,9 +27,11 @@ UIButtonDrawer InputDrawerCommon::spKeyS_;
 UIButtonDrawer InputDrawerCommon::spKeyD_;
 UIButtonDrawer InputDrawerCommon::spKeyE_;
 UIButtonDrawer InputDrawerCommon::spKeyF_;
+UIButtonDrawer InputDrawerCommon::spKeyR_;
 UIButtonDrawer InputDrawerCommon::spKeySpace_;
 UIButtonDrawer InputDrawerCommon::spMouseL_;
 UIButtonDrawer InputDrawerCommon::spKeyEsc_;
+bool InputDrawerCommon::isPlayer_ = false;
 
 #pragma endregion
 
@@ -44,23 +46,29 @@ void InputDrawerCommon::StaticInitialize()
 	sMouse_ = YInput::Mouse::GetInstance();
 	
 	// WASD
-	spKeyW_.Initialize(Texture::Load("UI/key_W.png"), Texture::Load("UI/key_W_PUSH.png"));
-	spKeyA_.Initialize(Texture::Load("UI/key_A.png"), Texture::Load("UI/key_A_PUSH.png"));
-	spKeyS_.Initialize(Texture::Load("UI/key_S.png"), Texture::Load("UI/key_S_PUSH.png"));
-	spKeyD_.Initialize(Texture::Load("UI/key_D.png"), Texture::Load("UI/key_D_PUSH.png"));
+	spKeyW_.Initialize(Texture::Load("UI/key_W.png"), Texture::Load("UI/key_W_PUSH.png"), Texture::Load("UI/key_W_DEAD.png"));
+	spKeyA_.Initialize(Texture::Load("UI/key_A.png"), Texture::Load("UI/key_A_PUSH.png"), Texture::Load("UI/key_A_DEAD.png"));
+	spKeyS_.Initialize(Texture::Load("UI/key_S.png"), Texture::Load("UI/key_S_PUSH.png"), Texture::Load("UI/key_S_DEAD.png"));
+	spKeyD_.Initialize(Texture::Load("UI/key_D.png"), Texture::Load("UI/key_D_PUSH.png"), Texture::Load("UI/key_D_DEAD.png"));
 
-	// EF
-	spKeyE_.Initialize(Texture::Load("UI/key_E.png"), Texture::Load("UI/key_E_PUSH.png"));
+	// E
+	spKeyE_.Initialize(Texture::Load("UI/key_E.png"), Texture::Load("UI/key_E_PUSH.png"), Texture::Load("UI/key_E_DEAD.png"));
+	// F
 	spKeyF_.Initialize(Texture::Load("UI/key_F.png"), Texture::Load("UI/key_F_PUSH.png"));
+	// R
+	spKeyR_.Initialize(Texture::Load("UI/key_R.png"), Texture::Load("UI/key_R_PUSH.png"));
 
 	// LEFT
-	spMouseL_.Initialize(Texture::Load("UI/mouse_LEFT.png"), Texture::Load("UI/mouse_LEFT_PUSH.png"));
+	spMouseL_.Initialize(Texture::Load("UI/mouse_LEFT.png"), Texture::Load("UI/mouse_LEFT_PUSH.png"), Texture::Load("UI/mouse_LEFT_DEAD.png"));
 	
 	// SPACE
-	spKeySpace_.Initialize(Texture::Load("UI/key_SPACE.png"), Texture::Load("UI/key_SPACE_PUSH.png"));
+	spKeySpace_.Initialize(Texture::Load("UI/key_SPACE.png"), Texture::Load("UI/key_SPACE_PUSH.png"), Texture::Load("UI/key_SPACE_DEAD.png"));
 	
 	// ESC
 	spKeyEsc_.Initialize(Texture::Load("UI/key_ESC.png"), Texture::Load("UI/key_ESC_PUSH.png"));
+
+	// プレイヤー操作
+	isPlayer_ = true;
 }
 
 void InputDrawerCommon::StaticUpdate()
@@ -70,19 +78,35 @@ void InputDrawerCommon::StaticUpdate()
 	spKeyA_.Update(sKeys_->IsLeft());
 	spKeyS_.Update(sKeys_->IsUnder());
 	spKeyD_.Update(sKeys_->IsRight());
-	
-	// EF 押したか更新
+
+	// EFR 押したか更新
 	spKeyE_.Update(sKeys_->IsDown(DIK_E));
 	spKeyF_.Update(sKeys_->IsDown(DIK_F));
-	
-	// Mouse 押したか更新
-	spMouseL_.Update(sMouse_->IsDown(YInput::MouseClick::DIM_LEFT));
+	spKeyR_.Update(sKeys_->IsDown(DIK_R));
 
 	// SPACE 押したか更新
 	spKeySpace_.Update(sKeys_->IsDown(DIK_SPACE));
 
 	// ESCAPE 押したか更新
 	spKeyEsc_.Update(sKeys_->IsDown(DIK_ESCAPE));
+
+	// Mouse 押したか更新
+	spMouseL_.Update(sMouse_->IsDown(YInput::MouseClick::DIM_LEFT));
+
+	// WASD
+	spKeyW_.SetIsDead(!isPlayer_);
+	spKeyA_.SetIsDead(!isPlayer_);
+	spKeyS_.SetIsDead(!isPlayer_);
+	spKeyD_.SetIsDead(!isPlayer_);
+
+	// E
+	spKeyE_.SetIsDead(!isPlayer_);
+
+	// SPACE
+	spKeySpace_.SetIsDead(!isPlayer_);
+
+	// Mouse
+	spMouseL_.SetIsDead(isPlayer_);
 }
 
 #pragma endregion
@@ -99,9 +123,10 @@ void InputDrawer::Initialize()
 	keySObj_.reset(Sprite2D::Object::Create());
 	keyDObj_.reset(Sprite2D::Object::Create());
 
-	// EF
+	// EFR
 	keyEObj_.reset(Sprite2D::Object::Create());
 	keyFObj_.reset(Sprite2D::Object::Create());
+	keyRObj_.reset(Sprite2D::Object::Create());
 	
 	// SPACE
 	keySpaceObj_.reset(Sprite2D::Object::Create());
@@ -122,7 +147,7 @@ void InputDrawer::Reset()
 	// ----- Object初期化 ----- //
 
 	// 位置保存用
-	Vector3 w, a, s, d, e, f, space, left, esc;
+	Vector3 w, a, s, d, e, f, r, space, left, esc;
 
 	// 大きさ
 	Vector3 scale;
@@ -189,9 +214,10 @@ void InputDrawer::Reset()
 	keySObj_->Initialize({ s, {}, scale });
 	keyDObj_->Initialize({ d, {}, scale });
 
-	// EF
+	// EFR
 	keyEObj_->Initialize({ e, {}, scale });
 	keyFObj_->Initialize({ f, {}, scale });
+	keyRObj_->Initialize({ r, {}, scale });
 
 	// SPACE
 	keySpaceObj_->Initialize({ space, {}, scale });
@@ -212,9 +238,10 @@ void InputDrawer::Update()
 	keySObj_->UpdateMatrix();
 	keyDObj_->UpdateMatrix();
 
-	// EF
+	// EFR
 	keyEObj_->UpdateMatrix();
 	keyFObj_->UpdateMatrix();
+	keyRObj_->UpdateMatrix();
 
 	// SPACE
 	keySpaceObj_->UpdateMatrix();
@@ -234,9 +261,10 @@ void InputDrawer::Draw()
 	spKeyS_.Draw(keySObj_.get());
 	spKeyD_.Draw(keyDObj_.get());
 
-	// EF
+	// EFR
 	spKeyE_.Draw(keyEObj_.get());
 	spKeyF_.Draw(keyFObj_.get());
+	spKeyR_.Draw(keyRObj_.get());
 	
 	// SPACE
 	spKeySpace_.Draw(keySpaceObj_.get());

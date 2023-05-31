@@ -24,9 +24,12 @@ protected:
 	static YGame::UIButtonDrawer spKeyS_;
 	static YGame::UIButtonDrawer spKeyD_;
 
-	// EF
+	// E
 	static YGame::UIButtonDrawer spKeyE_;
+	// F
 	static YGame::UIButtonDrawer spKeyF_;
+	// R
+	static YGame::UIButtonDrawer spKeyR_;
 	
 	// SPACE
 	static YGame::UIButtonDrawer spKeySpace_;
@@ -36,6 +39,10 @@ protected:
 	
 	// ESC
 	static YGame::UIButtonDrawer spKeyEsc_;
+
+
+	// プレイヤー操作か
+	static bool isPlayer_;
 
 public: 
 	
@@ -48,6 +55,10 @@ public:
 	/// 静的更新
 	/// </summary>
 	static void StaticUpdate();
+
+public:
+
+	static void SetIsPlayer(const bool isPlayer) { isPlayer_ = isPlayer; }
 
 public:
 	
@@ -66,14 +77,17 @@ private:
 	std::unique_ptr<YGame::Sprite2D::Object> keySObj_;
 	std::unique_ptr<YGame::Sprite2D::Object> keyDObj_;
 	
-	// EF
+	// E
 	std::unique_ptr<YGame::Sprite2D::Object> keyEObj_;
+	// F
 	std::unique_ptr<YGame::Sprite2D::Object> keyFObj_;
+	// R
+	std::unique_ptr<YGame::Sprite2D::Object> keyRObj_;
 	
 	// SPACE
 	std::unique_ptr<YGame::Sprite2D::Object> keySpaceObj_;
 
-	// SPACE
+	// LEFT
 	std::unique_ptr<YGame::Sprite2D::Object> mouseLObj_;
 	
 	// ESC
@@ -100,6 +114,5 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
-
 };
 
