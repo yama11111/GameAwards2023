@@ -129,14 +129,18 @@ void Stage::MouseCol4Warp(void)
                                 if (signVector_[i]->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.first * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                                 else {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                             }
                             // ワープブロックが左壁にあるなら（ワープブロックから見た出現方向がRIGHTなので）
@@ -145,14 +149,18 @@ void Stage::MouseCol4Warp(void)
                                 if (signVector_[i]->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.first * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.x_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.first * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                                 else {
                                     // そのワープブロックは利用可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                             }
 
@@ -162,14 +170,18 @@ void Stage::MouseCol4Warp(void)
                                 if (signVector_[i]->topLeftPos_.y_ - signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 < signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                                 else {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                             }
                             // ワープブロックが上壁にあるなら（ワープブロックから見た出現方向がBOTTOMなので）
@@ -178,14 +190,18 @@ void Stage::MouseCol4Warp(void)
                                 if (signVector_[i]->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemSelf_.second * Sign::blockRadius_ * 2 > signVector_[i]->warpInfos_[j].partnerPtr_->topLeftPos_.y_ + signVector_[i]->warpInfos_[j].mapchipElemPartner_.second * Sign::blockRadius_ * 2) {
                                     // そのワープブロックは利用不可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用不可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = false;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                                 else {
                                     // そのワープブロックは利用可能になる
                                     signVector_[i]->warpInfos_[j].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].isAvailable_);
                                     // そいつの相方のワープブロックも利用可
                                     signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_ = true;
+                                    signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].jdPtr_->jd_.AnimatePass(signVector_[i]->warpInfos_[j].partnerPtr_->warpInfos_[signVector_[i]->warpInfos_[j].IdxPartnerWarp_].isAvailable_);
                                 }
                             }
                         }
