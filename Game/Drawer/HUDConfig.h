@@ -26,6 +26,7 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { -1000.0f, -1000.0f, 0.0f };
 				const YMath::Vector3 F = { -1000.0f, -1000.0f, 0.0f };
+				const YMath::Vector3 R = { -1000.0f, -1000.0f, 0.0f };
 
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
@@ -43,7 +44,7 @@ namespace HUDConfig
 				// ----- à íu ----- //
 
 				// LEFT
-				const YMath::Vector3 Left = { +288.0f, WinSize.y_ - 48.0f , 0.0f };
+				const YMath::Vector3 Left = { -1000.0f, -1000.0f, 0.0f };
 			}
 		}
 		
@@ -67,6 +68,7 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { -1000.0f, -1000.0f, 0.0f };
 				const YMath::Vector3 F = { -1000.0f, -1000.0f, 0.0f };
+				const YMath::Vector3 R = { -1000.0f, -1000.0f, 0.0f };
 
 				// SPACE
 				const YMath::Vector3 Space = { +192.0f, WinSize.y_ - 32.0f, 0.0f };
@@ -84,7 +86,7 @@ namespace HUDConfig
 				// ----- à íu ----- //
 
 				// LEFT
-				const YMath::Vector3 Left = { +288.0f, WinSize.y_ - 48.0f , 0.0f };
+				const YMath::Vector3 Left = { -1000.0f, -1000.0f, 0.0f };
 			}
 		}
 			// ÉQÅ[ÉÄ
@@ -107,6 +109,7 @@ namespace HUDConfig
 				// EF
 				const YMath::Vector3 E = { +96.0f + 64.0f, WinSize.y_ - 48.0f - 32.0f, 0.0f };
 				const YMath::Vector3 F = { +96.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
+				const YMath::Vector3 R = { +96.0f + 96.0f, WinSize.y_ - 48.0f, 0.0f };
 
 				// SPACE
 				const YMath::Vector3 Space = { +256.0f, WinSize.y_ - 32.0f, 0.0f };

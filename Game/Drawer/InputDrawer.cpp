@@ -162,6 +162,7 @@ void InputDrawer::Reset()
 
 		e = Title::Key::E;
 		f = Title::Key::F;
+		r = Title::Key::R;
 
 		space = Title::Key::Space;
 
@@ -180,6 +181,7 @@ void InputDrawer::Reset()
 
 		e = Select::Key::E;
 		f = Select::Key::F;
+		r = Select::Key::R;
 
 		space = Select::Key::Space;
 
@@ -198,6 +200,7 @@ void InputDrawer::Reset()
 
 		e = Play::Key::E;
 		f = Play::Key::F;
+		r = Play::Key::R;
 
 		space = Play::Key::Space;
 

@@ -86,8 +86,19 @@ void SelectDrawerCommon::StaticInitialize(YGame::ViewProjection* pVP, YGame::Par
 	// タワー
 	TowerDrawerCommon::StaticInitialize(sTowerMate_.get(), sTowerLight_.get());
 
+
+	bool isAllClear = false;
+	for (size_t i = 0; i < StageConfig::GetInstance()->StageNum_; i++)
+	{
+		isAllClear = isAllClear && StageConfig::GetInstance()->GetIsClearStage(i);
+	}
+
+	CoreColor::ColorType colorType = CoreColor::ColorType::eGray;
+
+	if (isAllClear) { colorType = CoreColor::ColorType::eBlue; }
+
 	// 天球
-	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(CoreColor::ColorType::eGray, CoreColor::PartsType::eCore));
+	SkydomeDrawerCommon::StaticInitialize(CoreColor::ColorPtr(colorType, CoreColor::PartsType::eCore));
 
 
 	// レターボックス
