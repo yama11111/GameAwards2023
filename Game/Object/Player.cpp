@@ -258,6 +258,8 @@ void Player::OnCollision(ObjectCollider* pPair)
 	{
 		// Œ®‚ğŠ‚·‚é
 		isKeyHolder_ = true;
+
+		SetObjeColliderPointer(pPair);
 	}
 	// ƒS[ƒ‹‚È‚ç
 	else if (pPair->GetColliderType() == ObjectCollider::Type::eGoal)
@@ -266,6 +268,11 @@ void Player::OnCollision(ObjectCollider* pPair)
 		if (isKeyHolder_ == false) { return; }
 
 		pPair->SetIsActSkill(true);
+
+		if (GetObjeColliderPointer()) 
+		{
+			GetObjeColliderPointer()->SetIsActSkill(true);
+		}
 
 		// ƒS[ƒ‹
 		drawer_.AnimateGoal();
