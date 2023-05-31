@@ -25,13 +25,12 @@ void SelectScene::Load()
 
 	// セレクトシーンBGM
 	pSelectBGM_ = Audio::Load("BGM/select.wav");
-	//pSelectBGM_ = Audio::Load("SE2/s3.wav");
 
-	//// セレクトSE
-	//pSelectSE_ = Audio::Load("SE/select.wav");
+	// セレクトSE
+	pSelectSE_ = Audio::Load("SE/SE_select.wav");
 
-	//// 決定SE
-	//pDecisionSE_ = Audio::Load("SE/decision.wav");
+	// 決定SE
+	pDecisionSE_ = Audio::Load("SE/SE_decision.wav");
 	
 	// ----- 静的初期化 ----- //
 
@@ -133,7 +132,8 @@ void SelectScene::Update()
 	{
 		if (up || right || left || down)
 		{
-			//pSelectSE_->Play(false);
+			pSelectSE_->Stop();
+			pSelectSE_->Play(false);
 		}
 	}
 
@@ -144,7 +144,8 @@ void SelectScene::Update()
 	if (sKeys_->IsTrigger(DIK_SPACE))
 	{
 		// SE
-		//pDecisionSE_->Play(false);
+		pDecisionSE_->Stop();
+		pDecisionSE_->Play(false);
 
 		SceneExecutive::GetInstance()->Change("PLAY", "INFECTION", 5, 10);
 		//SceneExecutive::GetInstance()->Change("DEMO", "INFECTION", 5, 10);

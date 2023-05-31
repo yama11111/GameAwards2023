@@ -27,11 +27,11 @@ void TitleScene::Load()
 	pTitleBGM_ = Audio::Load("BGM/title.wav");
 
 
-	//// セレクトSE
-	//pSelectSE_ = Audio::Load("SE/select.wav");
+	// セレクトSE
+	pSelectSE_ = Audio::Load("SE/SE_select.wav");
 
-	//// 決定SE
-	//pDecisionSE_ = Audio::Load("SE/decision.wav");
+	// 決定SE
+	pDecisionSE_ = Audio::Load("SE/SE_decision.wav");
 
 	// ----- 静的初期化 ----- //
 
@@ -116,7 +116,8 @@ void TitleScene::Update()
 	{
 		if (up || right || left || down)
 		{
-			//pSelectSE_->Play(false);
+			pSelectSE_->Stop();
+			pSelectSE_->Play(false);
 		}
 	}
 
@@ -141,7 +142,8 @@ void TitleScene::Update()
 		if (titleDra_.GetSelection() == TitleDrawerCommon::Selection::Start)
 		{
 			// SE
-			//pDecisionSE_->Play(false);
+			pDecisionSE_->Stop();
+			pDecisionSE_->Play(false);
 
 			// セレクトシーンへ
 			SceneExecutive::GetInstance()->Change("SELECT", "INFECTION", 5, 10);

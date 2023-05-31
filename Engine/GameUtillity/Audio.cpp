@@ -165,6 +165,11 @@ void Audio::Play(const bool isLoop)
 	Result(pSourceVoice_->Start());
 }
 
+void Audio::SetVolume(const float volume)
+{
+	pSourceVoice_->SetVolume(volume);
+}
+
 void Audio::Stop()
 {
 	// 波形データの停止

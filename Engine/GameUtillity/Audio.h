@@ -97,6 +97,12 @@ namespace YGame
 		void Play(const bool isLoop);
 
 		/// <summary>
+		/// ボリューム設定
+		/// </summary>
+		/// <param name="volume"> : 音量</param>
+		void SetVolume(const float volume);
+
+		/// <summary>
 		/// オーディオ停止
 		/// </summary>
 		void Stop();
