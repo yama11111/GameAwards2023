@@ -3,40 +3,40 @@ namespace AudioConfig
 {
 	namespace BGM
 	{
-		const float Title = 1.0f;
+		const float Title = 0.3f;
 		
-		const float Select = 1.0f;
+		const float Select = 0.3f;
 		
-		const float Play = 1.0f;
+		const float Play = 0.5f;
 	}
 
 	namespace SE
 	{
-		const float Select = 1.0f;
+		const float Select = 0.8f;
 		
-		const float Decition = 1.0f;
-		
-
-		const float Jump = 1.0f;
-		
-		const float Dead = 1.0f;
+		const float Decition = 0.4f;
 		
 
-		const float Spring = 1.0f;
+		const float Jump = 0.1f;
 		
-		const float Switch = 1.0f;
-		
-		const float Key = 1.0f;
-		
-		
-		const float Warp = 1.0f;
-		
-		const float Connect = 1.0f;
-
-		
-		const float Change = 1.0f;
+		const float Dead = 0.8f;
 		
 
-		const float Clear = 1.0f;
+		const float Spring = 0.3f;
+		
+		const float Switch = 0.8f;
+		
+		const float Key = 0.4f;
+		
+		
+		const float Warp = 0.5f;
+		
+		const float Connect = 0.5f;
+
+		
+		const float Change = 0.4f;
+		
+
+		const float Clear = 0.4f;
 	}
 }
