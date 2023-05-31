@@ -434,7 +434,7 @@ void JunctionDrawer::AnimateSelectConnect(const bool isSelect)
 {
 	if (isConnected_) { return; }
 
-	rayScalePower_.Reset();
+	//rayScalePower_.Reset();
 
 	isSelect_ = isSelect;
 }
