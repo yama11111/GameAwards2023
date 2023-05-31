@@ -548,6 +548,8 @@ void PlayScene::Draw()
 
     // パーティクル描画
     particleMan_.Draw();
+
+    PilotManager::StaticDraw();
 }
 
 void PlayScene::CameraUpdate()

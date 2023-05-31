@@ -49,7 +49,7 @@ void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 	
 	sInitZoomEase_.Initialize(-20.0f, 0.0f, 3.0f);
 
-	sInitZoomTimer_.Initialize(30);
+	sInitZoomTimer_.Initialize(40);
 	
 	sIsActInitAnime_ = true;
 	
@@ -67,7 +67,7 @@ void PilotManager::StaticInitialize(Camera* pCamera, Stage* pStage)
 		
 	sChangePlayerPower_.Initialize(20);
 	sChangeStagePower_.Initialize(20);
-	sChangeHeight_.Initialize(-120.0f, 240.0f, 3.0f);
+	sChangeHeight_.Initialize(-120.0f, 0.0f, 3.0f);
 	sChangeAlpha_.Initialize(0.0f, 1.0f, 3.0f);
 
 	StaticReset();
@@ -81,6 +81,9 @@ void PilotManager::StaticReset()
 
 	sPilot_ = PilotType::ePlayer;
 	
+	sPilotPlayerObj_->Initialize({ {272.0f, 80.0f, 0.0f}, {}, {1.0f,1.0f,0.0f} });
+	sPilotStageObj_->Initialize({ {272.0f, 80.0f, 0.0f}, {}, {1.0f,1.0f,0.0f} });
+
 	sChangePlayerPower_.Reset();
 	sChangeStagePower_.Reset();
 }
@@ -121,6 +124,38 @@ void PilotManager::StaticUpdate()
 			StaticSetFollowStage(sSignIndex_);
 		}
 	}
+
+	bool isAct = sPilot_ == PilotType::ePlayer;
+
+	if (sIsActInitAnime_ == false)
+	{
+		sChangePlayerPower_.Update(isAct);
+		sChangeStagePower_.Update(!isAct);
+	}
+
+	float playerColor = 0.0f;
+	float stageColor = 0.0f;
+
+	if (!isAct) { playerColor = sChangeAlpha_.Out(sChangePlayerPower_.Ratio()); }
+	else { playerColor = sChangeAlpha_.In(sChangePlayerPower_.Ratio()); }
+
+	if (isAct) { stageColor = sChangeAlpha_.Out(sChangeStagePower_.Ratio()); }
+	else { stageColor = sChangeAlpha_.In(sChangeStagePower_.Ratio()); }
+
+	sPilotPlayerColor_->SetAlpha(playerColor);
+	sPilotStageColor_->SetAlpha(stageColor);
+
+	float playerHeight = 0.0f;
+	float stageHeight = 0.0f;
+	
+	if (!isAct) { playerHeight = sChangeHeight_.In(sChangePlayerPower_.Ratio()); }
+	else { playerHeight = sChangeHeight_.Out(sChangePlayerPower_.Ratio()); }
+
+	if (isAct) { stageHeight = sChangeHeight_.In(sChangeStagePower_.Ratio()); }
+	else { stageHeight = sChangeHeight_.Out(sChangeStagePower_.Ratio()); }
+
+	sPilotPlayerObj_->UpdateMatrix({ {0.0f,playerHeight,0.0f}, {},{} });
+	sPilotStageObj_->UpdateMatrix({ {0.0f,stageHeight,0.0f}, {},{} });
 }
 
 void PilotManager::StaticDraw()
@@ -137,13 +172,13 @@ void PilotManager::StaticChangePilot(const PilotType& pilot)
 	{
 		Vector3 pos = spStage_->signVector_[sSignIndex_]->GetCenterPos() + Vector3(0.0f, 0.0f, -50.0f);
 
-		spCamera_->SmoothMoving(20, pos, 3.0f);
+		spCamera_->SmoothMoving(40, pos, 3.0f);
 	}
 	else if (sPilot_ == PilotType::eStage)
 	{
 		Vector3 pos = sInitCameraPos_;
 
-		spCamera_->SmoothMoving(20, pos, 3.0f);
+		spCamera_->SmoothMoving(40, pos, 3.0f);
 	}
 }
 
@@ -153,5 +188,5 @@ void PilotManager::StaticSetFollowStage(const int signIndex)
 
 	Vector3 pos = spStage_->signVector_[sSignIndex_]->GetCenterPos() + Vector3(0.0f, 0.0f, -50.0f);
 
-	spCamera_->SmoothMoving(20, pos, 3.0f);
+	spCamera_->SmoothMoving(40, pos, 3.0f);
 }

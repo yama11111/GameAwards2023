@@ -5,6 +5,8 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "MouseCollider.h"
+
 #pragma region 名前空間
 
 using std::array;
@@ -158,7 +160,7 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	}
 	else if (type == Type::eRed)
 	{
-		color = CoreColor::ColorType::eRed;
+		color = CoreColor::ColorType::eOrange;
 	}
 
 	// カラーとマテリアル設定
@@ -207,12 +209,16 @@ void JunctionDrawer::Reset(const Vector3& direction, const Type& type)
 	isConnected_ = false;
 
 	// 接続タイマー初期化
-	connectTimer_.Initialize(Connect::Frame);
+	connectPower_.Initialize(Connect::Frame);
 
 	// 向き合わせタイマー初期化
 	alignDirectionTimer_.Initialize(Connect::AlignDirection::Frame);
 
-	rayScaleTimer_.Initialize(20);
+	rayScalePower_.Initialize(20);
+
+	isSelect_ = false;
+
+	isPass_ = true;
 }
 
 void JunctionDrawer::Reset()
@@ -253,12 +259,16 @@ void JunctionDrawer::Reset()
 	isConnected_ = false;
 
 	// 接続タイマー初期化
-	connectTimer_.Initialize(Connect::Frame);
+	connectPower_.Initialize(Connect::Frame);
 
 	// 向き合わせタイマー初期化
 	alignDirectionTimer_.Initialize(Connect::AlignDirection::Frame);
 
-	rayScaleTimer_.Initialize(20);
+	rayScalePower_.Initialize(20);
+
+	isSelect_ = false;
+
+	isPass_ = true;
 }
 
 void JunctionDrawer::Update()
@@ -354,6 +364,46 @@ Vector3 JunctionDrawer::GetDirection()
 	return direction_;
 }
 
+void JunctionDrawer::AnimatePass(const bool isPass)
+{
+	// 核の色とマテリアル設定
+	CoreColor::ColorType color = CoreColor::ColorType::eBlue;
+	CoreColor::PartsType coreParts = CoreColor::PartsType::eCore;
+	CoreColor::PartsType shellParts = CoreColor::PartsType::eShell;
+
+	if (isPass)
+	{
+		if (type_ == Type::eGreen)
+		{
+			color = CoreColor::ColorType::eGreen;
+		}
+		else if (type_ == Type::eRed)
+		{
+			color = CoreColor::ColorType::eOrange;
+		}
+	}
+	else
+	{
+		color = CoreColor::ColorType::eGray;
+	}
+
+	// カラーとマテリアル設定
+	for (size_t i = 0; i < modelObjs_.size(); i++)
+	{
+		modelObjs_[i][CoreIdx]->SetColor(CoreColor::ColorPtr(color, coreParts));
+		modelObjs_[i][CoreIdx]->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+
+		modelObjs_[i][ShellIdx]->SetColor(CoreColor::ColorPtr(color, shellParts));
+		modelObjs_[i][ShellIdx]->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+	}
+
+	gridModelObjs_->SetColor(CoreColor::ColorPtr(color, shellParts));
+	gridModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, shellParts));
+
+	rayModelObjs_->SetColor(CoreColor::ColorPtr(color, coreParts));
+	rayModelObjs_->SetMaterial(CoreColor::MaterialPtr(color, coreParts));
+}
+
 void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 {
 	// パートナー設定
@@ -366,6 +416,10 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	// 向きタイマーリセット
 	alignDirectionTimer_.Reset(true);
 
+	rayScalePower_.Reset();
+
+	isSelect_ = false;
+
 	// 接続した
 	isConnected_ = true;
 
@@ -373,7 +427,16 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	isIdle_ = false;
 
 	// タイマー初期化
-	connectTimer_.Reset(true);
+	connectPower_.Reset();
+}
+
+void JunctionDrawer::AnimateSelectConnect()
+{
+	if (isConnected_) { return; }
+
+	rayScalePower_.Reset();
+
+	isSelect_ = true;
 }
 
 void JunctionDrawer::UpdateIdleAnimation()
@@ -425,7 +488,7 @@ void JunctionDrawer::UpdateConnectAnimation()
 
 
 	// 接続タイマー更新
-	connectTimer_.Update();
+	connectPower_.Update(isConnected_);
 
 	// ベクトルの大きさ取得
 	float len = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 25.0f;
@@ -434,27 +497,27 @@ void JunctionDrawer::UpdateConnectAnimation()
 	for (size_t i = 0; i < sFrameNum_; i++)
 	{
 		// 位置係数
-		animePoss_[i].z_ += sConnectPosFactorEase_.Out(connectTimer_.Ratio()) * (len * (i + 1));
+		animePoss_[i].z_ += sConnectPosFactorEase_.Out(connectPower_.Ratio()) * (len * (i + 1));
 
 		// 回転係数
-		animeRotas_[i].z_ += sConnectRotaFactorEase_.Out(connectTimer_.Ratio()) * i;
+		animeRotas_[i].z_ += sConnectRotaFactorEase_.Out(connectPower_.Ratio()) * i;
 
 
 		// 回転
-		animeRotas_[i].z_ += sConnectRotaSpeedEase_.Out(connectTimer_.Ratio());
+		animeRotas_[i].z_ += sConnectRotaSpeedEase_.Out(connectPower_.Ratio());
 
 		// 大きさ
-		animeScales_[i] += sConnectScaleEase_.Out(connectTimer_.Ratio()) * sConnectPushScaleFactorEase_.Out(connectTimer_.Ratio());
+		animeScales_[i] += sConnectScaleEase_.Out(connectPower_.Ratio()) * sConnectPushScaleFactorEase_.Out(connectPower_.Ratio());
 	}
 
 	float rayLen = Vector3(pParent_->pos_ - pPartner_->pParent_->pos_).Length() / 2.0f;
 	animeRayPos_ = { 0.0f, 0.0f, rayLen };
-	animeRayRota_.z_ += sConnectRotaSpeedEase_.Out(connectTimer_.Ratio());
-	animeRayScale_ = { sConnectRayScaleEase_.Out(rayScaleTimer_.Ratio()),sConnectRayScaleEase_.Out(rayScaleTimer_.Ratio()), rayLen };
+	animeRayRota_.z_ += sConnectRotaSpeedEase_.Out(connectPower_.Ratio());
+	animeRayScale_ = { sConnectRayScaleEase_.Out(rayScalePower_.Ratio()),sConnectRayScaleEase_.Out(rayScalePower_.Ratio()), rayLen };
 
 
 	// タイマー終わったら
-	if (connectTimer_.IsEnd())
+	if (connectPower_.IsMax())
 	{
 		// リセットしてないなら
 		if (isIdle_ == false)
@@ -472,19 +535,26 @@ void JunctionDrawer::UpdateConnectAnimation()
 		isIdle_ = true;
 	}
 
-	if (connectTimer_.Ratio() >= 0.5f && 
-		rayScaleTimer_.IsAct() == false &&
-		rayScaleTimer_.IsEnd() == false)
-	{
-		rayScaleTimer_.Reset(true);
-	}
-
-
 	// 向き合わせタイマー更新
 	alignDirectionTimer_.Update();
 
 
-	rayScaleTimer_.Update();
+	rayScalePower_.Update((connectPower_.Ratio() >= 0.5f));
+}
+
+void JunctionDrawer::UpdateSelectAnimation()
+{
+	if (isAct_ == false) { return; }
+
+	if (isSelect_ == false) { return; }
+	
+	rayScalePower_.Update(isSelect_);
+
+
+	float rayLen = Vector3(pParent_->pos_ - MouseColliderCommon::StaticGetMouseWorldPos()).Length() / 2.0f;
+	animeRayPos_ = { 0.0f, 0.0f, rayLen };
+	animeRayScale_ = { sConnectRayScaleEase_.Out(rayScalePower_.Ratio()),sConnectRayScaleEase_.Out(rayScalePower_.Ratio()), rayLen };
+
 }
 
 #pragma endregion

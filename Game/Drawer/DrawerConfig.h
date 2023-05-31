@@ -762,6 +762,9 @@ namespace DrawerConfig
 
 				// 青
 				const YMath::Vector3 Blue	 = { 0.05f, 0.20f, 0.90f };
+				
+				// オレンジ
+				const YMath::Vector3 Orange	 = { 0.90f, 0.20f, 0.00f };
 			}
 
 			// アンビエント
@@ -778,6 +781,9 @@ namespace DrawerConfig
 
 				// 青
 				const YMath::Vector3 Blue	 = { 1.00f, 1.00f, 1.00f };
+				
+				// オレンジ
+				const YMath::Vector3 Orange	 = { 1.00f, 1.00f, 1.00f };
 			}
 		}
 
@@ -798,6 +804,9 @@ namespace DrawerConfig
 
 				// 青
 				const YMath::Vector3 Blue	 = { 0.60f, 0.60f, 0.90f };
+
+				// オレンジ
+				const YMath::Vector3 Orange	 = { 0.90f, 0.40f, 0.00f };
 			}
 
 			// アンビエント
@@ -814,6 +823,9 @@ namespace DrawerConfig
 
 				// 青
 				const YMath::Vector3 Blue	 = { 1.00f, 1.00f, 1.00f };
+
+				// オレンジ
+				const YMath::Vector3 Orange	 = { 1.00f, 1.00f, 1.00f };
 			}
 		}
 

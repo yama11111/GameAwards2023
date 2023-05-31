@@ -19,6 +19,7 @@ public:
 		eRed	 = 1, // 赤色
 		eGreen	 = 2, // 緑色
 		eBlue	 = 3, // 青色
+		eOrange	 = 4, // 橙色
 		eEnd, // リサイズ用
 	};
 

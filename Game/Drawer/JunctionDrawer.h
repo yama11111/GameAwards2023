@@ -156,7 +156,7 @@ private:
 	bool isConnected_ = false;
 
 	// 接続タイマー
-	YMath::Timer connectTimer_;
+	YMath::Power connectPower_;
 
 
 	// 向き合わせタイマー
@@ -166,7 +166,11 @@ private:
 	YMath::Ease<YMath::Vector3> alignDirectionEase_;
 	
 	// レイスケールタイマー
-	YMath::Timer rayScaleTimer_;
+	YMath::Power rayScalePower_;
+
+	bool isSelect_ = false;
+	
+	bool isPass_ = false;
 
 public:
 
@@ -219,11 +223,17 @@ private:
 
 public:
 	
+	//
+	void AnimatePass(const bool isPass);
+	
 	/// <summary>
 	/// 接続
 	/// </summary>
 	/// <param name="pPartner"> : 接続先のポインタ</param>
 	void AnimateConnection(JunctionDrawer* pPartner);
+	
+	
+	void AnimateSelectConnect();
 
 private:
 
@@ -236,6 +246,8 @@ private:
 	/// 接続モーション更新
 	/// </summary>
 	void UpdateConnectAnimation();
+	
+	void UpdateSelectAnimation();
 
 public:
 

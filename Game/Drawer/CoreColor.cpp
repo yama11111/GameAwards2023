@@ -69,10 +69,10 @@ void CoreColor::StaticInitialize()
 	{
 		{
 			{
-				Core::Color::Gray, Core::Color::Red, Core::Color::Green, Core::Color::Blue 
+				Core::Color::Gray, Core::Color::Red, Core::Color::Green, Core::Color::Blue, Core::Color::Orange
 			},
 			{
-				Shell::Color::Gray, Shell::Color::Red, Shell::Color::Green, Shell::Color::Blue
+				Shell::Color::Gray, Shell::Color::Red, Shell::Color::Green, Shell::Color::Blue, Shell::Color::Orange
 			}
 		}
 	};
@@ -82,10 +82,10 @@ void CoreColor::StaticInitialize()
 	{
 		{
 			{
-				Core::Material::Gray, Core::Material::Red, Core::Material::Green, Core::Material::Blue
+				Core::Material::Gray, Core::Material::Red, Core::Material::Green, Core::Material::Blue, Core::Material::Orange
 			},
 			{
-				Shell::Material::Gray, Shell::Material::Red, Shell::Material::Green, Shell::Material::Blue
+				Shell::Material::Gray, Shell::Material::Red, Shell::Material::Green, Shell::Material::Blue, Shell::Material::Orange
 			}
 		}
 	};
