@@ -27,7 +27,7 @@ namespace LevelData
 		static const float MaxGravity = 1.0f;
 		
 		// 最大速度
-		static const YMath::Vector2 MaxSpeed = { 0.3f, 1.0f };
+		static const YMath::Vector2 MaxSpeed = { 0.3f, 0.9f };
 
 		// アタリ判定用半径
 		static const YMath::Vector2 CollRadSize = { 1.0f, 1.0f };
@@ -112,9 +112,9 @@ namespace LevelData
 				},
 				//  8
 				{
-					{1,{+9.0f,-15.0f}},
-					{1,{+15.0f,-15.0f}},
-					{1,{+15.0f,-5.0f}},
+					{1,{+13.0f,-15.0f}},
+					{1,{+19.0f,-15.0f}},
+					{1,{+19.0f,-5.0f}},
 				},
 				////  9
 				//{
@@ -184,8 +184,8 @@ namespace LevelData
 				{
 					{0,{ +11.0f,-27.0f },12.0f},
 					{0,{ +13.0f,-27.0f },12.0f},
-					{1,{  +3.0f,-21.0f }, 8.0f},
-					{1,{  +5.0f,-21.0f }, 8.0f},
+					{1,{  +7.0f,-21.0f }, 8.0f},
+					{1,{  +9.0f,-21.0f }, 8.0f},
 					{2,{  +9.0f,-17.0f }, 6.0f},
 					{2,{ +11.0f,-17.0f }, 6.0f},
 					{2,{ +13.0f,-17.0f }, 6.0f},
@@ -276,7 +276,7 @@ namespace LevelData
 					{0, {  +8.5f,-12.5f }, 6.0f},
 					{0, {  +8.5f,-16.5f }, 6.0f},
 					{0, { +22.0f,-24.5f }, 4.0f},
-					{1, {  +7.0f, -8.25f  }, 6.0f},
+					{1, {  +8.5f, -8.25f  }, 8.0f},
 					{2, { +11.0f, -8.0f  }, 2.0f},
 				},
 				////  9
