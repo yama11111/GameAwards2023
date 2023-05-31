@@ -94,6 +94,7 @@ void Stage::MouseCol4Warp(void)
         // ----- ワープブロック ----- //
         if (mc4w_isConnectingWarp_) {
             // 始点から現在点まで線を引く
+            // 選択したワープブロックからマウスに線を伸ばすか？の関数（true)
             signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimateSelectConnect(true);
         }
 
@@ -108,7 +109,7 @@ void Stage::MouseCol4Warp(void)
                         signVector_[i]->topLeftPos_.x_ = movablePointMax_.x_ - signVector_[i]->mapchip_[0].size() * Sign::blockRadius_ * 2;
                     }
                     // 上下（+-)
-                    signVector_[i]->topLeftPos_.y_ = (std::min)(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_,movablePointMax_.y_);
+                    signVector_[i]->topLeftPos_.y_ = (std::min)(MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_, movablePointMax_.y_);
                     if (MouseColliderCommon::StaticGetMouseWorldPos().y_ - mc4w_offset_.y_ - signVector_[i]->mapchip_.size() * Sign::blockRadius_ * 2 < movablePointMin_.y_) {
                         signVector_[i]->topLeftPos_.y_ = movablePointMin_.y_ + signVector_[i]->mapchip_.size() * Sign::blockRadius_ * 2;
                     }
@@ -214,6 +215,8 @@ void Stage::MouseCol4Warp(void)
     else { // 押さなくなった時
         //ImGui::Text("isDownLeft : false");
         // ----- ワープブロック ----- //
+        // 選択したワープブロックからマウスに線を伸ばすか？の関数（false)
+        signVector_[mc4w_idxSign_start_]->warpInfos_[mc4w_IdxWarpInfo_start_].jdPtr_->jd_.AnimateSelectConnect(false);
         // コライダー全検索
         if (mc4w_isConnectingWarp_) {
             for (size_t i = 0; i < signVector_.size(); i++)
