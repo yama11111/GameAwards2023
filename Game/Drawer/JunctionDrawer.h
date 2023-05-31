@@ -73,6 +73,8 @@ protected:
 	// 接続大きさイージング
 	static YMath::Ease<YMath::Vector3> sConnectScaleEase_;
 
+	static YGame::Audio* spConnectSE_;
+
 public:
 
 	/// <summary>

@@ -319,6 +319,9 @@ void Player::Update()
 		drawer_.AnimateTeleport();
 
 		PilotManager::StaticSetFollowStage(idxSign_);
+
+		StopWarpSE();
+		PlayWarpSE();
 	}
 	
 	// –ß‚·

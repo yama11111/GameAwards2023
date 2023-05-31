@@ -16,6 +16,7 @@ using YGame::Transform;
 using YGame::Model;
 using YGame::CBColor;
 using YGame::CBMaterial;
+using YGame::Audio;
 
 using YGame::SlimeActor;
 
@@ -44,6 +45,8 @@ Ease<float> JunctionDrawerCommon::sConnectPosFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaFactorEase_{};
 Ease<float> JunctionDrawerCommon::sConnectRotaSpeedEase_{};
 Ease<Vector3> JunctionDrawerCommon::sConnectScaleEase_{};
+
+Audio* JunctionDrawerCommon::spConnectSE_ = nullptr;
 
 #pragma endregion
 
@@ -94,6 +97,8 @@ void JunctionDrawerCommon::StaticInitialize()
 
 	// 接続大きさイージング
 	sConnectScaleEase_.Initialize(Connect::Scale::Start, Connect::Scale::End, Connect::Scale::Exponent);
+
+	spConnectSE_ = Audio::Load("SE/SE_warpConnect.wav");
 }
 
 #pragma endregion
@@ -432,6 +437,12 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	rayScalePower_.Reset();
 
 	isSelect_ = false;
+
+	if (isConnected_ == false)
+	{
+		spConnectSE_->Stop();
+		spConnectSE_->Play(false);
+	}
 
 	// 接続した
 	isConnected_ = true;

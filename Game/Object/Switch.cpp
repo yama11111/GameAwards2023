@@ -6,6 +6,7 @@
 
 #include "Stage.h"
 #include "LevelData.h"
+#include "PilotManager.h"
 
 using YGame::Transform;
 using YMath::Vector3;
@@ -85,7 +86,7 @@ void Switch::PostUpdate()
 	*pGimmickFlag_ = isAct_;
 
 	// 動作アニメ
-	drawer_.AnimateSwitch(isAct_);
+	drawer_.AnimateSwitch(isAct_, PilotManager::StaticGetIsActInit() == false);
 
 	// 描画クラス更新
 	drawer_.Update();

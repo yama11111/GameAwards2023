@@ -13,6 +13,7 @@ using YGame::Transform;
 using YGame::Model;
 using YGame::CBColor;
 using YGame::CBMaterial;
+using YGame::Audio;
 
 using YGame::SlimeActor;
 
@@ -32,6 +33,7 @@ array<Model*, SwitchDrawerCommon::sPartsNum_> SwitchDrawerCommon::spModels_ =
 	nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 };
 Ease<float> SwitchDrawerCommon::sSwitchOnRotaSpeedEase_;
+Audio* SwitchDrawerCommon::spSwicthSE_ = nullptr;
 
 #pragma endregion
 
@@ -65,6 +67,9 @@ void SwitchDrawerCommon::StaticInitialize()
 
 	// スイッチオン回転スピードイージング
 	sSwitchOnRotaSpeedEase_.Initialize(RotaSpeed::Start, RotaSpeed::End, RotaSpeed::Exponent);
+
+
+	spSwicthSE_ = Audio::Load("SE/SE_switch.wav");
 }
 
 #pragma endregion
@@ -184,8 +189,17 @@ void SwitchDrawer::Draw()
 	}
 }
 
-void SwitchDrawer::AnimateSwitch(const bool isSwitchOn)
+void SwitchDrawer::AnimateSwitch(const bool isSwitchOn, const bool isPlaySE)
 {
+	if (isSwitchOn_ != isSwitchOn)
+	{
+		if (isPlaySE)
+		{
+			spSwicthSE_->Stop();
+			spSwicthSE_->Play(false);
+		}
+	}
+
 	// 代入
 	isSwitchOn_ = isSwitchOn;
 }

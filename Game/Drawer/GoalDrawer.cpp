@@ -12,6 +12,7 @@ using std::unique_ptr;
 
 using YGame::Transform;
 using YGame::Model;
+using YGame::Audio;
 using YGame::CBColor;
 
 using YGame::SlimeActor;
@@ -29,6 +30,7 @@ array<Model*, GoalDrawerCommon::sPartsNum_> GoalDrawerCommon::spModels_ =
 {
 	nullptr, nullptr, nullptr, nullptr, nullptr,
 };
+Audio* GoalDrawerCommon::spGoalSE_ = nullptr;
 
 #pragma endregion
 
@@ -53,6 +55,8 @@ void GoalDrawerCommon::StaticInitialize()
 	spModels_[InsideCoreIdx] = Model::LoadObj("goal/insideCore", true); // “à˜g
 	spModels_[OutsideIdx] = Model::LoadObj("goal/outside", true); // ŠO˜gŠj
 	spModels_[OutsideCoreIdx] = Model::LoadObj("goal/outsideCore", true); // ŠO˜g
+
+	spGoalSE_ = Audio::Load("SE/SE_clear.wav");
 }
 
 #pragma endregion
@@ -328,6 +332,9 @@ void GoalDrawer::ClearAnimation()
 		{
 			// •`‰æƒNƒ‰ƒXƒNƒŠƒA‰‰o
 			DrawerHelper::StaticClear();
+
+			spGoalSE_->Stop();
+			spGoalSE_->Play(false);
 
 			// ƒtƒ‰ƒO‚ðfalse‚É
 			isActClearRota_ = false;

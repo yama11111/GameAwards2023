@@ -2,6 +2,7 @@
 #include "ParticleManager.h"
 #include "SlimeActor.h"
 #include "Camera.h"
+#include "Audio.h"
 #include <memory>
 
 // •`‰æŠî’êƒNƒ‰ƒX

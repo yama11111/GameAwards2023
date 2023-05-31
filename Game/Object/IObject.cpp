@@ -7,8 +7,10 @@
 using YMath::Vector2;
 using YMath::Vector3;
 using YGame::Box2D;
+using YGame::Audio;
 
 Stage* IObject::spStageMan_ = nullptr;
+Audio* IObject::spWarpSE_ = nullptr;
 
 void IObject::UpdateLeftTop()
 {
@@ -35,4 +37,6 @@ void IObject::StaticInitialize(Stage* pStageMan)
 	assert(pStageMan);
 	// ‘ã“ü
 	spStageMan_ = pStageMan;
+
+	spWarpSE_ = Audio::Load("SE/SE_warp.wav");
 }

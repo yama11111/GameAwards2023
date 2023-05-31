@@ -24,6 +24,12 @@ protected:
 	
 	// モデル (パーツの数だけ)
 	static std::array<YGame::Model*, sPartsNum_> spModels_;
+
+	static YGame::Audio* spJumpSE_;
+	
+	static YGame::Audio* spDeadSE_;
+
+
 public:
 	
 	/// <summary>

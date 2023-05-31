@@ -171,6 +171,9 @@ void Block::Update()
 		// 看板インデックス更新
 		SetSignIndex(idxSign_);
 		elderLeftTop_ = spStageMan_->GetTopLeftPos(GetSignIndex());
+
+		StopWarpSE();
+		PlayWarpSE();
 	}
 
 	// 戻す

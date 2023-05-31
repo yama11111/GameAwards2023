@@ -12,6 +12,7 @@ using std::unique_ptr;
 using YGame::Transform;
 using YGame::Model;
 using YGame::CBColor;
+using YGame::Audio;
 
 using YGame::SlimeActor;
 
@@ -29,6 +30,8 @@ array<Model*, PlayerDrawerCommon::sPartsNum_> PlayerDrawerCommon::spModels_ =
 {
 	nullptr
 };
+Audio* PlayerDrawerCommon::spJumpSE_ = nullptr;
+Audio* PlayerDrawerCommon::spDeadSE_ = nullptr;
 
 #pragma endregion
 
@@ -40,6 +43,9 @@ void PlayerDrawerCommon::StaticInitialize()
 	// ----- ƒ‚ƒfƒ‹“Ç‚Ýž‚Ý ----- //
 
 	spModels_[BodyIdx] = Model::LoadObj("player", true); // ‘Ì
+
+	//spJumpSE_ = Audio::Load("SE/SE_jump.wav");
+	spDeadSE_ = Audio::Load("SE/SE_death.wav");
 }
 
 
@@ -346,6 +352,12 @@ void PlayerDrawer::AnimateTeleport()
 
 void PlayerDrawer::AnimateDead()
 {
+	if (isDead_ == false)
+	{
+		spDeadSE_->Stop();
+		spDeadSE_->Play(false);
+	}
+
 	// ƒJƒƒ‰ƒuƒŒ
 	spCamera_->Shaking(0.5f, 0.1f, 100.0f);
 

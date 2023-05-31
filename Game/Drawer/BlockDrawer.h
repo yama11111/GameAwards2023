@@ -39,6 +39,7 @@ protected:
 	// モデル (パーツの数だけ)
 	static std::array<std::array<YGame::Model*, sPartsNum_>, sTypeNum_> spModels_;
 
+
 public:
 
 	/// <summary>

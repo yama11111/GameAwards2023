@@ -15,6 +15,7 @@ using YGame::CBColor;
 using YGame::CBMaterial;
 
 using YGame::SlimeActor;
+using YGame::Audio;
 
 using YMath::Ease;
 using YMath::Power;
@@ -58,6 +59,7 @@ void BlockDrawerCommon::StaticInitialize()
 	// ÉuÉçÉbÉN (îí)
 	spModels_[WhiteIdx][CoreIdx] = Model::LoadObj("block/white/core", true); // äj
 	spModels_[WhiteIdx][ShellIdx] = Model::LoadObj("block/white/shell", true); // äk
+
 }
 
 #pragma endregion

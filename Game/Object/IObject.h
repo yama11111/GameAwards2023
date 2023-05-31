@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjectCollider.h"
 #include "Transform.h"
+#include "Audio.h"
 #include <memory>
 
 class Stage;
@@ -41,12 +42,19 @@ public:
 
 public:
 
+	void StopWarpSE() { spWarpSE_->Stop(); }
+	void PlayWarpSE() { spWarpSE_->Play(false); }
+
+public:
+
 	virtual ~IObject() = default;
 
 protected:
 
 	// 静的ステージマネージャーポインタ
 	static Stage* spStageMan_;
+
+	static YGame::Audio* spWarpSE_;
 
 public:
 	

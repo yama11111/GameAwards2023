@@ -45,6 +45,9 @@ protected:
 	// スイッチオン回転スピードイージング
 	static YMath::Ease<float> sSwitchOnRotaSpeedEase_;
 
+	// スイッチSE
+	static YGame::Audio* spSwicthSE_;
+
 public:
 
 	/// <summary>
@@ -136,7 +139,7 @@ public:
 	/// スイッチ
 	/// </summary>
 	/// <param name="isSwitchOn"> : 動かすか</param>
-	void AnimateSwitch(const bool isSwitchOn);
+	void AnimateSwitch(const bool isSwitchOn, const bool isPlaySE = true);
 
 private:
 
