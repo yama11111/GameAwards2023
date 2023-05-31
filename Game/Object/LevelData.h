@@ -11,7 +11,7 @@ namespace LevelData
 	namespace Player
 	{
 		// â¡ë¨óÕ (1FñàÇ…â¡éZ)
-		static const float Acceleration = 0.5f;
+		static const float Acceleration = 0.3f;
 		
 		// ñÄéCóÕ (1FñàÇ…å∏éZ)
 		static const float Friction = 0.1f;
@@ -24,10 +24,10 @@ namespace LevelData
 		//static const float Gravity = 0.0f;
 
 		// ç≈ëÂèdóÕ
-		static const float MaxGravity = 1.5f;
+		static const float MaxGravity = 1.0f;
 		
 		// ç≈ëÂë¨ìx
-		static const YMath::Vector2 MaxSpeed = { 0.5f, 3.0f };
+		static const YMath::Vector2 MaxSpeed = { 0.3f, 1.0f };
 
 		// ÉAÉ^ÉäîªíËópîºåa
 		static const YMath::Vector2 CollRadSize = { 1.0f, 1.0f };
@@ -104,6 +104,7 @@ namespace LevelData
 				//  6
 				{
 					{0,{+17.0f,-14.0f}},
+					//{1,{+17.0f,-16.0f}},
 				},
 				//  7
 				{
@@ -157,9 +158,9 @@ namespace LevelData
 				},
 				//  3
 				{
-					{2, { +9.0f,-23.0f }, 1.5f},
-					{2, { +11.0f,-23.0f }, 1.5f},
-					{2, { +13.0f,-23.0f }, 1.5f},
+					{2, {  +9.0f,-23.0f }, 6.0f},
+					{2, { +11.0f,-23.0f }, 6.0f},
+					{2, { +13.0f,-23.0f }, 6.0f},
 				},
 				//  4
 				{
@@ -171,23 +172,23 @@ namespace LevelData
 				},
 				//  6
 				{
-					{1,{+ 9.0f,-23.0f},2.0f},
-					{1,{+11.0f,-23.0f},2.0f},
-					{1,{+17.0f,-23.0f},1.5f},
-					{1,{+19.0f,-23.0f},1.5f},
+					{1,{+ 9.0f,-23.0f},9.0f},
+					{1,{+11.0f,-23.0f},9.0f},
+					{1,{+17.0f,-23.0f},6.0f},
+					{1,{+19.0f,-23.0f},6.0f},
 				},
 				//  7
 				{
 				},
 				//  8
 				{
-					{0,{ +11.0f,-27.0f },2.0f},
-					{0,{ +13.0f,-27.0f },2.0f},
-					{1,{ +3.0f,-21.0f },2.0f},
-					{1,{ +5.0f,-21.0f },2.0f},
-					{2,{ +9.0f,-17.0f },2.0f},
-					{2,{ +11.0f,-17.0f },2.0f},
-					{2,{ +13.0f,-17.0f },2.0f},
+					{0,{ +11.0f,-27.0f },12.0f},
+					{0,{ +13.0f,-27.0f },12.0f},
+					{1,{  +3.0f,-21.0f }, 8.0f},
+					{1,{  +5.0f,-21.0f }, 8.0f},
+					{2,{  +9.0f,-17.0f }, 6.0f},
+					{2,{ +11.0f,-17.0f }, 6.0f},
+					{2,{ +13.0f,-17.0f }, 6.0f},
 				},
 				////  9
 				//{
@@ -259,6 +260,7 @@ namespace LevelData
 				{
 					{0,{+19.0f, -8.25f},5.0f},
 					{1,{+10.0f, -8.5f},4.0f},
+					{1,{+18.0f, -12.5f},4.0f},
 				},
 				//  7
 				{
@@ -456,7 +458,7 @@ namespace LevelData
 				},
 				//  7
 				{
-					{1, { +22.0f,-7.0f }},
+					{1, { +25.0f,-7.0f }},
 				},
 				//  8
 				{
