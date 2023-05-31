@@ -5,6 +5,8 @@
 #include "DrawerConfig.h"
 #include <cassert>
 
+#include "StageConfig.h"
+
 #pragma region 名前空間
 
 using std::array;
@@ -112,6 +114,8 @@ void BackgroundDrawerCommon::StaticUnify()
 
 	// タイマーリセット + 開始
 	sUnifyTim_.Reset(true);
+
+	StageConfig::GetInstance()->ClearStage(StageConfig::GetInstance()->GetCurrentStageIndex() - 1);
 }
 
 void BackgroundDrawer::Initialize()

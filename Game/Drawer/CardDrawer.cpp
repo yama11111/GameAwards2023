@@ -234,14 +234,14 @@ void CardDrawer::UpdateSelectAnimation()
 	{
 		// 通常色に
 		colorVal = { 1.0f,1.0f,1.0f };
-		clearColorVal = { 1.0f,1.0f,0.0f };
+		clearColorVal = { 0.25f,1.0f,0.75f };
 	}
 	// それ以外なら
 	else
 	{
 		// 暗い色に
 		colorVal = { 0.25f,0.25f,0.25f };
-		clearColorVal = { 0.25f,0.25f,0.0f };
+		clearColorVal = Vector3(0.25f, 1.0f, 0.75f) * 0.25f;
 	}
 
 	// 色設定

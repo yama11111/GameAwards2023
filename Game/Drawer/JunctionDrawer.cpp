@@ -282,10 +282,20 @@ void JunctionDrawer::Update()
 	// アニメーション用
 	Vector3 pos{}, rota{}, scale{};
 
-	if (isConnected_)
+	if (isConnected_ || isSelect_)
 	{
+		Vector3 end = {};
+		if (isConnected_)
+		{
+			end = pPartner_->pParent_->pos_;
+		}
+		else if (isSelect_)
+		{
+			end = MouseColliderCommon::StaticGetMouseWorldPos();
+		}
+
 		// 向きイージング初期化
-		Vector3 d = -Vector3(pParent_->pos_ - pPartner_->pParent_->pos_);
+		Vector3 d = -Vector3(pParent_->pos_ - end);
 		alignDirectionEase_.SetEnd(d.Normalized());
 
 		// 向き合わせ
@@ -313,6 +323,9 @@ void JunctionDrawer::Update()
 
 	// 接続モーション更新
 	UpdateConnectAnimation();
+
+	// 接続モーション更新
+	UpdateSelectAnimation();
 
 	gridModelObjs_->UpdateMatrix();
 
@@ -545,7 +558,7 @@ void JunctionDrawer::UpdateConnectAnimation()
 void JunctionDrawer::UpdateSelectAnimation()
 {
 	if (isAct_ == false) { return; }
-
+	
 	if (isSelect_ == false) { return; }
 	
 	rayScalePower_.Update(isSelect_);
@@ -554,7 +567,6 @@ void JunctionDrawer::UpdateSelectAnimation()
 	float rayLen = Vector3(pParent_->pos_ - MouseColliderCommon::StaticGetMouseWorldPos()).Length() / 2.0f;
 	animeRayPos_ = { 0.0f, 0.0f, rayLen };
 	animeRayScale_ = { sConnectRayScaleEase_.Out(rayScalePower_.Ratio()),sConnectRayScaleEase_.Out(rayScalePower_.Ratio()), rayLen };
-
 }
 
 #pragma endregion
