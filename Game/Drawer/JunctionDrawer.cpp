@@ -430,13 +430,13 @@ void JunctionDrawer::AnimateConnection(JunctionDrawer* pPartner)
 	connectPower_.Reset();
 }
 
-void JunctionDrawer::AnimateSelectConnect()
+void JunctionDrawer::AnimateSelectConnect(const bool isSelect)
 {
 	if (isConnected_) { return; }
 
 	rayScalePower_.Reset();
 
-	isSelect_ = true;
+	isSelect_ = isSelect;
 }
 
 void JunctionDrawer::UpdateIdleAnimation()

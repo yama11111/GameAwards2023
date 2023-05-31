@@ -233,7 +233,7 @@ public:
 	void AnimateConnection(JunctionDrawer* pPartner);
 	
 	
-	void AnimateSelectConnect();
+	void AnimateSelectConnect(const bool isSelect);
 
 private:
 
