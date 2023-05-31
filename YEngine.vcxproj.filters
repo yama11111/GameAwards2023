@@ -529,7 +529,7 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Application\Draw\Drawer\UIChargeButtonDrawer.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Application\Draw\Drawer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -927,7 +927,7 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Application\Draw\Drawer\UIChargeButtonDrawer.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Application\Draw\Drawer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
