@@ -553,6 +553,8 @@ void PlayScene::Draw()
 
 void PlayScene::CameraUpdate()
 {
+#ifdef _DEBUG
+
     static const float sCameraMoveSpeed = 1.0f;
     static const float sCameraMoveValue = 5.0f;
 
@@ -571,6 +573,8 @@ void PlayScene::CameraUpdate()
 
     if (sMouse_->ScrollValue() > 0.0f) { camera_.pos_.z_ += sCameraScrollSpeed; }
     if (sMouse_->ScrollValue() < 0.0f) { camera_.pos_.z_ -= sCameraScrollSpeed; }
+
+#endif // DEBUG
 }
 
 #pragma endregion
